@@ -1,0 +1,1 @@
+This is a tmp file for processing uploaded images.

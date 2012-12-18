@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  MANAGER ORDER MATTERS! -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<import resource="applicationPropertiesLoader.xml" />
+	
+	<!-- MAINTAIN BEAN ORDER -->
+	<bean id="mailManager" class="main.java.com.eweware.service.mgr.MailManager"
+		init-method="start" destroy-method="shutdown">
+		<constructor-arg value="${blag.mail.smtp.do.not.use}" />
+		<constructor-arg value="${blag.mail.smtp.auth}" />
+		<constructor-arg value="${blag.mail.smtp.starttls.enable}" />
+		<constructor-arg value="${blag.mail.smtp.host}" />
+		<constructor-arg value="${blag.mail.smtp.port}" />
+		<constructor-arg value="${blag.mail.smtp.account}" />
+		<constructor-arg value="${blag.mail.smtp.password}" />
+		<constructor-arg value="${blag.mail.smtp.replyto.address}" />
+	</bean>
+
+    <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
+		init-method="start" destroy-method="shutdown">
+
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.hostname}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.port}" />
+        <!--<constructor-arg  type="java.lang.String" value="${blag.store.mongo.mediaDBName}" />-->
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userDBName}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahDBName}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerDBName}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.trackuser}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.trackblah}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.trackcomment}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.tracker}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.users}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.userProfiles}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.groups}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.groupTypes}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.usergroups}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahs}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahTypes}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.comments}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.userBlahInfo}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.userCommentInfo}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.inboxstate}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahInbox}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.demographics}" />
+        <constructor-arg  type="java.lang.Integer" value="${blag.store.mongo.connectionsPerHost}" />
+    </bean>
+
+    <bean id="groupManager" class="main.java.com.eweware.service.mgr.GroupManager"
+		init-method="start" destroy-method="shutdown">
+        <constructor-arg type="java.lang.Integer" value="${blag.maximum.returned.object.limit}" />
+    </bean>
+
+    <bean id="userManager" class="main.java.com.eweware.service.mgr.UserManager"
+		init-method="start" destroy-method="shutdown">
+        <constructor-arg type="java.lang.Boolean" value="${blag.debug}" />
+        <constructor-arg value="${blag.user.index.dir}" />
+        <constructor-arg value="${blag.user.index.event.count.before.flush}" />
+        <constructor-arg value="${blag.user.index.time.in.ms.before.flush}" />
+        <constructor-arg type="java.lang.Integer" value="${blag.maximum.returned.object.limit}" />
+    </bean>
+
+    <bean id="blahManager" class="main.java.com.eweware.service.mgr.BlahManager"
+		init-method="start" destroy-method="shutdown">
+        <constructor-arg type="java.lang.Boolean" value="${blag.debug}" />
+        <constructor-arg value="${blag.blah.index.dir}" />
+        <constructor-arg value="${blag.blah.comment.index.dir}" />
+        <constructor-arg value="${blag.blah.index.event.count.before.flush}" />
+        <constructor-arg value="${blag.blah.index.time.in.ms.before.flush}" />
+        <constructor-arg value="${blag.blah.max.opens.or.views.per.update}" />
+        <constructor-arg type="java.lang.Integer" value="${blag.maximum.returned.object.limit}" />
+    </bean>
+
+    <bean id="trackingManager" class="main.java.com.eweware.service.mgr.TrackingManager"
+          init-method="start" destroy-method="shutdown">
+    </bean>
+
+    <bean id="statisticsManager" class="main.java.com.eweware.service.mgr.StatisticsManager"
+          init-method="start" destroy-method="shutdown" />
+
+    <bean id="mediaManager" class="main.java.com.eweware.service.mgr.MediaManager"
+		init-method="start" destroy-method="shutdown">
+	</bean>
+	
+	<bean id="systemManager" class="main.java.com.eweware.service.mgr.SystemManager"
+		init-method="start" destroy-method="shutdown">
+        <constructor-arg value="${blag.memcache.hostname}" />
+        <constructor-arg value="${blag.memcache.port}" />
+	</bean>
+
+ 	<bean id="testManager" class="main.java.com.eweware.service.mgr.TestManager"
+ 		init-method="start" destroy-method="shutdown"> 
+ 	</bean> 
+</beans>

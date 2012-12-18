@@ -1,0 +1,51 @@
+<html>
+<header>
+    <title>Upload Image</title>
+</header>
+<body>
+<SCRIPT TYPE="text/javascript">
+    function getIt()
+    {
+    var x = document.getElementById("imagename");
+    if (!x) { alert("no imagename object");}
+    if (!x.value) {
+    alert("Enter a filename to download!");
+    return;
+    }
+
+    var y = document.getElementById("A");
+    if (!y) {alert("no img"); return;}
+    y.src = "http://localhost:50192/api/v2/images/download/blahId/A/" + x.value;
+    var y = document.getElementById("B");
+    if (!y) {alert("no img"); return;}
+    y.src = "http://localhost:50192/api/v2/images/download/blahId/B/" + x.value;
+    var y = document.getElementById("C");
+    if (!y) {alert("no img"); return;}
+    y.src = "http://localhost:50192/api/v2/images/download/blahId/C/" + x.value;
+    var y = document.getElementById("D");
+    if (!y) {alert("no img"); return;}
+    y.src = "http://localhost:50192/api/v2/images/download/blahId/D/" + x.value;
+    }
+</SCRIPT>
+<h1>Upload an Image</h1>
+<form id="up" action="v2/images/upload" method="post" enctype="multipart/form-data">
+    <p>Select an image to upload: <input type="file" name="file" size="45"/></p>
+    <input type="submit" value="Upload"/>
+</form>
+
+<h1>Download images</h1>
+<div>Enter file name (with extension) of image to download: <input id="imagename" type="text" value="bothered.jpg"/>&nbsp;&nbsp;
+    <input type="button" value="Download" onclick="getIt();"></div>
+<div id="pics">
+    <div><b>128x128:</b></div>
+    <div><img id="A"/></div>
+    <div><b>256x256:</b></div>
+    <div><img id="B"/></div>
+    <div><b>512x512:</b></div>
+    <div><img id="C"/></div>
+    <div><b>768x?:</b></div>
+    <div><img id="D"/></div>
+</div>
+
+</body>
+</html>

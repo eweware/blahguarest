@@ -1,0 +1,52 @@
+package main.java.com.eweware.service.base.store.dao.schema.type;
+
+/**
+ * @author rk@post.harvard.edu
+ *         Date: 9/7/12 Time: 10:48 AM
+ */
+public enum SchemaDataType {
+
+    DB_OBJECT_ID("a Mongo ObjectId",new MongoObjectIdValidator()),
+    ILS("indexed list of strings", new IndexedListValidator()),
+    ILN("indexed list of numbers", new IndexedListValidator()),
+    B("boolean", new BooleanDataTypeValidator()),
+    I("integer", new IntegerDataTypeValidator()),
+    R("real", new RealDataTypeValidator()),
+    S("string", new StringDataTypeValidator()),
+    DT("datetime", new DateTimeDataTypeValidator()),
+    D("date", new DateDataTypeValidator()), // yyyy-mm-dd
+    GPS("GPS", new GPSDataTypeValidator()),
+    E("spec for an embedded schema", new SchemaTypeValidator());
+
+    private String description;
+    private FieldValidator converter;
+//    private static final Map<String, SchemaDataType> codeToTypeMap = new HashMap<String, SchemaDataType>();
+//    static {
+//        codeToTypeMap.put(ILS.getDescription(), ILS);
+//        codeToTypeMap.put(ILN.getDescription(), ILN);
+//        codeToTypeMap.put(B.getDescription(), B);
+//        codeToTypeMap.put(I.getDescription(), I);
+//        codeToTypeMap.put(R.getDescription(), R);
+//        codeToTypeMap.put(S.getDescription(), S);
+//        codeToTypeMap.put(DT.getDescription(), DT);
+//        codeToTypeMap.put(D.getDescription(), D);
+//        codeToTypeMap.put(GPS.getDescription(), GPS);
+//    }
+
+    SchemaDataType(String description, FieldValidator converter) {
+        this.description = description;
+        this.converter = converter;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public FieldValidator getConverter() {
+        return converter;
+    }
+
+//    public static SchemaDataType getType(String description) {
+//        return codeToTypeMap.get(description);
+//    }
+}

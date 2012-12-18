@@ -1,0 +1,680 @@
+package main.java.com.eweware.service.base.store.impl.mongo.dao;
+
+import com.mongodb.*;
+import main.java.com.eweware.service.base.error.DuplicateKeyException;
+import main.java.com.eweware.service.base.error.ErrorCodes;
+import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.BaseDAO;
+import main.java.com.eweware.service.base.store.dao.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
+import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
+import main.java.com.eweware.service.base.store.dao.schema.type.FieldValidator;
+import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import org.bson.types.ObjectId;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
+
+/**
+ * @author rk@post.harvard.edu
+ *
+ * TODO still need to comb for IllegalArgumentException and possibly other runtime exception in Mongo calls below
+ *
+ */
+abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
+
+
+    // MongoException error code for duplicate keys
+    private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;
+
+    /**
+     * General constructor.
+     */
+    BaseDAOImpl() {
+        super();
+    }
+
+    /**
+     * Constructor for a dao with known id.
+     *
+     * @param id The id.
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
+     */
+    BaseDAOImpl(String id) throws SystemErrorException {
+        this();
+        setId(id); // need ObjectId
+    }
+
+    /**
+     * Constructor for a plain map
+     *
+     * @param map                The map of field names to values.
+     * @param validateAndConvert If true, the map's entries will be validated
+     *                           against the schema and the field values converted
+     *                           to the DB internal data type format when necessary.
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
+     */
+    BaseDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
+        super(map);
+        if (validateAndConvert) {
+            validateAndConvertFields();
+        }
+    }
+
+    /**
+     * All subclasses must override this method.
+     *
+     * @return BaseSchema   The schema for this DAO.
+     */
+    public static BaseSchema getSchema(LocaleId localeId) throws SystemErrorException {
+        throw new SystemErrorException("getSchema not implemented by DAO class", ErrorCodes.SERVER_SEVERE_ERROR);
+    }
+
+    private final static Map<Class, Method> classToGetSchemaMethodMap = new HashMap<Class, Method>();
+
+    /**
+     * Initializes all empty fields this object to their schema default values, if any.
+     *
+     * @param localeId
+     * @throws SystemErrorException
+     */
+    public void initToDefaultValues(LocaleId localeId) throws SystemErrorException {
+        final BaseSchema schema = getDAOSchema(localeId);
+        final Map<String, SchemaSpec> fieldNameToSpecMap = schema.getFieldNameToSpecMap();
+        for (Map.Entry<String, SchemaSpec> entry : fieldNameToSpecMap.entrySet()) {
+            final String fieldName = entry.getKey();
+            if (!containsField(fieldName)) {
+                final SchemaSpec spec = entry.getValue();
+                final Object defaultValue = spec.getDefaultValue();
+                if (defaultValue != null) {
+                    put(fieldName, defaultValue);
+                }
+            }
+        }
+    }
+
+    /**
+     * Verifies that each field in this instance is in the schema (to prevent an illegal insertion),
+     * validates the field value, and converts the value (if necessary) to the
+     * value type expected by DB schema (e.g., a String may be accepted as
+     * a value for a date, but the DAO stores the date in an internal ISO date format).
+     *
+     * @throws SystemErrorException
+     */
+    private void validateAndConvertFields() throws SystemErrorException {
+        validateAndConvertFields(null);
+    }
+
+    /**
+     * Verifies that each field in the supplied map is in the schema (to prevent an illegal insertion),
+     * validates the field value, and converts the value (if necessary) to the
+     * value type expected by DB schema (e.g., a String may be accepted as
+     * a value for a date, but the DAO stores the date in an internal ISO date format).
+     *
+     * @param map The field to value map to validate and convert. If null, all of
+     *            this instances fields will be validated and, if necessary, converted.
+     * @throws SystemErrorException
+     */
+    private void validateAndConvertFields(Map<String, Object> map) throws SystemErrorException {
+
+        // TODO support embedded schemas (SchemaDataType.E): this would make this method recursive
+        final BaseSchema schema = getDAOSchema(LocaleId.en_us);
+        if (schema == null) {
+            System.out.println("validateAndConvertFields: Ignoring missing schema for " + this.getClass().getSimpleName()); // dbg
+        } else {
+            final Map<String, SchemaSpec> fieldNameToSpecMap = schema.getFieldNameToSpecMap();
+            final Iterator<Map.Entry<String, Object>> iterator = (map == null) ? entrySet().iterator() : map.entrySet().iterator();
+            for (Iterator<Map.Entry<String, Object>> it = iterator; it.hasNext(); ) {
+                final Map.Entry<String, Object> entry = it.next();
+                final String fieldName = entry.getKey();
+                final Object value = entry.getValue();
+                final SchemaSpec spec = fieldNameToSpecMap.get(fieldName);
+                if (spec == null) { // not in schema: remove it
+                    System.out.println("Removed fieldName=" + fieldName + " without a spec in: " + this.getClass().getSimpleName()); // dbg
+                    it.remove();
+                } else {
+                    final SchemaDataType dataType = spec.getDataType();
+                    final FieldValidator converter = dataType.getConverter();
+                    if (!converter.isValid(value, spec)) {
+                        System.out.println("Ignored invalid value=" + value + " for fieldName=" + fieldName + " in: " + this.getClass().getSimpleName() + "\nspec=" + spec); // TODO dbg
+                        it.remove(); // not a valid value: remove it
+                    } else {
+                        entry.setValue(converter.toValidValue(value, spec));
+                    }
+                }
+            }
+        }
+    }
+
+    private BaseSchema getDAOSchema(LocaleId localeId) throws SystemErrorException {
+        Method getSchemaMeth = null;
+        try {
+            final Class<? extends BaseDAOImpl> clas = this.getClass();
+            getSchemaMeth = classToGetSchemaMethodMap.get(clas);
+            if (getSchemaMeth == null) {
+                getSchemaMeth = clas.getMethod("getSchema", LocaleId.class);
+                if (getSchemaMeth == null) {
+                    throw new SystemErrorException("no way to get schema from " + this.getClass().getSimpleName(), ErrorCodes.SERVER_SEVERE_ERROR);
+                }
+                classToGetSchemaMethodMap.put(clas, getSchemaMeth);
+            }
+            return (BaseSchema) getSchemaMeth.invoke(null, localeId);
+        } catch (Exception e) {
+            final Throwable cause = e.getCause();
+            String error = (cause != null && cause.getMessage() != null) ? cause.getMessage() : e.getMessage();
+            throw new SystemErrorException("error trying to get schema for " + this.getClass().getSimpleName() + "\nERROR: " + error + "\nMAP: " + this, e, ErrorCodes.SERVER_SEVERE_ERROR);
+        }
+    }
+
+    /**
+     * @return String Returns this object's unique id.
+     */
+    @Override
+    public String getId() {
+        final Object obj = get(ID); // ID is an ObjectId instance
+        return (obj == null) ? null : obj.toString();
+    }
+
+    /**
+     * Sets this object unique id.
+     *
+     * @param id A UUID string uniquely identifying this object. If null,
+     *           the id is removed.
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
+     */
+    @Override
+    public void setId(String id) throws SystemErrorException {
+        if (id != null) {
+            put(ID, makeMongoId(id));
+        } else {
+            put(ID, null); // don't user remove: null => empty field for atomic/incremental updates!
+        }
+    }
+
+    /**
+     * @return Boolean  Returns true if this object has been marked as deleted.
+     */
+    @Override
+    public Boolean getDeleted() {
+        final Object o = get(IS_DELETED);
+        return (o == null) ? Boolean.FALSE : (Boolean) o; // as if default were false
+    }
+
+    /**
+     * Marks or unmarks this object as deleted.
+     *
+     * @param deleted
+     */
+    @Override
+    public void setDeleted(Boolean deleted) {
+        if (deleted != null) {
+            put(IS_DELETED, deleted);
+        } else {
+            remove(IS_DELETED);
+        }
+    }
+
+    @Override
+//    @JsonSerialize(using = JsonDateSerializer.class)
+    public Date getCreated() {
+        return (Date) get(CREATED);
+    }
+
+    @Override
+    public void setCreated(Date created) {
+        put(CREATED, created);
+    }
+
+    @Override
+    public Date getUpdated() {
+        return (Date) get(UPDATED);
+    }
+
+    @Override
+    public void setUpdated(Date updated) {
+        put(UPDATED, updated);
+    }
+
+    /**
+     * Returns the appropriate id. Subclasses that need to use
+     * an id that is not a Mongo ObjectId should override this class.
+     *
+     * @param id The id as a string
+     * @return Object   A mongo ObjectId for the specified id
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *          Thrown if the specified id
+     *          is invalid.
+     */
+    protected Object makeMongoId(String id) throws SystemErrorException {
+        try {
+            return new ObjectId(id);
+        } catch (Exception e) {
+            throw new SystemErrorException("id is not an appropriate UUID string", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        }
+    }
+
+    /**
+     * @return Map<String, MongoFieldTypes> Provides a map from a field name to its data type.
+     */
+    protected abstract Map<String, MongoFieldTypes> _getFieldNameToTypeMap();
+
+    /**
+     * @return String                                Returns the name of the collection for the db object.
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
+     */
+    protected abstract String _getCollectionName() throws SystemErrorException;
+
+    /**
+     * @return DBCollection                              Returns the collection for the db object.
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
+     */
+    protected abstract DBCollection _getCollection() throws SystemErrorException;
+
+
+    // Workhorse methods to access/update MongoDB daos -------------------------------------------------------------
+
+    // Cache maps a BaseDAOImpl class to its default constructor for _findX operations
+    private static final Map<Class<? extends BaseDAOImpl>, Constructor<? extends BaseDAOImpl>> classToConstructorMap = new HashMap<Class<? extends BaseDAOImpl>, Constructor<? extends BaseDAOImpl>>();
+
+    @Override
+    public BaseDAO _findByPrimaryId(String... fieldsToReturnHint) throws SystemErrorException {
+        try {
+            final DBObject id = new BasicDBObject(ID, get(ID)); // note that get(ID) retrieves the ObjectId object (don't use getId())
+            DBObject fields = (fieldsToReturnHint.length == 0) ? null : makeFieldsToReturnMap(fieldsToReturnHint);
+            final DBCollection collection = _getCollection();
+            final DBObject dao = collection.findOne(id, fields);
+            if (dao == null) {
+                return null;
+            }
+            return getFindDAOConstructor().newInstance(dao, false);
+        } catch (Exception e) {
+            throw new SystemErrorException("failed to find objects in " + this.getClass().getSimpleName() + " object=" + this, e);
+        }
+    }
+
+    @Override
+    public List<? extends BaseDAO> _findMany(Integer start, Integer count, String sortFieldName) throws SystemErrorException {
+        try {
+            final DBCursor found;
+            if (sortFieldName == null) {
+                found = ((start != null && count != null) ? _getCollection().find(this).skip(start).limit(count) :
+                        (start != null) ? _getCollection().find(this).skip(start) :
+                                (count != null) ? _getCollection().find(this).limit(count) :
+                                        _getCollection().find(this));
+            } else {
+                final DBObject sort = new BasicDBObject(sortFieldName, 1);
+                found = ((start != null && count != null) ? _getCollection().find(this).sort(sort).skip(start).limit(count) :
+                        (start != null) ? _getCollection().find(this).sort(sort).skip(start) :
+                                (count != null) ? _getCollection().find(this).sort(sort).limit(count) :
+                                        _getCollection().find(this).sort(sort));
+            }
+            if (found.count() == 0) {
+                return new ArrayList<BaseDAO>(0);
+            }
+            final Constructor<? extends BaseDAO> constructor = getFindDAOConstructor();
+            final List<BaseDAO> daos = new ArrayList<BaseDAO>(found.count());
+            while (found.hasNext()) {
+                daos.add(constructor.newInstance(found.next(), false));
+            }
+            return daos;
+        } catch (Exception e) {
+            throw new SystemErrorException("failed to find objects in " + this.getClass().getSimpleName() + " object=" + this, e);
+        }
+    }
+
+    @Override
+    public List<? extends BaseDAO> _findManyByPrimaryIds(String[] primaryIds) throws SystemErrorException {
+        if (primaryIds == null || primaryIds.length == 0) {
+            throw new SystemErrorException("missing primary ids in " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        try {
+            final List<Object> ids = new ArrayList<Object>(primaryIds.length);
+            for (String id : primaryIds) {
+                ids.add(makeMongoId(id));
+            }
+            final BasicDBObject clause = new BasicDBObject("$in", ids);
+            final DBObject query = new BasicDBObject(ID, clause);
+            final DBCursor cursor = _getCollection().find(query);
+            if (cursor.count() == 0) {
+                return new ArrayList<BaseDAO>(0);
+            }
+            final Constructor<? extends BaseDAO> constructor = getFindDAOConstructor();
+            final List<BaseDAO> result = new ArrayList<BaseDAO>(cursor.count());
+            while (cursor.hasNext()) {
+                result.add(constructor.newInstance(cursor.next(), false));
+            }
+
+            return result;
+        } catch (Exception e) {
+            throw new SystemErrorException("failed to find objects with ids=" + primaryIds + "in " + this.getClass().getSimpleName() + " object=" + this, e);
+        }
+    }
+
+    public List<? extends BaseDAO> _findManyByCompositeId(Integer start, Integer count, String sortFieldName, String[] fieldsToReturnHint, String... idFieldNames) throws SystemErrorException {
+        if (idFieldNames.length == 0) {
+            throw new SystemErrorException("missing id field names: must have at least one in " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        DBObject criteria = new BasicDBObject();
+        try {
+            for (String idFieldName : idFieldNames) {
+                final Object obj = get(idFieldName);
+                if (obj == null) {
+                    throw new SystemErrorException("missing compound id field '" + idFieldName + "' in " + this.getClass().getSimpleName() + " object=" + this);
+                }
+                criteria.put(idFieldName, obj);
+            }
+
+            final DBObject fields = (fieldsToReturnHint == null || fieldsToReturnHint.length == 0) ? null : makeFieldsToReturnMap(fieldsToReturnHint);
+            final DBCursor cursor;
+            if (sortFieldName == null) {
+                cursor = (start != null && count != null) ? _getCollection().find(criteria, fields).skip(start).limit(count) :
+                        (start != null) ? _getCollection().find(criteria, fields).skip(start) :
+                                (count != null) ? _getCollection().find(criteria, fields).limit(count) :
+                                        _getCollection().find(criteria, fields);
+            } else {
+                final DBObject sort = new BasicDBObject(sortFieldName, 1);
+                cursor = (start != null && count != null) ? _getCollection().find(criteria, fields).sort(sort).skip(start).limit(count) :
+                        (start != null) ? _getCollection().find(criteria, fields).sort(sort).skip(start) :
+                                (count != null) ? _getCollection().find(criteria, fields).sort(sort).limit(count) :
+                                        _getCollection().find(criteria, fields).sort(sort);
+            }
+            if (cursor.count() == 0) {
+                return new ArrayList<BaseDAO>(0);
+            }
+
+            final Constructor<? extends BaseDAO> constructor = getFindDAOConstructor();
+            List<BaseDAO> daos = new ArrayList<BaseDAO>(cursor.count());
+            while (cursor.hasNext()) {
+                daos.add(constructor.newInstance(cursor.next(), false));
+            }
+            return daos;
+        } catch (Exception e) {
+            throw new SystemErrorException("failed to find objects with compound id fields=" + idFieldNames + " in " + this.getClass().getSimpleName() + " object=" + this, e);
+        }
+    }
+
+    @Override
+    public BaseDAO _findByCompositeId(String[] fieldsToReturnHint, String... idFieldNames) throws SystemErrorException {
+        if (idFieldNames.length == 0) {
+            throw new SystemErrorException("missing id field names: must have at least one in " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        final DBObject criteria = new BasicDBObject();
+        try {
+            for (String idFieldName : idFieldNames) {
+                final Object obj = get(idFieldName);
+                if (obj == null) {
+                    throw new SystemErrorException("missing compound id field '" + idFieldName + "' in " + this.getClass().getSimpleName() + " object=" + this);
+                }
+                criteria.put(idFieldName, obj);
+            }
+            final DBObject fields = (fieldsToReturnHint == null || fieldsToReturnHint.length == 0) ? null : makeFieldsToReturnMap(fieldsToReturnHint);
+            DBObject dao = _getCollection().findOne(criteria, fields);
+            if (dao == null) {
+                return null;
+            }
+            return getFindDAOConstructor().newInstance(dao, false);
+        } catch (Exception e) {
+            throw new SystemErrorException("failed to find objects with compound id fields=" + idFieldNames + " in" + this.getClass().getSimpleName() + " object=" + this, e);
+        }
+    }
+
+    @Override
+    public List<? extends BaseDAO> _findRangeSingleField(boolean sort, String fieldName, String from, boolean fromInclusive, String to, boolean toInclusive) throws SystemErrorException {
+        if (from == null) {
+            throw new SystemErrorException("from field is required", ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        }
+        final String op1 = fromInclusive ? "$gte" : "$gt";
+        final String op2 = toInclusive ? "$lte" : "$lt";
+        final DBObject criteria = new BasicDBObject();
+        final DBObject range = new BasicDBObject();
+        criteria.put(fieldName, range);
+        range.put(op1, from);
+        if (to != null) {
+            range.put(op2, to);
+        }
+        final List<BaseDAO> matches = new ArrayList<BaseDAO>();
+        try {
+            final Constructor<? extends BaseDAOImpl> constructor = getFindDAOConstructor();
+            final DBCollection col = _getCollection();
+            for (DBObject obj : sort ? col.find(criteria).sort(new BasicDBObject(fieldName, 1)) : col.find(criteria)) {
+                matches.add(constructor.newInstance(obj, false));
+            }
+        } catch (Exception e) {
+            throw new SystemErrorException("failed to find objects in range in " + this + ": " + e.getMessage(), ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        }
+
+        return matches;
+    }
+
+    @Override
+    public void _insert() throws SystemErrorException, DuplicateKeyException {
+        final DBCollection col = _getCollection();
+        try {
+            final Date date = new Date();
+            this.setCreated(date);
+//            this.setUpdated(date);
+            final WriteResult result = col.insert(this, WriteConcern.SAFE);
+            if (result.getError() != null) {
+                throw new SystemErrorException("system error inserting " + col.getName() + " in" + this.getClass().getSimpleName() + " object=" + this + "\nERROR: " + result.getError(), ErrorCodes.SERVER_DB_ERROR);
+            }
+        } catch (MongoException e) {
+            if (e.getCode() == MONGO_DUPLICATE_KEY_ERROR_CODE) {
+                throw new DuplicateKeyException(e.getMessage(), e);
+            }
+            throw new SystemErrorException("system error updating dao id=" + this.getId() + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR CODE=" + e.getCode() + "\nERROR: " + e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+        }
+    }
+
+    @Override
+    public void _updateByPrimaryId(DAOUpdateType updateType) throws SystemErrorException, DuplicateKeyException {
+        if (this.getId() == null) {
+            throw new SystemErrorException("missing id in " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        if (updateType == null) {
+            throw new SystemErrorException("missing update type " + this.getClass().getSimpleName() + " object=" + this);
+        }
+
+        try {
+            this.setUpdated(new Date());
+            WriteResult result = _getCollection().update(
+                    new BasicDBObject(ID, makeMongoId(this.getId())),
+                    makeAtomicUpdateObject(updateType),
+                    false, false, WriteConcern.SAFE);
+            if (result.getError() != null) {
+                throw new SystemErrorException("system error updating dao id=" + this.getId() + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR: " + result.getError(), ErrorCodes.SERVER_DB_ERROR);
+            }
+        } catch (MongoException e) {
+            if (e.getCode() == MONGO_DUPLICATE_KEY_ERROR_CODE) {
+                throw new DuplicateKeyException(e.getMessage(), e);
+            }
+            throw new SystemErrorException("system error updating dao id=" + this.getId() + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+        }
+    }
+
+    @Override
+    public void _updateByCompoundId(DAOUpdateType updateType, String... idFieldNames) throws SystemErrorException, DuplicateKeyException {
+        if (idFieldNames.length == 0) {
+            throw new SystemErrorException("missing compound id field names in " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        if (updateType == null) {
+            throw new SystemErrorException("missing update type " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        final DBObject criteria = new BasicDBObject();
+        this.setUpdated(new Date());
+        for (String idFieldName : idFieldNames) {
+            final Object obj = get(idFieldName);
+            if (obj == null) {
+                throw new SystemErrorException("missing compound id field '" + idFieldName + "' in " + this.getClass().getSimpleName() + " object=" + this);
+            }
+            criteria.put(idFieldName, obj);
+        }
+        try {
+            final WriteResult result = _getCollection().update(
+                    criteria,
+                    makeAtomicUpdateObject(updateType),
+                    false, false, WriteConcern.SAFE);
+            if (result.getError() != null) {
+                throw new SystemErrorException("system error updating in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR: " + result.getError());
+            }
+        } catch (MongoException e) {
+            if (e.getCode() == MONGO_DUPLICATE_KEY_ERROR_CODE) {
+                throw new DuplicateKeyException(e.getMessage(), e);
+            }
+            throw new SystemErrorException("system error updating dao id=" + this.getId() + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+        }
+    }
+
+    @Override
+    public void _deleteByPrimaryId() throws SystemErrorException {
+        if (this.getId() == null) {
+            throw new SystemErrorException("missing id in " + this);
+        }
+        try {
+            final WriteResult result = _getCollection().remove(new BasicDBObject(ID, makeMongoId(this.getId())), WriteConcern.SAFE);
+            if (result.getError() != null) {
+                throw new SystemErrorException("system error deleting " + this + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR: " + result.getError());
+            }
+        } catch (MongoException e) {
+            throw new SystemErrorException("system error updating dao id=" + this.getId() + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+        }
+    }
+
+    @Override
+    public void _deleteByCompositeId(String... idFieldNames) throws SystemErrorException {
+        if (idFieldNames.length == 0) {
+            throw new SystemErrorException("missing composite id field names");
+        }
+        final DBObject query = new BasicDBObject(idFieldNames.length);
+        for (String idFieldName : idFieldNames) {
+            final Object value = (idFieldName);
+            if (value == null) {
+                throw new SystemErrorException("cannot delete: id component field '" + idFieldName + "' has no value in " + this.getClass().getSimpleName() + " object=" + this);
+            }
+            query.put(idFieldName, value);
+        }
+        try {
+            final WriteResult result = _getCollection().remove(query, WriteConcern.SAFE);
+            if (result.getError() != null) {
+                throw new SystemErrorException("system error deleting " + this + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR " + result.getError());
+            }
+        } catch (MongoException e) {
+            throw new SystemErrorException("system error updating dao id=" + this.getId() + " in " + this.getClass().getSimpleName() + " object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+        }
+    }
+
+    @Override
+    public void addFromMap(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
+        if (map == null) {
+            throw new SystemErrorException("missing map to add in " + this.getClass().getSimpleName() + " object=" + this);
+        }
+        if (validateAndConvert) {
+            validateAndConvertFields(map);
+        }
+        putAll(map);
+    }
+
+    @Override
+    public boolean _exists() throws SystemErrorException {
+        return _getCollection().count(this) != 0;
+    }
+
+    @Override
+    public long _count() throws SystemErrorException {
+        return _getCollection().count();
+    }
+
+
+    /**
+     * Creates an atomic additive update. No fields are removed.
+     *
+     * @param updateType
+     * @return DBObject Containing the atomic update commands
+     */
+    private DBObject makeAtomicUpdateObject(DAOUpdateType updateType) throws SystemErrorException {
+        Map<String, Object> updates = this;
+        final int size = updates.size();
+        final BasicDBObject updater = new BasicDBObject(size);
+        if (size == 0) {
+            return updater;
+        }
+        for (Map.Entry<String, Object> entry : updates.entrySet()) {
+            final String fieldName = entry.getKey();
+            if (fieldName.equals(ID)) {
+                continue; // skip!
+            }
+            final MongoFieldTypes type = _getFieldNameToTypeMap().get(fieldName);
+            if (type == null) {
+                throw new SystemErrorException("missing field name to type map for fieldName " + fieldName + " in " + this.getClass().getSimpleName() + " object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+
+            final Object value = entry.getValue();
+            final boolean nullValue = (value == null);
+
+            final String operation;
+            switch (updateType) {
+                case INCREMENTAL_DAO_UPDATE:
+                    operation = type.getIncrementalOperation();
+                    break;
+                case ABSOLUTE_UPDATE:
+                    operation = nullValue?type.getDeleteOperation():type.getOverwriteOperation();
+                    break;
+                default:
+                    throw new SystemErrorException("invalid dao update operation=" + updateType, ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+            Map<String, Object> operationContents = (Map<String, Object>) updater.get(operation);
+            if (operationContents == null) {
+                operationContents = new HashMap<String, Object>(5);
+                updater.put(operation, operationContents);
+            }
+
+            if (value == null  && operation.equals("$unset")) {
+                operationContents.put(fieldName, 1); // deletes
+            } else if (type == MongoFieldTypes.SET || type == MongoFieldTypes.ARRAY) {   // TODO we're not properly dealing with SET and ARRAY, but we're not using it (so little time..)
+                if (value instanceof Collection<?>) {
+                    for (Object obj : (Collection<?>) value) {
+                        operationContents.put(fieldName, obj); // TODO test whether mongo complains if there are two fields with the same name (e.g., pushing two values into same field)
+                    }
+                }
+            } else {
+                operationContents.put(fieldName, value);
+            }
+        }
+        return updater;
+    }
+
+    /**
+     * Creates a map specifying which fields should be returned.
+     *
+     * @param fieldsToReturnHint An array of fields to return.
+     * @return DBObject A db object containing the map, or null
+     *         if there are no fields in the specified parameter.
+     */
+    private DBObject makeFieldsToReturnMap(String[] fieldsToReturnHint) {
+        DBObject fieldsToReturn = null;
+        if (fieldsToReturnHint.length != 0) {
+            fieldsToReturn = new BasicDBObject(fieldsToReturnHint.length);
+            for (String field : fieldsToReturnHint) {
+                fieldsToReturn.put(field, 1);
+            }
+        }
+        return fieldsToReturn;
+    }
+
+    private Constructor<? extends BaseDAOImpl> getFindDAOConstructor() throws NoSuchMethodException {
+        final Class<? extends BaseDAOImpl> c = getClass();
+        Constructor<? extends BaseDAOImpl> constructor = classToConstructorMap.get(c);
+        if (constructor == null) {
+            constructor = c.getDeclaredConstructor(Map.class, boolean.class);
+            classToConstructorMap.put(c, constructor);
+        }
+        return constructor;
+    }
+}
