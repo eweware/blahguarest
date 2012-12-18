@@ -3,15 +3,19 @@ package main.java.com.eweware.service.rest.resource;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import org.im4java.core.*;
+import main.java.com.eweware.service.base.error.ErrorCodes;
+import main.java.com.eweware.service.base.error.InvalidRequestException;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IMOperation;
+import org.im4java.core.Info;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.awt.*;
 import java.io.*;
+import java.util.HashMap;
 
 /**
  * @author rk@post.harvard.edu
@@ -29,6 +33,18 @@ public class ImageUploadResource {
      */
     private static final String tmpDir = "/app/blahguarest/images/tmp/";
     private static final String s3Dir = "/app/blahguarest/images/s3/";
+    private static final String canonicalFileFormat = ".jpg";
+    private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
+    static {
+        supportedUploadFormats.put(".jpg", 1);
+        supportedUploadFormats.put(".JPG", 1);
+        supportedUploadFormats.put(".jpeg", 1);
+        supportedUploadFormats.put(".JPEG", 1);
+        supportedUploadFormats.put(".png", 1);
+        supportedUploadFormats.put(".PNG", 1);
+        supportedUploadFormats.put(".gif", 1);
+        supportedUploadFormats.put(".GIF", 1);
+    }
 
 
     private enum FileTypeSpec {
@@ -73,7 +89,7 @@ public class ImageUploadResource {
         }
         try {
             filename = makeFilename(false, fileTypeSpec, filename);
-        } catch (main.java.com.eweware.service.base.error.InvalidRequestException e) {
+        } catch (InvalidRequestException e) {
             return Response.status(400).entity(e.getMessage()).build();
         }
         final File file = new File(s3Dir, filename);
@@ -105,14 +121,18 @@ public class ImageUploadResource {
         final String msg;
         try {
             msg = processFile(in, metadata, tmpDirPathname, s3Pathname);
-        } catch (main.java.com.eweware.service.base.error.InvalidRequestException x) {
+        } catch (InvalidRequestException x) {
             return Response.status(400).entity(x.getMessage()).build();
         }
         return (msg == null) ? Response.status(400).build() : Response.status(200).entity(msg).build();
     }
 
-    private String processFile(InputStream in, FormDataContentDisposition metadata, String tmpDirPathname, String s3Pathname) throws main.java.com.eweware.service.base.error.InvalidRequestException {
-        final File original = new File(tmpDirPathname + metadata.getFileName());
+    private String processFile(InputStream in, FormDataContentDisposition metadata, String tmpDirPathname, String s3Pathname) throws InvalidRequestException {
+        final String fileName = metadata.getFileName();
+        if (!isSupported(fileName)) {
+            throw new InvalidRequestException("File format not supported: " + fileName, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
+        }
+        final File original = new File(tmpDirPathname + fileName);
 
         saveFile(in, metadata, tmpDirPathname, original);
 
@@ -121,7 +141,12 @@ public class ImageUploadResource {
         return "OK";
     }
 
-    private void saveFormat(File original, String s3Pathname) throws main.java.com.eweware.service.base.error.InvalidRequestException {
+    private boolean isSupported(String fileName) {
+        final int dot = fileName.indexOf(".");
+        return (dot != -1) && (supportedUploadFormats.get(fileName.substring(dot)) != null);
+    }
+
+    private void saveFormat(File original, String s3Pathname) throws InvalidRequestException {
 
         final String filename = original.getName();
         final String filepath = original.getAbsolutePath();
@@ -175,14 +200,10 @@ public class ImageUploadResource {
         }
     }
 
-    private String makeFilename(boolean upload, FileTypeSpec spec, String filename) throws main.java.com.eweware.service.base.error.InvalidRequestException {
+    private String makeFilename(boolean upload, FileTypeSpec spec, String filename) throws InvalidRequestException {
         final int dot = filename.lastIndexOf(".");
         if (dot == -1) {
-            throw new main.java.com.eweware.service.base.error.InvalidRequestException("Invalid image filename: missing extension", main.java.com.eweware.service.base.error.ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
-        }
-        final String ext = filename.substring(dot);
-        if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")) {
-            throw new main.java.com.eweware.service.base.error.InvalidRequestException("Image type not supported: " + ext, main.java.com.eweware.service.base.error.ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
+            throw new InvalidRequestException("Invalid image filename: missing extension", ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
         final StringBuilder b = new StringBuilder();
         final String name = filename.substring(0, dot);
@@ -190,9 +211,9 @@ public class ImageUploadResource {
         b.append("-");
         b.append(spec);
         if (!upload && spec != FileTypeSpec.D) {
-            b.append("-0");          // XXX can we get rid of this?
+            b.append("-0");          // XXX can we get around this exception? maybe there's an output filename param.
         }
-        b.append(ext);
+        b.append(canonicalFileFormat);
         return b.toString();
     }
 
