@@ -202,11 +202,12 @@ public class ImageUploadResource {
 
     private String makeFilename(boolean upload, FileTypeSpec spec, String filename) throws InvalidRequestException {
         final int dot = filename.lastIndexOf(".");
-        if (dot != -1) {
-            throw new InvalidRequestException("Image name should not have an extension", ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
+        if (dot == -1) {
+            throw new InvalidRequestException("Extension missing from image filename: " + filename, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
+        final String imageName = filename.substring(0, dot);
         final StringBuilder b = new StringBuilder();
-        b.append(filename);
+        b.append(imageName);
         b.append("-");
         b.append(spec);
         if (!upload && spec != FileTypeSpec.D) {
