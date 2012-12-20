@@ -1,10 +1,12 @@
 package main.java.com.eweware.service.rest.resource;
 
 
+import com.sun.corba.se.impl.ior.POAObjectKeyTemplate;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
+import main.java.com.eweware.service.base.error.SystemErrorException;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
@@ -15,13 +17,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
  * @author rk@post.harvard.edu
  *         Date: 12/14/12 Time: 3:44 PM
  *         <p/>
- *         Need to create jersey-multipart-config.properties and add the following
+ *         XXX Need to create jersey-multipart-config.properties and add the following
  *         <p/>
  *         bufferThreshold = 128000
  */
@@ -35,6 +38,7 @@ public class ImageUploadResource {
     private static final String s3Dir = "/app/blahguarest/images/s3/";
     private static final String canonicalFileFormat = ".jpg";
     private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
+
     static {
         supportedUploadFormats.put(".jpg", 1);
         supportedUploadFormats.put(".JPG", 1);
@@ -70,6 +74,19 @@ public class ImageUploadResource {
         HEIGHT_DOMINANT
     }
 
+    @OPTIONS
+    @Path("/download/{blahId}/{fileType}/{filename}")
+    public Response xcorDownloadOptions(@Context HttpServletRequest req) {
+        Response.ResponseBuilder response = Response.status(200)
+                .header("Access-Control-Allow-Origin", "*")     // XXX should limit to the Webapp servers
+                .header("Access-Control-Allow-Methods", "GET");
+        final String acrh = req.getHeader("Access-Control-Request-Headers");
+        if (acrh != null && acrh.length() != 0) {
+            response = response.header("", acrh);
+        }
+        return response.build();
+    }
+
     @GET
     @Path("/download/{blahId}/{fileType}/{filename}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
@@ -98,7 +115,9 @@ public class ImageUploadResource {
         }
         try {
             System.out.println("Downloading " + file.getAbsolutePath());
-            final Response response = Response.status(200).entity(file).type(MediaType.MULTIPART_FORM_DATA_TYPE).build();
+            final Response response = Response.status(200)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .entity(file).type(MediaType.MULTIPART_FORM_DATA_TYPE).build();
             System.out.println("... downloaded");
             return response;
         } catch (Exception e) {
@@ -107,59 +126,75 @@ public class ImageUploadResource {
         }
     }
 
+    @OPTIONS
+    @Path("/upload")
+    public Response xcorUploadOptions(@Context HttpServletRequest req) {
+        Response.ResponseBuilder response = Response.status(200)
+                .header("Access-Control-Allow-Origin", "*")    // XXX should limit to the Webapp servers
+                .header("Access-Control-Allow-Methods", "POST");
+        final String acrh = req.getHeader("Access-Control-Request-Headers");
+        if (acrh != null && acrh.length() != 0) {
+            response = response.header("", acrh);
+        }
+        return response.build();
+    }
+
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response imageUpload(
+            @FormDataParam("objectType") String objectType,
+            @FormDataParam("objectId") String objectId,
+            @FormDataParam("primary") Boolean isPrimary,
             @FormDataParam("file") InputStream in,
             @FormDataParam("file") FormDataContentDisposition metadata,
             @Context HttpServletRequest request) {
-
-        final String tmpDirPathname = tmpDir; // request.getRealPath("") + File.separatorChar + "WEB-INF/images_tmp" + File.separatorChar;
-        final String s3Pathname = s3Dir; //request.getRealPath("") + File.separatorChar + "images" + File.separatorChar;
-
+        if (objectType == null || objectId == null) {
+            return Response.status(400).entity("missing objectType and/or objectId parameters").build();
+        }
         final String msg;
         try {
-            msg = processFile(in, metadata, tmpDirPathname, s3Pathname);
-        } catch (InvalidRequestException x) {
+            msg = processFile(in, metadata);
+        } catch (Exception x) {
             return Response.status(400).entity(x.getMessage()).build();
         }
-        return (msg == null) ? Response.status(400).build() : Response.status(200).entity(msg).build();
+        return (msg == null) ? Response.status(400).build() :
+                Response.status(200)
+                        .header("Access-Control-Allow-Origin", "*")
+                        .entity(msg).build();
     }
 
-    private String processFile(InputStream in, FormDataContentDisposition metadata, String tmpDirPathname, String s3Pathname) throws InvalidRequestException {
+    private String processFile(InputStream in, FormDataContentDisposition metadata) throws InvalidRequestException, SystemErrorException {
+        final long fileSize = metadata.getSize();
+        if (fileSize != 0 && fileSize > 1000000) {
+            throw new InvalidRequestException("File size exceeds 1MB limit: " + fileSize);
+        }
         final String fileName = metadata.getFileName();
         if (!isSupported(fileName)) {
             throw new InvalidRequestException("File format not supported: " + fileName, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
-        final File original = new File(tmpDirPathname + fileName);
+        final File original = new File(tmpDir + fileName);
 
-        saveFile(in, metadata, tmpDirPathname, original);
+        saveFile(in, metadata, tmpDir, original);
 
-        saveFormat(original, s3Pathname);
+        saveFormats(original);
 
         return "OK";
     }
 
     private boolean isSupported(String fileName) {
-        final int dot = fileName.indexOf(".");
+        final int dot = fileName.lastIndexOf(".");
         return (dot != -1) && (supportedUploadFormats.get(fileName.substring(dot)) != null);
     }
 
-    private void saveFormat(File original, String s3Pathname) throws InvalidRequestException {
+    private void saveFormats(File original) throws InvalidRequestException, SystemErrorException {
 
         final String filename = original.getName();
         final String filepath = original.getAbsolutePath();
         final ConvertCmd cmd = new ConvertCmd();
         try {
-            final Info imageInfo = new Info(filepath, true   );
-//            System.out.println("Format: " + imageInfo.getImageFormat());
-//            System.out.println("Width: " + imageInfo.getImageWidth());
-//            System.out.println("Height: " + imageInfo.getImageHeight());
-//            System.out.println("Geometry: " + imageInfo.getImageGeometry());
-//            System.out.println("Depth: " + imageInfo.getImageDepth());
-//            System.out.println("Class: " + imageInfo.getImageClass());
-
+            final Info imageInfo = new Info(filepath, true);
             final int imageWidth = imageInfo.getImageWidth();
             final int imageHeight = imageInfo.getImageHeight();
 
@@ -184,19 +219,20 @@ public class ImageUploadResource {
                         } else if (imageWidth < imageHeight) {
                             op.scale(spec.width, null);
                         }
-                        op.crop(spec.width, spec.height);
+                        op.crop(spec.width, spec.height, 0, 0);
                     }
                 } else if (spec.mode == TypeSpecMode.WIDTH_DOMINANT) {
                     op.scale(spec.width, null);
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
-                final String newImagePathname = s3Pathname + "/" + newFilename;
+                final String newImagePathname = s3Dir + "/" + newFilename;
                 op.addImage();
+
                 cmd.run(op, filepath, newImagePathname);
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new SystemErrorException("File upload failed", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
     }
 
@@ -210,9 +246,9 @@ public class ImageUploadResource {
         b.append(imageName);
         b.append("-");
         b.append(spec);
-        if (!upload && spec != FileTypeSpec.D) {
-            b.append("-0");          // XXX can we get around this exception? maybe there's an output filename param.
-        }
+//        if (!upload && spec != FileTypeSpec.D) {
+//            b.append("-0");          // XXX can we get around this exception? maybe there's an output filename param.
+//        }
         b.append(canonicalFileFormat);
         return b.toString();
     }

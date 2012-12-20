@@ -7,33 +7,42 @@
     function getIt()
     {
     var x = document.getElementById("imagename");
-    if (!x) { alert("no imagename object");}
+    if (!x) { alert("no imagename object"); return;}
     if (!x.value) {
     alert("Enter a filename to download!");
     return;
     }
-
+    var hstname = document.getElementById("hostname").value;
+    if (!hstname) { alert("Please add a hostname"); return;}
     var y = document.getElementById("A");
     if (!y) {alert("no img"); return;}
-    y.src = "http://localhost:50192/api/v2/images/download/blahId/A/" + x.value;
+    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/A/" + x.value;
     var y = document.getElementById("B");
     if (!y) {alert("no img"); return;}
-    y.src = "http://localhost:50192/api/v2/images/download/blahId/B/" + x.value;
+    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/B/" + x.value;
     var y = document.getElementById("C");
     if (!y) {alert("no img"); return;}
-    y.src = "http://localhost:50192/api/v2/images/download/blahId/C/" + x.value;
+    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/C/" + x.value;
     var y = document.getElementById("D");
     if (!y) {alert("no img"); return;}
-    y.src = "http://localhost:50192/api/v2/images/download/blahId/D/" + x.value;
+    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/D/" + x.value;
     }
 </SCRIPT>
 <h1>Upload an Image</h1>
+
+<p>REST Hostname:<input id="hostname" type="text" size="100" value="ec2-50-112-195-162.us-west-2.compute.amazonaws.com"/></p>
+
 <form id="up" action="v2/images/upload" method="post" enctype="multipart/form-data">
     <p>Select an image to upload: <input type="file" name="file" size="45"/></p>
+
+    <div>Image is for Blah or Comment?: <input type="text" name="objectType" value="Enter C (comment) or B (blah)"/></div>
+    <div>Blah/Comment Id:<input type="text" name="objectId" value="objectId"/></div>
+    <div>Primary image?: <input type="text" name="primary" value="true"/></div>
     <input type="submit" value="Upload"/>
 </form>
 
 <h1>Download images</h1>
+
 <div>Enter file name (with extension) of image to download: <input id="imagename" type="text" value="bothered.jpg"/>&nbsp;&nbsp;
     <input type="button" value="Download" onclick="getIt();"></div>
 <div id="pics">
