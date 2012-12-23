@@ -118,4 +118,9 @@ public class UserCommentInfoDAOImpl extends BaseDAOImpl implements UserCommentIn
     public void setOpens(Integer count) {
         put(OPENS, count);
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

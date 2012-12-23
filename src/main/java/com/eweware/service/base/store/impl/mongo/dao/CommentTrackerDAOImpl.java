@@ -82,4 +82,9 @@ public class CommentTrackerDAOImpl extends BaseDAOImpl implements CommentTracker
     public static BaseSchema getSchema(LocaleId localeId) throws SystemErrorException {
         return null;
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

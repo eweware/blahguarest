@@ -362,4 +362,9 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
             put(USER_PROFILE_COUNTRY_PUBLIC, p);
         }
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

@@ -75,4 +75,9 @@ public class BlahTypeDAOImpl extends BaseDAOImpl implements BlahTypeDAO {
     public void setName(String name) {
         put(NAME, name);
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

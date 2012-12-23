@@ -1,7 +1,10 @@
 package main.java.com.eweware.service.rest.resource;
 
 
-import com.sun.corba.se.impl.ior.POAObjectKeyTemplate;
+import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import main.java.com.eweware.service.base.error.ErrorCodes;
@@ -17,8 +20,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author rk@post.harvard.edu
@@ -34,8 +39,13 @@ public class ImageUploadResource {
     /**
      * These paths should be part of the config
      */
-    private static final String tmpDir = "/app/blahguarest/images/tmp/";
-    private static final String s3Dir = "/app/blahguarest/images/s3/";
+    private static final String localOriginalImagePath = "/app/blahguarest/images/original/";
+    private static final String localFormattedImagePath = "/app/blahguarest/images/image/";
+    private static final String s3BucketName = "blahguaimages";
+    private static final String s3OriginalImageDirname = "original/";
+    private static final String s3FormattedImageDirname = "image/";
+    private static final boolean useS3 = true;
+
     private static final String canonicalFileFormat = ".jpg";
     private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
 
@@ -75,58 +85,6 @@ public class ImageUploadResource {
     }
 
     @OPTIONS
-    @Path("/download/{blahId}/{fileType}/{filename}")
-    public Response xcorDownloadOptions(@Context HttpServletRequest req) {
-        Response.ResponseBuilder response = Response.status(200)
-                .header("Access-Control-Allow-Origin", "*")     // XXX should limit to the Webapp servers
-                .header("Access-Control-Allow-Methods", "GET");
-        final String acrh = req.getHeader("Access-Control-Request-Headers");
-        if (acrh != null && acrh.length() != 0) {
-            response = response.header("", acrh);
-        }
-        return response.build();
-    }
-
-    @GET
-    @Path("/download/{blahId}/{fileType}/{filename}")
-    @Produces(MediaType.MULTIPART_FORM_DATA)
-    public Response hello(@PathParam("blahId") String blahId,
-                          @PathParam("fileType") String fileType,
-                          @PathParam("filename") String filename) {
-        // ignore blahId
-        final FileTypeSpec fileTypeSpec;
-        try {
-            fileTypeSpec = FileTypeSpec.valueOf(fileType);
-        } catch (Exception e) {
-            return Response.status(400).entity("Invalid image type: " + e.getMessage()).build();
-        }
-        final File dir = new File(s3Dir);
-        if (!dir.exists()) {
-            return Response.status(400).entity("Directory " + dir.getAbsolutePath() + " doesn't exist").build();
-        }
-        try {
-            filename = makeFilename(false, fileTypeSpec, filename);
-        } catch (InvalidRequestException e) {
-            return Response.status(400).entity(e.getMessage()).build();
-        }
-        final File file = new File(s3Dir, filename);
-        if (!file.exists()) {
-            return Response.status(400).entity("File " + filename + " doesn't exist").build();
-        }
-        try {
-            System.out.println("Downloading " + file.getAbsolutePath());
-            final Response response = Response.status(200)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .entity(file).type(MediaType.MULTIPART_FORM_DATA_TYPE).build();
-            System.out.println("... downloaded");
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(400).entity(e.getMessage()).build();
-        }
-    }
-
-    @OPTIONS
     @Path("/upload")
     public Response xcorUploadOptions(@Context HttpServletRequest req) {
         Response.ResponseBuilder response = Response.status(200)
@@ -153,9 +111,24 @@ public class ImageUploadResource {
         if (objectType == null || objectId == null) {
             return Response.status(400).entity("missing objectType and/or objectId parameters").build();
         }
+        AmazonS3 s3 = null;
+        if (useS3) {
+            try {
+                final InputStream resourceAsStream = ImageUploadResource.class.getResourceAsStream("AwsCredentials.properties");
+                if (resourceAsStream == null) {
+                    return Response.status(400).entity("Missing AWS credentials file AwsCredentials.properties").build();
+                }
+                s3 = new AmazonS3Client(new PropertiesCredentials(resourceAsStream));
+            } catch (Exception e) {
+                System.err.println("Failed to get AWS credentials");
+                e.printStackTrace();
+                return Response.status(400).entity("Failed to get AWS credentials for S3. " + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
+            }
+        }
+
         final String msg;
         try {
-            msg = processFile(in, metadata);
+            msg = processFile(in, metadata, s3);
         } catch (Exception x) {
             return Response.status(400).entity(x.getMessage()).build();
         }
@@ -165,34 +138,42 @@ public class ImageUploadResource {
                         .entity(msg).build();
     }
 
-    private String processFile(InputStream in, FormDataContentDisposition metadata) throws InvalidRequestException, SystemErrorException {
+    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3) throws InvalidRequestException, SystemErrorException {
         final long fileSize = metadata.getSize();
-        if (fileSize != 0 && fileSize > 1000000) {
+        if (fileSize != 0 && fileSize > 1000000) { // can be misleading or -1, but try...
             throw new InvalidRequestException("File size exceeds 1MB limit: " + fileSize);
         }
-        final String fileName = metadata.getFileName();
-        if (!isSupported(fileName)) {
-            throw new InvalidRequestException("File format not supported: " + fileName, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
+        final String file = metadata.getFileName();
+        final String extension = getExtension(file);
+        if (!isFormatSupported(extension)) {
+            throw new InvalidRequestException("File format not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
-        final File original = new File(tmpDir + fileName);
+        final String filename = getFilename(file);
+        String mediaId = makeMediaId();
+        final String filepath = localOriginalImagePath + mediaId + extension;
+        final File infile = new File(filepath);
+        saveFile(in, infile, s3);
+        saveFormats(infile, s3);
 
-        saveFile(in, metadata, tmpDir, original);
-
-        saveFormats(original);
-
-        return "OK";
+        return mediaId;
     }
 
-    private boolean isSupported(String fileName) {
-        final int dot = fileName.lastIndexOf(".");
-        return (dot != -1) && (supportedUploadFormats.get(fileName.substring(dot)) != null);
+    private String makeMediaId() {
+        final UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 
-    private void saveFormats(File original) throws InvalidRequestException, SystemErrorException {
+    private boolean isFormatSupported(String extension) {
+        return (extension != null) && (supportedUploadFormats.get(extension) != null);
+    }
+
+    private void saveFormats(File original, AmazonS3 s3) throws InvalidRequestException, SystemErrorException {
 
         final String filename = original.getName();
         final String filepath = original.getAbsolutePath();
         final ConvertCmd cmd = new ConvertCmd();
+
+        final List<File> filesToDelete = new ArrayList<File>();
         try {
             final Info imageInfo = new Info(filepath, true);
             final int imageWidth = imageInfo.getImageWidth();
@@ -226,37 +207,104 @@ public class ImageUploadResource {
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
-                final String newImagePathname = s3Dir + "/" + newFilename;
+                final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
 
                 cmd.run(op, filepath, newImagePathname);
+
+                final File newFile = new File(newImagePathname);
+                if (!newFile.exists()) {
+                    throw new SystemErrorException("File " + newFilename + " was not successfully converted", ErrorCodes.SERVER_SEVERE_ERROR);
+                }
+                filesToDelete.add(newFile);
+                if (useS3) {
+                    // Upload converted file to s3
+                    try {
+                        s3.putObject(new PutObjectRequest(s3BucketName, s3FormattedImageDirname + newFilename, newFile));
+                    } catch (com.amazonaws.AmazonServiceException e) {
+                        throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    } catch (com.amazonaws.AmazonClientException e) {
+                        throw new SystemErrorException("AWS client exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    } catch (Exception e) {
+                        throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    }
+                }
             }
-        } catch (Exception e) {
-            throw new SystemErrorException("File upload failed", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        } catch (Exception ex) {
+            throw new SystemErrorException("File upload failed", ex, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        } finally {
+            for (File file : filesToDelete) {
+                try {
+                    file.delete();
+                } catch (Exception e) {
+                    System.err.println("Failed to delete " + file.getAbsolutePath());
+                    e.printStackTrace();
+                }
+            }
+            try {
+                original.delete();
+            } catch (Exception e) {
+                System.err.println("Failed to delete " + original.getAbsolutePath());
+                e.printStackTrace();
+            }
         }
     }
 
     private String makeFilename(boolean upload, FileTypeSpec spec, String filename) throws InvalidRequestException {
-        final int dot = filename.lastIndexOf(".");
-        if (dot == -1) {
+        final String extension = getExtension(filename);
+        if (extension == null) {
             throw new InvalidRequestException("Extension missing from image filename: " + filename, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
-        final String imageName = filename.substring(0, dot);
+        final String imageName = getFilename(filename);
         final StringBuilder b = new StringBuilder();
         b.append(imageName);
         b.append("-");
         b.append(spec);
-//        if (!upload && spec != FileTypeSpec.D) {
-//            b.append("-0");          // XXX can we get around this exception? maybe there's an output filename param.
-//        }
         b.append(canonicalFileFormat);
         return b.toString();
     }
 
-    private void saveFile(InputStream in, FormDataContentDisposition metadata, String tmpDirPathname, File original) {
+    private void saveFile(InputStream in, File infile, AmazonS3 s3) throws SystemErrorException {
+
+        saveLocalFile(in, infile);
+        if (useS3) {
+            try {
+                s3.putObject(new PutObjectRequest(s3BucketName, s3OriginalImageDirname + infile.getName(), infile));
+            } catch (com.amazonaws.AmazonServiceException e) {
+                throw new SystemErrorException("AWS service exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            } catch (com.amazonaws.AmazonClientException e) {
+                throw new SystemErrorException("AWS client exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            } catch (Exception e) {
+                throw new SystemErrorException("Exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+
+
+        }
+    }
+
+    /** Returns extension with dot (e.g., ".jpg") */
+    private String getExtension(String fileName) {
+        final int dot = fileName.lastIndexOf(".");
+        return (dot == -1) ? null : fileName.substring(dot);
+    }
+
+    /**
+     * Returns the file name (omits any extension)
+     */
+    private String getFilename(String fileNameWithPossibleExtension) {
+        final int dot = fileNameWithPossibleExtension.lastIndexOf(".");
+        if (dot == -1) {
+            return fileNameWithPossibleExtension;
+        } else {
+            return fileNameWithPossibleExtension.substring(0, dot);
+        }
+    }
+
+    private void saveLocalFile(InputStream in, File infile) throws SystemErrorException {
         OutputStream out = null;
         try {
-            out = new FileOutputStream(original);
+            out = new FileOutputStream(infile);
+
             int read = 0;
             byte[] bytes = new byte[1024];
             int bytecount = 0;
@@ -265,9 +313,9 @@ public class ImageUploadResource {
                 bytecount += read;
             }
             out.flush();
-            System.out.println("Saved " + metadata + " (" + bytecount + " bytes) to " + tmpDirPathname);
+            System.out.println("Saved " + infile.getAbsolutePath() + " (" + bytecount + " bytes)");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SystemErrorException("Failed to save uploaded file " + infile.getAbsolutePath());
         } finally {
             if (out != null) {
                 try {
@@ -292,13 +340,13 @@ public class ImageUploadResource {
 //            DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 //            String path = request.getRealPath("") + File.separatorChar + "publishFiles" + File.separatorChar;
 //            // File f = new File(path + "myfile.txt");
-//            // File tmpDir = new File("c:\\tmp");
+//            // File localOriginalImagePath = new File("c:\\tmp");
 //            File destinationDir = new File(path);
 //            // Set the size threshold, above which content will be stored on disk.
 //            // fileItemFactory.setSizeThreshold(1*1024*1024); //1 MB
 //
 //            // Set the temporary directory to store the uploaded files of size above threshold.
-//            // fileItemFactory.setRepository(tmpDir);
+//            // fileItemFactory.setRepository(localOriginalImagePath);
 //
 //            // Create a new file upload handler
 //            ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
@@ -335,4 +383,76 @@ public class ImageUploadResource {
 //        }
 //
 //        return (error != null) ? Response.status(400).entity(error).build() : Response.status(200).entity(msg).build();
+//    }
+
+
+
+//    @OPTIONS
+//    @Path("/download/{blahId}/{fileType}/{filename}")
+//    public Response xcorDownloadOptions(@Context HttpServletRequest req) {
+//        Response.ResponseBuilder response = Response.status(200)
+//                .header("Access-Control-Allow-Origin", "*")     // XXX should limit to the Webapp servers
+//                .header("Access-Control-Allow-Methods", "GET");
+//        final String acrh = req.getHeader("Access-Control-Request-Headers");
+//        if (acrh != null && acrh.length() != 0) {
+//            response = response.header("", acrh);
+//        }
+//        return response.build();
+//    }
+
+//    @GET
+//    @Path("/download/{blahId}/{fileType}/{filename}")
+//    @Produces(MediaType.MULTIPART_FORM_DATA)
+//    public Response downloadFile(@PathParam("blahId") String blahId,
+//                          @PathParam("fileType") String fileType,
+//                          @PathParam("filename") String filename) {
+//        // ignore blahId
+//        final FileTypeSpec fileTypeSpec;
+//        try {
+//            fileTypeSpec = FileTypeSpec.valueOf(fileType);
+//        } catch (Exception e) {
+//            return Response.status(400).entity("Invalid image type: " + e.getMessage()).build();
+//        }
+//        if (useS3) {
+//            return downloadFileFromS3(filename, fileTypeSpec);
+//        } else {
+//            return downloadFileFromLocalFS(filename, fileTypeSpec);
+//        }
+//    }
+//
+//    private Response downloadFileFromS3(String filename, FileTypeSpec fileTypeSpec) {
+//        try {
+//            filename = makeFilename(false, fileTypeSpec, filename);
+//        } catch (InvalidRequestException e) {
+//            return Response.status(400).entity(e.getMessage()).build();
+//        }
+//
+//        return null;  //To change body of created methods use File | Settings | File Templates.
+//    }
+//
+//    private Response downloadFileFromLocalFS(String filename, FileTypeSpec fileTypeSpec) {
+//        final File dir = new File(localFormattedImagePath);
+//        if (!dir.exists()) {
+//            return Response.status(400).entity("Local image directory " + dir.getAbsolutePath() + " doesn't exist").build();
+//        }
+//        try {
+//            filename = makeFilename(false, fileTypeSpec, filename);
+//        } catch (InvalidRequestException e) {
+//            return Response.status(400).entity(e.getMessage()).build();
+//        }
+//        final File file = new File(localFormattedImagePath, filename);
+//        if (!file.exists()) {
+//            return Response.status(400).entity("File " + filename + " doesn't exist").build();
+//        }
+//        try {
+//            System.out.println("Downloading " + file.getAbsolutePath());
+//            final Response response = Response.status(200)
+//                    .header("Access-Control-Allow-Origin", "*")
+//                    .entity(file).type(MediaType.MULTIPART_FORM_DATA_TYPE).build();
+//            System.out.println("... downloaded");
+//            return response;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return Response.status(400).entity(e.getMessage()).build();
+//        }
 //    }

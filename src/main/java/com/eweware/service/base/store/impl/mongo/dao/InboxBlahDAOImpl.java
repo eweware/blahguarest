@@ -202,4 +202,9 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     public void setViews(Integer views) {
         put(VIEWS, views);
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

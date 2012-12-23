@@ -40,6 +40,7 @@
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.groups}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.groupTypes}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.usergroups}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.media}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahs}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahTypes}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.comments}" />

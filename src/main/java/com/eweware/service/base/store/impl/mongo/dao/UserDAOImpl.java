@@ -119,4 +119,9 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     public void setControversyStrength(Double strength) {
         put(USER_CONTROVERSY_STRENGTH, strength);
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

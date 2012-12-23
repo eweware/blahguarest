@@ -151,4 +151,9 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     public void setComments(Integer comments) {
         put(COMMENTS_ON_THIS_BLAH, comments);
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

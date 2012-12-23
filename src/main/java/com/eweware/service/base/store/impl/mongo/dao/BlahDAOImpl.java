@@ -221,4 +221,8 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         put(DOWN_VOTES, votes);
     }
 
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }

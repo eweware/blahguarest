@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <header>
     <title>Upload Image</title>
 </header>
@@ -12,38 +12,39 @@
     alert("Enter a filename to download!");
     return;
     }
-    var hstname = document.getElementById("hostname").value;
-    if (!hstname) { alert("Please add a hostname"); return;}
+    var hstname = document.getElementById("s3ImagePath").value;
+    if (!hstname) { alert("Please add a s3ImagePath"); return;}
     var y = document.getElementById("A");
     if (!y) {alert("no img"); return;}
-    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/A/" + x.value;
+    y.src = "http://" + hstname + x.value + "-A.jpg";
     var y = document.getElementById("B");
     if (!y) {alert("no img"); return;}
-    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/B/" + x.value;
+    y.src = "http://" + hstname + x.value + "-B.jpg";
     var y = document.getElementById("C");
     if (!y) {alert("no img"); return;}
-    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/C/" + x.value;
+    y.src = "http://" + hstname + x.value + "-C.jpg";
     var y = document.getElementById("D");
     if (!y) {alert("no img"); return;}
-    y.src = "http://" + hstname + ":50192/api/v2/images/download/blahId/D/" + x.value;
+    y.src = "http://" + hstname + x.value + "-D.jpg";
     }
 </SCRIPT>
 <h1>Upload an Image</h1>
 
-<p>REST Hostname:<input id="hostname" type="text" size="100" value="ec2-50-112-195-162.us-west-2.compute.amazonaws.com"/></p>
 
 <form id="up" action="v2/images/upload" method="post" enctype="multipart/form-data">
-    <p>Select an image to upload: <input type="file" name="file" size="45"/></p>
+    <div>Select an image to upload: <input type="file" name="file" size="45"/><span>&nbsp;&nbsp;<input type="submit" value="Upload"/></span></div>
 
     <div>Image is for Blah or Comment?: <input type="text" name="objectType" value="Enter C (comment) or B (blah)"/></div>
     <div>Blah/Comment Id:<input type="text" name="objectId" value="objectId"/></div>
     <div>Primary image?: <input type="text" name="primary" value="true"/></div>
-    <input type="submit" value="Upload"/>
-</form>
 
+</form>
+<br/>
 <h1>Download images</h1>
 
-<div>Enter file name (with extension) of image to download: <input id="imagename" type="text" value="bothered.jpg"/>&nbsp;&nbsp;
+<div>Images:<input id="s3ImagePath" type="text" size="100" value="blahguaimages.s3-website-us-west-2.amazonaws.com/image/"/></div>
+<div/>
+<div>Enter id of media to download: <input id="imagename" type="text" value="56ec33a2-618d-44a5-9906-6a3e8775f6fa" size="100"/>&nbsp;&nbsp;
     <input type="button" value="Download" onclick="getIt();"></div>
 <div id="pics">
     <div><b>128x128:</b></div>

@@ -43,6 +43,7 @@ public final class MongoStoreManager implements StoreManager {
     private String trackerDbName;
 
     private String inboxStateCollectionName;
+    private String mediaCollectionName;
     private String blahCollectionName;
     private String blahTypeCollectionName;
     private String groupCollectionName;
@@ -67,6 +68,9 @@ public final class MongoStoreManager implements StoreManager {
         return inboxStateCollectionName;
     }
 
+    public String getMediaCollectionName() {
+        return mediaCollectionName;
+    }
     public String getBlahCollectionName() {
         return blahCollectionName;
     }
@@ -168,6 +172,7 @@ public final class MongoStoreManager implements StoreManager {
 
             String userGroupCollectionName,
 
+            String mediaCollectionName,
             String blahCollectionName,
             String blahTypeCollectionName,
             String commentCollectionName,
@@ -197,6 +202,7 @@ public final class MongoStoreManager implements StoreManager {
         dbNameToDbMap.put(trackerDbName, null);
 
         this.trackUserCollectionName = trackUserCollectionName;
+
         this.trackBlahCollectionName = trackBlahCollectionName;
         this.trackCommentCollectionName = trackCommentCollectionName;
         this.trackerCollectionName = trackerCollectionName;
@@ -206,6 +212,7 @@ public final class MongoStoreManager implements StoreManager {
         this.groupTypeCollectionName = groupTypeCollectionName;
         this.userGroupCollectionName = userGroupCollectionName;
         this.inboxStateCollectionName = inboxStateCollectionName;
+        this.mediaCollectionName = mediaCollectionName;
         this.blahCollectionName = blahCollectionName;
         this.blahTypeCollectionName = blahTypeCollectionName;
         this.commentCollectionName = commentCollectionName;
@@ -249,6 +256,8 @@ public final class MongoStoreManager implements StoreManager {
             collectionNameToCollectionMap.put(userGroupCollectionName, getUserDb().getCollection(userGroupCollectionName));
 
             collectionNameToCollectionMap.put(blahCollectionName, getBlahDb().getCollection(blahCollectionName));
+
+            collectionNameToCollectionMap.put(mediaCollectionName, getBlahDb().getCollection(mediaCollectionName));
 
             collectionNameToCollectionMap.put(inboxStateCollectionName, getBlahDb().getCollection(inboxStateCollectionName));
 

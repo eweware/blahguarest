@@ -162,4 +162,9 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
         }
         return query;
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
+    }
 }
