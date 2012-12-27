@@ -70,6 +70,14 @@
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/v2/*</url-pattern>
 	</servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <name>BSID</name>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
 	<!-- <servlet-mapping> -->
 	<!-- <servlet-name>dwr</servlet-name> -->
 	<!-- <url-pattern>/dwr/*</url-pattern> -->

@@ -13,10 +13,12 @@ import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
@@ -291,7 +293,8 @@ public class UsersResource {
     public Response getUsers(
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count,
-            @QueryParam("sort") String sortFieldName) {
+            @QueryParam("sort") String sortFieldName,
+            @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             final Response response = RestUtilities.makeOkResponse(UserManager.getInstance().getUsers(LocaleId.en_us, start, count, sortFieldName));

@@ -72,5 +72,5 @@ public final class ErrorCodes {
     public static final Integer SERVER_CACHE_ERROR = 62;
     public static final Integer INVALID_UPDATE = 63;
     public static final Integer UNSUPPORTED_MEDIA_TYPE = 64;
-
+    public static final Integer INVALID_SESSION = 65;
 }

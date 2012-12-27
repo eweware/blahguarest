@@ -2,7 +2,10 @@ package main.java.com.eweware.service.rest;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.payload.ErrorResponsePayload;
+import main.java.com.eweware.service.rest.resource.SessionState;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -15,6 +18,21 @@ import java.util.Date;
  *         Date: 6/15/12 Time: 2:41 PM
  */
 public final class RestUtilities {
+
+    public static final SessionState getSessionState(HttpSession session) throws SystemErrorException {
+        SessionState state = null;
+        if (session == null || (state = (SessionState) session.getAttribute("S")) == null) {
+            throw new SystemErrorException("Missing session and/or session state", ErrorCodes.INVALID_SESSION);
+        }
+        return state;
+    }
+
+    public static final void setSessionState(HttpSession session, SessionState state) throws SystemErrorException {
+        if (session == null) {
+            throw new SystemErrorException("Mission session", ErrorCodes.INVALID_SESSION);
+        }
+        session.setAttribute("S", state);
+    }
 
     public static final Response makeAndLogSystemErrorResponse(BaseException e) {
         String msg = e.getMessage();
