@@ -9,9 +9,17 @@ import java.util.List;
  */
 public interface UserDAO extends BaseDAO, UserDAOConstants {
 
-    public String getDisplayName();
+    public String getUsername();
 
-    public void setDisplayName(String displayName);
+    public void setUsername(String username);
+
+    public String getDigest();
+
+    public void setDigest(String digest);
+
+    public String getSalt();
+
+    public void setSalt(String salt);
 
     public Integer getLastInbox();
 

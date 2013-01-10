@@ -1,128 +1,248 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta  charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style>
- .param {}
-</style>
-<title>Blahgua Test App</title>
+    <meta  charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .param {}
+    </style>
+    <title>Blahgua API Test Center</title>
 </head>
 
 <body>
 <script src="js/jquery-1.8.3.js"></script>
+<!-- input type="button" value="Config" onclick="configFromServer();" / -->
 <script>
-function rest(method, path, data, successFunction) {
- {$("#results").html("<br/>");}
-           $.ajax({
-            type: method,
-            url: "../v2/" + path,
-            data: data,
-            contentType: "application/json; charset=utf-8",
-            dataType: "html",
-            success:  successFunction == null?defaultSuccessFunction:successFunction,
-            error: function (theErr, err) {
-                      $("#results").css({'color': 'red'}).html(theErr.responseText);
-        }});
-}
-function defaultSuccessFunction(results) {
- {$("#results").css({'color': 'black'}).html(results);}
-}
+    // Get blah type name to id map, etc...:
+    $(document).ready(function() {configFromServer()});
 
-function createUser() {
-   var username = document.getElementById("username").value;
-   rest("POST", "users", '{"displayName": "'+username+'"}', setUserData);
-}
-function setUserData(user) {
-  defaultSuccessFunction(user);
-  var obj = jQuery.parseJSON(user);
-alert(user);
-  document.getElementById("username").value = obj.displayName;
-  document.getElementById("userid").value = obj._id;
-}
+    function rest(method, path, dataHandler, successFunction) {
+    $("#results").html("");
+    $("#callmeth").attr("value", method);
+    $("#callurl").attr("value", 'http://hostname/v2/'+path);
+    $.ajax({
+    type: method,
+    url: "../v2/" + path,
+    data: dataHandler,
+    contentType: "application/json; charset=utf-8",
+    dataType: "html",
+    success:  successFunction == null?defaultSuccessFunction:successFunction,
+    error: function (theErr, err, thrown) {
+    $("#resultstatus").css({'color': 'red'}).html("(Http Status: "+err+": "+thrown+")");
+    $("#results").css({'color': 'red'}).html(theErr.responseText);
+    }});
+    var payload = String(dataHandler);
+    if (payload == 'null' || payload.indexOf("function") != -1) {
+    payload = 'NO PAYLOAD';
+    }
+    $("#payload").css({'color': 'red'}).text(payload);
+    }
 
-function getUserById() {
-  var userId = document.getElementById("userid").value;
-  rest("GET", "users/" + userId, setUserData);
-}
+    function defaultSuccessFunction(results, status) {
+    $("#resultstatus").html("(Http Status: "+status+")");
+    $("#results").css({'color': 'black'}).html(results)
+    }
 
-function joinChannel() {
-  var channelId = document.getElementById("channelid").value;
-  var userId = document.getElementById("userid").value;
-  alert("Joining userid="+userId+" to channel=" + channelId);
-  var data = '{"userId": "' + userId + '", "groupId": "' + channelId + '"}';
-  rest("POST", "userGroups", data);
-}
+    function createUser() {
 
-function createBlah() {
-  var userId = document.getElementById("userid").value;
-  var typeId =  document.getElementById("blahtypeid").value;
-  var channelId =  document.getElementById("channelid").value;
-  var text =  document.getElementById("blahtext").value;
-  alert(userId+" " + typeId+ " " + channelId + " " + text);
-  var data = '{"authorId": "' + userId + '", "groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
-  rest("POST", "blahs", data, setBlahData);
-}
-function setBlahData(blahinfo) {
-  defaultSuccessFunction(blahinfo);  
-  var obj = jQuery.parseJSON(blahinfo);
-  document.getElementById("blahid").value = obj._id;
-}
+    var username = getUsername();
+    var password = getPassword();
+    if (!username || username.length == 0) { alert("Missing User Name"); return;}
+    if (!password || password.length == 0) { alert("Missing Password"); return;}
+    rest("POST", "users", '{"displayName": "'+username+'", "pwd": "'+password+'"}', setUserData);
+    }
 
-function getUserBlahs() {
-    var userId = document.getElementById("userid").value;
+    function setPassword() {
+    var userId = getUserId();
+    var password = getPassword();
+    if (username.length == 0) { alert("Missing User Name"); return;}
+    rest("POST", "users", '{"userId": "'+userId+'", "pwd": "'+password+'"}', setUserData);
+    }
+
+    function loginUser() {
+    var username = getUsername();
+    var password = getPassword();
+    if (username.length == 0 || password.length == 0) { alert("Missing username and/or password"); return; }
+    rest("POST", "users/login", '{"displayName": "'+username+'", "pwd": "'+password+'"}', setUserData);
+    }
+
+    function userLoggedIn() {
+    rest("GET", "users/login/check");
+    }
+
+    function setUserData(user) {
+    defaultSuccessFunction(user);
+    var obj = jQuery.parseJSON(user);
+    //  alert(user);
+    document.getElementById("username").value = obj.displayName;
+    document.getElementById("userid").value = obj._id;
+    }
+
+    function getUserById() {
+    var userId = getUserId();
+    if (userId.length == 0) { alert("Missing User Id"); return;}
+    rest("GET", "users/" + userId, setUserData);
+    }
+
+    function getUserByName() {
+    var username = getUsername();
+    if (username.length == 0) {
+    alert("Missing User Name");
+    return;
+    }
+    rest("GET", "users/" + username + "?u=true" , setUserData);
+    }
+
+    function joinChannel() {
+    var channelId = getChannelId();
+    var userId = getUserId();
+    if (channelId.length == 0 || userId.length == 0) {
+    alert("Missing Channel Id and/or User Id");
+    return;
+    }
+    var data = '{"userId": "' + userId + '", "groupId": "' + channelId + '"}';
+    rest("POST", "userGroups", data);
+    }
+
+    function createBlah() {
+    var userId = getUserId();
+    var typeId =  getTypeId();
+    var channelId =  getChannelId();
+    var text =  getBlahText();
+    if (userId.length == 0 || typeId.length == 0 || channelId.length == 0 || text.length == 0) {
+    alert("Missing User Id, and/or Blah Type Id, and/or Channel Id and/or Blah Text");
+    return;
+    }
+    var data = '{"authorId": "' + userId + '", "groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
+    rest("POST", "blahs", data, setBlahData);
+    }
+
+    function setBlahData(blahinfo) {
+    defaultSuccessFunction(blahinfo);
+    var obj = jQuery.parseJSON(blahinfo);
+    document.getElementById("blahid").value = obj._id;
+    }
+
+    function getUserBlahs() {
+    var userId = getUserId();
+    if (userId.length == 0) {
+    alert("Missing User id");
+    return;
+    }
     rest("GET", "blahs?authorId=" + userId);
-}
+    }
 
-function clearResults() {
-  $("#results").css({'color': 'black'}).html("<br/>");
-}
+    function clearResults() {
+    $("#results").css({'color': 'black'}).html("");
+    $("#payload").css({'color': 'red'}).html("");
+    $("#callmeth").attr("value", "");
+    $("#callurl").attr("value", '');
 
-function clearParameters() {
- var obj = $(".param").val("");
-}
+    }
 
-function help() {
-  $("#results").css({'color': 'blue'}).html("<h4>Help</h4><div>Create User: needs a User Name</div><div>Get Users: needs no parameters</div><div>Get User By Id: needs User Id parameter -- returns users when not provided</div><div>Get User's Blahs: needs User Id parameter</div><div>Get Channels: needs no parameter</div><div>Join User To Channel: needs User Id and Channel Id parameters</div><div>Create Blah: Needs User Id parameter</div><div>Get User Blahs:: Needs User Id parameter</div><br/><div>Clear Parameters: Clears parameter values</div><div>Clear Results: clears results text</div>");
-}
+    function clearParameters() {
+    var obj = $(".param").val("");
+    }
 
+    function help() {
+    $("#results").css({'color': 'blue'}).html("<h4>Help</h4><div>Create User: needs a User Name. If password is given, this will be used to later authenticate.</div><div>Login User: requires User Name and Password.</div><div>Get Users: needs no parameters</div><div>Get User By Id: needs User Id parameter -- returns users when not provided</div><div>Get User By Name: needs the User Name parameter.</div><div>Get User's Blahs: needs User Id parameter</div><div>Get Channels: needs no parameter</div><div>Join User To Channel: needs User Id and Channel Id parameters</div><div>Create Blah: Needs User Id parameter</div><div>Get User Blahs:: Needs User Id parameter</div><br/><div>Clear All Parameters: Clears parameter values</div><div>Clear All Results: clears results text</div>");
+    }
+
+    // Getters --------------------------------------
+    function getUsername() {
+    return document.getElementById("username").value;
+    }
+    function getPassword() {
+    return document.getElementById("password").value;
+    }
+    function getUserId() {
+    return document.getElementById("userid").value;
+    }
+    function getChannelId() {
+    return document.getElementById("channelid").value;
+    }
+    function getTypeId() {
+    return document.getElementById("blahtypeid").value;
+    }
+    function getBlahText() {
+    return document.getElementById("blahtext").value;
+    }
+    function getBlahId() {
+    return document.getElementById("blahid").value;
+    }
+
+    // Special
+    function configFromServer() {
+    $.ajax({
+    type: "GET",
+    url: "../v2/blahs/types",
+    data: null,
+    contentType: "application/json; charset=utf-8",
+    dataType: "html",
+    success: configHandler,
+    error: configErrorHandler
+    });
+    }
+    function configHandler(result) {
+    var items = $.parseJSON(result);
+    var ar = Array.prototype.slice.call(items, 0);
+    var selectHtml = "<select id='blahtypeid'>";
+    for (var i=0;i<ar.length;i++) {
+    var obj = ar[i];
+    var theId = "";
+    var theName = "";
+    for (var p in obj) {
+    if (p == '_id') theId = obj[p];
+    if (p == 'name') theName = obj[p];
+    }
+
+    selectHtml += "<option value='"+theId+"'>"+theName+"</option>";
+    }
+    selectHtml += "</select>";
+    $("#blahTypes").html(selectHtml);
+    }
+    function configErrorHandler(result, error, thrown) {
+    alert("Error: Failed to configure page:\n"+thrown+"\n"+result);
+    }
 </script>
+
+<style>
+    .calls {
+    color: red; font-weight: bold;
+    }
+</style>
+
 <h2>Actions</h2>
 <div><input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
-<div style="margin-top: .5em"><input id="createUser" type="button" onclick="createUser()" value="Create User"/>
-&nbsp;<input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>&nbsp;
-<input id="getUserById" type="button" onclick="getUserById();"  value="Get User By Id"/>&nbsp;
-<input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
-</div>
-<div style="margin-top: .5em"><input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get Channels"/>&nbsp;
-<input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>&nbsp;</div>
-<div style="margin-top: .5em"><input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>&nbsp;
-<input id="getUserBlahs" type="button" onclick="getUserBlahs()" value="Get User Blahs"/>&nbsp;</div>
-<h2>Parameters</h2>
-<input id="clearparams" type="button" onclick="clearParameters();" value="Clear Parameters"/>
-<h3>User/Channel Parameters</h3>
-<div>User Name: <input class="param" id="username" type="text" size=20 /></div>
-<div style="margin-top: .5em">User Id: <input class="param" id="userid" type="text" size=30 /></div>
-<div  style="margin-top: .5em">Channel Id: <input class="param" id="channelid" type="text" size=30 /></div>
-<h3>Blah Parameters</h3>
-<div>Blah Id: <input class="param" id="blahid" type="text" size=30 /></div>
-<div style="margin-top: .5em">Blah Type: <select id="blahtypeid">
- <option selected="selected" value="5091c871036412176ccce82d">says</option>
- <option value="5091c871036412176ccce82e">whispers</option>
- <option value="5091c871036412176ccce82f">asks</option>
- <option value="5091c871036412176ccce830">predicts</option>
- <option value="5091c871036412176ccce831">wishes</option>
- <option value="5091c871036412176ccce832">leaks</option>
- <option value="5091c871036412176ccce833">paid</option>
-</select></div>
-<div style="margin-top: .5em">Blah Text:</div>
-<div><textarea class="param" id="blahtext" rows="2" columns="1" value="hello">Blah text goes here</textarea></div>
+    <div style="margin-top: .5em"><input id="createUser" type="button" onclick="createUser()" value="Create User"/>
+        &nbsp;<input id="loginUser" type="button" onclick="loginUser()" value="Login User" />
+        &nbsp;<input id="userLoggedIn" type="button" onclick="userLoggedIn()" value="Check Login" />
+        &nbsp;<input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>&nbsp;
+        <input id="getUserById" type="button" onclick="getUserById();"  value="Get User By Id"/>&nbsp;
+        <input id="getUserByName" type="button" onclick="getUserByName();"  value="Get User By Name"/>&nbsp;
+        <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
+    </div>
+    <div style="margin-top: .5em"><input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get Channels"/>&nbsp;
+        <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>&nbsp;</div>
+    <div style="margin-top: .5em"><input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/></div>
+    <h2>Parameters</h2>
+    <input id="clearparams" type="button" onclick="clearParameters();" value="Clear All Parameters"/>
+    <h3>User/Channel Parameters</h3>
+    <div>User Name: <input class="param" id="username" type="text" size=20 />&nbsp;Password: <input class="param" id="password" type="text" size="20"/>&nbsp;User Id: <input class="param" id="userid" type="text" size=35 /></div>
+    <div  style="margin-top: .5em">Channel Id: <input class="param" id="channelid" type="text" size=30 /></div>
+    <h3>Blah Parameters</h3>
+    <div>Blah Id: <input class="param" id="blahid" type="text" size=30 />&nbsp;Blah Type: <span id="blahTypes"/></div>
 
-<br/>
-<h2>Results</h2>
-<input id="clear" type="button" onclick="clearResults();" value="Clear Results"/>
-<p id="results">
-</p>
+    <div><textarea class="param" id="blahtext" rows="2" cols="90" value="hello">Blah text goes here</textarea></div>
+
+    <br/>
+    <h2>Call &amp; Results</h2>
+    <div style="margin-top: -1em;margin-bottom: 1em;"><input id="clear" type="button" onclick="clearResults();" value="Clear All Results"/></div>    <div style="font-weight: bold;;">Method: <input class="calls" type="text" size="4" id="callmeth" readonly="readonly"/> URL: <input class="calls" type="text" id="callurl" size="100" readonly="readonly"/></div>
+    <div style="font-weight: bold;">Outgoing Payload (POST/PUT):</div>
+    <textarea id="payload" class="calls" cols="94" rows="5"></textarea>
+    <div style="font-weight: bold;">Results: <span id="resultstatus" class"calls"></span></div>
+    <textarea id="results" cols="94" rows="10"></textarea>
+
 
 </body>
 </html>

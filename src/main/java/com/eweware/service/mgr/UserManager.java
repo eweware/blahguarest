@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.mgr;
 
+import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
@@ -17,6 +18,7 @@ import main.java.com.eweware.service.search.index.common.BlahguaFilterIndexReade
 import main.java.com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
 import main.java.com.eweware.service.search.index.user.UserDataIndexable;
 import main.java.com.eweware.service.search.index.user.UserDataIndexableInterpreter;
+import main.java.com.eweware.service.user.Login;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -37,6 +39,7 @@ import proj.zoie.api.indexing.ZoieIndexableInterpreter;
 import proj.zoie.impl.indexing.ZoieConfig;
 import proj.zoie.impl.indexing.ZoieSystem;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.util.ArrayList;
@@ -113,17 +116,30 @@ public class UserManager implements ManagerInterface {
         return this.state;
     }
 
-    public UserPayload createUser(LocaleId localeId, String displayName) throws InvalidRequestException, SystemErrorException {
-        if (isEmptyString(displayName)) {
-            throw new InvalidRequestException("missing displayName", ErrorCodes.MISSING_DISPLAY_NAME);
-        }
+    public UserPayload createUser(LocaleId localeId, String username, String password) throws InvalidRequestException, SystemErrorException {
+
+        Login.checkUsername(username);
+//        Login.checkPassword(password); TODO add this back when Dave's through testing
+
         final UserDAO userDAO = storeManager.createUser();
-        userDAO.setDisplayName(displayName);
+        userDAO.setUsername(username);
         if (userDAO._exists()) {
-            throw new InvalidRequestException("user with displayName=" + displayName + " already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_DISPLAY_NAME);
+            throw new InvalidRequestException("user with username=" + username + " already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
         }
 
         userDAO.initToDefaultValues(localeId);
+
+        if (!CommonUtilities.isEmptyString(password)) {
+            Login.checkPassword(password);
+            try {
+                final String[] saltedPassword = Login.createSaltedPassword(password);
+                userDAO.setDigest(saltedPassword[0]);
+                userDAO.setSalt(saltedPassword[1]);
+            } catch (Exception e) {
+                throw new SystemErrorException("Failed to handle password", ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+        }
+
         userDAO._insert();
 
         addUserToIndex(userDAO);
@@ -133,6 +149,32 @@ public class UserManager implements ManagerInterface {
 //        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
 
         return new UserPayload(userDAO);
+    }
+
+    /**
+     * Logs in a user. If the user is authenticated, the session is marked as authenticated
+     * for as long as it lasts.
+     *
+     * @param locale
+     * @param username The username
+     * @param password The password for authentication
+     * @param request The http servlet request
+     */
+    public void loginUser(LocaleId locale, String username, String password, HttpServletRequest request) throws InvalidRequestException, SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException {
+        Login.checkUsername(username);
+        Login.checkPassword(password);
+        final UserDAO userDAO = storeManager.createUser();
+        userDAO.setUsername(username);
+        final UserDAO user = (UserDAO) userDAO._findByCompositeId(new String[]{UserDAO.DIGEST, UserDAO.SALT}, UserDAO.USERNAME);
+        if (user == null) {
+            throw new ResourceNotFoundException("No such user", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        if (Login.authenticate(user.getDigest(), user.getSalt(), password)) {
+            Login.markAuthenticated(request.getSession(true), true);
+        } else {
+            Login.markAuthenticated(request.getSession(true), false);
+            throw new InvalidAuthorizedStateException("User not authorized", ErrorCodes.UNAUTHORIZED_USER);
+        }
     }
 
     /**
@@ -155,7 +197,7 @@ public class UserManager implements ManagerInterface {
             throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
         }
         final String userId = profile.getId();
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", profile, ErrorCodes.MISSING_USER_ID);
         }
 
@@ -290,10 +332,10 @@ public class UserManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public UserGroupPayload registerUserInGroup(LocaleId localeId, String userId, String validationKey, String groupId) throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException, InvalidUserValidationKey {
-        if (isEmptyString(groupId)) {
+        if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("groupId required to join user to a group", ErrorCodes.MISSING_GROUP_ID);
         }
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("userId required to join user to a group", ErrorCodes.MISSING_USER_ID);
         }
         if (!storeManager.createUser(userId)._exists()) {
@@ -343,7 +385,7 @@ public class UserManager implements ManagerInterface {
      *         If there is no error, the usergroup state becomes A (active).
      */
     public void validateUser(LocaleId localeId, String validationCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
-        if (isEmptyString(validationCode)) {
+        if (CommonUtilities.isEmptyString(validationCode)) {
             throw new InvalidRequestException("missing validation code", ErrorCodes.MISSING_VALIDATION_CODE);
         }
         final UserGroupDAO searchDAO = storeManager.createUserGroup();
@@ -390,15 +432,17 @@ public class UserManager implements ManagerInterface {
      * @throws InvalidRequestException
      */
     public void updateUser(LocaleId localeId, String userId, UserPayload updates) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("userId is required", ErrorCodes.MISSING_USER_ID);
         }
         final UserDAO dao = storeManager.createUser(userId);
         if (!dao._exists()) { // TODO optimization: catch some ObjectNotExistsException from _update call below
             throw new ResourceNotFoundException("no user exists with userId ", userId, ErrorCodes.NOT_FOUND_USER_ID);
         }
-        final String displayName = updates.getDisplayName();
-        dao.setDisplayName(displayName); // ok to delete display name (user handle)
+        final String username = updates.getUsername();
+        if (username != null) {
+            dao.setUsername(username);
+        }
         dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         addUserToIndex(dao);
@@ -430,32 +474,39 @@ public class UserManager implements ManagerInterface {
      * Returns a user's data by user Id
      *
      * @param localeId
-     * @param userId
-     * @param stats
-     * @param statsStartDate format is yymmdd (e.g., August 27, 2012 is 120827
-     * @param statsEndDate   format is yymmdd (e.g., August 27, 2012 is 120827
+     * @param userId   The userId to fetch with
+     * @param byUsername  If true, the userId is actually the username
+     * @param stats If true, return user stats
+     * @param statsStartDate if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
+     * @param statsEndDate   if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
      * @return
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
      */
-    public UserPayload getUserById(LocaleId localeId, String userId, Boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
-        if (isEmptyString(userId)) {
-            throw new InvalidRequestException("invalid userId", "user id=" + userId, ErrorCodes.MISSING_USER_ID);
+    public UserPayload getUserById(LocaleId localeId, String userId, boolean byUsername, Boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+        if (CommonUtilities.isEmptyString(userId)) {
+            throw new InvalidRequestException("invalid user id or username", byUsername ? ErrorCodes.INVALID_USERNAME : ErrorCodes.INVALID_USER_ID);
         }
-        final UserDAO dao = (UserDAO) storeManager.createUser(userId)._findByPrimaryId();
+        UserDAO dao = storeManager.createUser();
+
+        if (byUsername) {dao.setUsername(userId);} else {dao.setId(userId);}
+
+        dao = (UserDAO) (byUsername ? dao._findByCompositeId(null, UserDAO.USERNAME) : dao._findByPrimaryId());
         if (dao == null) {
-            throw new ResourceNotFoundException("user with given id not found", "user id=" + userId, ErrorCodes.NOT_FOUND_USER_ID);
+            throw new ResourceNotFoundException("user with given id or username not found", ErrorCodes.NOT_FOUND_USER_ID);
         }
+
         if (stats) { // TODO it is an understatement to say that this is inefficient
-            fetchAndAddUserTrackers(userId, statsStartDate, statsEndDate, dao);
+            fetchAndAddUserTrackers(dao.getId(), statsStartDate, statsEndDate, dao);
         }
+
         return new UserPayload(dao);
     }
 
     public UserProfilePayload getUserProfileById(LocaleId localeId, String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", userId, ErrorCodes.MISSING_USER_ID);
         }
         final UserProfileDAO profileDAO = (UserProfileDAO) storeManager.createUserProfile(userId)._findByPrimaryId();
@@ -530,7 +581,7 @@ public class UserManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public void checkUserById(String userId, Object entity) throws ResourceNotFoundException, InvalidRequestException, SystemErrorException {
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
         if (!storeManager.createUser(userId)._exists()) {
@@ -539,10 +590,10 @@ public class UserManager implements ManagerInterface {
     }
 
     public UserGroupPayload getUserGroup(LocaleId localeId, String userId, String groupId) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
-        if (isEmptyString(groupId)) {
+        if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing groupId", ErrorCodes.MISSING_GROUP_ID);
         }
         final UserGroupDAO userGroupDAO = (UserGroupDAO) storeManager.createUserGroup(userId, groupId)._findByCompositeId(new String[]{UserGroupDAO.STATE}, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
@@ -560,7 +611,7 @@ public class UserManager implements ManagerInterface {
 
         count = ensureCount(count);
 
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", ErrorCodes.MISSING_USER_ID);
         }
         if (state != null) {
@@ -633,13 +684,13 @@ public class UserManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public void updateUserStatus(LocaleId localeId, String userId, String groupId, String newState, String validationCode) throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException {
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
-        if (isEmptyString(groupId)) {
+        if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing groupId", ErrorCodes.MISSING_GROUP_ID);
         }
-        if (isEmptyString(newState)) {
+        if (CommonUtilities.isEmptyString(newState)) {
             throw new SystemErrorException("missing state", ErrorCodes.MISSING_AUTHORIZATION_STATE);
         } else {
             try {
@@ -730,10 +781,6 @@ public class UserManager implements ManagerInterface {
         }
     }
 
-    private boolean isEmptyString(String string) {
-        return (string == null || string.length() == 0);
-    }
-
     // Indexer
     // zoie index stuff to be integrated later...
 
@@ -742,10 +789,10 @@ public class UserManager implements ManagerInterface {
     }
 
     private void addUserToIndex(UserDAO user) throws SystemErrorException {
-        if (UserManager.disableIndexing) {           // dbg
+        if (UserManager.disableIndexing) { // dbg
             return;
         }
-        if (isEmptyString(user.getId())) {
+        if (CommonUtilities.isEmptyString(user.getId())) {
             throw new SystemErrorException("missing userId", user, ErrorCodes.MISSING_USER_ID);
         }
 

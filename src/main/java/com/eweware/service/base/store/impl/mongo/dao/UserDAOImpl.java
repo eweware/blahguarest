@@ -24,7 +24,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(4);
 
     static {  // TODO should be derived from schema
-        UserDAOImpl.FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
+        UserDAOImpl.FIELD_TO_TYPE_MAP.put(USERNAME, MongoFieldTypes.STRING);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_CONTROVERSY_STRENGTH, MongoFieldTypes.NUMBER);
@@ -71,13 +71,33 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     }
 
     @Override
-    public String getDisplayName() {
-        return (String) get(DISPLAY_NAME);
+    public String getUsername() {
+        return (String) get(USERNAME);
     }
 
     @Override
-    public void setDisplayName(String displayName) {
-        put(DISPLAY_NAME, displayName);
+    public void setUsername(String username) {
+        put(USERNAME, username);
+    }
+
+    @Override
+    public String getDigest() {
+        return (String) get(DIGEST);
+    }
+
+    @Override
+    public void setDigest(String digest) {
+        put(DIGEST, digest);
+    }
+
+    @Override
+    public String getSalt() {
+        return (String) get(SALT);
+    }
+
+    @Override
+    public void setSalt(String salt) {
+        put(SALT, salt);
     }
 
     @Override

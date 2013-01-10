@@ -8,7 +8,7 @@ public final class ErrorCodes {
 
 
     public static final Integer SERVER_NOT_INITIALIZED = 1;
-    public static final Integer MISSING_DISPLAY_NAME = 2;
+    public static final Integer MISSING_USERNAME = 2;
     public static final Integer MISSING_GROUP_TYPE_ID = 3;
     public static final Integer ALREADY_EXISTS_GROUP_TYPE_WITH_DISPLAY_NAME = 4;
     public static final Integer NOTHING_TO_UPDATE = 5;
@@ -17,7 +17,7 @@ public final class ErrorCodes {
     public static final Integer MISSING_GROUP_ID = 8;
     public static final Integer INVALID_STATE_CODE = 9;
     public static final Integer NOT_FOUND_GROUP_ID = 10;
-    public static final Integer ALREADY_EXISTS_USER_WITH_DISPLAY_NAME = 11;
+    public static final Integer ALREADY_EXISTS_USER_WITH_USERNAME = 11;
     public static final Integer MISSING_EMAIL_ADDRESS = 12;
     public static final Integer MISSING_USER_ID = 13;
     public static final Integer NOT_FOUND_USER_ID = 14;
@@ -73,4 +73,11 @@ public final class ErrorCodes {
     public static final Integer INVALID_UPDATE = 63;
     public static final Integer UNSUPPORTED_MEDIA_TYPE = 64;
     public static final Integer INVALID_SESSION = 65;
+    public static final Integer SESSION_ERROR = 66;
+    public static final Integer INVALID_SESSION_STATE = 67;
+    public static final Integer INVALID_PASSWORD = 68;
+    public static final Integer INVALID_USERNAME = 69;
+    public static final Integer INVALID_USER_ID = 70;
+    public static final Integer UNAUTHORIZED_USER = 71;
+    
 }

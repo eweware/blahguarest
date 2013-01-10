@@ -44,9 +44,9 @@ public class UserDataIndexable implements ZoieIndexable {
         } else {
             throw new SystemErrorException("missing id in userDAO");
         }
-        field = doc.getFieldable(main.java.com.eweware.service.base.store.dao.UserDAO.DISPLAY_NAME);
+        field = doc.getFieldable(main.java.com.eweware.service.base.store.dao.UserDAO.USERNAME);
         if (field != null) {
-            map.put(UserDAO.DISPLAY_NAME, field.stringValue());
+            map.put(UserDAO.USERNAME, field.stringValue());
         }
         return dao;
     }
@@ -61,7 +61,7 @@ public class UserDataIndexable implements ZoieIndexable {
 		// This array should contain one and only one indexing request.
 		Document doc = new Document();
 		doc.add(new Field(BaseDAO.ID, user.getId(), Store.YES, Index.ANALYZED));
-		doc.add(new Field(UserDAO.DISPLAY_NAME, user.getDisplayName(), Store.YES, Index.ANALYZED));
+		doc.add(new Field(UserDAO.USERNAME, user.getUsername(), Store.YES, Index.ANALYZED));
 
 		// no need to add the id field, Zoie will manage the id for you
 		return new IndexingReq[] { new IndexingReq(doc) };

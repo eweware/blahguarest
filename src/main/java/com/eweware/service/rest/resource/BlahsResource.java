@@ -1,15 +1,14 @@
 package main.java.com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.StateConflictException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.payload.BlahPayload;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
 import main.java.com.eweware.service.rest.RestUtilities;
+import main.java.com.eweware.service.rest.session.BlahguaSession;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -77,9 +76,11 @@ public class BlahsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateBlah(
             BlahPayload blah,
-            @PathParam("blahId") String blahId) {
+            @PathParam("blahId") String blahId,
+            @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
+            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
             blah.setId(blahId);
             BlahManager.getInstance().updateBlah(LocaleId.en_us, blah);
             final Response response = RestUtilities.makeOKNoContentResponse();
@@ -100,28 +101,29 @@ public class BlahsResource {
 
     /**
      * Deletes the blah.
-     * TODO this should either not be exposed or it should be a soft delete
      *
      * @param blahId The blah's id
      * @return The response without content.
      */
-    @DELETE
-    @Path("/{blahId}")
-    public Response deleteBlah(@PathParam("blahId") String blahId) {
-        try {
-            final long start = System.currentTimeMillis();
-            BlahManager.getInstance().deleteBlah(LocaleId.en_us, blahId);
-            final Response response = RestUtilities.makeOKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
-            return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        }
-    }
+//    @DELETE
+//    @Path("/{blahId}")
+//    public Response deleteBlah(@PathParam("blahId") String blahId,
+//                               @Context HttpServletRequest request) {
+//        try {
+//            final long start = System.currentTimeMillis();
+//            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
+//            BlahManager.getInstance().deleteBlah(LocaleId.en_us, blahId);
+//            final Response response = RestUtilities.makeOKNoContentResponse();
+//            SystemManager.getInstance().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+//            return response;
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.makeInvalidRequestException(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.makeAndLogSystemErrorResponse(e);
+//        } catch (RuntimeException e) {
+//            return RestUtilities.makeAndLogSystemErrorResponse(e);
+//        }
+//    }
 
     /**
      * Returns an array of blah type docs.
@@ -151,20 +153,26 @@ public class BlahsResource {
      * If a userId is provided, the blah's data will include blah stats
      * for the specified user instead of stats for the blah itself.
      *
-     * @param blahId The blah's id
-     * @param userId (Optional): a userId
+     * @param blahId         The blah's id
+     * @param userId         (Optional): a userId
+     * @param stats          (Optional): if true, return statistics with blah
+     * @param statsStartDate If stats=true, return statistics starting with this date
+     * @param statsEndDate   If stats=true, return statistics ending with this date
      * @return List<BlahPayload> An array of blah docs.
      */
     @GET
     @Path("/{blahId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBlahById(@PathParam("blahId") String blahId,
-                                @QueryParam("userId") String userId,
-                                @QueryParam("stats") boolean stats,
-                                @QueryParam("s") String statsStartDate, // format is yymmdd (e.g., August 27, 2012 is 120827)
-                                @QueryParam("e") String statsEndDate) {  // format is yymmdd (e.g., August 27, 2012 is 120827)
+                                @QueryParam("userId") final String userId,
+                                @QueryParam("stats") final boolean stats,
+                                @QueryParam("s") final String statsStartDate, // format is yymmdd (e.g., August 27, 2012 is 120827)
+                                @QueryParam("e") final String statsEndDate,   // format is yymmdd (e.g., August 27, 2012 is 120827)
+                                @QueryParam("sc") final boolean saveContext,
+                                @Context HttpServletRequest req) {
         try {
             final long start = System.currentTimeMillis();
+            blahId = BlahguaSession.getInternalBlahId(blahId, req.getSession(true));
             final Response response = RestUtilities.makeOkResponse(BlahManager.getInstance().getBlahById(LocaleId.en_us, blahId, userId, stats, statsStartDate, statsEndDate));
             SystemManager.getInstance().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -202,6 +210,7 @@ public class BlahsResource {
                              @QueryParam("authorId") String authorId,
                              @QueryParam("userId") String userId,
                              @QueryParam("typeid") String typeId) {
+        // TODO XXX must translate every
         try {
             final long s = System.currentTimeMillis();
             final Response response = RestUtilities.makeOkResponse(BlahManager.getInstance().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));

@@ -1,105 +1,71 @@
 package main.java.com.eweware.service.user;
 
 
+import main.java.com.eweware.service.base.CommonUtilities;
+import main.java.com.eweware.service.base.error.ErrorCodes;
+import main.java.com.eweware.service.base.error.InvalidRequestException;
+import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.rest.session.SessionAttributes;
 import org.apache.commons.codec.binary.Base64;
 
-import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Connection;
 import java.util.Arrays;
 
 /**
  * @author rk@post.harvard.edu
  *         Date: 8/24/12 Time: 1:04 AM
- *
+ *         <p/>
  *         version 1: uses OWASP recommendations
- *         TODO version 2: create own version of SHA-X algorithm
  */
-public class Login {
+public final class Login {
 
-    private final static int ITERATION_NUMBER = 1000;
+    private final static int ITERATIONS = 1000;
 
     /**
-     * Authenticates the user with a given login and password
-     * If password and/or login is null then always returns false.
-     * If the user does not exist in the database returns false.
+     * Authenticates the user with the given password.
      *
-     * @param login    String The login of the user
-     * @param password String The password of the user
-     * @return boolean Returns true if the user is authenticated, false otherwise
+     * @param digest   The digest from the db
+     * @param salt     The salt from the db
+     * @param password String The password supplied by the user
+     * @return boolean Returns true if the user is authenticated
      * @throws NoSuchAlgorithmException If the algorithm SHA-1 is not supported by the JVM
      */
-    public boolean authenticate(String login, String password)
-            throws Exception {
+    public static boolean authenticate(String digest, String salt, final String password) throws SystemErrorException {
         try {
-
-            boolean userExists = true;
-
-            // INPUT VALIDATION
-            if (login == null || password == null) {
-                // TIME RESISTANT ATTACK
-                // Computation time is equal to the time needed by a legitimate user
-                userExists = false;
-                login = "";
-                password = "";
+            if (CommonUtilities.isEmptyString(digest) || CommonUtilities.isEmptyString(salt)) {
+                throw new SystemErrorException("Missing validation data", ErrorCodes.SERVER_SEVERE_ERROR);
             }
 
+            final byte[] proposedDigest = getHash(ITERATIONS, password, Base64.decodeBase64(salt));
 
-            // get digest and salt from db for login key
-            String digest = "base64digestfromdb", salt = "base64salt";
-            userExists = true;
+            return Arrays.equals(proposedDigest, Base64.decodeBase64(digest));
 
-            if (!userExists) {
-                // TIME RESISTANT ATTACK (Even if the user does not exist the
-                // Computation time is equal to the time needed for a legitimate user
-                digest = "000000000000000000000000000=";
-                salt = "00000000000=";
-            }
-
-
-            byte[] bDigest = base64ToByte(digest);
-            byte[] bSalt = base64ToByte(salt);
-
-            // Compute the new DIGEST
-            byte[] proposedDigest = getHash(ITERATION_NUMBER, password, bSalt);
-
-            return Arrays.equals(proposedDigest, bDigest) && userExists;
-        } catch (IOException ex) {
-            throw new Exception("password inaccessible format", ex);
+        } catch (Exception ex) {
+            throw new SystemErrorException("Unable to support validation", ex, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
 
     /**
-     * Inserts a new user in the database
+     * Creates a digest and salt for the password
      *
-     * @param con      Connection An open connection to a databse
-     * @param login    String The login of the user
      * @param password String The password of the user
-     * @return boolean Returns true if the login and password are ok (not null and length(login)<=100
+     * @return String[] Returns the digest and salt strings, in this order.
      * @throws NoSuchAlgorithmException If the algorithm SHA-1 or the SecureRandom is not supported by the JVM
      */
-    public boolean createUser(Connection con, String login, String password)
+    public static String[] createSaltedPassword(final String password)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (login != null && password != null && login.length() <= 100) {
-            // Uses a secure Random not a simple Random
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            // Salt generation 64 bits long
-            byte[] bSalt = new byte[8];
-            random.nextBytes(bSalt);
-            // Digest computation
-            byte[] bDigest = getHash(ITERATION_NUMBER, password, bSalt);
-            String sDigest = byteToBase64(bDigest);
-            String sSalt = byteToBase64(bSalt);
 
-            // TODO insert digest and salt into db
-            return true;
-        } else {
-            return false;
-        }
+        final byte[] bSalt = new byte[8];
+        SecureRandom.getInstance("SHA1PRNG").nextBytes(bSalt);
+
+        final byte[] bDigest = getHash(ITERATIONS, password, bSalt);
+
+        return new String[]{new String(Base64.encodeBase64(bDigest)), new String(Base64.encodeBase64(bSalt))};
     }
 
 
@@ -113,7 +79,7 @@ public class Login {
      * @return byte[] The digested password
      * @throws NoSuchAlgorithmException If the algorithm doesn't exist
      */
-    public byte[] getHash(int iterationNb, String password, byte[] salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static byte[] getHash(final int iterationNb, final String password, final byte[] salt) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest digest = MessageDigest.getInstance("SHA-1");
         digest.reset();
         digest.update(salt);
@@ -125,26 +91,32 @@ public class Login {
         return input;
     }
 
-    /**
-     * From a base 64 representation, returns the corresponding byte[]
-     *
-     * @param data String The base64 representation
-     * @return byte[]
-     * @throws IOException
-     */
-    public static byte[] base64ToByte(String data) throws IOException {
-        return Base64.decodeBase64(data);
+    public static void checkPassword(String password) throws InvalidRequestException {
+        if (CommonUtilities.checkString(password, 6, 32)) {
+            throw new InvalidRequestException("Invalid password", ErrorCodes.INVALID_PASSWORD);
+        }
     }
 
-    /**
-     * From a byte[] returns a base 64 representation
-     *
-     * @param data byte[]
-     * @return String
-     * @throws IOException
-     */
-    public static String byteToBase64(byte[] data) {
-        return new String(Base64.encodeBase64(data));
+    public static void checkUsername(String username) throws InvalidRequestException {
+        if (CommonUtilities.checkString(username, 3, 32)) {
+            throw new InvalidRequestException("Invalid username", ErrorCodes.INVALID_USERNAME);
+        }
     }
 
+    public static void markAuthenticated(HttpSession session, boolean passedAuthentication) {
+        if (passedAuthentication) {
+            session.setAttribute(SessionAttributes.IS_AUTHENTICATED, Boolean.TRUE);
+        } else {
+            session.removeAttribute(SessionAttributes.IS_AUTHENTICATED);
+        }
+    }
+
+    public static boolean isAuthenticated(HttpSession session) {
+        if (session == null) {
+            return false;
+        }
+        final Object attribute = session.getAttribute(SessionAttributes.IS_AUTHENTICATED);
+        final Boolean bool = (Boolean) attribute;
+        return (bool == Boolean.TRUE);
+    }
 }

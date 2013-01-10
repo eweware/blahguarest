@@ -144,15 +144,15 @@ public final class BlahManager implements ManagerInterface {
      */
     public BlahPayload createBlah(LocaleId localeId, BlahPayload request) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
         final String authorId = request.getAuthorId();
-        if (isEmptyString(authorId)) {
+        if (CommonUtilities.isEmptyString(authorId)) {
             throw new InvalidRequestException("missing field authorId=" + authorId, request, ErrorCodes.MISSING_USER_ID);
         }
         final String text = request.getText();
-        if (isEmptyString(text)) {
+        if (CommonUtilities.isEmptyString(text)) {
             throw new InvalidRequestException("missing field text=" + text, request, ErrorCodes.MISSING_TEXT);
         }
         final String groupId = request.getGroupId();
-        if (isEmptyString(groupId)) {
+        if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing field groupId=" + groupId, ErrorCodes.MISSING_GROUP_ID);
         }
         final String typeId = request.getTypeId();
@@ -207,7 +207,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private boolean isTypeIdValid(String typeId) throws InvalidRequestException, SystemErrorException {
-        if (isEmptyString(typeId)) {
+        if (CommonUtilities.isEmptyString(typeId)) {
             throw new InvalidRequestException("missing typeId");
         }
         ensureBlahTypesCached();
@@ -238,15 +238,15 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public void updateBlah(LocaleId localeId, BlahPayload request) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
-        if (!isEmptyString(request.getText()) || !isEmptyString(request.getBody())) {
+        if (!CommonUtilities.isEmptyString(request.getText()) || !CommonUtilities.isEmptyString(request.getBody())) {
             throw new InvalidRequestException("user may not edit blah text or body", request, ErrorCodes.CANNOT_EDIT_TEXT);
         }
         final String blahId = request.getId();
-        if (isEmptyString(blahId)) {
+        if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", request, ErrorCodes.MISSING_BLAH_ID);
         }
         final String userId = request.getAuthorId();
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
@@ -316,7 +316,7 @@ public final class BlahManager implements ManagerInterface {
         if (blahDAO == null) {
             throw new ResourceNotFoundException("blah not found; blahId=" + blahId, ErrorCodes.NOT_FOUND_BLAH_ID);
         }
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("userId is missing", ErrorCodes.MISSING_USER_ID);
         }
         final String authorId = blahDAO.getAuthorId();
@@ -403,7 +403,7 @@ public final class BlahManager implements ManagerInterface {
      *
      */
     public void deleteBlah(LocaleId localeId, String blahId) throws InvalidRequestException, SystemErrorException {
-        if (isEmptyString(blahId)) {
+        if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
 
@@ -439,11 +439,11 @@ public final class BlahManager implements ManagerInterface {
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
         count = ensureCount(count);
         final BlahDAO blahDAO = storeManager.createBlah();
-        final boolean hasAuthor = !isEmptyString(authorId);
+        final boolean hasAuthor = !CommonUtilities.isEmptyString(authorId);
         if (hasAuthor) {
             blahDAO.setAuthorId(authorId);
         }
-        final boolean hasType = !isEmptyString(typeId);
+        final boolean hasType = !CommonUtilities.isEmptyString(typeId);
         if (hasType) {
             blahDAO.setTypeId(typeId);
         }
@@ -463,7 +463,7 @@ public final class BlahManager implements ManagerInterface {
 
     private List<BlahPayload> toBlahPayload(String userId, List<? extends BlahDAO> blahDAOs) throws SystemErrorException {
         final List<BlahPayload> payload = new ArrayList<BlahPayload>(blahDAOs.size());
-        final boolean hasUserId = !isEmptyString(userId);
+        final boolean hasUserId = !CommonUtilities.isEmptyString(userId);
         for (BaseDAO dao : blahDAOs) {
             final BlahPayload blahPayload = new BlahPayload(dao);
             payload.add(blahPayload);
@@ -541,10 +541,10 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public BlahPayload getBlahById(LocaleId localeId, String blahId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
-        if (isEmptyString(blahId)) {
+        if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
-        final boolean includeUserInfo = !isEmptyString(userId);
+        final boolean includeUserInfo = !CommonUtilities.isEmptyString(userId);
 
         if (includeUserInfo && !storeManager.createUser(userId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " not found", ErrorCodes.NOT_FOUND_USER_ID);
@@ -615,7 +615,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public String getAuthorIdForBlah(String blahId) throws SystemErrorException, ResourceNotFoundException {
-        if (isEmptyString(blahId)) {
+        if (CommonUtilities.isEmptyString(blahId)) {
             throw new SystemErrorException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
         BlahDAO blahDAO = storeManager.createBlah(blahId);
@@ -628,7 +628,7 @@ public final class BlahManager implements ManagerInterface {
 
 
     public String getAuthorIdForComment(String commentId) throws SystemErrorException, ResourceNotFoundException {
-        if (isEmptyString(commentId)) {
+        if (CommonUtilities.isEmptyString(commentId)) {
             throw new SystemErrorException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
         CommentDAO commentDAO = storeManager.createComment(commentId);
@@ -649,7 +649,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     private void checkBlahById(String blahId, Object entity) throws SystemErrorException, ResourceNotFoundException {
-        if (isEmptyString(blahId)) {
+        if (CommonUtilities.isEmptyString(blahId)) {
             throw new SystemErrorException("missing blah id", entity, ErrorCodes.MISSING_BLAH_ID);
         }
         if (!storeManager.createBlah(blahId)._exists()) {
@@ -675,15 +675,15 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("cannot vote for comment when creating it", request, ErrorCodes.CANNOT_VOTE_ON_COMMENT_WHEN_CREATING_IT);
         }
         final String blahId = request.getBlahId();
-        if (isEmptyString(blahId)) {
+        if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", request, ErrorCodes.MISSING_BLAH_ID);
         }
         final String commentAuthorId = request.getAuthorId();
-        if (isEmptyString(commentAuthorId)) {
+        if (CommonUtilities.isEmptyString(commentAuthorId)) {
             throw new InvalidRequestException("missing authorId", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
         final String text = request.getText();
-        if (isEmptyString(text)) {
+        if (CommonUtilities.isEmptyString(text)) {
             throw new InvalidRequestException("missing text", request, ErrorCodes.MISSING_TEXT);
         }
         final Integer blahVote = GeneralUtilities.checkDiscreteValue(request.getBlahVote(), request);
@@ -757,15 +757,15 @@ public final class BlahManager implements ManagerInterface {
      */
     public void updateComment(LocaleId localeId, CommentPayload request) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
 
-        if (!isEmptyString(request.getText())) {
+        if (!CommonUtilities.isEmptyString(request.getText())) {
             throw new InvalidRequestException("user may not edit comment text", request, ErrorCodes.CANNOT_EDIT_TEXT);
         }
         final String commentId = request.getId();
-        if (isEmptyString(commentId)) {
+        if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", request, ErrorCodes.MISSING_COMMENT_ID);
         }
         final String userId = request.getAuthorId();
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
         if (request.getBlahVote() != null) {
@@ -874,7 +874,7 @@ public final class BlahManager implements ManagerInterface {
 
     // TODO draconic: should archive them if needed, though old comments should really just fade away
     public void deleteComment(LocaleId localeId, String commentId) throws InvalidRequestException, SystemErrorException {
-        if (isEmptyString(commentId)) {
+        if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
         final CommentDAO commentDAO = storeManager.createComment(commentId);
@@ -884,7 +884,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public CommentPayload getCommentById(LocaleId localeId, String commentId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
-        if (isEmptyString(commentId)) {
+        if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
         final CommentDAO commentDAO = (CommentDAO) storeManager.createComment(commentId)._findByPrimaryId();
@@ -892,7 +892,7 @@ public final class BlahManager implements ManagerInterface {
             throw new ResourceNotFoundException("blah comment not found", "commentId=" + commentId, ErrorCodes.NOT_FOUND_COMMENT_ID);
         }
         final CommentPayload comment = new CommentPayload(commentDAO);
-        if (!isEmptyString(userId)) {
+        if (!CommonUtilities.isEmptyString(userId)) {
             addUserCommentInfoToPayload(comment, commentId, userId);
         }
         if (stats) {
@@ -947,7 +947,7 @@ public final class BlahManager implements ManagerInterface {
 
     public List<CommentPayload> getComments(LocaleId localeId, String blahId, String userId, String authorId, Integer start, Integer count, String sortFieldName) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         count = ensureCount(count);
-        final boolean forBlah = !isEmptyString(blahId);
+        final boolean forBlah = !CommonUtilities.isEmptyString(blahId);
         if (forBlah) {
             checkBlahById(blahId, blahId);
         }
@@ -955,7 +955,7 @@ public final class BlahManager implements ManagerInterface {
         if (forBlah) {
             commentDAO.setBlahId(blahId);
         }
-        final boolean forAuthor = !isEmptyString(authorId);
+        final boolean forAuthor = !CommonUtilities.isEmptyString(authorId);
         if (forAuthor) {
             commentDAO.setAuthorId(authorId);
         }
@@ -974,7 +974,7 @@ public final class BlahManager implements ManagerInterface {
         for (CommentDAO dao : commentDAOs) {
             comments.add(new CommentPayload(dao));
         }
-        if (!isEmptyString(userId)) {
+        if (!CommonUtilities.isEmptyString(userId)) {
             for (CommentPayload comment : comments) {
                 addUserCommentInfoToPayload(comment, comment.getId(), userId);
             }
@@ -1009,7 +1009,7 @@ public final class BlahManager implements ManagerInterface {
         } else if (Math.abs(sortDirection) != 1) {
             sortDirection = (sortDirection < 0) ? -1 : 1;
         }
-        if (isEmptyString(userId)) {
+        if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", ErrorCodes.MISSING_USER_ID);
         }
         final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.LAST_INBOX);
@@ -1057,10 +1057,6 @@ public final class BlahManager implements ManagerInterface {
             return new ArrayList<InboxBlahPayload>(0);
         }
         return inbox.getItems();
-    }
-
-    private boolean isEmptyString(String string) {
-        return (string == null || string.length() == 0);
     }
 
     // Indexing -----------------
@@ -1172,7 +1168,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private void deleteCommentFromIndex(CommentDAO commentDAO) throws SystemErrorException {
-        if (isEmptyString(commentDAO.getId())) {
+        if (CommonUtilities.isEmptyString(commentDAO.getId())) {
             throw new SystemErrorException("missing comment id in " + this, ErrorCodes.SERVER_INDEXING_ERROR);
         }
         commentDAO.setDeleted(Boolean.TRUE);
@@ -1187,7 +1183,7 @@ public final class BlahManager implements ManagerInterface {
 //     *
 //     */
 //    private void deleteCommentFromIndex(String commentId) throws SystemErrorException {
-//        if (isEmptyString(commentId)) {
+//        if (CommonUtilities.isEmptyString(commentId)) {
 //            throw new SystemErrorException("missing comment id in " + this, ErrorCodes.SERVER_INDEXING_ERROR);
 //        }
 //        final CommentDAO comment = storeManager.createComment(commentId);
@@ -1253,7 +1249,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private List<BasePayload> searchBlahs(boolean searchBlahs, String fieldName, String query, Integer maxResults) throws SystemErrorException {
-        if (isEmptyString(fieldName)) {
+        if (CommonUtilities.isEmptyString(fieldName)) {
             fieldName = BlahDAO.TEXT;
         }
 
@@ -1263,7 +1259,7 @@ public final class BlahManager implements ManagerInterface {
         try {
             indexingSystem = searchBlahs ? blahIndexingSystem : commentIndexingSystem;
 
-            if (isEmptyString(query)) {
+            if (CommonUtilities.isEmptyString(query)) {
                 return getFromIndex(maxResults, indexingSystem, searchBlahs);
             }
 

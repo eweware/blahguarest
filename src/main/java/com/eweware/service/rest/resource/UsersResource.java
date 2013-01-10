@@ -1,25 +1,23 @@
 package main.java.com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.StateConflictException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.payload.UserPayload;
 import main.java.com.eweware.service.base.payload.UserProfilePayload;
+import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
+import main.java.com.eweware.service.user.Login;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author rk@post.harvard.edu
@@ -40,6 +38,44 @@ public class UsersResource {
     private static final String VALIDATE_USER_OPERATION = "validateUser";
     private static final String RECOVER_USER_OPERATION = "recoverUser";
 
+    @GET
+    @Path("/login/check")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkLogin(@Context HttpServletRequest request) {
+        if (Login.isAuthenticated(request.getSession(false))) {
+            return Response.ok().build();
+        } else {
+            return Response.status(404).build();
+        }
+    }
+
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loginUser(Map<String, Object> user,
+                              @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String username = (String) user.get(UserDAOConstants.USERNAME);
+            final String password = (String) user.get("pwd");
+            UserManager.getInstance().loginUser(LocaleId.en_us, username, password, request);
+            final Response response = RestUtilities.makeAcceptedResponse();
+            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.makeInvalidRequestException(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.makeUnauthorizedException(e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.makeResourceNotFoundResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        }
+    }
+
     @POST
     @Path("/recover")
     @Produces(MediaType.APPLICATION_JSON)
@@ -58,7 +94,7 @@ public class UsersResource {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -79,7 +115,7 @@ public class UsersResource {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -103,7 +139,7 @@ public class UsersResource {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -112,7 +148,7 @@ public class UsersResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUser(UserPayload user,
+    public Response createUser(Map<String, Object> user,
                                @Context UriInfo uri,
                                @Context HttpHeaders headers,
                                @Context HttpServletRequest request) {
@@ -129,8 +165,10 @@ public class UsersResource {
 //            }
 //            System.out.println();
 
-            user = UserManager.getInstance().createUser(LocaleId.en_us, user.getDisplayName());
-            final Response response = RestUtilities.makeCreatedResourceResponse(user, new URI(uri.getAbsolutePath() + user.getId()));
+            final String username = (String) user.get(UserDAOConstants.USERNAME);
+            final String password = (String) user.get(UserDAOConstants.PASSWORD);
+            final UserPayload payload = UserManager.getInstance().createUser(LocaleId.en_us, username, password);
+            final Response response = RestUtilities.makeCreatedResourceResponse(payload, new URI(uri.getAbsolutePath() + payload.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
@@ -139,7 +177,7 @@ public class UsersResource {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -164,7 +202,7 @@ public class UsersResource {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -186,7 +224,7 @@ public class UsersResource {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -228,7 +266,7 @@ public class UsersResource {
             return RestUtilities.makeInvalidRequestException(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
@@ -269,12 +307,13 @@ public class UsersResource {
     public Response getUserById(
             @PathParam("userId") String userId,
             @QueryParam("stats") boolean stats,
+            @QueryParam("u") boolean byUsername, // if true, the userId is actually the username
             @QueryParam("s") String statsStartDate, // format is yymmdd (e.g., August 27, 2012 is 120827)
             @QueryParam("e") String statsEndDate // format is yymmdd (e.g., August 27, 2012 is 120827)
     ) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.makeOkResponse(UserManager.getInstance().getUserById(LocaleId.en_us, userId, stats, statsStartDate, statsEndDate));
+            final Response response = RestUtilities.makeOkResponse(UserManager.getInstance().getUserById(LocaleId.en_us, userId, byUsername, stats, statsStartDate, statsEndDate));
             SystemManager.getInstance().setResponseTime(GET_USER_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {

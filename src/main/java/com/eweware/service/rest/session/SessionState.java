@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.rest.resource;
+package main.java.com.eweware.service.rest.session;
 
 /**
  * @author rk@post.harvard.edu

@@ -28,10 +28,7 @@ import java.util.UUID;
 /**
  * @author rk@post.harvard.edu
  *         Date: 12/14/12 Time: 3:44 PM
- *         <p/>
- *         XXX Need to create jersey-multipart-config.properties and add the following
- *         <p/>
- *         bufferThreshold = 128000
+ *         TODO Need to create jersey-multipart-config.properties and add the following:  bufferThreshold = 128000
  */
 @Path("/images")
 public class ImageUploadResource {
@@ -61,11 +58,15 @@ public class ImageUploadResource {
     }
 
 
+    /**
+     * We create a set of versions of the uploaded file
+     * in JPG format, each version has a different spec.
+     */
     private enum FileTypeSpec {
-        A(128, 128, TypeSpecMode.FIXED),
-        B(256, 256, TypeSpecMode.FIXED),
-        C(512, 512, TypeSpecMode.FIXED),
-        D(768, null, TypeSpecMode.WIDTH_DOMINANT);
+        A(128, 128, TypeSpecMode.FIXED), // scale & crop to 128x128
+        B(256, 256, TypeSpecMode.FIXED), // scale & crop to 256x256
+        C(512, 512, TypeSpecMode.FIXED), // scale & crop to 512x512
+        D(768, null, TypeSpecMode.WIDTH_DOMINANT); // scale to 768x?
 
         private final Integer width;
         private final Integer height;
@@ -79,11 +80,16 @@ public class ImageUploadResource {
     }
 
     private enum TypeSpecMode {
-        FIXED,
-        WIDTH_DOMINANT,
-        HEIGHT_DOMINANT
+        FIXED, // Scale so that width and height are preserved
+        WIDTH_DOMINANT, // Scale to preserve width
+        HEIGHT_DOMINANT // Scale to preserve height
     }
 
+    /**
+     * TODO should be replaced by the OptionsMethodFilter class when necessary
+     * @param req
+     * @return
+     */
     @OPTIONS
     @Path("/upload")
     public Response xcorUploadOptions(@Context HttpServletRequest req) {
@@ -92,7 +98,7 @@ public class ImageUploadResource {
                 .header("Access-Control-Allow-Methods", "POST");
         final String acrh = req.getHeader("Access-Control-Request-Headers");
         if (acrh != null && acrh.length() != 0) {
-            response = response.header("", acrh);
+            response = response.header("Access-Control-Request-Headers", acrh);
         }
         return response.build();
     }
@@ -385,74 +391,3 @@ public class ImageUploadResource {
 //        return (error != null) ? Response.status(400).entity(error).build() : Response.status(200).entity(msg).build();
 //    }
 
-
-
-//    @OPTIONS
-//    @Path("/download/{blahId}/{fileType}/{filename}")
-//    public Response xcorDownloadOptions(@Context HttpServletRequest req) {
-//        Response.ResponseBuilder response = Response.status(200)
-//                .header("Access-Control-Allow-Origin", "*")     // XXX should limit to the Webapp servers
-//                .header("Access-Control-Allow-Methods", "GET");
-//        final String acrh = req.getHeader("Access-Control-Request-Headers");
-//        if (acrh != null && acrh.length() != 0) {
-//            response = response.header("", acrh);
-//        }
-//        return response.build();
-//    }
-
-//    @GET
-//    @Path("/download/{blahId}/{fileType}/{filename}")
-//    @Produces(MediaType.MULTIPART_FORM_DATA)
-//    public Response downloadFile(@PathParam("blahId") String blahId,
-//                          @PathParam("fileType") String fileType,
-//                          @PathParam("filename") String filename) {
-//        // ignore blahId
-//        final FileTypeSpec fileTypeSpec;
-//        try {
-//            fileTypeSpec = FileTypeSpec.valueOf(fileType);
-//        } catch (Exception e) {
-//            return Response.status(400).entity("Invalid image type: " + e.getMessage()).build();
-//        }
-//        if (useS3) {
-//            return downloadFileFromS3(filename, fileTypeSpec);
-//        } else {
-//            return downloadFileFromLocalFS(filename, fileTypeSpec);
-//        }
-//    }
-//
-//    private Response downloadFileFromS3(String filename, FileTypeSpec fileTypeSpec) {
-//        try {
-//            filename = makeFilename(false, fileTypeSpec, filename);
-//        } catch (InvalidRequestException e) {
-//            return Response.status(400).entity(e.getMessage()).build();
-//        }
-//
-//        return null;  //To change body of created methods use File | Settings | File Templates.
-//    }
-//
-//    private Response downloadFileFromLocalFS(String filename, FileTypeSpec fileTypeSpec) {
-//        final File dir = new File(localFormattedImagePath);
-//        if (!dir.exists()) {
-//            return Response.status(400).entity("Local image directory " + dir.getAbsolutePath() + " doesn't exist").build();
-//        }
-//        try {
-//            filename = makeFilename(false, fileTypeSpec, filename);
-//        } catch (InvalidRequestException e) {
-//            return Response.status(400).entity(e.getMessage()).build();
-//        }
-//        final File file = new File(localFormattedImagePath, filename);
-//        if (!file.exists()) {
-//            return Response.status(400).entity("File " + filename + " doesn't exist").build();
-//        }
-//        try {
-//            System.out.println("Downloading " + file.getAbsolutePath());
-//            final Response response = Response.status(200)
-//                    .header("Access-Control-Allow-Origin", "*")
-//                    .entity(file).type(MediaType.MULTIPART_FORM_DATA_TYPE).build();
-//            System.out.println("... downloaded");
-//            return response;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return Response.status(400).entity(e.getMessage()).build();
-//        }
-//    }

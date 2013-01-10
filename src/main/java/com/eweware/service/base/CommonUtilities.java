@@ -60,4 +60,12 @@ public final class CommonUtilities {
         throw new SystemErrorException("Can't handle value=" + val);
     }
 
+    public static boolean isEmptyString(String string) {
+        return (string == null || string.length() == 0);
+    }
+
+    public static boolean checkString(String string, int minimumLength, int maximumLength) {
+        final int len = string.length();
+        return (string == null || len == 0 || len > maximumLength || len < minimumLength);
+    }
 }

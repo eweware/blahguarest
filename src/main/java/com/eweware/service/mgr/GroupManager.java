@@ -78,7 +78,7 @@ public final class GroupManager implements ManagerInterface {
         ensureReady();
         final String displayName = request.getDisplayName();
         if (isEmptyString(displayName)) {
-            throw new InvalidRequestException("missing display name", request, ErrorCodes.MISSING_DISPLAY_NAME);
+            throw new InvalidRequestException("missing display name", request, ErrorCodes.MISSING_USERNAME);
         }
         final GroupTypeDAO dao = storeManager.createGroupType();
         dao.setDisplayName(displayName);
@@ -175,7 +175,7 @@ public final class GroupManager implements ManagerInterface {
         ensureReady();
         final String displayName = group.getDisplayName();
         if (isEmptyString(displayName)) { // TODO maybe force to a global group, but preferably not: client should provide reasonable options
-            throw new InvalidRequestException("missing display name", group, ErrorCodes.MISSING_DISPLAY_NAME);
+            throw new InvalidRequestException("missing display name", group, ErrorCodes.MISSING_USERNAME);
         }
         final String groupTypeId = group.getGroupTypeId();
         if (isEmptyString(groupTypeId)) {

@@ -20,14 +20,16 @@ public final class UserPayload extends BasePayload implements UserDAOConstants {
 
     public UserPayload(Map<String, Object> map) {
         super(map);
+        remove(DIGEST);
+        remove(SALT);
     }
 
-    public String getDisplayName() {
-        return (String) get(DISPLAY_NAME);
+    public String getUsername() {
+        return (String) get(USERNAME);
     }
 
-    public void setDisplayName(String displayName) {
-        put(DISPLAY_NAME, displayName);
+    public void setUsername(String username) {
+        put(USERNAME, username);
     }
 
     public Double getStrength() {
