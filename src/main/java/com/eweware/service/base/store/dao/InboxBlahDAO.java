@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import java.util.List;
+
 /**
  * @author rk@post.harvard.edu
  *         Date: 7/9/12 Time: 4:08 PM
@@ -25,6 +27,10 @@ public interface InboxBlahDAO extends BaseDAO, InboxBlahDAOConstants {
     public String getBlahText();
 
     public void setBlahText(String text);
+
+    public List<String> getImageIds();
+
+    public void setImageIds(List<String> imageIds);
 
     public Integer getInboxNumber();
 

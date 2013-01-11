@@ -21,6 +21,10 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
 
     public void setText(String text);
 
+    public List<String> getImageIds();
+
+    public void setImageIds(List<String> imageIds);
+
     public Integer getBlahVote();
 
     public void setBlahVote(Integer vote);

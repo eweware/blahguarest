@@ -32,7 +32,7 @@ public class GroupTypesResource {
 			type = GroupManager.getInstance().createGroupType(LocaleId.en_us, type);
 			return RestUtilities.makeCreatedResourceResponse(type, new URI(uri.getAbsolutePath() + "/" + type.getId()));
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (StateConflictException e) {
 			return RestUtilities.makeStateConflictResponse(e);
 		} catch (URISyntaxException e) {
@@ -53,7 +53,7 @@ public class GroupTypesResource {
             GroupManager.getInstance().updateGroupType(LocaleId.en_us, groupTypeId, payloadWithUpdates);
 			return RestUtilities.makeOKNoContentResponse();
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
@@ -86,7 +86,7 @@ public class GroupTypesResource {
 		try {
 			return RestUtilities.makeOkResponse(GroupManager.getInstance().getGroupTypeById(LocaleId.en_us, groupTypeId));
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (ResourceNotFoundException e) {
 			return RestUtilities.makeResourceNotFoundResponse(e);
 		} catch (SystemErrorException e) {

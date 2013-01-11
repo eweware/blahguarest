@@ -52,6 +52,7 @@ public interface StoreManager extends ManagerInterface {
     public abstract UserGroupDAO createUserGroup(String userId, String groupId) throws SystemErrorException;
     public abstract UserGroupDAO createUserGroup(Map<String, Object> map) throws SystemErrorException;
 
+    public abstract MediaDAO createMedia();
 
     public abstract BlahDAO createBlah();
     public abstract BlahDAO createBlah(String blahId) throws SystemErrorException;
@@ -61,27 +62,26 @@ public interface StoreManager extends ManagerInterface {
     public abstract UserBlahInfoDAO createUserBlahInfo(String userId, String blahId);
     public abstract UserBlahInfoDAO createUserBlahInfo(Map<String, Object> map) throws SystemErrorException;
 
-    public abstract UserCommentInfoDAO createUserCommentInfo(String userId, String commentId);
+    public abstract BlahTypeDAO createBlahType();
 
+    public abstract UserCommentInfoDAO createUserCommentInfo(String userId, String commentId);
     public abstract UserCommentInfoDAO createUserCommentInfo(Map<String, Object> map) throws SystemErrorException;
+
     public abstract CommentDAO createComment();
     public abstract CommentDAO createComment(String commentId) throws SystemErrorException;
-
     public abstract CommentDAO createComment(Map<String, Object> map) throws SystemErrorException;
+
     public abstract UserTrackerDAO createUserTracker() throws SystemErrorException;
     public abstract UserTrackerDAO createUserTracker(String trackerId) throws SystemErrorException;
-
     public abstract UserTrackerDAO createUserTracker(Map<String, Object> map) throws SystemErrorException;
 
     public abstract InboxBlahDAO createInboxBlah();
 
-    public abstract BlahTypeDAO createBlahType();
-    public abstract CommentTrackerDAO createCommentTracker();
-
-    public abstract CommentTrackerDAO createCommentTracker(String trackerId) throws SystemErrorException;
     public abstract BlahTrackerDAO createBlahTracker();
-
     public abstract BlahTrackerDAO createBlahTracker(String trackerId) throws SystemErrorException;
+
+    public abstract CommentTrackerDAO createCommentTracker();
+    public abstract CommentTrackerDAO createCommentTracker(String trackerId) throws SystemErrorException;
 
     public abstract InboxStateDAO createInboxState();
 

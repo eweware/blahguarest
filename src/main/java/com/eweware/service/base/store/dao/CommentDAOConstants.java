@@ -20,6 +20,7 @@ public interface CommentDAOConstants {
     static final String VIEWS = "views";
     static final String OPENS = "opens";
     static final String STATS = "stats";
+    static final String IMAGE_IDS = "img";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
@@ -33,6 +34,9 @@ public interface CommentDAOConstants {
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS
+            }),
+            new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {
+                    IMAGE_IDS
             }),
     };
 }

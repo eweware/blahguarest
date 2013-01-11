@@ -49,7 +49,7 @@ public class BlahsResource {
             SystemManager.getInstance().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
@@ -80,14 +80,14 @@ public class BlahsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
+//            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
             blah.setId(blahId);
             BlahManager.getInstance().updateBlah(LocaleId.en_us, blah);
             final Response response = RestUtilities.makeOKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
@@ -117,7 +117,7 @@ public class BlahsResource {
 //            SystemManager.getInstance().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
 //            return response;
 //        } catch (InvalidRequestException e) {
-//            return RestUtilities.makeInvalidRequestException(e);
+//            return RestUtilities.makeInvalidRequestResponse(e);
 //        } catch (SystemErrorException e) {
 //            return RestUtilities.makeAndLogSystemErrorResponse(e);
 //        } catch (RuntimeException e) {
@@ -172,14 +172,14 @@ public class BlahsResource {
                                 @Context HttpServletRequest req) {
         try {
             final long start = System.currentTimeMillis();
-            blahId = BlahguaSession.getInternalBlahId(blahId, req.getSession(true));
+//            blahId = BlahguaSession.getInternalBlahId(blahId, req.getSession(true));
             final Response response = RestUtilities.makeOkResponse(BlahManager.getInstance().getBlahById(LocaleId.en_us, blahId, userId, stats, statsStartDate, statsEndDate));
             SystemManager.getInstance().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {

@@ -31,7 +31,7 @@ public class StatisticsResource {
             SystemManager.getInstance().setResponseTime(GET_GROUP_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {

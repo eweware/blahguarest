@@ -45,7 +45,7 @@ public class CommentsResource {
             SystemManager.getInstance().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
@@ -74,7 +74,7 @@ public class CommentsResource {
             SystemManager.getInstance().setResponseTime(UPDATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
@@ -96,7 +96,7 @@ public class CommentsResource {
             SystemManager.getInstance().setResponseTime(DELETE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {
@@ -119,7 +119,7 @@ public class CommentsResource {
             SystemManager.getInstance().setResponseTime(GET_COMMENT_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
@@ -144,7 +144,7 @@ public class CommentsResource {
             SystemManager.getInstance().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {

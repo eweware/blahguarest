@@ -9,6 +9,7 @@ import main.java.com.eweware.service.base.store.dao.schema.InboxBlahSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +37,7 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(DOWN_VOTES, MongoFieldTypes.NUMBER);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
+        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
     }
@@ -131,6 +133,16 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     @Override
     public void setBlahText(String text) {
         put(BLAH_TEXT, text);
+    }
+
+    @Override
+    public List<String> getImageIds() {
+        return (List<String>) get(IMAGE_IDS);
+    }
+
+    @Override
+    public void setImageIds(List<String> imageIds) {
+        put(IMAGE_IDS, imageIds);
     }
 
     @Override

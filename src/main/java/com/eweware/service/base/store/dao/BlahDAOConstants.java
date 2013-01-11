@@ -23,6 +23,7 @@ public interface BlahDAOConstants {
     static final String BLAH_STRENGTH = "s";
     static final String RECENT_BLAH_STRENGTH = "r";
     static final String STATS = "stats";
+    static final String IMAGE_IDS = "img";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
@@ -36,7 +37,10 @@ public interface BlahDAOConstants {
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS
-            })
+            }),
+            new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {
+                    IMAGE_IDS
+            }),
     };
 
 }

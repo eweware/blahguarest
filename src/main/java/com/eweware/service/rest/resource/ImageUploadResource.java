@@ -9,7 +9,16 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
+import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.store.StoreManager;
+import main.java.com.eweware.service.base.store.dao.BlahDAO;
+import main.java.com.eweware.service.base.store.dao.CommentDAO;
+import main.java.com.eweware.service.base.store.dao.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.MediaDAO;
+import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import main.java.com.eweware.service.mgr.MediaManager;
+import main.java.com.eweware.service.rest.RestUtilities;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
@@ -23,7 +32,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author rk@post.harvard.edu
@@ -38,10 +46,11 @@ public class ImageUploadResource {
      */
     private static final String localOriginalImagePath = "/app/blahguarest/images/original/";
     private static final String localFormattedImagePath = "/app/blahguarest/images/image/";
-    private static final String s3BucketName = "blahguaimages";
-    private static final String s3OriginalImageDirname = "original/";
-    private static final String s3FormattedImageDirname = "image/";
-    private static final boolean useS3 = true;
+    private static String s3BucketName;
+    private static String s3OriginalImageDirname;
+    private static String s3FormattedImageDirname;
+
+    private static StoreManager storeManager;
 
     private static final String canonicalFileFormat = ".jpg";
     private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
@@ -56,7 +65,6 @@ public class ImageUploadResource {
         supportedUploadFormats.put(".gif", 1);
         supportedUploadFormats.put(".GIF", 1);
     }
-
 
     /**
      * We create a set of versions of the uploaded file
@@ -86,6 +94,15 @@ public class ImageUploadResource {
     }
 
     /**
+     * Parameter objectType is used to refer to a blah or comment type.
+     * See imageUpload method.
+     */
+    private enum ObjectType {
+        B, // A blah
+        C; // A comment
+    }
+
+    /**
      * TODO should be replaced by the OptionsMethodFilter class when necessary
      * @param req
      * @return
@@ -108,33 +125,40 @@ public class ImageUploadResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
     public Response imageUpload(
-            @FormDataParam("objectType") String objectType,
+            @FormDataParam("objectType") String objType,
             @FormDataParam("objectId") String objectId,
-            @FormDataParam("primary") Boolean isPrimary,
+            @FormDataParam("primary") Boolean isPrimary, // ignored TODO there's only one image for now
             @FormDataParam("file") InputStream in,
             @FormDataParam("file") FormDataContentDisposition metadata,
             @Context HttpServletRequest request) {
-        if (objectType == null || objectId == null) {
-            return Response.status(400).entity("missing objectType and/or objectId parameters").build();
+        if (objectId == null) {
+            return RestUtilities.makeInvalidRequestResponse(
+                    new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));
         }
+        final ObjectType objectType;
+        try {
+            objectType = ObjectType.valueOf(objType);
+        } catch (IllegalArgumentException e) {
+            return RestUtilities.makeInvalidRequestResponse(
+                    new InvalidRequestException("missing or invalid objectType", ErrorCodes.INVALID_INPUT));
+        }
+
         AmazonS3 s3 = null;
-        if (useS3) {
-            try {
-                final InputStream resourceAsStream = ImageUploadResource.class.getResourceAsStream("AwsCredentials.properties");
-                if (resourceAsStream == null) {
-                    return Response.status(400).entity("Missing AWS credentials file AwsCredentials.properties").build();
-                }
-                s3 = new AmazonS3Client(new PropertiesCredentials(resourceAsStream));
-            } catch (Exception e) {
-                System.err.println("Failed to get AWS credentials");
-                e.printStackTrace();
-                return Response.status(400).entity("Failed to get AWS credentials for S3. " + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
+        try {
+            final InputStream resourceAsStream = ImageUploadResource.class.getResourceAsStream("AwsCredentials.properties");
+            if (resourceAsStream == null) {
+                return Response.status(400).entity("Missing AWS credentials file AwsCredentials.properties").build();
             }
+            s3 = new AmazonS3Client(new PropertiesCredentials(resourceAsStream)); // TODO is it reasonable to cache this object?
+        } catch (Exception e) {
+            System.err.println("Failed to get AWS credentials");
+            e.printStackTrace();
+            return Response.status(400).entity("Failed to get AWS credentials for S3. " + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
         }
 
         final String msg;
         try {
-            msg = processFile(in, metadata, s3);
+            msg = processFile(in, metadata, s3, objectType, objectId);
         } catch (Exception x) {
             return Response.status(400).entity(x.getMessage()).build();
         }
@@ -144,7 +168,7 @@ public class ImageUploadResource {
                         .entity(msg).build();
     }
 
-    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3) throws InvalidRequestException, SystemErrorException {
+    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException {
         final long fileSize = metadata.getSize();
         if (fileSize != 0 && fileSize > 1000000) { // can be misleading or -1, but try...
             throw new InvalidRequestException("File size exceeds 1MB limit: " + fileSize);
@@ -155,25 +179,27 @@ public class ImageUploadResource {
             throw new InvalidRequestException("File format not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
         final String filename = getFilename(file);
-        String mediaId = makeMediaId();
-        final String filepath = localOriginalImagePath + mediaId + extension;
+        final MediaDAO mediaDAO = makeMediaRecord(objectType);
+        final String filepath = localOriginalImagePath + mediaDAO.getId() + extension;
         final File infile = new File(filepath);
         saveFile(in, infile, s3);
-        saveFormats(infile, s3);
+        saveFormats(infile, s3, mediaDAO.getId(), objectType, objectId);
 
-        return mediaId;
+        return mediaDAO.getId();
     }
 
-    private String makeMediaId() {
-        final UUID uuid = UUID.randomUUID();
-        return uuid.toString();
+    private MediaDAO makeMediaRecord(ObjectType objectType) throws SystemErrorException {
+        final MediaDAO media = getStoreManager().createMedia();
+        media.setType(objectType.toString());
+        media._insert();
+        return media;
     }
 
     private boolean isFormatSupported(String extension) {
         return (extension != null) && (supportedUploadFormats.get(extension) != null);
     }
 
-    private void saveFormats(File original, AmazonS3 s3) throws InvalidRequestException, SystemErrorException {
+    private void saveFormats(File original, AmazonS3 s3, String mediaId, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException {
 
         final String filename = original.getName();
         final String filepath = original.getAbsolutePath();
@@ -223,17 +249,19 @@ public class ImageUploadResource {
                     throw new SystemErrorException("File " + newFilename + " was not successfully converted", ErrorCodes.SERVER_SEVERE_ERROR);
                 }
                 filesToDelete.add(newFile);
-                if (useS3) {
-                    // Upload converted file to s3
-                    try {
-                        s3.putObject(new PutObjectRequest(s3BucketName, s3FormattedImageDirname + newFilename, newFile));
-                    } catch (com.amazonaws.AmazonServiceException e) {
-                        throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
-                    } catch (com.amazonaws.AmazonClientException e) {
-                        throw new SystemErrorException("AWS client exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
-                    } catch (Exception e) {
-                        throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
-                    }
+                // Upload converted file to s3
+                try {
+                    ensureBucketMetadata();
+                    final long start = System.currentTimeMillis();
+                    s3.putObject(new PutObjectRequest(s3BucketName, s3FormattedImageDirname + newFilename, newFile));
+                    System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
+                    associateWithObject(mediaId, objectType, objectId);
+                } catch (com.amazonaws.AmazonServiceException e) {
+                    throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                } catch (com.amazonaws.AmazonClientException e) {
+                    throw new SystemErrorException("AWS client exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                } catch (Exception e) {
+                    throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
                 }
             }
         } catch (Exception ex) {
@@ -256,6 +284,28 @@ public class ImageUploadResource {
         }
     }
 
+    private void associateWithObject(String mediaId, ObjectType objectType, String objectId) throws SystemErrorException, ResourceNotFoundException {
+        List<String> imageIds = new ArrayList<String>(1);
+        imageIds.add(mediaId);
+        if (objectType == ObjectType.B) {
+            if (!getStoreManager().createBlah(objectId)._exists()) {
+                throw new ResourceNotFoundException("No blahId=" + objectId + " exists");
+            }
+            final BlahDAO blah = (BlahDAO) getStoreManager().createBlah(objectId);
+            blah.setImageIds(imageIds);
+            blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        } else if (objectType == ObjectType.C) {
+            if (!getStoreManager().createComment(objectId)._exists()) {
+                throw new ResourceNotFoundException("No commentId=" + objectId + " exists");
+            }
+            final CommentDAO comment = (CommentDAO) getStoreManager().createComment(objectId);
+            comment.setImageIds(imageIds);
+            comment._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        } else {
+            throw new SystemErrorException("Object type " + objectType + " not supported");
+        }
+    }
+
     private String makeFilename(boolean upload, FileTypeSpec spec, String filename) throws InvalidRequestException {
         final String extension = getExtension(filename);
         if (extension == null) {
@@ -273,18 +323,15 @@ public class ImageUploadResource {
     private void saveFile(InputStream in, File infile, AmazonS3 s3) throws SystemErrorException {
 
         saveLocalFile(in, infile);
-        if (useS3) {
-            try {
-                s3.putObject(new PutObjectRequest(s3BucketName, s3OriginalImageDirname + infile.getName(), infile));
-            } catch (com.amazonaws.AmazonServiceException e) {
-                throw new SystemErrorException("AWS service exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
-            } catch (com.amazonaws.AmazonClientException e) {
-                throw new SystemErrorException("AWS client exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
-            } catch (Exception e) {
-                throw new SystemErrorException("Exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
-            }
-
-
+        try {
+            ensureBucketMetadata();
+            s3.putObject(new PutObjectRequest(s3BucketName, s3OriginalImageDirname + infile.getName(), infile));
+        } catch (com.amazonaws.AmazonServiceException e) {
+            throw new SystemErrorException("AWS service exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+        } catch (com.amazonaws.AmazonClientException e) {
+            throw new SystemErrorException("AWS client exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+        } catch (Exception e) {
+            throw new SystemErrorException("Exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
@@ -306,6 +353,9 @@ public class ImageUploadResource {
         }
     }
 
+    /**
+     * Saves the uploaded file in the local fs for further processing
+     */
     private void saveLocalFile(InputStream in, File infile) throws SystemErrorException {
         OutputStream out = null;
         try {
@@ -313,13 +363,13 @@ public class ImageUploadResource {
 
             int read = 0;
             byte[] bytes = new byte[1024];
-            int bytecount = 0;
+//            int bytecount = 0;
             while ((read = in.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
-                bytecount += read;
+//                bytecount += read;
             }
             out.flush();
-            System.out.println("Saved " + infile.getAbsolutePath() + " (" + bytecount + " bytes)");
+//            System.out.println("Saved " + infile.getAbsolutePath() + " (" + bytecount + " bytes)");
         } catch (IOException e) {
             throw new SystemErrorException("Failed to save uploaded file " + infile.getAbsolutePath());
         } finally {
@@ -327,10 +377,30 @@ public class ImageUploadResource {
                 try {
                     out.close();
                 } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    throw new SystemErrorException("Failed to save local file " + infile.getAbsolutePath(), e, ErrorCodes.SERVER_SEVERE_ERROR);
                 }
             }
         }
+    }
+
+    /** Cache bucket info */
+    private void ensureBucketMetadata() throws SystemErrorException {
+        if (s3BucketName == null) {
+            s3BucketName = MediaManager.getInstance().getImageBucketName();
+        }
+        if (s3OriginalImageDirname == null) {
+            s3OriginalImageDirname = MediaManager.getInstance().getBucketOriginalDir();
+        }
+        if (s3FormattedImageDirname == null) {
+            s3FormattedImageDirname = MediaManager.getInstance().getBucketImageDir();
+        }
+    }
+
+    private StoreManager getStoreManager() throws SystemErrorException {
+        if (storeManager == null) {
+            storeManager = MongoStoreManager.getInstance();
+        }
+        return storeManager;
     }
 }
 

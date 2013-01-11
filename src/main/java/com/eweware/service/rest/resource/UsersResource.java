@@ -64,9 +64,9 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.makeUnauthorizedException(e);
+            return RestUtilities.makeUnauthorizedRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
@@ -89,7 +89,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (SystemErrorException e) {
@@ -110,7 +110,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(VALIDATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (SystemErrorException e) {
@@ -132,7 +132,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (URISyntaxException e) {
@@ -172,7 +172,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (URISyntaxException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (SystemErrorException e) {
@@ -197,7 +197,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (SystemErrorException e) {
@@ -219,7 +219,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(UPDATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
@@ -263,7 +263,7 @@ public class UsersResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -289,7 +289,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(GET_USER_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
@@ -317,7 +317,7 @@ public class UsersResource {
             SystemManager.getInstance().setResponseTime(GET_USER_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {

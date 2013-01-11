@@ -14,7 +14,7 @@ public interface MediaDAOConstants {
 
     static final String BUCKET = "b"; // the bucket name
 
-    static final String PATHNAME = "p"; // the pathname withint the bucket
+    static final String PATHNAME = "p"; // the pathname within the bucket
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{

@@ -40,7 +40,7 @@ public class UserGroupsResource {
             SystemManager.getInstance().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
@@ -69,7 +69,7 @@ public class UserGroupsResource {
             SystemManager.getInstance().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.makeStateConflictResponse(e);
         } catch (ResourceNotFoundException e) {
@@ -93,7 +93,7 @@ public class UserGroupsResource {
             SystemManager.getInstance().setResponseTime(GET_USER_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.makeResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
@@ -118,7 +118,7 @@ public class UserGroupsResource {
             SystemManager.getInstance().setResponseTime(GET_USER_GROUPS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestException(e);
+            return RestUtilities.makeInvalidRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {

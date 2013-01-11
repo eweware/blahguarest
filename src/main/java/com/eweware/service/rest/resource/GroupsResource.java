@@ -33,7 +33,7 @@ public class GroupsResource {
             GroupPayload g = GroupManager.getInstance().createGroup(LocaleId.en_us, group);
             return RestUtilities.makeCreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (URISyntaxException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
 		} catch (SystemErrorException e) {
@@ -52,7 +52,7 @@ public class GroupsResource {
             GroupManager.getInstance().updateGroup(LocaleId.en_us, groupId, group);
 			return RestUtilities.makeOKNoContentResponse();
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (ResourceNotFoundException e) {
 			return RestUtilities.makeResourceNotFoundResponse(e);
 		} catch (StateConflictException e) {
@@ -76,7 +76,7 @@ public class GroupsResource {
 		try {
 			return RestUtilities.makeOkResponse(GroupManager.getInstance().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (SystemErrorException e) {
 			return RestUtilities.makeAndLogSystemErrorResponse(e);
 		} catch (RuntimeException e) {
@@ -92,7 +92,7 @@ public class GroupsResource {
 		try {
 			return RestUtilities.makeOkResponse(GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId));
 		} catch (InvalidRequestException e) {
-			return RestUtilities.makeInvalidRequestException(e);
+			return RestUtilities.makeInvalidRequestResponse(e);
 		} catch (ResourceNotFoundException e) {
 			return RestUtilities.makeResourceNotFoundResponse(e);
 		} catch (SystemErrorException e) {

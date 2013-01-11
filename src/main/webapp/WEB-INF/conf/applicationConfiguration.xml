@@ -86,6 +86,10 @@
 
     <bean id="mediaManager" class="main.java.com.eweware.service.mgr.MediaManager"
 		init-method="start" destroy-method="shutdown">
+        <constructor-arg  type="java.lang.String" value="${blag.media.images.s3pathname}" />
+        <constructor-arg  type="java.lang.String" value="${blag.media.images.bucket.name}" />
+        <constructor-arg  type="java.lang.String" value="${blag.media.images.bucket.image.dirpath}" />
+        <constructor-arg  type="java.lang.String" value="${blag.media.images.bucket.original.dirpath}" />
 	</bean>
 	
 	<bean id="systemManager" class="main.java.com.eweware.service.mgr.SystemManager"

@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -117,6 +118,9 @@ public class InboxHandler extends Thread {
         if (tmp != null) {dao.setOpens(tmp);}
         tmp = blahDAO.getViews();
         if (tmp != null) {dao.setViews(tmp);}
+        final List<String> imageIds = blahDAO.getImageIds();
+        if (imageIds != null) {dao.setImageIds(imageIds);}
+
 //        dao.setStrength(0.85);
 //        dao.setRecentStrength(0.85);
 

@@ -35,6 +35,7 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENT_STRENGTH, MongoFieldTypes.NUMBER);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
+        CommentDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
     }
@@ -88,6 +89,16 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     @Override
     public void setText(String text) {
         put(TEXT, text);
+    }
+
+    @Override
+    public List<String> getImageIds() {
+        return (List<String>) get(IMAGE_IDS);
+    }
+
+    @Override
+    public void setImageIds(List<String> imageIds) {
+        put(IMAGE_IDS, imageIds);
     }
 
     @Override
@@ -200,5 +211,10 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     @Override
     public void setStats(List<CommentTrackerDAO> stats) {
         put(STATS, stats);
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
     }
 }

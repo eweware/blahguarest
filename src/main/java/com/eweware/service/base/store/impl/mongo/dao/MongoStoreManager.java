@@ -414,6 +414,11 @@ public final class MongoStoreManager implements StoreManager {
     }
 
     @Override
+    public MediaDAO createMedia() {
+        return new MediaDAOImpl();
+    }
+
+    @Override
     public BlahDAO createBlah() {
         return new BlahDAOImpl();
     }

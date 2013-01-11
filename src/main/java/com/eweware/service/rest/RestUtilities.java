@@ -61,7 +61,7 @@ public final class RestUtilities {
         return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
     }
 
-    public static Response makeInvalidRequestException(InvalidRequestException e) {
+    public static Response makeInvalidRequestResponse(InvalidRequestException e) {
         String msg = new Date() + ": makeInvalidRequestException: " + e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {
@@ -70,7 +70,7 @@ public final class RestUtilities {
         return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
     }
 
-    public static Response makeUnauthorizedException(InvalidAuthorizedStateException e) {
+    public static Response makeUnauthorizedRequestResponse(InvalidAuthorizedStateException e) {
         String msg = new Date() + ": makeUnauthorizedException: " + e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {

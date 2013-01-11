@@ -57,6 +57,17 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setBody(String body);
 
     /**
+     * @return List<String> A list of image ids associated with this blah.
+     */
+    public List<String> getImageIds();
+
+    /**
+     * Sets the image ids associated with this blah.
+     * @param imageIds A list of image ids
+     */
+    public void setImageIds(List<String> imageIds);
+
+    /**
      * @return String Returns the blah's injected group id
      */
     public String getGroupId();

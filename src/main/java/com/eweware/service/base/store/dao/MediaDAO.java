@@ -7,13 +7,20 @@ package main.java.com.eweware.service.base.store.dao;
  */
 public interface MediaDAO extends BaseDAO, MediaDAOConstants {
 
+    /**
+     * @return String   Returns the type of media (e.g., jpg, mov)
+     */
     public String getType();
 
+    /**
+     * Sets the media type
+     * @param type Media type (a valid file extension)
+     */
     public void setType(String type);
 
     public String getBucketName();
 
-    public String setBucketName();
+    public void setBucketName(String bucket);
 
     public String getPathname();
 
