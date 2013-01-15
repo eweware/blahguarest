@@ -2,9 +2,8 @@ package main.java.com.eweware.service.mgr;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.mgr.UserValidationMethod;
+import main.java.com.eweware.service.user.validation.UserValidationMethod;
 import main.java.com.eweware.service.base.payload.AuthorizedState;
 import main.java.com.eweware.service.base.payload.GroupPayload;
 import main.java.com.eweware.service.base.payload.GroupTypePayload;

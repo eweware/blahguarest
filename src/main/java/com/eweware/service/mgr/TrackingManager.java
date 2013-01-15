@@ -11,7 +11,6 @@ import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;

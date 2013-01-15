@@ -3,7 +3,6 @@ package main.java.com.eweware.service.mgr;
 import main.java.com.eweware.service.base.cache.BlahCache;
 import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import org.apache.commons.codec.binary.Base64;

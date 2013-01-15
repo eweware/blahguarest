@@ -2,215 +2,231 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/CommentDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/CommentDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom-jar.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_contribs_jersey_multipart_1_14.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_servlet_1_14.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_jvnet_mimepull_1_6.xml" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_client_1_14.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_client_1_8.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_core_1_14.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_json_1_8.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_json_1_14.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_core_1_8.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_server_1_14.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_jersey_jersey_server_1_8.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_9_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_jaxrs_1_7_1.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_9_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_jackson_jackson_xc_1_7_1.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/DefaultUserValidationMethod.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/DefaultUserValidationMethod.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/EmailUserValidationMethod.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/EmailUserValidationMethod.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/ManagerInterface.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/ManagerInterface.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/UserValidationMethod.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/UserValidationMethod.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/Login.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/Login.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/InboxBlahDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/InboxBlahDAOImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__asm_asm_3_3_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__asm_asm_3_3_1.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MediaManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MediaManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/StatisticsManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/StatisticsManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/SystemManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/SystemManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TestManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TestManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TrackingManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TrackingManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/test/index.html" afterPath="$PROJECT_DIR$/src/main/webapp/test/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/upload-image.html" afterPath="$PROJECT_DIR$/src/main/webapp/upload-image.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blahguarest.iml" afterPath="$PROJECT_DIR$/blahguarest.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866690990" ignored="false" />
-    <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357861829638" ignored="false" />
-    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357855056779" ignored="false" />
-    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357860632652" ignored="false" />
-    <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
-    <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356586410915" ignored="false" />
-    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357266453260" ignored="false" />
-    <file path="/index.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357773699232" ignored="false" />
-    <file path="/RestUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357259737229" ignored="false" />
-    <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356587830566" ignored="false" />
-    <file path="/JSONProvider.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356589590232" ignored="false" />
-    <file path="/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866443383" ignored="false" />
-    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356641153279" ignored="false" />
-    <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739660136" ignored="false" />
-    <file path="/Session.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739367070" ignored="false" />
-    <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
-    <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357265923992" ignored="false" />
-    <file path="/SessionAttributes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357259452694" ignored="false" />
-    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916122165" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916341457" ignored="false" />
-    <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357264979693" ignored="false" />
-    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357772003881" ignored="false" />
-    <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357260958356" ignored="false" />
-    <file path="/UserDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357256223358" ignored="false" />
-    <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357256285329" ignored="false" />
-    <file path="/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357263685986" ignored="false" />
-    <file path="/CommonUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357258308599" ignored="false" />
-    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357851038558" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328273494" ignored="false" />
-    <file path="/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328258608" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Entry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357330149291" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/IndexLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357621391214" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Sense.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357607336235" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Lang.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515088906" ignored="false" />
-    <file path="/Sense.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357606732877" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/ConstraintViolationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357331335080" ignored="false" />
-    <file path="/ConstraintViolationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357331300228" ignored="false" />
-    <file path="/IndexLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357621365103" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/LexicalEntry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357603627655" ignored="false" />
-    <file path="/LexicalEntry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515364526" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/LexiconFormatException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338094305" ignored="false" />
-    <file path="/LexiconFormatException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338076100" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338216857" ignored="false" />
-    <file path="/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338174516" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/BetaToGreek.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357340340809" ignored="false" />
-    <file path="/Lang.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357343571546" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Lexeme.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515195813" ignored="false" />
-    <file path="/Lexeme.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357350341286" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/ApplicationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357423753577" ignored="false" />
-    <file path="/ApplicationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357423751691" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/LSJ/out.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357620449301" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/LSJ/logopod.css" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357514436074" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/LSJ/aatos.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357427448736" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/ParseLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357619078169" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Indexer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357605290508" ignored="false" />
-    <file path="/Indexer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357600304838" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Searcher.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515195441" ignored="false" />
-    <file path="/Searcher.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357506712150" ignored="false" />
-    <file path="/logopod.css" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357507320109" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Script.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357605448603" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 8/nutch-default.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 6/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 6/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666420" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 3/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 3/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 10/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 7/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 10/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 9/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 5/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 10/modified/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 10/original/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 3/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 5/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 6/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 2/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 10/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 8/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 6/cores/de/conf/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 6/cores/en/conf/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 12/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 1/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/logopodConfig.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 1/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 7/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 7/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
-    <file path="/Script.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357605439421" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Locales.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357518283624" ignored="false" />
-    <file path="/Locales.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357518276249" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Locale.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357599970398" ignored="false" />
-    <file path="/Locale.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357599969531" ignored="false" />
-    <file path="/ParseLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357609078221" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/main/java/attic/Locales.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357600143182" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/main/java/attic/Locale.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357600143182" ignored="false" />
-    <file path="/OptionsMethodFilter.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357770721587" ignored="false" />
-    <file path="/MediaDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357849433063" ignored="false" />
-    <file path="/MediaDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357850474695" ignored="false" />
-    <file path="/MediaManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357851730224" ignored="false" />
-    <file path="/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357850296493" ignored="false" />
-    <file path="/StoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357855849048" ignored="false" />
-    <file path="/MongoStoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357855880163" ignored="false" />
-    <file path="/BlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357858997757" ignored="false" />
-    <file path="/BlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859135626" ignored="false" />
-    <file path="/CommentDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859729323" ignored="false" />
-    <file path="/CommentDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859782041" ignored="false" />
-    <file path="/CommentDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357861866880" ignored="false" />
-    <file path="/InboxBlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866288916" ignored="false" />
-    <file path="/InboxBlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866345606" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
+    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
+    <file path="/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357954037755" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357954037439" ignored="false" />
     <file path="/InboxBlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866385887" ignored="false" />
+    <file path="/InboxBlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866345606" ignored="false" />
+    <file path="/InboxBlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866288916" ignored="false" />
+    <file path="/CommentDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357861866880" ignored="false" />
+    <file path="/CommentDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859782041" ignored="false" />
+    <file path="/CommentDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859729323" ignored="false" />
+    <file path="/BlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859135626" ignored="false" />
+    <file path="/BlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357858997757" ignored="false" />
+    <file path="/MongoStoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357855880163" ignored="false" />
+    <file path="/StoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357855849048" ignored="false" />
+    <file path="/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357850296493" ignored="false" />
+    <file path="/MediaManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357851730224" ignored="false" />
+    <file path="/MediaDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357850474695" ignored="false" />
+    <file path="/MediaDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357849433063" ignored="false" />
+    <file path="/OptionsMethodFilter.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357770721587" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/main/java/attic/Locale.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357600143182" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/main/java/attic/Locales.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357600143182" ignored="false" />
+    <file path="/ParseLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357609078221" ignored="false" />
+    <file path="/Locale.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357599969531" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Locale.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357599970398" ignored="false" />
+    <file path="/Locales.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357518276249" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Locales.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357518283624" ignored="false" />
+    <file path="/Script.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357605439421" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 7/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 7/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 1/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/logopodConfig.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 1/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666415" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 12/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 6/cores/en/conf/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 6/cores/de/conf/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 8/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 10/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 2/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 6/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 5/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 3/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 10/original/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_10_Code/task 10/modified/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 5/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 9/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 10/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 11/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666416" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 6/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 7/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 1/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 10/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 10/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 3/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 3/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_08_Code/Task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666420" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 6/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_02_Code/task 8/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 6/solrconfig.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_01_Code/task 8/nutch-default.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 7/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_05_Code/task 5/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_06_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_03_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 4/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 2/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666417" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_07_Code/task 9/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/2183_Code/2183OS_09_Code/task 3/schema.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666419" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Script.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357605448603" ignored="false" />
+    <file path="/logopod.css" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357507320109" ignored="false" />
+    <file path="/Searcher.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357506712150" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Searcher.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515195441" ignored="false" />
+    <file path="/Indexer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357600304838" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Indexer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357605290508" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/ParseLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357619078169" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/LSJ/aatos.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357427448736" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/LSJ/logopod.css" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357514436074" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/LSJ/out.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357620449301" ignored="false" />
+    <file path="/ApplicationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357423751691" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/ApplicationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357423753577" ignored="false" />
+    <file path="/Lexeme.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357350341286" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Lexeme.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515195813" ignored="false" />
+    <file path="/Lang.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357343571546" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/BetaToGreek.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357340340809" ignored="false" />
+    <file path="/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338174516" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338216857" ignored="false" />
+    <file path="/LexiconFormatException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338076100" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/LexiconFormatException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357338094305" ignored="false" />
+    <file path="/LexicalEntry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515364526" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/LexicalEntry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357603627655" ignored="false" />
+    <file path="/IndexLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357621365103" ignored="false" />
+    <file path="/ConstraintViolationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357331300228" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/ConstraintViolationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357331335080" ignored="false" />
+    <file path="/Sense.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357606732877" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Lang.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515088906" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Sense.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357607336235" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/IndexLSJ.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357621391214" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Entry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357330149291" ignored="false" />
+    <file path="/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328258608" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328273494" ignored="false" />
+    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357851038558" ignored="false" />
+    <file path="/CommonUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357258308599" ignored="false" />
+    <file path="/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357263685986" ignored="false" />
+    <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357256285329" ignored="false" />
+    <file path="/UserDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357256223358" ignored="false" />
+    <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357260958356" ignored="false" />
+    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357772003881" ignored="false" />
+    <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357264979693" ignored="false" />
+    <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916341457" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
+    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357932446957" ignored="false" />
+    <file path="/SessionAttributes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357259452694" ignored="false" />
+    <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357265923992" ignored="false" />
+    <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
+    <file path="/Session.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739367070" ignored="false" />
+    <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739660136" ignored="false" />
+    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356641153279" ignored="false" />
+    <file path="/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357954049798" ignored="false" />
+    <file path="/JSONProvider.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356589590232" ignored="false" />
+    <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356587830566" ignored="false" />
+    <file path="/RestUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357259737229" ignored="false" />
+    <file path="/index.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357773699232" ignored="false" />
+    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357266453260" ignored="false" />
+    <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356586410915" ignored="false" />
+    <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
+    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357860632652" ignored="false" />
+    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357855056779" ignored="false" />
+    <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357861829638" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1358282881793" ignored="false" />
+    <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357932167993" ignored="false" />
+    <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1358284207843" ignored="false" />
+    <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357936918978" ignored="false" />
+    <file path="/DefaultUserValidationMethod.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357942757084" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/.idea/workspace.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357947053957" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/.idea/modules.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357946477553" ignored="false" />
+    <file path="/DAOUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357953916944" ignored="false" />
+    <file path="/MailManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1358285842265" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +241,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -237,7 +253,7 @@
         <option name="SUSPEND" value="true" />
         <option name="COUNT_FILTER_ENABLED" value="false" />
         <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CONDITION_ENABLED" value="false" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
         <option name="CONDITION" value="" />
@@ -253,14 +269,13 @@
         <option name="SUSPEND" value="true" />
         <option name="COUNT_FILTER_ENABLED" value="false" />
         <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CONDITION_ENABLED" value="false" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -270,64 +285,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BlahsResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="58" selection-start="3381" selection-end="3381" vertical-scroll-proportion="0.0">
+            <state line="123" column="23" selection-start="4467" selection-end="4467" vertical-scroll-proportion="-6.090909">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/test/index.html">
+      <file leaf-file-name="MailManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="270" column="0" selection-start="10452" selection-end="10452" vertical-scroll-proportion="0.0">
+            <state line="119" column="34" selection-start="4796" selection-end="4796" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="65" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InboxHandler.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="122" column="8" selection-start="5157" selection-end="5157" vertical-scroll-proportion="1.0437063">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InboxBlahDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="85" selection-start="1486" selection-end="1486" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="upload-image.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/upload-image.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="46" selection-start="1260" selection-end="1260" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlahguaSession.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="25" selection-start="1866" selection-end="1866" vertical-scroll-proportion="0.0">
+            <state line="290" column="28" selection-start="12945" selection-end="12952" vertical-scroll-proportion="0.3686088">
               <folding />
             </state>
           </provider>
@@ -356,22 +335,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAOConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/CommentDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/test/index.html" />
-        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/src/main/webapp/upload-image.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAOConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/InboxBlahDAOImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java" />
+        <option value="$PROJECT_DIR$/pom-jar.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/ManagerInterface.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/utils/DAOUtilities.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" />
       </list>
     </option>
   </component>
@@ -414,293 +393,27 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="blahguarest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servlet-api-2.5-20081211.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servlet-api-2.5-20081211.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servlet" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servlet-api-2.5-20081211.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servlet" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="http" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: com.amazonaws:aws-java-sdk:1.3.27" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="aws-java-sdk-1.3.27.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: com.amazonaws:aws-java-sdk:1.3.27" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="aws-java-sdk-1.3.27.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="amazonaws" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: com.amazonaws:aws-java-sdk:1.3.27" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="aws-java-sdk-1.3.27.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="amazonaws" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: com.amazonaws:aws-java-sdk:1.3.27" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="aws-java-sdk-1.3.27.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="amazonaws" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="s3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Maven: com.amazonaws:aws-java-sdk:1.3.27" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="aws-java-sdk-1.3.27.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="amazonaws" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="services" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="s3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.6 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.6 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.6 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; 1.6 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lang" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -822,62 +535,6 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahgua" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -931,37 +588,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="user" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="index" />
+              <option name="myItemId" value="validation" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -992,40 +619,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="rest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="session" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1225,48 +818,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mongo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mongo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="dao" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1301,162 +852,39 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="schema" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="schema" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="type" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="error" />
+              <option name="myItemId" value="mgr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="OverrideImplement.combined" value="false" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="editor.preferences.import" />
-    <property name="project.structure.side.proportion" value="0.19999999" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/eweware/service/base" />
+    <property name="project.structure.side.proportion" value="0.19999997" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveMembersDialog.RECENTS_KEY">
       <recent name="main.java.com.eweware.service.user.Login" />
       <recent name="main.java.com.eweware.service.base.CommonUtilities" />
@@ -1465,7 +893,29 @@
   </component>
   <component name="RunManager" selected="Remote.BlahguaRest">
     <configuration default="false" name="Login" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="main.java.com.eweware.service.user.Login" />
+      <option name="MAIN_CLASS_NAME" value="main.java.com.eweware.service.user.validation.Login" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="blahguarest" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="MailManager" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="main.java.com.eweware.service.mgr.MailManager" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -1500,6 +950,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1525,19 +988,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1588,13 +1038,14 @@
       <ConfigurationWrapper RunnerId="Debug" />
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Remote.BlahguaRest" />
       <item index="1" class="java.lang.String" itemvalue="Application.Login" />
+      <item index="2" class="java.lang.String" itemvalue="Application.MailManager" />
     </list>
     <recent_temporary>
       <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Application.Login" />
+        <item index="0" class="java.lang.String" itemvalue="Application.MailManager" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -1650,12 +1101,16 @@
       <created>1357793454348</created>
       <updated>1357793454348</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Blah, Comment, and Inbox blah objects have an img field associated with them containing an array of image ids.">
+      <created>1357866754908</created>
+      <updated>1357866754908</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="53" y="22" width="1627" height="1028" extended-state="6" />
-    <editor active="false" />
+    <frame x="53" y="22" width="1627" height="1028" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1665,17 +1120,17 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32637364" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32637364" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24920936" sideWeight="0.2400881" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24920936" sideWeight="0.67362636" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.314358" sideWeight="0.6013216" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11638204" sideWeight="0.6013216" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11638204" sideWeight="0.6013216" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1745,114 +1200,112 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/MongoFieldTypes.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/EmailUserValidationMethod.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="12" selection-start="245" selection-end="245" vertical-scroll-proportion="0.0">
+        <state line="16" column="33" selection-start="669" selection-end="669" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="66" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/UserValidationMethod.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="29" selection-start="510" selection-end="510" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/CommentDAOImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/DefaultUserValidationMethod.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="54" selection-start="1951" selection-end="1951" vertical-scroll-proportion="0.0">
+        <state line="10" column="32" selection-start="395" selection-end="395" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/ManagerInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="185" column="0" selection-start="7932" selection-end="7932" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="178" column="0" selection-start="7939" selection-end="7939" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="25" selection-start="1866" selection-end="1866" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="58" selection-start="3381" selection-end="3381" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/test/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="270" column="0" selection-start="10452" selection-end="10452" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/upload-image.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="46" selection-start="1260" selection-end="1260" vertical-scroll-proportion="0.0">
+        <state line="6" column="24" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="65" selection-start="1134" selection-end="1134" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="85" selection-start="1486" selection-end="1486" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/InboxBlahSchema.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="286" selection-end="286" vertical-scroll-proportion="0.13969733">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/InboxBlahDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="144" column="33" selection-start="4725" selection-end="4725" vertical-scroll-proportion="0.9650757">
+        <state line="27" column="0" selection-start="1005" selection-end="1005" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="23" selection-start="179" selection-end="179" vertical-scroll-proportion="0.10477299">
+        <state line="0" column="21" selection-start="18" selection-end="21" vertical-scroll-proportion="-0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="154" column="36" selection-start="3500" selection-end="3500" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="17" selection-start="319" selection-end="319" vertical-scroll-proportion="0.15306123">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/ManagerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="18" selection-start="106" selection-end="106" vertical-scroll-proportion="0.08503401">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="122" column="8" selection-start="5157" selection-end="5157" vertical-scroll-proportion="1.0437063">
+        <state line="104" column="149" selection-start="4536" selection-end="4536" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="13" selection-start="189" selection-end="189" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="46" selection-start="692" selection-end="741" vertical-scroll-proportion="0.2589183">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="123" column="23" selection-start="4467" selection-end="4467" vertical-scroll-proportion="-6.090909">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="119" column="34" selection-start="4796" selection-end="4796" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="290" column="28" selection-start="12945" selection-end="12952" vertical-scroll-proportion="0.3686088">
           <folding />
         </state>
       </provider>
@@ -1863,10 +1316,11 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
+          <last-edited>blahguarest:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.19999999" />
               </list>
             </option>
           </splitter-proportions>
@@ -1897,6 +1351,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
+          <last-edited>scala-compiler</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1924,7 +1379,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.19999999" />
+                <option value="0.19999997" />
                 <option value="0.5" />
               </list>
             </option>
@@ -1949,7 +1404,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.19999999" />
+                <option value="0.19999997" />
               </list>
             </option>
           </splitter-proportions>

@@ -1,7 +1,7 @@
 package main.java.com.eweware.service.base.store;
 
 import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
+import main.java.com.eweware.service.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
 

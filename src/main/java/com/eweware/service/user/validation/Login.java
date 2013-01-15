@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.user;
+package main.java.com.eweware.service.user.validation;
 
 
 import main.java.com.eweware.service.base.CommonUtilities;

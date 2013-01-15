@@ -102,6 +102,8 @@ public class InboxHandler extends Thread {
      */
     public void spreadBlah(LocaleId localeId, BlahDAO blahDAO, String groupId) throws SystemErrorException {
 
+        // TODO need a static method in baselib for the inbox blah creation so that it's shared with stats app, see stats InboxBuilder.buildInboxes()
+
         InboxBlahDAO dao = storeManager.createInboxBlah();
         dao.initToDefaultValues(localeId);
 

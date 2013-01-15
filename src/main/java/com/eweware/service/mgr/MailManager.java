@@ -9,6 +9,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.xml.ws.WebServiceException;
 import java.net.InetAddress;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.Properties;
 
 /**
@@ -18,7 +20,7 @@ import java.util.Properties;
  *         TODO add monitors for mutating variables or lists with mutating elements
  *         TODO add transaction-level management (rollbacks)
  */
-public class MailManager implements main.java.com.eweware.service.base.mgr.ManagerInterface {
+public class MailManager implements ManagerInterface {
 
     private static MailManager singleton;
 
@@ -100,10 +102,25 @@ public class MailManager implements main.java.com.eweware.service.base.mgr.Manag
 
     private void test() throws SystemErrorException {
         try {
-            System.out.println("TESTING MailManager...");
             final String host = InetAddress.getLocalHost().getHostName();
-            send("rk@eweware.com", "Server at '" + host + "' Started", "This host has just started running...");
-            System.out.println("... MailManager test succeeded.");
+            final StringBuilder subject = new StringBuilder("Instance ");
+            subject.append(System.getProperty("user.name"));
+            subject.append("@");
+            subject.append(host);
+            subject.append(" started ");
+            subject.append(new Date());
+            final StringBuilder body = new StringBuilder("blahguarest service started on this instance.\n\n");
+            Properties props =  System.getProperties();
+            final Enumeration<?> elements = props.propertyNames();
+            while (elements.hasMoreElements()) {
+                final String pname = (String) elements.nextElement();
+                body.append(pname);
+                body.append("=");
+                body.append(props.getProperty(pname));
+                body.append("\n");
+            }
+            body.append("\n");
+            send("rk@eweware.com", subject.toString(), body.toString());
         } catch (SendFailedException e) {
         } catch (Exception e) {
             throw new SystemErrorException(e);

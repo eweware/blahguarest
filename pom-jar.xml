@@ -6,25 +6,19 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.eweware</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>baselib</artifactId>
     <version>0.9.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <name>Blahgua REST API Service</name>
+    <packaging>jar</packaging>
+    <name>Blahgua REST API Base Jar</name>
     <url/>
-    <description>Blahgua Rest Service</description>
+    <description>Contains common classes (DAOs, resources, etc) used by test and other frameworks</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
-        <resources>
-            <resource>
-                <targetPath>main/java/com/eweware/service/rest/resource</targetPath>
-                <directory> ${basedir}/src/main/resources</directory>
-                <includes><include>**/*.properties</include></includes>
-            </resource>
-        </resources>
+        <sourceDirectory>src/main/java/com/eweware/service</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -34,33 +28,6 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <id>filtered-jar-with-deps</id>
-                        <phase>assembly</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptor>src/main/resources/assemblies/filtered-jar-with-deps.xml</descriptor>
-                            <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-                <!-- configuration>
-                    <url>http://localhost:50192/manager</url>
-                    <server>Tomcat</server>
-                    <path>/Users/admin/dev/apache-tomcat-7.0.27</path>
-                </configuration -->
             </plugin>
         </plugins>
     </build>
@@ -100,43 +67,43 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
-            <version>1.8</version>
+            <version>1.14</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>1.8</version>
+            <version>1.14</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
-            <version>1.8</version>
+            <version>1.14</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.8</version>
+            <version>1.14</version>
         </dependency>
-        <!-- dependency>
+        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-servlet</artifactId>
-            <version>1.8</version>
-        </dependency -->
+            <version>1.14</version>
+        </dependency>
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-multipart</artifactId>
-            <version>1.8</version>
+            <version>1.14</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.jettison</groupId>
             <artifactId>jettison</artifactId>
             <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
         </dependency>
         <!-- jackson obtained from jersey?
         <dependency>
@@ -184,27 +151,6 @@
             <artifactId>spring</artifactId>
             <version>2.5.6</version>
         </dependency>
-        <!-- dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>2.5.6</version>
-        </dependency -->
-
-        <!-- dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-api</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-core</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
-            <version>2.2.2</version>
-        </dependency -->
 
         <dependency>
             <groupId>taglibs</groupId>
@@ -268,13 +214,6 @@
             <version>2.2.4_2</version>
         </dependency>
 
-        <!-- dependency>
-            <groupId>activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.0.2</version>
-        </dependency -->
-
-
         <!-- MongoDB dependencies -->
         <dependency>
             <groupId>org.mongodb</groupId>
@@ -301,11 +240,6 @@
             <artifactId>im4java</artifactId>
             <version>1.2.0</version>
         </dependency>
-        <!-- dependency>
-            <groupId>jmagick</groupId>
-            <artifactId>jmagick</artifactId>
-            <version>6.2.4</version>
-        </dependency -->
 
         <!-- Memcached -->
         <dependency>

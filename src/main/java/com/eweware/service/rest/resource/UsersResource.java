@@ -9,7 +9,7 @@ import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.user.Login;
+import main.java.com.eweware.service.user.validation.Login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;

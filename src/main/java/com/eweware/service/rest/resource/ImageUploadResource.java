@@ -255,7 +255,6 @@ public class ImageUploadResource {
                     final long start = System.currentTimeMillis();
                     s3.putObject(new PutObjectRequest(s3BucketName, s3FormattedImageDirname + newFilename, newFile));
                     System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
-                    associateWithObject(mediaId, objectType, objectId);
                 } catch (com.amazonaws.AmazonServiceException e) {
                     throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
                 } catch (com.amazonaws.AmazonClientException e) {
@@ -264,6 +263,9 @@ public class ImageUploadResource {
                     throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
                 }
             }
+
+            associateWithObject(mediaId, objectType, objectId);
+
         } catch (Exception ex) {
             throw new SystemErrorException("File upload failed", ex, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         } finally {

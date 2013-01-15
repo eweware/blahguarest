@@ -4,11 +4,9 @@ import com.mongodb.gridfs.GridFS;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 
 import javax.ws.rs.core.Response;
-import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
