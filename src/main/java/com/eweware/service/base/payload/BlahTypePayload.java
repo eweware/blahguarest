@@ -29,4 +29,12 @@ public class BlahTypePayload extends BasePayload implements BlahTypeDAOConstants
     public void setName(String name) {
         put(NAME, name);
     }
+
+    public Integer getCategoryId() {
+        return (Integer) get(CATEGORY_ID);
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        put(CATEGORY_ID, categoryId);
+    }
 }

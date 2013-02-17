@@ -5,6 +5,7 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.BlahTrackerDAO;
+import main.java.com.eweware.service.base.store.dao.PollOptionTextDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
@@ -31,7 +32,6 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(BODY, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_ID, MongoFieldTypes.STRING);
-        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(VOTES, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(UP_VOTES, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(DOWN_VOTES, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
@@ -39,6 +39,9 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENTS, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_STRENGTH, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(RECENT_BLAH_STRENGTH, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_OPTION_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_OPTIONS_TEXT, MongoFieldTypes.ARRAY);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_OPTION_VOTES, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(STATS, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
@@ -123,6 +126,36 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
+    public Integer getPollOptionCount() {
+        return (Integer) get(POLL_OPTION_COUNT);
+    }
+
+    @Override
+    public void setPollOptionCount(Integer pollOptionCount) {
+        put(POLL_OPTION_COUNT, pollOptionCount);
+    }
+
+    @Override
+    public List<PollOptionTextDAO> getPollOptionsText() {
+        return (List<PollOptionTextDAO>) get(POLL_OPTIONS_TEXT);
+    }
+
+    @Override
+    public void setPollOptionsText(List<PollOptionTextDAO> pollOptionText) {
+        put(POLL_OPTIONS_TEXT, pollOptionText);
+    }
+
+    @Override
+    public List<Integer> getPollOptionVotes() {
+        return (List<Integer>) get(POLL_OPTION_VOTES);
+    }
+
+    @Override
+    public void setPollOptionVotes(List<Integer> pollOptionVotes) {
+        put(POLL_OPTION_VOTES, pollOptionVotes);
+    }
+
+    @Override
     public String getGroupId() {
         return (String) get(GROUP_ID);
     }
@@ -200,16 +233,6 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     @Override
     public void setRecentStrength(Double strength) {
         put(RECENT_BLAH_STRENGTH, strength);
-    }
-
-    @Override
-    public Integer getVotes() {
-        return (Integer) get(VOTES);
-    }
-
-    @Override
-    public void setVotes(Integer votes) {
-        put(VOTES, votes);
     }
 
     @Override

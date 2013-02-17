@@ -11,6 +11,7 @@ import java.util.Map;
 public final class BlahPayload extends BasePayload implements BlahDAOConstants {
 
     static final String ORIGINAL_GROUP_ID = "groupId";
+    static final String VOTES = "v";
     static final String USER_VOTE = "uv";
     static final String USER_VIEWS = "uw";
     static final String USER_OPENS = "uo";
@@ -137,6 +138,62 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
 
     public void setUserOpens(Integer userOpens) {
         put(USER_OPENS, userOpens);
+    }
+
+    /**
+     * @return List<String> A list of image ids associated with this blah.
+     */
+    public List<String> getImageIds() {
+        return (List<String>) get(IMAGE_IDS);
+    }
+
+    /**
+     * Sets the image ids associated with this blah.
+     * @param imageIds A list of image ids
+     */
+    public void setImageIds(List<String> imageIds) {
+        put(IMAGE_IDS, imageIds);
+    }
+
+    /**
+     * Returns the number of poll options (number of
+     * entries in poll options array.
+     * @return  The number of poll options
+     */
+    public Integer getPollOptionCount() {
+        return (Integer) get(POLL_OPTION_COUNT);
+    }
+
+    /**
+     * Sets the number of poll options
+     * @param pollOptionCount   The number of poll options
+     */
+    public void setPollOptionCount(Integer pollOptionCount) {
+        put(POLL_OPTION_COUNT, pollOptionCount);
+    }
+
+    /**
+     * Returns the poll option items' text
+     * @return An array with the text option's text
+     */
+    public List<PollOptionsTextPayload> getPollOptionsText() {
+        return (List<PollOptionsTextPayload>) get(POLL_OPTIONS_TEXT);
+    }
+
+    /**
+     * Sets the text for each of the poll options.
+     * @param options   The options
+     */
+    public void setPollOptionsText(List<PollOptionsTextPayload> options) {
+        put(POLL_OPTIONS_TEXT, options);
+    }
+
+    public List<Integer> getPollOptionVotes() {
+        return (List<Integer>) get(POLL_OPTION_VOTES);
+    }
+
+    public void setPollOptionVotes(List<Integer> pollOptionVotes) {
+        put(POLL_OPTION_VOTES, pollOptionVotes);
     }
 
     public Double getStrength() {

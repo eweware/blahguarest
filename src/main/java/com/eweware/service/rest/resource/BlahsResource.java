@@ -6,7 +6,6 @@ import main.java.com.eweware.service.base.payload.BlahPayload;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
 import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -32,20 +31,20 @@ public class BlahsResource {
     private static final String GET_BLAHS_OPERATION = "getBlahs";
 
     /**
-     * Creates a blah.
+     * Creates a request.
      *
-     * @param blah The blah payload
+     * @param request The request payload
      * @param uri  URI to use to build the http Location header
-     * @return BlahPayload The created blah with the new _id
+     * @return BlahPayload The created request with the new _id
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createBlah(BlahPayload blah, @Context UriInfo uri) {
+    public Response createBlah(BlahPayload request, @Context UriInfo uri) {
         try {
             final long start = System.currentTimeMillis();
-            blah = BlahManager.getInstance().createBlah(LocaleId.en_us, blah);
-            final Response response = RestUtilities.makeCreatedResourceResponse(blah, new URI(uri.getAbsolutePath() + blah.getId()));
+            request = BlahManager.getInstance().createBlah(LocaleId.en_us, request);
+            final Response response = RestUtilities.makeCreatedResourceResponse(request, new URI(uri.getAbsolutePath() + request.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {

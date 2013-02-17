@@ -142,10 +142,6 @@ public class BlahDataIndexable implements ZoieIndexable {
         if (field != null) {
             blah.setBody(field.stringValue());
         }
-        field = doc.getFieldable(BlahDAO.VOTES);
-        if (field != null) {
-            blah.setVotes(new Integer(field.stringValue()));
-        }
         field = doc.getFieldable(BlahDAO.UP_VOTES);
         if (field != null) {
             blah.setUpVotes(new Integer(field.stringValue()));

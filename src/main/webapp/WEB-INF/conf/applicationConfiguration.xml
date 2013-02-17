@@ -60,6 +60,7 @@
     <bean id="userManager" class="main.java.com.eweware.service.mgr.UserManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Boolean" value="${blag.debug}" />
+        <constructor-arg type="java.lang.Boolean" value="${blag.index.doIndex}" />
         <constructor-arg value="${blag.user.index.dir}" />
         <constructor-arg value="${blag.user.index.event.count.before.flush}" />
         <constructor-arg value="${blag.user.index.time.in.ms.before.flush}" />
@@ -69,6 +70,7 @@
     <bean id="blahManager" class="main.java.com.eweware.service.mgr.BlahManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Boolean" value="${blag.debug}" />
+        <constructor-arg type="java.lang.Boolean" value="${blag.index.doIndex}" />
         <constructor-arg value="${blag.blah.index.dir}" />
         <constructor-arg value="${blag.blah.comment.index.dir}" />
         <constructor-arg value="${blag.blah.index.event.count.before.flush}" />

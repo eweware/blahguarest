@@ -14,13 +14,15 @@ public interface BlahDAOConstants {
     static final String BODY = "b";
     static final String GROUP_ID = "groupId";
     static final String AUTHOR_ID = "authorId";
-    static final String VOTES = "votes";  // TODO retire this field: we are now using UP_VOTES and DOWN_VOTES
     static final String UP_VOTES = "vu";
     static final String DOWN_VOTES = "vd";
     static final String VIEWS = "views";
     static final String OPENS = "opens";
     static final String COMMENTS = "c";
     static final String BLAH_STRENGTH = "s";
+    static final String POLL_OPTION_COUNT = "pc";
+    static final String POLL_OPTIONS_TEXT = "pt";
+    static final String POLL_OPTION_VOTES = "pv";
     static final String RECENT_BLAH_STRENGTH = "r";
     static final String STATS = "stats";
     static final String IMAGE_IDS = "img";
@@ -30,7 +32,7 @@ public interface BlahDAOConstants {
                     TYPE_ID, TEXT, BODY, GROUP_ID, AUTHOR_ID}),
 
             new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
-                    VOTES, UP_VOTES, DOWN_VOTES, VIEWS, OPENS, COMMENTS
+                    UP_VOTES, DOWN_VOTES, VIEWS, OPENS, COMMENTS, POLL_OPTION_COUNT
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{
                     BLAH_STRENGTH, RECENT_BLAH_STRENGTH
@@ -41,6 +43,7 @@ public interface BlahDAOConstants {
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {
                     IMAGE_IDS
             }),
+            new SchemaDataTypeFieldMap(SchemaDataType.E, new String[] {POLL_OPTIONS_TEXT, POLL_OPTION_VOTES})
     };
 
 }

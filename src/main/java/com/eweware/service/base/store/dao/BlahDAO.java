@@ -5,6 +5,14 @@ import java.util.List;
 /**
  * @author rk@post.harvard.edu
  *         Date: 7/2/12 Time: 1:54 PM
+ *
+ *         <p>This is the basic blah data object. The fields in a blah dependend on
+ *         the type of blah it is. They all require the 'text' field, which
+ *         is a short line.</p>
+ *         <p><b>Says Blahs:</b> Optionally uses a 'body' field.</p>
+ *         <p><b>Poll Blahs:</b> Optionally uses a 'body' field, which might amplify on what the
+ *         poll is about or give instructions.</p>
+ *
  */
 public interface BlahDAO extends BaseDAO, BlahDAOConstants {
 
@@ -68,6 +76,44 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setImageIds(List<String> imageIds);
 
     /**
+     * Returns the number of poll options (number of
+     * entries in poll options array.
+     * @return  The number of poll options
+     */
+    public Integer getPollOptionCount();
+
+    /**
+     * Sets the number of poll options
+     * @param pollOptionCount   The number of poll options
+     */
+    public void setPollOptionCount(Integer pollOptionCount);
+
+    /**
+     * Returns the poll option items' text
+     * @return An array with the text option's text
+     */
+    public List<PollOptionTextDAO> getPollOptionsText();
+
+    /**
+     * Sets the text for each of the poll option's text fields.
+     * @param pollOptionText   The poll option's text
+     */
+    public void setPollOptionsText(List<PollOptionTextDAO> pollOptionText);
+
+    /**
+     * Returns the votes for the poll options. The vote for the Nth (0-origin)
+     * poll option text element is in the Nth element in this array.
+     * @return  The votes for the poll options
+     */
+    public List<Integer> getPollOptionVotes();
+
+    /**
+     * Sets the votes for the poll options
+     * @param pollOptionVotes   The votes for the poll options
+     */
+    public void setPollOptionVotes(List<Integer> pollOptionVotes);
+
+    /**
      * @return String Returns the blah's injected group id
      */
     public String getGroupId();
@@ -78,22 +124,6 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      * @param groupId String The injection group id
      */
     public void setGroupId(String groupId);
-
-    /**
-     * The blah's cumulative vote is the number of positive votes
-     * minus the number of negative votes. Therefore, this number
-     * may be negative.
-     *
-     * @return Integer Returns the blah's cumulative vote to this moment.
-     */
-    public Integer getVotes();
-
-    /**
-     * Sets the blah's cumulative vote.
-     *
-     * @param votes The votes
-     */
-    public void setVotes(Integer votes);
 
     /**
      * @return Integer Number of up votes.

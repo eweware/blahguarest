@@ -58,6 +58,9 @@ public interface StoreManager extends ManagerInterface {
     public abstract BlahDAO createBlah(String blahId) throws SystemErrorException;
     public abstract BlahDAO createBlah(Map<String, Object> map) throws SystemErrorException;
 
+    public abstract PollOptionTextDAO createPollOption();
+    public abstract PollOptionTextDAO createPollOption(String tagLine, String text);
+
     public abstract UserBlahInfoDAO createUserBlahInfo();
     public abstract UserBlahInfoDAO createUserBlahInfo(String userId, String blahId);
     public abstract UserBlahInfoDAO createUserBlahInfo(Map<String, Object> map) throws SystemErrorException;

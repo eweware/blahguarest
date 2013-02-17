@@ -434,6 +434,16 @@ public final class MongoStoreManager implements StoreManager {
     }
 
     @Override
+    public PollOptionTextDAO createPollOption() {
+        return new PollOptionTextImpl();
+    }
+
+    @Override
+    public PollOptionTextDAO createPollOption(String tagLine, String text) {
+        return new PollOptionTextImpl(tagLine, text);
+    }
+
+    @Override
     public UserBlahInfoDAO createUserBlahInfo() {
         return new UserBlahInfoDAOImpl();
     }

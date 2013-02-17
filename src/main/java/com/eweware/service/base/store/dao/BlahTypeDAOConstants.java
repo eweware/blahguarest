@@ -10,9 +10,11 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFi
 public interface BlahTypeDAOConstants {
 
     static final String NAME = "name";
+    static final String CATEGORY_ID = "c";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{NAME})
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{NAME}),
+            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{CATEGORY_ID})
     };
 
 }

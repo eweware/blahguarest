@@ -14,16 +14,6 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
-	<!-- <servlet> -->
-	<!-- <servlet-name>dwr</servlet-name> -->
-	<!-- <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class> -->
-	<!-- <init-param> -->
-	<!-- <param-name>debug</param-name> -->
-	<!-- <param-value>true</param-value> -->
-	<!-- </init-param> -->
-	<!-- <load-on-startup>2</load-on-startup> -->
-	<!-- </servlet> -->
-
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -38,34 +28,6 @@
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 
-	<!-- <servlet> -->
-	<!-- <servlet-name>Spring MVC Dispatcher Servlet</servlet-name> -->
-	<!-- <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> -->
-	<!-- <init-param> -->
-	<!-- <param-name>contextConfigLocation</param-name> -->
-	<!-- <param-value>/WEB-INF/applicationConfiguration.xml</param-value> -->
-	<!-- </init-param> -->
-	<!-- <load-on-startup>2</load-on-startup> -->
-	<!-- </servlet> -->
-
-<!-- 	<servlet> -->
-<!-- 		<servlet-name>Zoie Store Startup</servlet-name> -->
-<!-- 		<servlet-class>com.service.service.store.zoie.Startup</servlet-class> -->
-<!-- 		<init-param> -->
-<!-- 		<param-name>blag.rumor.index.dir</param-name> -->
-<!-- 		<param-value>../blag-index</param-value> -->
-<!-- 		</init-param> -->
-<!-- 		<init-param> -->
-<!-- 		<param-name>blag.rumor.index.event._count.before.flush</param-name> -->
-<!-- 		<param-value>1000</param-value> -->
-<!-- 		</init-param> -->
-<!-- 		<init-param> -->
-<!-- 		<param-name>blag.rumor.index.time.in.ms.before.flush</param-name> -->
-<!-- 		<param-value>300000</param-value> -->
-<!-- 		</init-param> -->
-<!-- 		<load-on-startup>4</load-on-startup> -->
-<!-- 	</servlet> -->
-
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/v2/*</url-pattern>
@@ -78,17 +40,8 @@
             <http-only>true</http-only>
         </cookie-config>
     </session-config>
-	<!-- <servlet-mapping> -->
-	<!-- <servlet-name>dwr</servlet-name> -->
-	<!-- <url-pattern>/dwr/*</url-pattern> -->
-	<!-- </servlet-mapping> -->
-	<!-- <servlet-mapping> -->
-	<!-- <servlet-name>Spring MVC Dispatcher Servlet</servlet-name> -->
-	<!-- <url-pattern>/app/*</url-pattern> -->
-	<!-- </servlet-mapping> -->
 
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<!-- <welcome-file>index.jsp</welcome-file> -->
+		<welcome-file>blahgua/default.html</welcome-file>
 	</welcome-file-list>
 </web-app>

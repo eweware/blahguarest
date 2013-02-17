@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.impl.mongo.dao.UserDAOImpl;
 import main.java.com.eweware.service.user.validation.EmailUserValidationMethod;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
@@ -53,14 +54,13 @@ import java.util.List;
  */
 public class UserManager implements ManagerInterface {
 
-    private static final boolean disableIndexing = false; // TODO debug
-
     private static UserManager singleton;
 
     private static final String userSetRecoveryCodeMethod = "u";
 
 
     private final boolean debug;
+    private final boolean doIndex;
     private StoreManager storeManager;
     private ManagerState state = ManagerState.UNINITIALIZED;
     private final File indexDir;
@@ -77,15 +77,37 @@ public class UserManager implements ManagerInterface {
 
     private ZoieSystem<BlahguaFilterIndexReader, UserDAO> indexingSystem;
 
-    public UserManager(Boolean debug, String indexDir, String batchSize, String batchDelay, Integer returnedObjectLimit) {
+    public UserManager(Boolean debug, Boolean doIndex, String indexDir, String batchSize, String batchDelay, Integer returnedObjectLimit) {
         this.debug = (debug == Boolean.TRUE);
+        this.doIndex = (doIndex == Boolean.TRUE);
         this.indexDir = new File(indexDir);
         this.batchSize = Integer.parseInt(batchSize);
         this.batchDelay = Long.parseLong(batchDelay);
         this.returnedObjectLimit = returnedObjectLimit;
         UserManager.singleton = this;
         this.state = ManagerState.INITIALIZED;
+        if (doIndex) {
+            System.out.println("*** UserManager Initializing ***");
+            final File searchDir = this.indexDir.getParentFile();
+            if (!searchDir.exists()) {
+                System.out.println("*** UserManager: Search directory '" + searchDir + "' doesn't exist. Creating it...");
+                try {
+                    searchDir.mkdirs();
+                } catch (Exception e) {    // fall through
+                }
+                if (!searchDir.exists()) {
+                    throw new WebServiceException("Couldn't create search directory index '" + searchDir + "'. UserManager aborting.");
+                }
+            }
+            System.out.println("*** User Index: " + this.indexDir.getAbsolutePath()+" ***");
+        } else {
+            System.out.println("*** UserManager search disabled ***");
+        }
         System.out.println("*** UserManager initialized ***");
+    }
+
+    public boolean doIndex() {
+        return doIndex;
     }
 
     /**
@@ -106,7 +128,10 @@ public class UserManager implements ManagerInterface {
      * Called by Spring to shut down the manager.
      */
     public void shutdown() {
-        indexingSystem.shutdown();
+        if (doIndex()) {
+            indexingSystem.shutdown();
+        }
+
         this.state = ManagerState.SHUTDOWN;
         System.out.println("*** UserManager shut down ***");
     }
@@ -141,7 +166,9 @@ public class UserManager implements ManagerInterface {
 
         userDAO._insert();
 
-        addUserToIndex(userDAO);
+        if (doIndex()) {
+            addUserToIndex(userDAO);
+        }
 
 //        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_USER);
 //        tracker.setUserId(userDAO.getId());
@@ -576,8 +603,7 @@ public class UserManager implements ManagerInterface {
      * @param userId The user id
      * @param entity Any entity to pass in a resource not found exception
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException    Thrown when the user can't be found
      */
     public void checkUserById(String userId, Object entity) throws ResourceNotFoundException, InvalidRequestException, SystemErrorException {
         if (CommonUtilities.isEmptyString(userId)) {
@@ -784,11 +810,13 @@ public class UserManager implements ManagerInterface {
     // zoie index stuff to be integrated later...
 
     public void InitializeUserSearch() {
-        createZoieSystem();
+        if (doIndex()) {
+            createZoieSystem();
+        }
     }
 
     private void addUserToIndex(UserDAO user) throws SystemErrorException {
-        if (UserManager.disableIndexing) { // dbg
+        if (!doIndex()) { // dbg
             return;
         }
         if (CommonUtilities.isEmptyString(user.getId())) {
@@ -815,8 +843,11 @@ public class UserManager implements ManagerInterface {
     }
 
     public List<UserDAO> searchUserIndex(LocaleId localeId, String fieldName, String query) throws SystemErrorException {
-
         final List<UserDAO> users = new ArrayList<UserDAO>();
+        if (!doIndex()) {
+            users.add(storeManager.createUser());
+            return users;
+        }
         List<ZoieIndexReader<BlahguaFilterIndexReader>> readerList = null;
         try {
             // get the IndexReaders
@@ -866,6 +897,9 @@ public class UserManager implements ManagerInterface {
     }
 
     private void createZoieSystem() {
+        if (!doIndex()) {
+            return;
+        }
         final ZoieIndexableInterpreter<UserDAO> interpreter = new UserDataIndexableInterpreter();
 
         final IndexReaderDecorator<BlahguaFilterIndexReader> decorator = new BlahguaIndexReaderDecorator();
