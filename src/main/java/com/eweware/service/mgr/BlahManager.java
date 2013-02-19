@@ -48,6 +48,7 @@ import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.Date;
 
 /**
  * @author rk@post.harvard.edu
@@ -57,6 +58,8 @@ import java.util.*;
  */
 public final class BlahManager implements ManagerInterface {
 
+    private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH = 1000 * 60 * 10;
+
     private boolean debug;
     private final boolean doIndex;
     private final File blahIndexDir;
@@ -65,12 +68,16 @@ public final class BlahManager implements ManagerInterface {
     private final long batchDelay;
     private final int maxOpensOrViewsPerUpdate;
     private final InboxHandler inboxHandler;
-    private Map<String, Boolean> blahTypeIdCheckCache;
-    private List<BlahTypePayload> blahTypesCache;
-    private long lastTimeBlahTypesCached;
+
+    /**
+     * Maps an existing blah type id to its data
+     */
+    private Map<String, BlahTypeEntry> blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>();
+    private Object blahTypeIdToBlahTypeEntryMapLock = new Object(); // locks blahTypeIdToBlahTypeEntryMap
+    private long lastTimeBlahTypesCached = System.currentTimeMillis() + TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH + 1;
+
     private ZoieSystem<BlahguaFilterIndexReader, BlahDAO> blahIndexingSystem;
     private ZoieSystem<BlahguaFilterIndexReader, CommentDAO> commentIndexingSystem;
-
     private ManagerState status;
     public static BlahManager singleton;
     private StoreManager storeManager;
@@ -142,6 +149,8 @@ public final class BlahManager implements ManagerInterface {
                 initializeBlahIndex();
             }
 
+            ensureBlahTypesCached();
+
             this.status = ManagerState.STARTED;
             System.out.println("*** BlahManager started ***");
 
@@ -202,6 +211,16 @@ public final class BlahManager implements ManagerInterface {
         final BlahDAO blahDAO = storeManager.createBlah();
         blahDAO.initToDefaultValues(localeId);
         blahDAO.addFromMap(request, true); // removes fields not in schema
+        final List<PollOptionTextDAO> pollOptionsText = blahDAO.getPollOptionsText();
+        if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
+            int count = pollOptionsText.size();
+            blahDAO.setPollOptionCount(count);
+            final List<Integer> vcs = new ArrayList<Integer>(count);
+            while (count-- > 0) {
+                vcs.add(0);
+            }
+            blahDAO.setPollOptionVotes(vcs);
+        }
         blahDAO._insert();
 
         updateGroupBlahCount(groupId, true);
@@ -257,7 +276,7 @@ public final class BlahManager implements ManagerInterface {
         final boolean voteDown = false;
         final Integer viewCount = null;
         final Integer openCount = null;
-        TrackingManager.getInstance().trackObject(TrackerOperation.CREATE_BLAH, authorId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, viewCount, openCount);
+        TrackingManager.getInstance().trackObject(TrackerOperation.CREATE_BLAH, authorId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
     }
 
     /**
@@ -290,29 +309,105 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(typeId)) {
             throw new InvalidRequestException("missing typeId");
         }
-        ensureBlahTypesCached();
-        return blahTypeIdCheckCache.get(typeId) != null;
+        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
+            ensureBlahTypesCached();
+            return blahTypeIdToBlahTypeEntryMap.get(typeId) != null;
+        }
     }
 
-    public void pollVote(LocaleId localeId, String blahId, Integer pollOptionIndex, Integer vote) throws InvalidRequestException {
+    public void pollVote(LocaleId localeId, String blahId, String userId, Integer pollOptionIndex) throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
         if (blahId == null) {
             throw new InvalidRequestException("request missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
         if (pollOptionIndex == null || pollOptionIndex < 0 || pollOptionIndex > PollOptionDAOConstants.MAX_POLL_OPTIONS) {
-            throw new InvalidRequestException("invalid number of poll options=" + pollOptionIndex, ErrorCodes.INVALID_INPUT);
+            throw new InvalidRequestException("invalid poll index; maximum is "+PollOptionDAOConstants.MAX_POLL_OPTIONS+" but was=" + pollOptionIndex, ErrorCodes.INVALID_INPUT);
         }
-        vote = GeneralUtilities.checkDiscreteValue(vote, vote);
+        final BlahDAO blahDAO = getBlahById_unsafe(blahId, BlahDAO.POLL_OPTION_COUNT, BlahDAO.TYPE_ID);
+        if (blahDAO == null) {
+            throw new InvalidRequestException("blahId '" + blahId + "' doesn't exist", ErrorCodes.NOT_FOUND_BLAH_ID);
+        }
+        if (isNotPollCategory(blahDAO.getTypeId())) {
+            throw new InvalidRequestException("Blah id '" + blahId + "' is not a poll category blah", ErrorCodes.INVALID_UPDATE);
+        }
 
+        final UserBlahInfoData userBlahInfoData = ensureUserDidNotVoteOnPoll(blahId, userId);
 
+        final Integer noPollCount = -1;
+        final Integer pollCount = GeneralUtilities.safeGetInteger(blahDAO.getPollOptionCount(), noPollCount);
+        if (pollCount == noPollCount) {
+            throw new InvalidRequestException("There are no poll options in this blah", ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        }
+        if (pollOptionIndex >= pollCount) {
+            throw new InvalidRequestException("poll index is out of range: it must be less than " + pollCount, ErrorCodes.INVALID_INPUT);
+        }
+        blahDAO.addPollOptionVote_immediate(pollOptionIndex);
+
+        userBlahInfoData.dao.setPollVoteIndex(pollOptionIndex);
+        userBlahInfoData.dao.setPollVoteTimestamp(new Date());
+        if (userBlahInfoData.exists) {
+            userBlahInfoData.dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        } else {
+            userBlahInfoData.dao._insert();
+        }
+
+        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
     }
 
     /**
-     * Allows a user to update a blah's vote, views, and opens, in any combination.
-     * A blah's text may not be edited.
+     * Returns true if this blah type id is a poll category type of blah
+     * @param typeId    The blah type id
+     * @return  True if this is a poll category type of blah
+     */
+    private boolean isNotPollCategory(String typeId) {
+        return false;
+    }
+
+
+    /**
+     * Returns polling information
+     *
+     * @param localeId The locale
+     * @param blahId   The blah id
+     * @param userId   The user id
+     * @return The polling information for this blah and user combination
+     */
+    public BlahInfoPayload getPollVoteInfo(LocaleId localeId, String blahId, String userId) throws SystemErrorException {
+        final UserBlahInfoDAO userBlahInfo = storeManager.createUserBlahInfo(userId, blahId);
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX, UserBlahInfoDAO.POLL_VOTE_TIMESTAMP}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        if (dao != null) {
+            return new BlahInfoPayload(dao);
+        }
+        return new BlahInfoPayload(userId, blahId);
+    }
+
+    private class UserBlahInfoData {
+        private final UserBlahInfoDAO dao;
+        private final boolean exists;
+        UserBlahInfoData(UserBlahInfoDAO dao, boolean exists) {
+            this.dao = dao;
+            this.exists = exists;
+        }
+    }
+    /**
+     * Throws a state exception if the user already voted in this poll.
+     * @param blahId    The blah id (a poll blah)
+     * @param userId    The user id
+     * @return  An otherwise empty user blah info dao with the blahId and userId already filled in
+     * @throws SystemErrorException
+     * @throws StateConflictException
+     */
+    private UserBlahInfoData ensureUserDidNotVoteOnPoll(String blahId, String userId) throws SystemErrorException, StateConflictException {
+        final UserBlahInfoDAO userBlahInfo = storeManager.createUserBlahInfo(userId, blahId);
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        if (dao != null && dao.getPollVoteIndex() != null) {
+            throw new StateConflictException("userId '" + userId + "' already voted on poll for blahId '" + blahId + "'", ErrorCodes.ALREADY_VOTED_ON_POLL);
+        }
+        return new UserBlahInfoData(userBlahInfo, dao != null);
+    }
+
+    /**
+     * Allows a user to update a blah's vote, views, and/or opens, in any combination.
      * Ignored if there is no vote, views or opens in request.
-     * <p/>
-     * TODO check injection problems: e.g., authorId changed, etc...
-     * <p/>
      *
      * @param localeId
      * @param request
@@ -321,7 +416,7 @@ public final class BlahManager implements ManagerInterface {
      *
      * @throws ResourceNotFoundException
      */
-    public void updateBlah(LocaleId localeId, BlahPayload request) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
+    public void updateBlahVoteViewOrOpens(LocaleId localeId, BlahPayload request) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
         if (!CommonUtilities.isEmptyString(request.getText()) || !CommonUtilities.isEmptyString(request.getBody())) {
             throw new InvalidRequestException("user may not edit blah text or body", request, ErrorCodes.CANNOT_EDIT_TEXT);
         }
@@ -334,7 +429,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer vote = GeneralUtilities.checkDiscreteValue(request.getUpVotes(), request);
+        final Integer vote = GeneralUtilities.checkDiscreteValue(request.getVotes(), request);
 
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
         final Integer viewCount = GeneralUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);
@@ -357,7 +452,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = null;
         final boolean voteUp = (vote.intValue() > 0);
         final boolean voteDown = (vote.intValue() < 0);
-        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, viewCount, openCount);
+        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
 
         if (doIndex()) {
             indexBlah(updateBlahDAO);
@@ -380,7 +475,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     /**
-     * Called when updating a blah or creating a comment.
+     * Called when updating a blah's votes|opens|views or when creating a comment.
      * Updates userBlahInfoDAO and blahDAOs.
      *
      * @param localeId
@@ -411,8 +506,8 @@ public final class BlahManager implements ManagerInterface {
             throw new StateConflictException("userId=" + userId + " may not vote on own blahId=" + blahId, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
         }
 
-        final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAOConstants.VOTE};
-        final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAOConstants.USER_ID, UserBlahInfoDAOConstants.BLAH_ID);
+        final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.VOTE};
+        final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         final boolean insert = (userBlahHistory == null);
 
         final UserBlahInfoDAO userBlahInfoDAO = storeManager.createUserBlahInfo();
@@ -561,44 +656,56 @@ public final class BlahManager implements ManagerInterface {
     // TODO cache with hourly TTL candidate
     public List<BlahTypePayload> getBlahTypes(LocaleId localeId) throws SystemErrorException {
         ensureBlahTypesCached();
-        final List<? extends BaseDAO> daos = storeManager.createBlahType()._findMany(null, null, null);
-        blahTypesCache = new ArrayList<BlahTypePayload>(daos.size());
-        for (BaseDAO dao : daos) {
-            blahTypesCache.add(new BlahTypePayload(dao.toMap()));
-        }
-        return blahTypesCache;
+        return getBlahTypes();
     }
 
     private void ensureBlahTypesCached() throws SystemErrorException {
-        long now = System.currentTimeMillis();
-        final int TEN_MINUTES = 1000 * 60 * 10;
-        if (blahTypesCache == null || ((lastTimeBlahTypesCached - now) > TEN_MINUTES)) {
-            refreshBlahTypesCache(now);
+        if (((lastTimeBlahTypesCached - System.currentTimeMillis()) > TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH)) {
+            refreshBlahTypesCache();
+        }
+    }
+
+    private class BlahTypeEntry {
+        private final BlahTypeDAO blahTypeDAO;
+        private final BlahTypeCategoryType categoryType;
+        BlahTypeEntry(BlahTypeDAO blahTypeDAO, BlahTypeCategoryType categoryType) {
+            this.blahTypeDAO = blahTypeDAO;
+            this.categoryType = categoryType;
         }
     }
 
     private void refreshBlahTypesCache() throws SystemErrorException {
-        refreshBlahTypesCache(System.currentTimeMillis());
-    }
-
-    private void refreshBlahTypesCache(long now) throws SystemErrorException {
         final List<BlahTypeDAO> blahTypeDAOs = (List<BlahTypeDAO>) storeManager.createBlahType()._findMany(null, null, null);
-        blahTypesCache = new ArrayList<BlahTypePayload>(blahTypeDAOs.size());
-        blahTypeIdCheckCache = new HashMap<String, Boolean>(blahTypeDAOs.size());
+        final HashMap<String, BlahTypeEntry> map = new HashMap<String, BlahTypeEntry>(blahTypeDAOs.size());
         for (BlahTypeDAO dao : blahTypeDAOs) {
-            blahTypesCache.add(new BlahTypePayload(dao.toMap()));
-            blahTypeIdCheckCache.put(dao.getId(), Boolean.TRUE);
+            if (dao.getCategoryId() == null) {
+                throw new SystemErrorException("Blah type id '" + dao.getId() + " missing category id", ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+            final BlahTypeCategoryType categoryId = BlahTypeCategoryType.findByCategoryId(dao.getCategoryId());
+            if (categoryId == null) {
+                throw new SystemErrorException("Blah type dao has an invalid category id '" + dao.getCategoryId() + "'. Should be one of " + BlahTypeCategoryType.values(), ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+            map.put(dao.getId(), new BlahTypeEntry(dao, categoryId));
         }
-        lastTimeBlahTypesCached = now;
+        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
+            blahTypeIdToBlahTypeEntryMap = map;
+            lastTimeBlahTypesCached = System.currentTimeMillis();
+        }
         System.out.println(new Date() + ": Blah type cache refreshed");
     }
 
-    public List<BlahTypePayload> getCachedBlahTypes() {
-        return blahTypesCache;
+    public List<BlahTypePayload> getBlahTypes() throws SystemErrorException {
+        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
+            final List<BlahTypePayload> bt = new ArrayList<BlahTypePayload>(blahTypeIdToBlahTypeEntryMap.size());
+            for (BlahTypeEntry entry : blahTypeIdToBlahTypeEntryMap.values()) {
+                bt.add(new BlahTypePayload(entry.blahTypeDAO.toMap()));
+            }
+            return bt;
+        }
     }
 
     /**
-     * Used for testing purposes: refresh all caches.
+     * Used for testing purposes: forces refresh of all caches.
      *
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
@@ -648,6 +755,14 @@ public final class BlahManager implements ManagerInterface {
             fetchAndAddBlahTrackers(blahId, statsStartDate, statsEndDate, blahPayload);
         }
         return blahPayload;
+    }
+
+    private BlahDAO getBlahById_unsafe(String blahId, String... fieldsToReturnHint) throws SystemErrorException {
+        final BlahDAO blahDAO = storeManager.createBlah(blahId);
+        if (fieldsToReturnHint != null && fieldsToReturnHint.length > 0) {
+            return (BlahDAO) blahDAO._findByPrimaryId();
+        }
+        return (BlahDAO) blahDAO._findByPrimaryId(fieldsToReturnHint);
     }
 
     private void fetchAndAddBlahTrackers(String blahId, String statsStartDate, String statsEndDate, BlahPayload blahPayload) throws InvalidRequestException, SystemErrorException {
@@ -810,7 +925,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = blahId;
         final boolean voteUp = (blahVote > 0);
         final boolean voteDown = (blahVote < 0);
-        TrackingManager.getInstance().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, request.getViews(), request.getOpens());
+        TrackingManager.getInstance().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, request.getViews(), request.getOpens());
 
 //        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_COMMENT);
 //        tracker.setBlahAuthorId(blahAuthorId);
@@ -940,7 +1055,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = blahId;
         final boolean voteUp = (voteForComment == 1);
         final boolean voteDown = (voteForComment == -1);
-        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_COMMENT, userId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, views, opens);
+        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_COMMENT, userId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, views, opens);
 
         if (doIndex()) {
             indexComment(commentUpdateDAO);

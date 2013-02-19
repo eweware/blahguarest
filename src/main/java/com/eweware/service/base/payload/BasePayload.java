@@ -96,6 +96,22 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
         }
     }
 
+    // TODO not too elegant: the payload (client) expects a string representation, not a date. Would be nice to have a per-field autoconversion method
+    @JsonIgnore
+    protected void ensureDate(String dateFieldName) {
+        final Object dob = get(dateFieldName);
+        if (dob != null && (dob instanceof Date)) {
+            put(dateFieldName, DateUtils.formatDate((Date) dob));
+        }
+    }
+    @JsonIgnore
+    protected void ensureDateTime(String dateFieldName) {
+        final Object dob = get(dateFieldName);
+        if (dob != null && (dob instanceof Date)) {
+            put(dateFieldName, DateUtils.formatDateTime((Date) dob));
+        }
+    }
+
     // TODO this is already handled by the schema validateandconvert: check it out
     @JsonIgnore
     private void ensureDates(Map<String, Object> map) {

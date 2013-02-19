@@ -1,7 +1,9 @@
 package main.java.com.eweware.service.rest.resource;
 
+import com.amazonaws.services.ec2.model.UserIdGroupPair;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.payload.BlahInfoPayload;
 import main.java.com.eweware.service.base.payload.BlahPayload;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
@@ -57,14 +59,52 @@ public class BlahsResource {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         } catch (URISyntaxException e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        }
+    }
+
+    @PUT
+    @Path("/{blahId}/pollVote/{userId}/{pollOptionIndex}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response pollVote(@PathParam("blahId") String blahId,
+                             @PathParam("userId") String userId,
+                             @PathParam("pollOptionIndex") Integer index) {
+        try {
+            BlahManager.getInstance().pollVote(LocaleId.en_us, blahId, userId, index);
+            return RestUtilities.makeOKNoContentResponse();
+        } catch (InvalidRequestException e) {
+            return RestUtilities.makeInvalidRequestResponse(e);
+        } catch (StateConflictException e) {
+            return RestUtilities.makeStateConflictResponse(e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.makeResourceNotFoundResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        }
+    }
+
+    @GET
+    @Path("/{blahId}/pollVote/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPollVoteInfo(@PathParam("blahId") String blahId,
+                                    @PathParam("userId") String userId) {
+        try {
+            final BlahInfoPayload info = BlahManager.getInstance().getPollVoteInfo(LocaleId.en_us, blahId, userId);
+            return RestUtilities.makeOkResponse(info);
+        } catch (SystemErrorException e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        } catch (Exception e) {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
 
     /**
-     * Updates a blah.
-     *
+     * Updates a blah's view, open, and or vote counts.
+     * Any other update requests in the payload are ignored.
      * @param blah   The blah payload with the fields to update.
      * @param blahId The blah's id
      * @return An update response without content.
@@ -73,7 +113,7 @@ public class BlahsResource {
     @Path("/{blahId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateBlah(
+    public Response updateBlahVoteViewOrOpens(
             BlahPayload blah,
             @PathParam("blahId") String blahId,
             @Context HttpServletRequest request) {
@@ -81,7 +121,7 @@ public class BlahsResource {
             final long start = System.currentTimeMillis();
 //            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
             blah.setId(blahId);
-            BlahManager.getInstance().updateBlah(LocaleId.en_us, blah);
+            BlahManager.getInstance().updateBlahVoteViewOrOpens(LocaleId.en_us, blah);
             final Response response = RestUtilities.makeOKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -97,32 +137,6 @@ public class BlahsResource {
             return RestUtilities.makeAndLogSystemErrorResponse(e);
         }
     }
-
-    /**
-     * Deletes the blah.
-     *
-     * @param blahId The blah's id
-     * @return The response without content.
-     */
-//    @DELETE
-//    @Path("/{blahId}")
-//    public Response deleteBlah(@PathParam("blahId") String blahId,
-//                               @Context HttpServletRequest request) {
-//        try {
-//            final long start = System.currentTimeMillis();
-//            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
-//            BlahManager.getInstance().deleteBlah(LocaleId.en_us, blahId);
-//            final Response response = RestUtilities.makeOKNoContentResponse();
-//            SystemManager.getInstance().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.makeInvalidRequestResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.makeAndLogSystemErrorResponse(e);
-//        } catch (RuntimeException e) {
-//            return RestUtilities.makeAndLogSystemErrorResponse(e);
-//        }
-//    }
 
     /**
      * Returns an array of blah type docs.
@@ -224,3 +238,31 @@ public class BlahsResource {
         }
     }
 }
+
+
+
+/**
+ * Deletes the blah.
+ *
+ * @param blahId The blah's id
+ * @return The response without content.
+ */
+//    @DELETE
+//    @Path("/{blahId}")
+//    public Response deleteBlah(@PathParam("blahId") String blahId,
+//                               @Context HttpServletRequest request) {
+//        try {
+//            final long start = System.currentTimeMillis();
+//            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
+//            BlahManager.getInstance().deleteBlah(LocaleId.en_us, blahId);
+//            final Response response = RestUtilities.makeOKNoContentResponse();
+//            SystemManager.getInstance().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+//            return response;
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.makeInvalidRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.makeAndLogSystemErrorResponse(e);
+//        } catch (RuntimeException e) {
+//            return RestUtilities.makeAndLogSystemErrorResponse(e);
+//        }
+//    }

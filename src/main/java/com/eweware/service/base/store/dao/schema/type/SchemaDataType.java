@@ -20,18 +20,6 @@ public enum SchemaDataType {
 
     private String description;
     private FieldValidator converter;
-//    private static final Map<String, SchemaDataType> codeToTypeMap = new HashMap<String, SchemaDataType>();
-//    static {
-//        codeToTypeMap.put(ILS.getDescription(), ILS);
-//        codeToTypeMap.put(ILN.getDescription(), ILN);
-//        codeToTypeMap.put(B.getDescription(), B);
-//        codeToTypeMap.put(I.getDescription(), I);
-//        codeToTypeMap.put(R.getDescription(), R);
-//        codeToTypeMap.put(S.getDescription(), S);
-//        codeToTypeMap.put(DT.getDescription(), DT);
-//        codeToTypeMap.put(D.getDescription(), D);
-//        codeToTypeMap.put(GPS.getDescription(), GPS);
-//    }
 
     SchemaDataType(String description, FieldValidator converter) {
         this.description = description;
@@ -46,7 +34,4 @@ public enum SchemaDataType {
         return converter;
     }
 
-//    public static SchemaDataType getType(String description) {
-//        return codeToTypeMap.get(description);
-//    }
 }

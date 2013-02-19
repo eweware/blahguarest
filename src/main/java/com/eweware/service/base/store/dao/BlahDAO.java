@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import main.java.com.eweware.service.base.error.SystemErrorException;
+
 import java.util.List;
 
 /**
@@ -112,6 +114,13 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      * @param pollOptionVotes   The votes for the poll options
      */
     public void setPollOptionVotes(List<Integer> pollOptionVotes);
+
+    /**
+     * Adds one vote to this blah's poll for the specified
+     * option index.
+     * @param pollOptionIndex The option index
+     */
+    public void addPollOptionVote_immediate(Integer pollOptionIndex) throws SystemErrorException;
 
     /**
      * @return String Returns the blah's injected group id

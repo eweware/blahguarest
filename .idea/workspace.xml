@@ -6,52 +6,46 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeCategoryType.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionDAOConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionTextDAO.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/PollOptionTextImpl.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_2_2.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_2_3.xml" />
+    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="Passed QA unit tests.">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahInfoPayload.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/search/index/blah/BlahDataIndexable.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/search/index/blah/BlahDataIndexable.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahTypeDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahTypeDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTypePayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTypePayload.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeCategoryType.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeCategoryType.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/GeneralUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/GeneralUtilities.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/IntegerDataTypeValidator.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/IntegerDataTypeValidator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/SchemaDataType.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/SchemaDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/StatisticsManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/StatisticsManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TrackingManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TrackingManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserBlahInfoDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserBlahInfoDAOImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blahguarest.iml" afterPath="$PROJECT_DIR$/blahguarest.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/blahgua/default.html" afterPath="$PROJECT_DIR$/src/main/webapp/blahgua/default.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom-jar.xml" afterPath="$PROJECT_DIR$/pom-jar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
-    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360791472552" ignored="false" />
+    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361229301662" ignored="false" />
     <file path="/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357954037755" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357954037439" ignored="false" />
     <file path="/InboxBlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866385887" ignored="false" />
-    <file path="/InboxBlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866345606" ignored="false" />
+    <file path="/InboxBlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361213750842" ignored="false" />
     <file path="/InboxBlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357866288916" ignored="false" />
     <file path="/CommentDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357861866880" ignored="false" />
     <file path="/CommentDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859782041" ignored="false" />
     <file path="/CommentDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357859729323" ignored="false" />
-    <file path="/BlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361140153026" ignored="false" />
+    <file path="/BlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361147538088" ignored="false" />
     <file path="/BlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361139918946" ignored="false" />
-    <file path="/MongoStoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361135755101" ignored="false" />
+    <file path="/MongoStoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361212133314" ignored="false" />
     <file path="/StoreManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361135778594" ignored="false" />
     <file path="/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357850296493" ignored="false" />
     <file path="/MediaManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357851730224" ignored="false" />
@@ -189,7 +183,7 @@
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Entry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357330149291" ignored="false" />
     <file path="/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328258608" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328273494" ignored="false" />
-    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360794379452" ignored="false" />
+    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361239203297" ignored="false" />
     <file path="/CommonUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357258308599" ignored="false" />
     <file path="/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357263685986" ignored="false" />
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357256285329" ignored="false" />
@@ -200,13 +194,13 @@
     <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916341457" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
-    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361138121698" ignored="false" />
+    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361236962332" ignored="false" />
     <file path="/SessionAttributes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357259452694" ignored="false" />
-    <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357265923992" ignored="false" />
+    <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361225082123" ignored="false" />
     <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
     <file path="/Session.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739367070" ignored="false" />
-    <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361139281826" ignored="false" />
-    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361141827983" ignored="false" />
+    <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361235959526" ignored="false" />
+    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361235976353" ignored="false" />
     <file path="/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357954049798" ignored="false" />
     <file path="/JSONProvider.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356589590232" ignored="false" />
     <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356587830566" ignored="false" />
@@ -216,9 +210,9 @@
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360790042266" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357860632652" ignored="false" />
-    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361139106306" ignored="false" />
-    <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361140398900" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361142494804" ignored="false" />
+    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361226832180" ignored="false" />
+    <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361147678059" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361239413276" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357932167993" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361130067974" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360787242331" ignored="false" />
@@ -344,7 +338,7 @@
     <file path="/SQLQuery.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359843945143" ignored="false" />
     <file path="/SelectorDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359834019725" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/gehofrest/src/main/java/com/ge/hof/dao/SelectorDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359834035449" ignored="false" />
-    <file path="/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359835154982" ignored="false" />
+    <file path="/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361212753531" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/gehofrest/src/main/java/com/ge/hof/db/datasource/engine/sql/ArrayOfStringLiteral.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359834456061" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/gehofrest/src/main/java/com/ge/hof/db/datasource/engine/ArrayOfStringLiteral.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359839307977" ignored="false" />
     <file path="/ArrayOfStringLiteral.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359839307057" ignored="false" />
@@ -363,7 +357,7 @@
     <file path="/PagingSpecDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1359848162033" ignored="false" />
     <file path="/BlahDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360791357658" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/BlahDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360791419891" ignored="false" />
-    <file path="/BlahPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361140372780" ignored="false" />
+    <file path="/BlahPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361148364147" ignored="false" />
     <file path="/PollOptionDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361135596203" ignored="false" />
     <file path="/PollOptionDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361141884013" ignored="false" />
     <file path="/PollOptionImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361135721637" ignored="false" />
@@ -371,35 +365,51 @@
     <file path="/BlahTypeDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361041096926" ignored="false" />
     <file path="/BlahTypeDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361041578782" ignored="false" />
     <file path="/BlahTypeDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361041653392" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/simple/Simple05UserStatsTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361040635581" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Demo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361137766841" ignored="false" />
-    <file path="/Demo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361137755775" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/simple/Simple05UserStatsTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223624719" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Demo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223403007" ignored="false" />
+    <file path="/Demo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223401701" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/simple/Simple02GroupTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360987194348" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/simple/Simple04BlahTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361137833112" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/simple/Simple04BlahTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223386771" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/simple/Simple03UserTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360987276738" ignored="false" />
     <file path="/Simple03UserTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360987274364" ignored="false" />
-    <file path="/HighLevelAPICallMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1360987293254" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/HighLevelAPICallMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361132320489" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361042181186" ignored="false" />
+    <file path="/HighLevelAPICallMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361236848185" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/HighLevelAPICallMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361238855164" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223089657" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Constants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361134905945" ignored="false" />
     <file path="/Constants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361042243235" ignored="false" />
-    <file path="/Simple05UserStatsTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361040633654" ignored="false" />
-    <file path="/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361042180499" ignored="false" />
-    <file path="/Simple04BlahTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361137726626" ignored="false" />
-    <file path="/BlahTypeCategoryType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361041500749" ignored="false" />
+    <file path="/Simple05UserStatsTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223476083" ignored="false" />
+    <file path="/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223007799" ignored="false" />
+    <file path="/Simple04BlahTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361222308726" ignored="false" />
+    <file path="/BlahTypeCategoryType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361230056488" ignored="false" />
     <file path="/BlahTypePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361041707864" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/store/dao/BlahTypeDAOConstants.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361042119252" ignored="false" />
     <file path="/AWS.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361131605182" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361132093663" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361132565178" ignored="false" />
-    <file path="/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361132545250" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361220236934" ignored="false" />
+    <file path="/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361220094440" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/demo-blah-text-source-37.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361133058123" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/demo-blah-text-source.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361133569925" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/BlahDistribution.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361141142186" ignored="false" />
-    <file path="/BlahDistribution.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361141142186" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/BlahDistribution.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223392229" ignored="false" />
+    <file path="/BlahDistribution.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223391306" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/payload/PollOptionPayload.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361137137565" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/payload/BlahPayload.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361140532208" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/payload/BlahPayload.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361148842271" ignored="false" />
     <file path="/PollOptionTextDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361140281442" ignored="false" />
+    <file path="/GeneralUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361146124955" ignored="false" />
+    <file path="/REST_API.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361217884219" ignored="false" />
+    <file path="/UserBlahInfoDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361225747425" ignored="false" />
+    <file path="/UserBlahInfoDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361225831503" ignored="false" />
+    <file path="/UserBlahInfoDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361225886835" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361212755706" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361213201063" ignored="false" />
+    <file path="/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361213168777" ignored="false" />
+    <file path="/TrackingManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361228746335" ignored="false" />
+    <file path="/BlahTrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361228025354" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/suite/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361229369386" ignored="false" />
+    <file path="/StatisticsManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361231138402" ignored="false" />
+    <file path="/BlahInfoPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361237685141" ignored="false" />
+    <file path="/BasePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361237675556" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/payload/BasePayload.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361237700730" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/demo.log" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361238969841" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -407,6 +417,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -414,6 +429,23 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" line="103" class="main.java.com.eweware.service.base.payload.BasePayload" package="main.java.com.eweware.service.base.payload">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -448,7 +480,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -458,10 +489,64 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="374" column="0" selection-start="16247" selection-end="16247" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#3465#3488#0" expanded="true" />
+                <element signature="e#9357#9366#0" expanded="true" />
+                <element signature="e#30454#30477#0" expanded="true" />
+                <element signature="e#31649#31666#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlahInfoPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahInfoPayload.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="23" selection-start="632" selection-end="632" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="101" selection-start="1116" selection-end="1116" vertical-scroll-proportion="0.5517711">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BasePayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="107" column="33" selection-start="3034" selection-end="3048" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DateUtils.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/date/DateUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="38" column="0" selection-start="1490" selection-end="1490" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="BlahPayload.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="197" column="0" selection-start="4557" selection-end="4557" vertical-scroll-proportion="0.0">
+            <state line="30" column="46" selection-start="569" selection-end="758" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -472,84 +557,7 @@
       <file leaf-file-name="BlahsResource.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="46" selection-start="3389" selection-end="3389" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PollOptionsTextPayload.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="28" selection-start="236" selection-end="236" vertical-scroll-proportion="0.0">
-              <folding>
-                <marker date="1361140501000" expanded="true" signature="337:344" placeholder="{...}" />
-                <marker date="1361140501000" expanded="true" signature="409:468" placeholder="{...}" />
-                <marker date="1361140501000" expanded="true" signature="659:701" placeholder="{...}" />
-                <marker date="1361140501000" expanded="true" signature="740:772" placeholder="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="305" column="8" selection-start="12983" selection-end="12983" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="web.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="13" selection-start="1476" selection-end="1476" vertical-scroll-proportion="0.6835443">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PollOptionDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="28" selection-start="204" selection-end="204" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GeneralUtilities.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/GeneralUtilities.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="26" selection-start="697" selection-end="697" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlahDAO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="20" selection-start="591" selection-end="591" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlahDAOImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="59" selection-start="2238" selection-end="2238" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PollOptionTextImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/PollOptionTextImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="22" selection-start="655" selection-end="655" vertical-scroll-proportion="0.0">
+            <state line="95" column="0" selection-start="4119" selection-end="4119" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -579,21 +587,21 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/docs/REST_API.txt" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionDAO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/PollOptionImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserBlahInfoDAOImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TrackingManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeCategoryType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/StatisticsManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/ManagerInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionTextDAO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/PollOptionTextImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionPayload.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionDAOConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahInfoPayload.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
       </list>
     </option>
   </component>
@@ -636,6 +644,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -650,13 +659,78 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="blahguarest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.mongodb:mongo-java-driver:2.9.3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mongo-java-driver-2.9.3.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.mongodb:mongo-java-driver:2.9.3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mongo-java-driver-2.9.3.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bson" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.mongodb:mongo-java-driver:2.9.3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mongo-java-driver-2.9.3.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mongodb" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -925,6 +999,40 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="mgr" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aux" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="base" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1078,6 +1186,94 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="dao" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="store" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dao" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="schema" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="store" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dao" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="schema" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="type" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1125,6 +1321,74 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="error" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="date" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="docs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1136,14 +1400,14 @@
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
     <property name="project.structure.last.edited" value="Artifacts" />
-    <property name="OverrideImplement.combined" value="false" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="OverrideImplement.combined" value="false" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../RestUnitTests/lib" />
+    <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="blahguarest" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -1158,8 +1422,8 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -1233,19 +1497,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1271,6 +1522,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1392,12 +1656,16 @@
       <created>1358286165094</created>
       <updated>1358286165094</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Poll option capability. New base library">
+      <created>1361142576420</created>
+      <updated>1361142576420</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="53" y="22" width="1867" height="1178" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1408,13 +1676,13 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27977315" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27977315" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27134725" sideWeight="0.32929516" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2712795" sideWeight="0.6020794" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23558484" sideWeight="0.7202268" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24492037" sideWeight="0.7202268" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23558484" sideWeight="0.7202268" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24492037" sideWeight="0.6020794" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1459,7 +1727,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Poll option capability" />
+    <option name="LAST_COMMIT_MESSAGE" value="Poll option capability. New base library" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1480,6 +1748,7 @@
     <MESSAGE value="Blah, Comment, and Inbox blah objects have an img field associated with them containing an array of image ids." />
     <MESSAGE value="Fixed: jersey initialization bug in 1.14, backed to v 1.8. Only one img id added per upload." />
     <MESSAGE value="Poll option capability" />
+    <MESSAGE value="Poll option capability. New base library" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1489,121 +1758,129 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/SchemaTypeValidator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="0" selection-start="796" selection-end="796" vertical-scroll-proportion="0.0">
+        <state line="47" column="67" selection-start="2039" selection-end="2039" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/StatisticsManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="141" column="0" selection-start="6105" selection-end="6105" vertical-scroll-proportion="0.0">
+        <state line="103" column="73" selection-start="3927" selection-end="3927" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/ManagerInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="33" selection-start="3613" selection-end="3613" vertical-scroll-proportion="0.0">
+        <state line="8" column="25" selection-start="183" selection-end="183" vertical-scroll-proportion="0.11916584">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="25" selection-start="1153" selection-end="1153" vertical-scroll-proportion="0.0">
+        <state line="64" column="36" selection-start="2949" selection-end="2949" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="107" selection-start="1973" selection-end="1973" vertical-scroll-proportion="0.0">
+        <state line="9" column="17" selection-start="318" selection-end="318" vertical-scroll-proportion="0.18209408">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="20" selection-start="591" selection-end="591" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionTextDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="71" selection-start="592" selection-end="592" vertical-scroll-proportion="0.30582523">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="197" column="0" selection-start="4557" selection-end="4557" vertical-scroll-proportion="0.0">
+        <state line="26" column="5" selection-start="708" selection-end="708" vertical-scroll-proportion="0.3887195">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="59" selection-start="2238" selection-end="2238" vertical-scroll-proportion="0.0">
+        <state line="95" column="0" selection-start="4119" selection-end="4119" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/PollOptionTextImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/InboxBlahPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="22" selection-start="655" selection-end="655" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="28" selection-start="236" selection-end="236" vertical-scroll-proportion="0.0">
+        <state line="8" column="15" selection-start="198" selection-end="202" vertical-scroll-proportion="0.18292683">
           <folding>
-            <marker date="1361140501000" expanded="true" signature="337:344" placeholder="{...}" />
-            <marker date="1361140501000" expanded="true" signature="409:468" placeholder="{...}" />
-            <marker date="1361140501000" expanded="true" signature="659:701" placeholder="{...}" />
-            <marker date="1361140501000" expanded="true" signature="740:772" placeholder="{...}" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTypePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="46" selection-start="3389" selection-end="3389" vertical-scroll-proportion="0.0">
+        <state line="10" column="13" selection-start="242" selection-end="242" vertical-scroll-proportion="0.17595308">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/GeneralUtilities.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="26" selection-start="697" selection-end="697" vertical-scroll-proportion="0.0">
+        <state line="8" column="17" selection-start="173" selection-end="173" vertical-scroll-proportion="0.17595308">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionDAOConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="28" selection-start="204" selection-end="204" vertical-scroll-proportion="0.0">
-          <folding />
+        <state line="30" column="46" selection-start="569" selection-end="758" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="305" column="8" selection-start="12983" selection-end="12983" vertical-scroll-proportion="0.0">
+        <state line="374" column="0" selection-start="16247" selection-end="16247" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#3465#3488#0" expanded="true" />
+            <element signature="e#9357#9366#0" expanded="true" />
+            <element signature="e#30454#30477#0" expanded="true" />
+            <element signature="e#31649#31666#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/date/DateUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="0" selection-start="1490" selection-end="1490" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="13" selection-start="1476" selection-end="1476" vertical-scroll-proportion="0.6835443">
+        <state line="107" column="33" selection-start="3034" selection-end="3048" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahInfoPayload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="23" selection-start="632" selection-end="632" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="101" selection-start="1116" selection-end="1116" vertical-scroll-proportion="0.5517711">
           <folding />
         </state>
       </provider>

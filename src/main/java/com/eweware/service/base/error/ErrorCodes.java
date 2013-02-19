@@ -79,5 +79,5 @@ public final class ErrorCodes {
     public static final Integer INVALID_USERNAME = 69;
     public static final Integer INVALID_USER_ID = 70;
     public static final Integer UNAUTHORIZED_USER = 71;
-    
+    public static final Integer ALREADY_VOTED_ON_POLL = 72;
 }

@@ -51,4 +51,14 @@ public final class GeneralUtilities {
             return 0;
         }
     }
+
+    /**
+     * Returns the integer value if it is not null or else the default value
+     * @param integer   The integer value
+     * @param defaultValue  The default value
+     * @return  An integer value (either the integer or the defaultValue)
+     */
+    public static Integer safeGetInteger(Integer integer, Integer defaultValue) {
+        return (integer != null) ? integer : defaultValue;
+    }
 }

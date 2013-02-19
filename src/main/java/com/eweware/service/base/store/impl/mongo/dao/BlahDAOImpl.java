@@ -1,6 +1,10 @@
 package main.java.com.eweware.service.base.store.impl.mongo.dao;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.WriteResult;
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
@@ -9,6 +13,7 @@ import main.java.com.eweware.service.base.store.dao.PollOptionTextDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import org.bson.types.ObjectId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -153,6 +158,27 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     @Override
     public void setPollOptionVotes(List<Integer> pollOptionVotes) {
         put(POLL_OPTION_VOTES, pollOptionVotes);
+    }
+
+
+
+    /**
+     * Adds one vote to this blah's poll for the specified
+     * option index.
+     * @param pollOptionIndex The option index
+     */
+    public void addPollOptionVote_immediate(Integer pollOptionIndex) throws SystemErrorException {
+        final StringBuilder b = new StringBuilder(POLL_OPTION_VOTES);
+        b.append('.');
+        b.append(pollOptionIndex);
+        String index = b.toString();
+        final Map<String, Object> update = new HashMap<String, Object>();
+        update.put(index, 1);
+        final BasicDBObject criteria = new BasicDBObject(BlahDAO.ID, get(ID));
+        final WriteResult result = _getCollection().update(criteria, new BasicDBObject("$inc", update));
+        if (result.getError() != null) {
+            throw new SystemErrorException("Failed to vote on poll with pollIndex '" + pollOptionIndex + "'", result.getError(), ErrorCodes.SERVER_DB_ERROR);
+        }
     }
 
     @Override

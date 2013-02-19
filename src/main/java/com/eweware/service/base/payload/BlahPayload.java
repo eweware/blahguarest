@@ -15,6 +15,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     static final String USER_VOTE = "uv";
     static final String USER_VIEWS = "uw";
     static final String USER_OPENS = "uo";
+    static final String POLL_OPTION_VOTE_INDEX = "povi";
 
 
     public BlahPayload() {
@@ -194,6 +195,18 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
 
     public void setPollOptionVotes(List<Integer> pollOptionVotes) {
         put(POLL_OPTION_VOTES, pollOptionVotes);
+    }
+
+    /**
+     * Returns the poll option vote index from a client.
+     * This is an index that must be less than the number
+     * of poll options on a poll type blah. A value
+     * in this field means that the client's user wants
+     * to vote for the poll option with the specified index.
+     * @return  The poll option vote index
+     */
+    public Integer getPollOptionVoteIndex() {
+        return (Integer) get(POLL_OPTION_VOTE_INDEX);
     }
 
     public Double getStrength() {

@@ -16,6 +16,10 @@ public interface InboxBlahDAO extends BaseDAO, InboxBlahDAOConstants {
 
     public void setAuthorId(String authorId);
 
+    /**
+     * Returns the blah type id
+     * @return  The blah type id
+     */
     public String getType();
 
     public void setType(String type);

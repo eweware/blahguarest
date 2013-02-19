@@ -72,6 +72,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         private final String userId;
         private final boolean voteUp;
         private final boolean voteDown;
+        private final Integer pollOptionIndex;
         private final Integer viewCount;
         private final Integer openCount;
 
@@ -88,10 +89,11 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 *                    upon which it is commenting.
          * @param voteUp   True if the vote is up for this operation
          * @param voteDown True if the vote is down for this operation
-         * @param viewCount   Number of views
-         * @param openCount   Number of opens
+         * @param pollOptionIndex  If not null, the poll option index for the option for which the specified user voted
+         * @param viewCount   Number of added views
+         * @param openCount   Number of added opens
          */
-        TrackerQueueItem(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer viewCount, Integer openCount) {
+        TrackerQueueItem(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) {
             this.operation = operation;
             this.authorId = authorId;
             this.isBlah = isBlah;
@@ -101,37 +103,40 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
             this.userId = userId;
             this.voteUp = voteUp;
             this.voteDown = voteDown;
+            this.pollOptionIndex = pollOptionIndex;
             this.viewCount = viewCount;
             this.openCount = openCount;
         }
 
-        public String toString() {
-            final StringBuilder b = new StringBuilder();
-            b.append("[op=");
-            b.append(operation);
-            b.append("userId=");
-            b.append(userId);
-            b.append("authorId=");
-            b.append(authorId);
-            b.append("isBlah=");
-            b.append(isBlah);
-            b.append("isNewObject=");
-            b.append(isNewObject);
-            b.append("objectId=");
-            b.append(objectId);
-            b.append("subObjectId=");
-            b.append(subObjectId);
-            b.append("voteUp=");
-            b.append(voteUp);
-            b.append("voteDown=");
-            b.append(voteDown);
-            b.append("viewCount=");
-            b.append(viewCount);
-            b.append("openCount=");
-            b.append(openCount);
-            b.append("]");
-            return b.toString();
-        }
+//        public String toString() {
+//            final StringBuilder b = new StringBuilder();
+//            b.append("[op=");
+//            b.append(operation);
+//            b.append(" userId=");
+//            b.append(userId);
+//            b.append(" authorId=");
+//            b.append(authorId);
+//            b.append(" isBlah=");
+//            b.append(isBlah);
+//            b.append(" isNewObject=");
+//            b.append(isNewObject);
+//            b.append(" objectId=");
+//            b.append(objectId);
+//            b.append(" subObjectId=");
+//            b.append(subObjectId);
+//            b.append("voteUp=");
+//            b.append(voteUp);
+//            b.append("voteDown=");
+//            b.append(voteDown);
+//            b.append(" pollOptionIndex=");
+//            b.append(pollOptionIndex);
+//            b.append("viewCount=");
+//            b.append(viewCount);
+//            b.append("openCount=");
+//            b.append(openCount);
+//            b.append("]");
+//            return b.toString();
+//        }
     }
 
     private static TrackingManager singleton;
@@ -209,19 +214,20 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param authorId    The id of the author of a blah or comment, depending on the operation
      * @param isBlah      True if the object is a blah; else it's a comment
      * @param isNewObject True if the blah or comment is new. Implies that
- *                    the userId is the author's id.
+*                    the userId is the author's id.
      * @param objectId    The blah or comment id
      * @param subObjectId If the object is a comment, this is optionally it's blah's id
      * @param voteUp      Vote up for a blah or a comment
      * @param voteDown    Vote up for a blah or a comment
+     * @param pollOptionIndex
      * @param viewCount   Number of views
      * @param openCount   Number of opens         @throws main.java.com.eweware.service.base.error.SystemErrorException
      */
-    public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer viewCount, Integer openCount) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
+    public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
         if (!isBlah && subObjectId == null) {
             throw new SystemErrorException("missing subObjectId", ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
-        final TrackerQueueItem trackerData = new TrackerQueueItem(operation, userId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, viewCount, openCount);
+        final TrackerQueueItem trackerData = new TrackerQueueItem(operation, userId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, pollOptionIndex, viewCount, openCount);
         trackUserStats(trackerData);
         trackBlahOrCommentStats(trackerData);
     }
@@ -658,6 +664,13 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         } else if (trackerData.voteDown) {
             map.put(BT_DOWN_VOTES, 1);
         }
+        if (trackerData.pollOptionIndex != null) {
+            // The name of the field for the number of votes for poll option at index 2 would be p-2
+            final StringBuilder pollOptionVoteCountFieldName = new StringBuilder(BT_POLL_OPTION_INDEX);
+            pollOptionVoteCountFieldName.append('-');
+            pollOptionVoteCountFieldName.append(trackerData.pollOptionIndex);
+            map.put(pollOptionVoteCountFieldName.toString(), 1);
+        }
         if (trackerData.viewCount != null && trackerData.viewCount > 0) {
             map.put(BT_VIEWS, trackerData.viewCount);
         }
@@ -693,7 +706,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         tracker.put(isBlahTracker ? BT_AUTHOR_ID : CT_AUTHOR_ID, trackerData.authorId);
 
         // Monthly stats:
-        for (String fieldName : isBlahTracker ? BT_FIELD_NAMES : CT_FIELD_NAMES) {
+        for (String fieldName : isBlahTracker ? BT_FIELD_NAMES : CT_FIELD_NAMES) { // TODO try to do without this?
             tracker.put(fieldName, 0);
         }
         final WriteResult insert = collection.insert(tracker);

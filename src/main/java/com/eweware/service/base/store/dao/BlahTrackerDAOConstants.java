@@ -12,6 +12,7 @@ public interface BlahTrackerDAOConstants {
     public static final String BT_COMMENTS = "c";
     public static final String BT_UP_VOTES = "u";
     public static final String BT_DOWN_VOTES = "d";
+    public static final String BT_POLL_OPTION_INDEX = "p";
     public static final String BT_VIEWS = "v";
     public static final String BT_OPENS = "o";
 
@@ -19,6 +20,7 @@ public interface BlahTrackerDAOConstants {
             BT_COMMENTS,
             BT_UP_VOTES,
             BT_DOWN_VOTES,
+            BT_POLL_OPTION_INDEX,
             BT_VIEWS,
             BT_OPENS,
     };

@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import java.util.Date;
+
 /**
  * @author rk@post.harvard.edu
  *         Date: 7/2/12 Time: 2:35 PM
@@ -25,6 +27,14 @@ public interface UserBlahInfoDAO extends BaseDAO, UserBlahInfoDAOConstants {
     public Integer getVote();
 
     public void setVote(Integer vote);
+
+    public Integer getPollVoteIndex();
+
+    public void setPollVoteIndex(Integer pollIndex);
+
+    public Date getPollVoteTimestamp();
+
+    public void setPollVoteTimestamp(Date timestamp);
 
     public Integer getViews();
 

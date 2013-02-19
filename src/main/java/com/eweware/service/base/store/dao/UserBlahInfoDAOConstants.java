@@ -38,6 +38,19 @@ public interface UserBlahInfoDAOConstants {
     static final String VOTE = "v";
 
     /**
+     * If this is a poll blah type, indicates whether the user
+     * has voted on the poll. The value is the poll option index
+     * (an integer) or null if the user has not voted on this poll.
+     */
+    static final String POLL_VOTE_INDEX = "p";
+
+    /**
+     * If POLL_VOTE_INDEX is not null, this is
+     * the datetime when the vote was made.
+     */
+    static final String POLL_VOTE_TIMESTAMP = "t";
+
+    /**
      * The number of views of this blah by the user.
      * If the user hasn't viewed the blah, this
      * field is either null or 0.
@@ -58,6 +71,7 @@ public interface UserBlahInfoDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, BLAH_ID, ORIGINAL_GROUP_ID}),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{VOTE, VIEWS, OPENS, COMMENTS_ON_THIS_BLAH}),
+            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{VOTE, POLL_VOTE_INDEX, VIEWS, OPENS, COMMENTS_ON_THIS_BLAH}),
+            new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{POLL_VOTE_TIMESTAMP})
     };
 }

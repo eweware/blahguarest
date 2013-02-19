@@ -23,16 +23,7 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
 
     public UserProfilePayload(Map<String, Object> map) {
         super(map);
-        ensureDates();
-    }
-
-    // TODO not too elegant: the payload (client) expects a string representation, not a date. Would be nice to have a per-field autoconversion method
-    @JsonIgnore
-    private void ensureDates() {
-        final Object dob = get(USER_PROFILE_DATE_OF_BIRTH);
-        if (dob != null && (dob instanceof  Date)) {
-            put(USER_PROFILE_DATE_OF_BIRTH, DateUtils.formatDate((Date) dob));
-        }
+        ensureDate(USER_PROFILE_DATE_OF_BIRTH);
     }
 
     public String getUserType() {

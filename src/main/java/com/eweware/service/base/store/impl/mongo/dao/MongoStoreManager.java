@@ -184,6 +184,42 @@ public final class MongoStoreManager implements StoreManager {
 
             Integer connectionsPerHost
             ) {
+        doInitialize(hostname, port, userDbName, blahDbName, trackerDbName, trackUserCollectionName, trackBlahCollectionName,
+                trackCommentCollectionName, trackerCollectionName, userCollectionName, userProfileCollectionName,
+                groupCollectionName, groupTypeCollectionName, userGroupCollectionName, mediaCollectionName, blahCollectionName,
+                blahTypeCollectionName, commentCollectionName, userBlahInfoCollectionName, userCommentInfoCollectionName,
+                inboxStateCollectionName, blahInboxCollectionName, demographicsCollectionName, connectionsPerHost);
+    }
+
+    /**
+     * Initializes the store manager. This method is public to allow
+     * test units to initialize it outside the context of the web server.
+     * @param hostname
+     * @param port
+     * @param userDbName
+     * @param blahDbName
+     * @param trackerDbName
+     * @param trackUserCollectionName
+     * @param trackBlahCollectionName
+     * @param trackCommentCollectionName
+     * @param trackerCollectionName
+     * @param userCollectionName
+     * @param userProfileCollectionName
+     * @param groupCollectionName
+     * @param groupTypeCollectionName
+     * @param userGroupCollectionName
+     * @param mediaCollectionName
+     * @param blahCollectionName
+     * @param blahTypeCollectionName
+     * @param commentCollectionName
+     * @param userBlahInfoCollectionName
+     * @param userCommentInfoCollectionName
+     * @param inboxStateCollectionName
+     * @param blahInboxCollectionName
+     * @param demographicsCollectionName
+     * @param connectionsPerHost
+     */
+    public void doInitialize(String hostname, String port, String userDbName, String blahDbName, String trackerDbName, String trackUserCollectionName, String trackBlahCollectionName, String trackCommentCollectionName, String trackerCollectionName, String userCollectionName, String userProfileCollectionName, String groupCollectionName, String groupTypeCollectionName, String userGroupCollectionName, String mediaCollectionName, String blahCollectionName, String blahTypeCollectionName, String commentCollectionName, String userBlahInfoCollectionName, String userCommentInfoCollectionName, String inboxStateCollectionName, String blahInboxCollectionName, String demographicsCollectionName, Integer connectionsPerHost) {
         this.hostname = hostname;
         this.port = Integer.parseInt(port);
         this.connectionsPerHost = connectionsPerHost;

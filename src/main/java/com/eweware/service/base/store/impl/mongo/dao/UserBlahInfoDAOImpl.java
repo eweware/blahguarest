@@ -8,6 +8,7 @@ import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.UserBlahInfoSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(ORIGINAL_GROUP_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_TYPE_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VOTE, MongoFieldTypes.NUMBER);
+        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_VOTE_INDEX, MongoFieldTypes.NUMBER);
+        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_VOTE_TIMESTAMP, MongoFieldTypes.DATE);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENTS_ON_THIS_BLAH, MongoFieldTypes.NUMBER);
@@ -120,6 +123,26 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     @Override
     public void setVote(Integer vote) {
         put(VOTE, vote);
+    }
+
+    @Override
+    public Integer getPollVoteIndex() {
+        return (Integer) get(POLL_VOTE_INDEX);
+    }
+
+    @Override
+    public void setPollVoteIndex(Integer pollIndex) {
+        put(POLL_VOTE_INDEX, pollIndex);
+    }
+
+    @Override
+    public Date getPollVoteTimestamp() {
+        return (Date) get(POLL_VOTE_TIMESTAMP);
+    }
+
+    @Override
+    public void setPollVoteTimestamp(Date timestamp) {
+        put(POLL_VOTE_TIMESTAMP, timestamp);
     }
 
     @Override

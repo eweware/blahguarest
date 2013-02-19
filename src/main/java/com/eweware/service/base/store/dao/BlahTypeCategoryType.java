@@ -18,7 +18,7 @@ public enum BlahTypeCategoryType {
         return categoryId;
     }
 
-    public BlahTypeCategoryType findByCategoryId(Integer category) {
+    public static BlahTypeCategoryType findByCategoryId(Integer category) {
         if (category == null) {
             return DEFAULT;
         }

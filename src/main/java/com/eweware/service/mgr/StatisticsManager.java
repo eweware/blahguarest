@@ -101,7 +101,7 @@ public class StatisticsManager implements ManagerInterface {
     }
 
     public Object getBlahTypeDemographics() throws SystemErrorException {
-        final List<BlahTypePayload> types = BlahManager.getInstance().getCachedBlahTypes();
+        final List<BlahTypePayload> types = BlahManager.getInstance().getBlahTypes(); // TODO right now, it can dynamically change so it can't be cached
         final String[] ids = new String[types.size()];
         int i = 0;
         for (BlahTypePayload bt : types) {

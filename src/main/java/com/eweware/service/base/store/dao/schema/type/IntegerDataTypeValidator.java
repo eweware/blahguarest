@@ -7,6 +7,7 @@ import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
  *         Date: 9/16/12 Time: 11:12 AM
  */
 public class IntegerDataTypeValidator implements FieldValidator {
+
     @Override
     public Object toValidValue(Object value, SchemaSpec spec) {
         return value;
@@ -15,7 +16,7 @@ public class IntegerDataTypeValidator implements FieldValidator {
     @Override
     public boolean isValid(Object value, SchemaSpec spec) {
         if (value == null) {
-            return true; // a null value is a command to delete the field or set the field's value to null
+            return true;
         }
         final Number maximumValue = spec.getMaximumValue();
         if (value instanceof Integer) {
