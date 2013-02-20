@@ -5,10 +5,8 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.rest.session.SessionAttributes;
 import org.apache.commons.codec.binary.Base64;
 
-import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -103,20 +101,4 @@ public final class Login {
         }
     }
 
-    public static void markAuthenticated(HttpSession session, boolean passedAuthentication) {
-        if (passedAuthentication) {
-            session.setAttribute(SessionAttributes.IS_AUTHENTICATED, Boolean.TRUE);
-        } else {
-            session.removeAttribute(SessionAttributes.IS_AUTHENTICATED);
-        }
-    }
-
-    public static boolean isAuthenticated(HttpSession session) {
-        if (session == null) {
-            return false;
-        }
-        final Object attribute = session.getAttribute(SessionAttributes.IS_AUTHENTICATED);
-        final Boolean bool = (Boolean) attribute;
-        return (bool == Boolean.TRUE);
-    }
 }

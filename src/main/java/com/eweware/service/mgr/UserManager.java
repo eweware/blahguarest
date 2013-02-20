@@ -4,7 +4,7 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.UserDAOImpl;
+import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.user.validation.EmailUserValidationMethod;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
@@ -196,9 +196,9 @@ public class UserManager implements ManagerInterface {
             throw new ResourceNotFoundException("No such user", ErrorCodes.UNAUTHORIZED_USER);
         }
         if (Login.authenticate(user.getDigest(), user.getSalt(), password)) {
-            Login.markAuthenticated(request.getSession(true), true);
+            BlahguaSession.markAuthenticated(request, true, username);
         } else {
-            Login.markAuthenticated(request.getSession(true), false);
+            BlahguaSession.markAuthenticated(request, false, username);
             throw new InvalidAuthorizedStateException("User not authorized", ErrorCodes.UNAUTHORIZED_USER);
         }
     }

@@ -8,7 +8,9 @@ import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.payload.GroupPayload;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
+import org.apache.http.HttpRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -63,8 +65,37 @@ public class GroupsResource {
 			return RestUtilities.makeAndLogSystemErrorResponse(e);
 		}
 	}
-	
-	@GET
+
+    @PUT
+    @Path("/{groupId}/viewerCount/{added}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateViewerCount(@PathParam("groupId") String groupId,
+                                      @PathParam("added") Boolean added,
+                                      @Context HttpServletRequest request) {
+        try {
+            GroupManager.getInstance().updateViewerCount(groupId, added, request);
+            return RestUtilities.makeOKNoContentResponse();
+        } catch (SystemErrorException e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        }
+    }
+
+    @GET
+    @Path("/{groupId}/viewerCount")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewerAdded(@PathParam("groupId") String groupId) {
+        try {
+            return RestUtilities.makeOkResponse(GroupManager.getInstance().getViewerCount(groupId));
+        } catch (SystemErrorException e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.makeAndLogSystemErrorResponse(e);
+        }
+    }
+
+    @GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroups(
             @QueryParam("type") String groupTypeId,

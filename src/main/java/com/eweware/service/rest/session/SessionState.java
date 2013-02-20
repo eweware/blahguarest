@@ -6,14 +6,6 @@ package main.java.com.eweware.service.rest.session;
  */
 public enum SessionState {
 
-    V("VALIDATED"), /** user has been validated (e.g., through username/password) **/
-    A("ANONYMOUS");
-    private final String name;
-
-    SessionState(String name) {
-        this.name = name;
-    }
-    public String getName() {
-        return name;
-    }
+    AUTHENTICATED, /** user has been authenticated (e.g., through username/password) **/
+    ANONYMOUS;     /** user is anonymous: has not passed any sort of authentication */
 }

@@ -3,6 +3,7 @@ package main.java.com.eweware.service.mgr;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.mgr.ManagerState;
+import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
 import main.java.com.eweware.service.base.payload.AuthorizedState;
 import main.java.com.eweware.service.base.payload.GroupPayload;
@@ -13,7 +14,9 @@ import main.java.com.eweware.service.base.store.dao.DAOUpdateType;
 import main.java.com.eweware.service.base.store.dao.GroupDAO;
 import main.java.com.eweware.service.base.store.dao.GroupTypeDAO;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import org.apache.http.HttpRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +74,7 @@ public final class GroupManager implements ManagerInterface {
      * @return GroupTypeDAOImpl    The created group type dao
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      * @throws StateConflictException
      */
     public GroupTypePayload createGroupType(LocaleId localeId, GroupTypePayload request) throws InvalidRequestException, SystemErrorException, StateConflictException {
@@ -103,11 +107,11 @@ public final class GroupManager implements ManagerInterface {
      * 1. check that group type exists
      * 2. update group type
      *
-     *
      * @param localeId
      * @param groupTypeId The group type id
      * @param updates     Just the fields that are being updated.
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      * @throws InvalidRequestException
      */
     public void updateGroupType(LocaleId localeId, String groupTypeId, GroupTypePayload updates) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
@@ -126,6 +130,7 @@ public final class GroupManager implements ManagerInterface {
     /**
      * @return List<GroupTypeDAOImpl>	Returns all group types or an empty list if there are none.
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     public List<GroupTypePayload> getGroupTypes(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
         ensureReady();
@@ -148,6 +153,7 @@ public final class GroupManager implements ManagerInterface {
      * @return GroupTypeDAOImpl Returns a group type by id or null if it doesn't exist.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      * @throws ResourceNotFoundException
      */
     public GroupTypePayload getGroupTypeById(LocaleId localeId, String groupTypeId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
@@ -169,6 +175,7 @@ public final class GroupManager implements ManagerInterface {
      * @return GroupDAOImpl    Creates a group and returns the dao.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     public GroupPayload createGroup(LocaleId localeId, GroupPayload group) throws InvalidRequestException, SystemErrorException {
         ensureReady();
@@ -227,12 +234,12 @@ public final class GroupManager implements ManagerInterface {
      * TODO users should not be able to approve a group: need to discuss safe method for doing this
      * Used to update a group's display name and state.
      *
-     *
      * @param localeId
-     * @param groupId The group id
-     * @param updates A group DAO with the updates.
+     * @param groupId  The group id
+     * @param updates  A group DAO with the updates.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
@@ -258,19 +265,18 @@ public final class GroupManager implements ManagerInterface {
     }
 
     /**
-     *
-     *
      * @param localeId
-     * @param groupTypeId A group type id (optional).
-     * @param displayName A group's display name (optional).
-     * @param state       A group state (optional: if null, all groups are returned).
-     * @param start       Optional start index
-     * @param count       Optional number of items to fetch
+     * @param groupTypeId   A group type id (optional).
+     * @param displayName   A group's display name (optional).
+     * @param state         A group state (optional: if null, all groups are returned).
+     * @param start         Optional start index
+     * @param count         Optional number of items to fetch
      * @param sortFieldName
      * @return List<GroupDAOImpl>	Returns a possibly empty list of groups of the
      *         given type and state.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     public List<GroupPayload> getGroups(LocaleId localeId, String groupTypeId, String displayName, String state, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
         ensureReady();
@@ -305,12 +311,12 @@ public final class GroupManager implements ManagerInterface {
     }
 
     /**
-     *
      * @param localeId
-     * @param groupId A group id
+     * @param groupId  A group id
      * @return GroupDAOImpl    Returns a dao for the group or null if the group doesn't exist.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      * @throws ResourceNotFoundException
      */
     public GroupPayload getGroupById(LocaleId localeId, String groupId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
@@ -325,6 +331,38 @@ public final class GroupManager implements ManagerInterface {
         return new GroupPayload(dao);
     }
 
+    /**
+     * Updates the viewer count for this group
+     *
+     * @param groupId The group id
+     * @param added   If true, add one to the count, else subtract one
+     * @param request
+     */
+    public void updateViewerCount(String groupId, Boolean added, HttpServletRequest request) throws SystemErrorException, ResourceNotFoundException {
+        final GroupDAO group = storeManager.createGroup(groupId);
+        if (!group._exists()) {
+            throw new ResourceNotFoundException("No such group id '" + groupId + "'", ErrorCodes.NOT_FOUND_GROUP_ID);
+        }
+        group.setCurrentViewerCount(added ? 1 : -1);
+        group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        if (request != null) {
+            BlahguaSession.addCurrentlyViewedGroup(groupId, request);
+        }
+    }
+
+    /**
+     * Returns the number of current viewers in this channel
+     * @return A group payload with the current viewer count
+     */
+    public GroupPayload getViewerCount(String groupId) throws SystemErrorException {
+        final GroupDAO groupDAO = (GroupDAO) storeManager.createGroup(groupId)._findByPrimaryId(GroupDAO.CURRENT_VIEWER_COUNT);
+        final GroupPayload groupPayload = new GroupPayload(groupId);
+        if (groupDAO == null || groupDAO.getCurrentViewerCount() == null) {
+            groupPayload.setCurrentViewerCount(0);
+        }
+        groupPayload.setCurrentViewerCount(groupDAO.getCurrentViewerCount());
+        return groupPayload;
+    }
 
     private boolean isEmptyString(String string) {
         return (string == null || string.length() == 0);

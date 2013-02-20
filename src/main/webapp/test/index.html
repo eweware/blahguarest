@@ -11,25 +11,31 @@
 
 <body>
 <script src="js/jquery-1.8.3.js"></script>
-<!-- input type="button" value="Config" onclick="configFromServer();" / -->
 <script>
 // Get blah type name to id map, etc...:
 $(document).ready(function() {configFromServer()});
 
 function rest(method, path, dataHandler, successFunction) {
+var endpoint = document.getElementById("endpoint").value;
+if (typeof(endpoint) == "undefined") {
+alert("Missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");
+return;
+}
+var fullUrl = 'http://'+endpoint+'/v2/'+path;
 $("#results").html("");
 $("#resultstatus").html("");
 $("#callmeth").attr("value", method);
-$("#callurl").attr("value", 'http://hostname/v2/'+path);
+$("#callurl").attr("value", fullUrl);
 $.ajax({
 type: method,
-url: "../v2/" + path,
+url: fullUrl,
 data: dataHandler,
 contentType: "application/json; charset=utf-8",
 dataType: "html",
 success:  successFunction == null?defaultSuccessFunction:successFunction,
 error: function (theErr, err, thrown) {
 $("#resultstatus").css({'color': 'red'}).html("(Http Status: "+err+": "+thrown+")");
+$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
 $("#results").css({'color': 'red'}).html(theErr.responseText);
 }});
 var payload = String(dataHandler);
@@ -41,6 +47,7 @@ $("#payload").css({'color': 'red'}).text(payload);
 
 function defaultSuccessFunction(results, status) {
 $("#resultstatus").html("(Http Status: "+status+")");
+$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
 $("#results").css({'color': 'black'}).html(results)
 }
 
@@ -169,6 +176,7 @@ var obj = $(".param").val("");
 }
 
 function help() {
+$("#resultsArea").html('<div id="results"/>');
 $("#results").css({'color': 'blue'}).html("<h4>Help</h4><div>Create User: needs a User Name. If password is given, this will be used to later authenticate.</div><div>Login User: requires User Name and Password.</div><div>Get Users: needs no parameters</div><div>Get User By Id: needs User Id parameter -- returns users when not provided</div><div>Get User By Name: needs the User Name parameter.</div><div>Get User's Blahs: needs User Id parameter</div><div>Get Channels: needs no parameter</div><div>Join User To Channel: needs User Id and Channel Id parameters</div><div>Create Blah: Needs User Id parameter</div><div>Get Blah: Needs the Blah Id parameter. Returns any images.</div><div>Get User Blahs:: Needs User Id parameter</div><br/><div>Clear All Parameters: Clears parameter values</div><div>Clear All Results: clears results text</div>");
 }
 
@@ -197,9 +205,16 @@ return document.getElementById("blahid").value;
 
 // Special
 function configFromServer() {
+help();
+var endpoint = document.getElementById("endpoint").value;
+if (typeof(endpoint) == "undefined") {
+alert("Config Error: missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");
+return;
+} // Get blah types for drop down menu
+var getBlahTypesUrl = "http://"+endpoint+"/v2/blahs/types";
 $.ajax({
 type: "GET",
-url: "../v2/blahs/types",
+url: getBlahTypesUrl,
 data: null,
 contentType: "application/json; charset=utf-8",
 dataType: "html",
@@ -237,7 +252,7 @@ alert("Error: Failed to configure page:\n"+thrown+"\n"+result);
 </style>
 
 <h2>Actions</h2>
-<div><input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
+<div><div><input style="color: blue" id="help" type="button" onclick="help()" value="Help"/> &nbsp;Host Endpoint: <input id="endpoint" type="text" value="localhost:8080"/></div>
     <!-- Actions -->
     <div style="margin-top: .5em"><input id="createUser" type="button" onclick="createUser()" value="Create User"/>
         &nbsp;<input id="loginUser" type="button" onclick="loginUser()" value="Login User" />
@@ -266,8 +281,8 @@ alert("Error: Failed to configure page:\n"+thrown+"\n"+result);
     <div style="font-weight: bold;">Outgoing Payload (POST/PUT):</div>
     <textarea id="payload" class="calls" cols="94" rows="5"></textarea>
     <div style="font-weight: bold;">Results: <span id="resultstatus" class"calls"></span></div>
-    <textarea id="results" cols="94" rows="10"></textarea>
-    <div id="imgs" style="top-margin: 1em;visibility: visible;">Images:<br /><div><img id="img_a"/><img id="img_b"/><img id="img_c"/><img id="img_d"/></div></div>
+    <div id="resultsArea"></div>
+    <div id="imgs" style="top-margin: 2em;visibility: visible;"><b>Images:</b><br /><div><img id="img_a"/><img id="img_b"/><img id="img_c"/><img id="img_d"/></div></div>
 
 </body>
 </html>

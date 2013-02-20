@@ -14,6 +14,7 @@ public interface GroupDAOConstants {
     static final String GROUP_TYPE_ID = "groupTypeId";
     static final String USER_COUNT = "ucount";
     static final String BLAH_COUNT = "bcount";
+    static final String CURRENT_VIEWER_COUNT = "v";
     static final String USER_VALIDATION_METHOD = "vmeth";
     static final String USER_VALIDATION_PARAMETERS = "vp";
     static final String STATE = "state";
@@ -22,6 +23,6 @@ public interface GroupDAOConstants {
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                 DISPLAY_NAME, DESCRIPTION, GROUP_TYPE_ID, USER_VALIDATION_METHOD, USER_VALIDATION_PARAMETERS, STATE
         }),
-        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{USER_COUNT, BLAH_COUNT}),
+        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT}),
     };
 }

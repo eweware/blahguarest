@@ -1,126 +1,65 @@
 package main.java.com.eweware.service.rest.session;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import org.apache.http.HttpRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author rk@post.harvard.edu
  *         Date: 12/28/12 Time: 1:59 PM
  */
-public class BlahguaSession {
+public final class BlahguaSession {
 
     /**
-     * The session state. Initially, anonymous
+     * Set to a Boolean. Indicates whether the user was authenticated or not.
      */
-    private SessionState state;
+    public static final String AUTHENTICATION_STATE = "A";
+    /**
+     * Set to a Set of Strings, each string is a group id
+     * These are the groups that the user is currently watching.
+     */
+    public static final String VIEWING_COUNT_GROUP_IDS = "G";
+
+    // TODO debugging
+    public static final String USERNAME = "U";
+
 
     /**
-     * Maps an external blah id to an internal id
+     * Marks the user session as authenticated.
+     *
+     * @param request              The http request object
+     * @param passedAuthentication True if it passed authentication
+     * @param username    TODO remove (dbg)
      */
-    private Map<String, String> externalToInternalBlahIdMap = new HashMap<String, String>();
-
-    /**
-     * Maps an internal blah id to an external id
-     */
-    private Map<String, String> internalToExternalBlahIdMap = new HashMap<String, String>();
-
-    /**
-     * Maps an external comment id to an internal id
-     */
-    private Map<String, String> externalToInternalCommentIdMap = new HashMap<String, String>();
-
-    /**
-     * Maps an internal comment id to an external id
-     */
-    private Map<String, String> internalToExternalCommentIdMap = new HashMap<String, String>();
-
-    public BlahguaSession(SessionState state) {
-        super();
-        this.state = state;
-    }
-
-    /**
-     * not used
-     */
-    private BlahguaSession() {}
-
-    /**
-     * Convenience method.
-     * @param externalBlahId    An external (client-side) blah id
-     * @param httpSession   An http session object
-     * @return String   The internal (server db) blah id
-     * @throws SystemErrorException Thrown if the http session doesn't exist or doesn't
-     * contain a blahgua session object
-     * @throws InvalidRequestException Thrown if there is no internal blah id corresponding
-     * to the specified external id
-     */
-    public static String getInternalBlahId(String externalBlahId, HttpSession httpSession) throws SystemErrorException, InvalidRequestException {
-        final String internalBlahId = getBlahguaSession(httpSession).getInternalBlahId(externalBlahId);
-        if (internalBlahId == null) {
-            throw new InvalidRequestException("No such blahId=" + externalBlahId, ErrorCodes.INVALID_SESSION_STATE);
+    public static void markAuthenticated(HttpServletRequest request, Boolean passedAuthentication, String username) {
+        final HttpSession session = request.getSession(true);
+        if (username != null) {
+            session.setAttribute(USERNAME, username);
         }
-        externalBlahId = internalBlahId;
-        return externalBlahId;
+        session.setAttribute(AUTHENTICATION_STATE, passedAuthentication ? SessionState.AUTHENTICATED : SessionState.ANONYMOUS);
     }
 
-    public String getInternalBlahId(String externalBlahId) {
-        return externalToInternalBlahIdMap.get(externalBlahId);
-    }
-
-    public String getExternalBlahId(String internalBlahId) {
-        return internalToExternalBlahIdMap.get(internalBlahId);
-    }
-
-    public String getInternalCommentId(String externalCommentId) {
-        return externalToInternalCommentIdMap.get(externalCommentId);
-    }
-
-    public String getExternalCommentId(String internalCommentId) {
-        return internalToExternalCommentIdMap.get(internalCommentId);
-    }
-
-    // Static
-
-    /**
-     * @param session   The Tomcat session object from the context
-     * @return BlahSession  Returns the corresponding Blahgua Session object for this Tomcat session or null
-     * if no Blahgua session is associated with it
-     * @throws SystemErrorException
-     */
-    public static final BlahguaSession getBlahguaSession(HttpSession session) throws SystemErrorException {
-        BlahguaSession blahguaSession = null;
-        if (session == null || (blahguaSession = (BlahguaSession) session.getAttribute(SessionAttributes.BLAH_SESSION_ATTRIBUTE_NAME)) == null) {
-            throw new SystemErrorException("Missing session and/or blah session", ErrorCodes.INVALID_SESSION);
+    public static boolean isAuthenticated(HttpServletRequest request) {
+        final HttpSession session = request.getSession();
+        if (session == null) { // don't create one
+            return false;
         }
-        return blahguaSession;
+        return ((SessionState) session.getAttribute(AUTHENTICATION_STATE) == SessionState.AUTHENTICATED);
     }
 
-    /**
-     * Associates a new BlahguaSession with the specified Http session. A new BlahguaSession
-     * object is created. If no SessionState is provided, the default (anonymous)
-     * session state will be used to initialize the BlahguaSession object.
-     * @param session The Http session object
-     * @param sessionState If not null, this session state will be used to initialize
-     *                     the new BlahguaSession object, else the object will initialize to the default state.
-     * @return BlahguaSession   The created blahgua session object
-     * @throws SystemErrorException
-     */
-    public static final BlahguaSession setBlahguaSession(HttpSession session, SessionState sessionState) throws SystemErrorException {
-        if (session == null) {
-            throw new SystemErrorException("Mission session", ErrorCodes.INVALID_SESSION);
-        }
-        BlahguaSession blahguaSession = (BlahguaSession) session.getAttribute(SessionAttributes.BLAH_SESSION_ATTRIBUTE_NAME);
-        if (blahguaSession != null) {
-            throw new SystemErrorException("BlahSession already exists=" + blahguaSession, ErrorCodes.SESSION_ERROR);
-        }
-        blahguaSession = new BlahguaSession((sessionState == null) ? sessionState : SessionState.A);
-        session.setAttribute(SessionAttributes.BLAH_SESSION_ATTRIBUTE_NAME, blahguaSession);
-        return blahguaSession;
-    }
 
+    public static void addCurrentlyViewedGroup(String groupId, HttpServletRequest request) {
+        final HttpSession session = request.getSession(true);
+        if (groupId != null) {
+            Set<String> groupIds = (Set<String>) session.getAttribute(VIEWING_COUNT_GROUP_IDS);
+            if (groupIds == null) {
+                groupIds = new HashSet<String>(5);
+                session.setAttribute(VIEWING_COUNT_GROUP_IDS, groupIds);
+            }
+            groupIds.add(groupId);
+        }
+    }
 }

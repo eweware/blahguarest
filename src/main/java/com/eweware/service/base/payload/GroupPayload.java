@@ -76,4 +76,12 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
     public void setUserCount(Integer userCount) {
         put(USER_COUNT, userCount);
     }
+
+    public Integer getCurrentViewerCount() {
+        return (Integer) get(CURRENT_VIEWER_COUNT);
+    }
+
+    public void setCurrentViewerCount(Integer count) {
+        put(CURRENT_VIEWER_COUNT, count);
+    }
 }

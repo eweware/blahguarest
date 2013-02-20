@@ -32,6 +32,7 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_COUNT, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CURRENT_VIEWER_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
     }
@@ -135,6 +136,16 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     @Override
     public void setBlahCount(Integer blahCount) {
         put(BLAH_COUNT, blahCount);
+    }
+
+    @Override
+    public Integer getCurrentViewerCount() {
+        return (Integer) get(CURRENT_VIEWER_COUNT);
+    }
+
+    @Override
+    public void setCurrentViewerCount(Integer currentViewerCount) {
+        put(CURRENT_VIEWER_COUNT, currentViewerCount);
     }
 
     @Override

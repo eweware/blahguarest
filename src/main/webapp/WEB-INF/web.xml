@@ -13,6 +13,9 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+    <listener>
+        <listener-class>main.java.com.eweware.service.rest.session.BlahguaSessionListener</listener-class>
+    </listener>
 
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
@@ -42,6 +45,7 @@
     </session-config>
 
 	<welcome-file-list>
-		<welcome-file>blahgua/default.html</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<!--<welcome-file>blahgua/default.html</welcome-file>-->
 	</welcome-file-list>
 </web-app>

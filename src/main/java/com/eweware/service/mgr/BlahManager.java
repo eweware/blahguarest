@@ -74,7 +74,7 @@ public final class BlahManager implements ManagerInterface {
      */
     private Map<String, BlahTypeEntry> blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>();
     private Object blahTypeIdToBlahTypeEntryMapLock = new Object(); // locks blahTypeIdToBlahTypeEntryMap
-    private long lastTimeBlahTypesCached = System.currentTimeMillis() + TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH + 1;
+    private long lastTimeBlahTypesCached = System.currentTimeMillis() - TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH - 1;
 
     private ZoieSystem<BlahguaFilterIndexReader, BlahDAO> blahIndexingSystem;
     private ZoieSystem<BlahguaFilterIndexReader, CommentDAO> commentIndexingSystem;
@@ -149,7 +149,7 @@ public final class BlahManager implements ManagerInterface {
                 initializeBlahIndex();
             }
 
-            ensureBlahTypesCached();
+            refreshBlahTypesCache();
 
             this.status = ManagerState.STARTED;
             System.out.println("*** BlahManager started ***");
@@ -177,7 +177,7 @@ public final class BlahManager implements ManagerInterface {
      * Creates a new blah authored by user.
      *
      * @param localeId
-     * @param request The request object
+     * @param request  The request object
      * @return BlahPayload A blah payload including the new blah id
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
@@ -320,13 +320,13 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("request missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
         if (pollOptionIndex == null || pollOptionIndex < 0 || pollOptionIndex > PollOptionDAOConstants.MAX_POLL_OPTIONS) {
-            throw new InvalidRequestException("invalid poll index; maximum is "+PollOptionDAOConstants.MAX_POLL_OPTIONS+" but was=" + pollOptionIndex, ErrorCodes.INVALID_INPUT);
+            throw new InvalidRequestException("invalid poll index; maximum is " + PollOptionDAOConstants.MAX_POLL_OPTIONS + " but was=" + pollOptionIndex, ErrorCodes.INVALID_INPUT);
         }
         final BlahDAO blahDAO = getBlahById_unsafe(blahId, BlahDAO.POLL_OPTION_COUNT, BlahDAO.TYPE_ID);
         if (blahDAO == null) {
             throw new InvalidRequestException("blahId '" + blahId + "' doesn't exist", ErrorCodes.NOT_FOUND_BLAH_ID);
         }
-        if (isNotPollCategory(blahDAO.getTypeId())) {
+        if (!isPollCategory(blahDAO.getTypeId())) {
             throw new InvalidRequestException("Blah id '" + blahId + "' is not a poll category blah", ErrorCodes.INVALID_UPDATE);
         }
 
@@ -355,11 +355,16 @@ public final class BlahManager implements ManagerInterface {
 
     /**
      * Returns true if this blah type id is a poll category type of blah
-     * @param typeId    The blah type id
-     * @return  True if this is a poll category type of blah
+     *
+     * @param typeId The blah type id
+     * @return True if this is a poll category type of blah
      */
-    private boolean isNotPollCategory(String typeId) {
-        return false;
+    private boolean isPollCategory(String typeId) {
+        BlahTypeEntry entry = null;
+        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
+            entry = blahTypeIdToBlahTypeEntryMap.get(typeId);
+        }
+        return (entry != null && entry.categoryType == BlahTypeCategoryType.POLL);
     }
 
 
@@ -383,16 +388,19 @@ public final class BlahManager implements ManagerInterface {
     private class UserBlahInfoData {
         private final UserBlahInfoDAO dao;
         private final boolean exists;
+
         UserBlahInfoData(UserBlahInfoDAO dao, boolean exists) {
             this.dao = dao;
             this.exists = exists;
         }
     }
+
     /**
      * Throws a state exception if the user already voted in this poll.
-     * @param blahId    The blah id (a poll blah)
-     * @param userId    The user id
-     * @return  An otherwise empty user blah info dao with the blahId and userId already filled in
+     *
+     * @param blahId The blah id (a poll blah)
+     * @param userId The user id
+     * @return An otherwise empty user blah info dao with the blahId and userId already filled in
      * @throws SystemErrorException
      * @throws StateConflictException
      */
@@ -668,6 +676,7 @@ public final class BlahManager implements ManagerInterface {
     private class BlahTypeEntry {
         private final BlahTypeDAO blahTypeDAO;
         private final BlahTypeCategoryType categoryType;
+
         BlahTypeEntry(BlahTypeDAO blahTypeDAO, BlahTypeCategoryType categoryType) {
             this.blahTypeDAO = blahTypeDAO;
             this.categoryType = categoryType;
