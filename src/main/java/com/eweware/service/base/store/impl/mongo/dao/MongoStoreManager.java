@@ -49,6 +49,7 @@ public final class MongoStoreManager implements StoreManager {
     private String groupCollectionName;
     private String groupTypeCollectionName;
     private String userCollectionName;
+    private String userAccountsCollectionName;
     private String userProfileCollectionName;
     private String userGroupCollectionName;
     private String commentCollectionName;
@@ -68,71 +69,152 @@ public final class MongoStoreManager implements StoreManager {
         return inboxStateCollectionName;
     }
 
+    public void setInboxStateCollectionName(String name) {
+        inboxStateCollectionName = name;
+    }
+
     public String getMediaCollectionName() {
         return mediaCollectionName;
     }
+
+    public void setMediaCollectionName(String name) {
+        mediaCollectionName = name;
+    }
+
     public String getBlahCollectionName() {
         return blahCollectionName;
+    }
+
+    public void setBlahCollectionName(String name) {
+        blahCollectionName = name;
     }
 
     public String getBlahTypeCollectionName() {
         return blahTypeCollectionName;
     }
 
+    public void setBlahTypeCollectionName(String name) {
+        blahTypeCollectionName = name;
+    }
+
     public String getGroupCollectionName() {
         return groupCollectionName;
+    }
+
+    public void setGroupCollectionName(String name) {
+        groupCollectionName = name;
     }
 
     public String getGroupTypeCollectionName() {
         return groupTypeCollectionName;
     }
 
+    public void setGroupTypeCollectionName(String name) {
+        groupTypeCollectionName = name;
+    }
+
     public String getUserCollectionName() {
         return userCollectionName;
+    }
+
+    public void setUserCollectionName(String name) {
+        userCollectionName = name;
+    }
+
+    public String getUserAccountsCollectionName() {
+        return userAccountsCollectionName;
+    }
+
+    public void setUserAccountsCollectionName(String name) {
+        userAccountsCollectionName = name;
     }
 
     public String getUserProfileCollectionName() {
         return userProfileCollectionName;
     }
 
+    public void setUserProfileCollectionName(String name) {
+        userProfileCollectionName = name;
+    }
+
     public String getUserGroupCollectionName() {
         return userGroupCollectionName;
+    }
+
+    public void setUserGroupCollectionName(String name) {
+        userGroupCollectionName = name;
     }
 
     public String getCommentCollectionName() {
         return commentCollectionName;
     }
 
+    public void setCommentCollectionName(String name) {
+        commentCollectionName = name;
+    }
+
     public String getUserBlahInfoCollectionName() {
         return userBlahInfoCollectionName;
+    }
+
+    public void setUserBlahInfoCollectionName(String name) {
+        userBlahInfoCollectionName = name;
     }
 
     public String getUserCommentInfoCollectionName() {
         return userCommentInfoCollectionName;
     }
 
+    public void setUserCommentInfoCollectionName(String name) {
+        userCommentInfoCollectionName = name;
+    }
+
     public String getTrackBlahCollectionName() {
         return trackBlahCollectionName;
+    }
+
+    public void setTrackBlahCollectionName(String name) {
+        trackBlahCollectionName = name;
     }
 
     public String getTrackCommentCollectionName() {
         return trackCommentCollectionName;
     }
 
+    public void setTrackCommentCollectionName(String name) {
+        trackCommentCollectionName = name;
+    }
+
     public String getTrackerCollectionName() {
         return trackerCollectionName;
+    }
+
+    public void setTrackerCollectionName(String name) {
+        trackerCollectionName = name;
     }
 
     public String getTrackUserCollectionName() {
         return trackUserCollectionName;
     }
 
+    public void setTrackUserCollectionName(String name) {
+        trackUserCollectionName = name;
+    }
+
     public String getBlahInboxCollectionName() {
         return blahInboxCollectionName;
     }
 
+    public void setBlahInboxCollectionName(String name) {
+        blahInboxCollectionName = name;
+    }
+
     public String getDemographicsCollectionName() {
         return demographicsCollectionName;
+    }
+
+    public void setDemographicsCollectionName(String name) {
+        demographicsCollectionName = name;
     }
 
 
@@ -159,36 +241,10 @@ public final class MongoStoreManager implements StoreManager {
             String blahDbName,
             String trackerDbName,
 
-            String trackUserCollectionName,
-            String trackBlahCollectionName,
-            String trackCommentCollectionName,
-            String trackerCollectionName,
-
-            String userCollectionName,
-            String userProfileCollectionName,
-
-            String groupCollectionName,
-            String groupTypeCollectionName,
-
-            String userGroupCollectionName,
-
-            String mediaCollectionName,
-            String blahCollectionName,
-            String blahTypeCollectionName,
-            String commentCollectionName,
-            String userBlahInfoCollectionName,
-            String userCommentInfoCollectionName,
-            String inboxStateCollectionName,
-            String blahInboxCollectionName,
-            String demographicsCollectionName,
-
             Integer connectionsPerHost
             ) {
-        doInitialize(hostname, port, userDbName, blahDbName, trackerDbName, trackUserCollectionName, trackBlahCollectionName,
-                trackCommentCollectionName, trackerCollectionName, userCollectionName, userProfileCollectionName,
-                groupCollectionName, groupTypeCollectionName, userGroupCollectionName, mediaCollectionName, blahCollectionName,
-                blahTypeCollectionName, commentCollectionName, userBlahInfoCollectionName, userCommentInfoCollectionName,
-                inboxStateCollectionName, blahInboxCollectionName, demographicsCollectionName, connectionsPerHost);
+        doInitialize(hostname, port, userDbName, blahDbName, trackerDbName,
+                connectionsPerHost);
     }
 
     /**
@@ -199,27 +255,10 @@ public final class MongoStoreManager implements StoreManager {
      * @param userDbName
      * @param blahDbName
      * @param trackerDbName
-     * @param trackUserCollectionName
-     * @param trackBlahCollectionName
-     * @param trackCommentCollectionName
-     * @param trackerCollectionName
-     * @param userCollectionName
-     * @param userProfileCollectionName
-     * @param groupCollectionName
-     * @param groupTypeCollectionName
-     * @param userGroupCollectionName
-     * @param mediaCollectionName
-     * @param blahCollectionName
-     * @param blahTypeCollectionName
-     * @param commentCollectionName
-     * @param userBlahInfoCollectionName
-     * @param userCommentInfoCollectionName
-     * @param inboxStateCollectionName
-     * @param blahInboxCollectionName
-     * @param demographicsCollectionName
      * @param connectionsPerHost
      */
-    public void doInitialize(String hostname, String port, String userDbName, String blahDbName, String trackerDbName, String trackUserCollectionName, String trackBlahCollectionName, String trackCommentCollectionName, String trackerCollectionName, String userCollectionName, String userProfileCollectionName, String groupCollectionName, String groupTypeCollectionName, String userGroupCollectionName, String mediaCollectionName, String blahCollectionName, String blahTypeCollectionName, String commentCollectionName, String userBlahInfoCollectionName, String userCommentInfoCollectionName, String inboxStateCollectionName, String blahInboxCollectionName, String demographicsCollectionName, Integer connectionsPerHost) {
+    public void doInitialize(String hostname, String port, String userDbName, String blahDbName, String trackerDbName,
+                             Integer connectionsPerHost) {
         this.hostname = hostname;
         this.port = Integer.parseInt(port);
         this.connectionsPerHost = connectionsPerHost;
@@ -236,26 +275,6 @@ public final class MongoStoreManager implements StoreManager {
 //        dbNameToDbMap.put(mediaDbName, null);
         dbNameToDbMap.put(blahDbName, null);
         dbNameToDbMap.put(trackerDbName, null);
-
-        this.trackUserCollectionName = trackUserCollectionName;
-
-        this.trackBlahCollectionName = trackBlahCollectionName;
-        this.trackCommentCollectionName = trackCommentCollectionName;
-        this.trackerCollectionName = trackerCollectionName;
-        this.userCollectionName = userCollectionName;
-        this.userProfileCollectionName = userProfileCollectionName;
-        this.groupCollectionName = groupCollectionName;
-        this.groupTypeCollectionName = groupTypeCollectionName;
-        this.userGroupCollectionName = userGroupCollectionName;
-        this.inboxStateCollectionName = inboxStateCollectionName;
-        this.mediaCollectionName = mediaCollectionName;
-        this.blahCollectionName = blahCollectionName;
-        this.blahTypeCollectionName = blahTypeCollectionName;
-        this.commentCollectionName = commentCollectionName;
-        this.userBlahInfoCollectionName = userBlahInfoCollectionName;
-        this.userCommentInfoCollectionName = userCommentInfoCollectionName;
-        this.blahInboxCollectionName = blahInboxCollectionName;
-        this.demographicsCollectionName = demographicsCollectionName;
 
         System.out.println("*STORE MGR: known database names: " + dbNameToDbMap.keySet());
         MongoStoreManager.singleton = this;
@@ -286,6 +305,8 @@ public final class MongoStoreManager implements StoreManager {
             collectionNameToCollectionMap.put(groupTypeCollectionName, getUserDb().getCollection(groupTypeCollectionName));
 
             collectionNameToCollectionMap.put(userCollectionName, getUserDb().getCollection(userCollectionName));
+
+            collectionNameToCollectionMap.put(userAccountsCollectionName, getUserDb().getCollection(userAccountsCollectionName));
 
             collectionNameToCollectionMap.put(userProfileCollectionName, getUserDb().getCollection(userProfileCollectionName));
 
@@ -419,6 +440,16 @@ public final class MongoStoreManager implements StoreManager {
     @Override
     public UserDAO createUser(Map<String, Object> map) throws SystemErrorException {
         return new UserDAOImpl(map, true);
+    }
+
+    @Override
+    public UserAccountDAO createUserAccount() throws SystemErrorException {
+        return new UserAccountDAOImpl();
+    }
+
+    @Override
+    public UserAccountDAO createUserAccount(String id) throws SystemErrorException {
+        return new UserAccountDAOImpl(id);
     }
 
     @Override
@@ -584,5 +615,4 @@ public final class MongoStoreManager implements StoreManager {
     public TrackerDAO createTracker(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
         return new TrackerDAOImpl(map, validateAndConvert);
     }
-
 }

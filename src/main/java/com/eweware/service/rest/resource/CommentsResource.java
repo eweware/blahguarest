@@ -32,6 +32,15 @@ public class CommentsResource {
     private static final String GET_COMMENTS_OPERATION = "getComments";
     private static final String UPDATE_COMMENT_OPERATION = "updateComment";
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param comment
+     * @param uri
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,24 +50,33 @@ public class CommentsResource {
         try {
             final long start = System.currentTimeMillis();
             comment = BlahManager.getInstance().createComment(LocaleId.en_us, comment);
-            final Response response = RestUtilities.makeCreatedResourceResponse(comment, new URI(uri.getAbsolutePath() + comment.getId()));
+            final Response response = RestUtilities.make201CreatedResourceResponse(comment, new URI(uri.getAbsolutePath() + comment.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.makeResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
-            return RestUtilities.makeStateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (URISyntaxException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param comment
+     * @param commentId
+     * @return
+     */
     @PUT
     @Path("/{commentId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -70,40 +88,60 @@ public class CommentsResource {
             final long start = System.currentTimeMillis();
             comment.setId(commentId); // ensure this
             BlahManager.getInstance().updateComment(LocaleId.en_us, comment);
-            final Response response = RestUtilities.makeOKNoContentResponse();
+            final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.makeResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
-            return RestUtilities.makeStateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 
-    @DELETE
-    @Path("/{commentId}")
-    public Response deleteComment(@PathParam("commentId") String commentId) {
-        try {
-            final long start = System.currentTimeMillis();
-            BlahManager.getInstance().deleteComment(LocaleId.en_us, commentId);
-            final Response response = RestUtilities.makeOKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(DELETE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
-            return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        }
-    }
+//    /**
+//     *
+//     * <p></p>
+//     * <div><b>METHOD:</b> </div>
+//     * <div><b>URL:</b> </div>
+//     * @param commentId
+//     * @return
+//     */
+//    @DELETE
+//    @Path("/{commentId}")
+//    public Response deleteComment(@PathParam("commentId") String commentId) {
+//        try {
+//            final long start = System.currentTimeMillis();
+//            BlahManager.getInstance().deleteComment(LocaleId.en_us, commentId);
+//            final Response response = RestUtilities.make204OKNoContentResponse();
+//            SystemManager.getInstance().setResponseTime(DELETE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
+//            return response;
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.make400InvalidRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (RuntimeException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param commentId
+     * @param stats
+     * @param userId
+     * @param statsStartDate
+     * @param statsEndDate
+     * @return
+     */
     @GET
     @Path("/{commentId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -115,20 +153,33 @@ public class CommentsResource {
             @QueryParam("e") String statsEndDate) {  // format is yymmdd (e.g., August 27, 2012 is 120827)) {
         try {
             final long start = System.currentTimeMillis();
-            final Response response = RestUtilities.makeOkResponse(BlahManager.getInstance().getCommentById(LocaleId.en_us, commentId, userId, stats, statsStartDate, statsEndDate));
+            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getCommentById(LocaleId.en_us, commentId, userId, stats, statsStartDate, statsEndDate));
             SystemManager.getInstance().setResponseTime(GET_COMMENT_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.makeResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param blahId
+     * @param count
+     * @param authorId
+     * @param sortFieldName
+     * @param userId
+     * @param start
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getComments(
@@ -140,17 +191,17 @@ public class CommentsResource {
             @QueryParam("start") Integer start) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.makeOkResponse(BlahManager.getInstance().getComments(LocaleId.en_us, blahId, userId, authorId, start, count, sortFieldName));
+            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getComments(LocaleId.en_us, blahId, userId, authorId, start, count, sortFieldName));
             SystemManager.getInstance().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.makeInvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.makeResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 }

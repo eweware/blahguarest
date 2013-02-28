@@ -20,8 +20,6 @@ public final class UserPayload extends BasePayload implements UserDAOConstants {
 
     public UserPayload(Map<String, Object> map) {
         super(map);
-        remove(DIGEST);
-        remove(SALT);
     }
 
     public String getUsername() {

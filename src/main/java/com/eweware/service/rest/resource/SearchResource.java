@@ -33,11 +33,11 @@ public class SearchResource {
 			) {
 		try {
 			BlahManager blahMgr = BlahManager.getInstance();
-            return RestUtilities.makeOkResponse(blahMgr.search(LocaleId.en_us, fieldName, query, subset, count));
+            return RestUtilities.make200OkResponse(blahMgr.search(LocaleId.en_us, fieldName, query, subset, count));
 		} catch (SystemErrorException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
-		} catch (RuntimeException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
+		} catch (Exception e) {
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
 		}
 	}
 
@@ -51,11 +51,11 @@ public class SearchResource {
     ) {
         try {
             UserManager userManager = UserManager.getInstance();
-            return RestUtilities.makeOkResponse(userManager.searchUserIndex(LocaleId.en_us, fieldName, query));
+            return RestUtilities.make200OkResponse(userManager.searchUserIndex(LocaleId.en_us, fieldName, query));
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 }

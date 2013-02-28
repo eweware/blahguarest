@@ -13,14 +13,6 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
 
     public void setUsername(String username);
 
-    public String getDigest();
-
-    public void setDigest(String digest);
-
-    public String getSalt();
-
-    public void setSalt(String salt);
-
     public Integer getLastInbox();
 
     public void setLastInbox(Integer nextInbox);

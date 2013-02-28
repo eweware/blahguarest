@@ -42,9 +42,12 @@ import proj.zoie.impl.indexing.ZoieSystem;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
@@ -53,6 +56,8 @@ import java.util.List;
  *         TODO add transaction-level management (rollbacks)
  */
 public class UserManager implements ManagerInterface {
+
+    private static final Logger logger = Logger.getLogger("UserManager");
 
     private static UserManager singleton;
 
@@ -99,7 +104,7 @@ public class UserManager implements ManagerInterface {
                     throw new WebServiceException("Couldn't create search directory index '" + searchDir + "'. UserManager aborting.");
                 }
             }
-            System.out.println("*** User Index: " + this.indexDir.getAbsolutePath()+" ***");
+            System.out.println("*** User Index: " + this.indexDir.getAbsolutePath() + " ***");
         } else {
             System.out.println("*** UserManager search disabled ***");
         }
@@ -140,41 +145,96 @@ public class UserManager implements ManagerInterface {
         return this.state;
     }
 
-    public UserPayload createUser(LocaleId localeId, String username, String password) throws InvalidRequestException, SystemErrorException {
+    /**
+     * Registers a user. First a UserDAO is created with the username and
+     * a user account with the username (lc), digest, and password.
+     * @param localeId
+     * @param username  The username
+     * @param password  The password
+     * @return  The user payload with the userId and username.
+     * @throws InvalidRequestException
+     * @throws SystemErrorException
+     * @throws StateConflictException
+     */
+    public UserPayload registerUser(LocaleId localeId, String username, String password) throws InvalidRequestException, SystemErrorException, StateConflictException {
 
-        Login.checkUsername(username);
-//        Login.checkPassword(password); TODO add this back when Dave's through testing
+        boolean createdAccount = false;
+        UserDAO userDAO = null;
+        try {
+            username = Login.ensureUsernameString(username);
+            password = Login.ensurePasswordString(password);
 
-        final UserDAO userDAO = storeManager.createUser();
-        userDAO.setUsername(username);
-        if (userDAO._exists()) {
-            throw new InvalidRequestException("user with username=" + username + " already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
-        }
+            ensureUserExistsByUsername(username); // this is just a prelim check: final is at DB monitor level
 
-        userDAO.initToDefaultValues(localeId);
+            userDAO = storeManager.createUser();
+            userDAO.initToDefaultValues(localeId);
+            userDAO.setUsername(username);
+            userDAO._insert();
 
-        if (!CommonUtilities.isEmptyString(password)) {
-            Login.checkPassword(password);
+            // Store sensitive data in user account record. Makes sure
+            // that sensitive data never goes to the client (no corresponding Payload class).
+            final UserAccountDAO userAccount = storeManager.createUserAccount(userDAO.getId());
             try {
                 final String[] saltedPassword = Login.createSaltedPassword(password);
-                userDAO.setDigest(saltedPassword[0]);
-                userDAO.setSalt(saltedPassword[1]);
+                userAccount.setCanonicalUsername(makeCanonicalUsername(username));
+                userAccount.setDigest(saltedPassword[0]);
+                userAccount.setSalt(saltedPassword[1]);
+                userAccount._insert();
             } catch (Exception e) {
-                throw new SystemErrorException("Failed to handle password", ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("Failed to create account for username'" + username + "'", ErrorCodes.SERVER_SEVERE_ERROR);
             }
-        }
+            createdAccount = true;
 
-        userDAO._insert();
+            if (doIndex()) {
+                maybeUpdateUserInIndex(userDAO);
+            }
 
-        if (doIndex()) {
-            addUserToIndex(userDAO);
+            return new UserPayload(userDAO);
+        } finally {
+            if (!createdAccount && userDAO != null) {
+                try {
+                    userDAO._deleteByPrimaryId();
+                } catch (SystemErrorException e) {
+                    logger.warning("Failed to roll back UserDAO for userId '" + userDAO.getId() + "' username '" + username + "' after failing to create an account for it");
+                }
+            } else {
+                /* failure to create account will be logged by caller with corresponding SystemErrorException */
+            }
         }
 
 //        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_USER);
 //        tracker.setUserId(userDAO.getId());
 //        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
 
-        return new UserPayload(userDAO);
+    }
+
+    /**
+     * Used to efficiently check whether a username is already taken.
+     *
+     * @param username The username
+     * @throws SystemErrorException
+     * @throws StateConflictException  Thrown if the username is already taken
+     * @throws InvalidRequestException Thrown if the specified username is either null or an empty string
+     */
+    public void ensureUserExistsByUsername(String username) throws SystemErrorException, StateConflictException, InvalidRequestException {
+        if (username == null || username.length() == 0) {
+            throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
+        }
+        final UserAccountDAO dao = storeManager.createUserAccount();
+        dao.setCanonicalUsername(makeCanonicalUsername(username));
+        if (dao._exists()) {
+            throw new StateConflictException("username already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
+        }
+    }
+
+    /**
+     * Returns the canonical form of a username. This form
+     * is the unique form of the username.
+     * @param username  The username
+     * @return  The canonical username
+     */
+    private String makeCanonicalUsername(String username) {
+        return username.toLowerCase();
     }
 
     /**
@@ -184,21 +244,26 @@ public class UserManager implements ManagerInterface {
      * @param locale
      * @param username The username
      * @param password The password for authentication
-     * @param request The http servlet request
+     * @param request  The http servlet request
      */
-    public void loginUser(LocaleId locale, String username, String password, HttpServletRequest request) throws InvalidRequestException, SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException {
-        Login.checkUsername(username);
-        Login.checkPassword(password);
-        final UserDAO userDAO = storeManager.createUser();
-        userDAO.setUsername(username);
-        final UserDAO user = (UserDAO) userDAO._findByCompositeId(new String[]{UserDAO.DIGEST, UserDAO.SALT}, UserDAO.USERNAME);
-        if (user == null) {
-            throw new ResourceNotFoundException("No such user", ErrorCodes.UNAUTHORIZED_USER);
+    public void loginUser(LocaleId locale, String username, String password, HttpServletRequest request)
+            throws InvalidRequestException, SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException {
+
+        username = Login.ensureUsernameString(username);
+        password = Login.ensurePasswordString(password);
+
+        UserAccountDAO accountDAO = storeManager.createUserAccount();
+        accountDAO.setCanonicalUsername(makeCanonicalUsername(username));
+
+        accountDAO = (UserAccountDAO) accountDAO._findByCompositeId(new String[]{UserAccountDAO.PASSWORD_DIGEST, UserAccountDAO.PASSWORD_SALT}, UserAccountDAO.CANONICAL_USERNAME);
+        if (accountDAO == null) {
+            throw new ResourceNotFoundException("No such user '" + username + "'", ErrorCodes.UNAUTHORIZED_USER);
         }
-        if (Login.authenticate(user.getDigest(), user.getSalt(), password)) {
-            BlahguaSession.markAuthenticated(request, true, username);
+
+        if (Login.authenticate(accountDAO.getDigest(), accountDAO.getSalt(), password)) {
+            BlahguaSession.markAuthenticated(request, accountDAO.getId(), username);
         } else {
-            BlahguaSession.markAuthenticated(request, false, username);
+            BlahguaSession.markAnonymous(request);
             throw new InvalidAuthorizedStateException("User not authorized", ErrorCodes.UNAUTHORIZED_USER);
         }
     }
@@ -215,7 +280,8 @@ public class UserManager implements ManagerInterface {
      * @throws SystemErrorException
      * @throws StateConflictException
      */
-    public UserProfilePayload createOrUpdateUserProfile(LocaleId localeId, UserProfilePayload profile, boolean createOnly) throws InvalidRequestException, SystemErrorException, StateConflictException {
+    public UserProfilePayload createOrUpdateUserProfile(LocaleId localeId, UserProfilePayload profile, boolean createOnly)
+            throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
         if (profile == null) {
             throw new InvalidRequestException("missing profile payload", profile, ErrorCodes.MISSING_INPUT_PAYLOAD);
         }
@@ -228,9 +294,12 @@ public class UserManager implements ManagerInterface {
         }
 
         UserProfileDAO userProfileDAO = storeManager.createUserProfile(userId);
-        final boolean update = userProfileDAO._exists();
-        if (update && createOnly) {
+        final boolean profileExists = userProfileDAO._exists();
+
+        if (profileExists && createOnly) {
             throw new StateConflictException("profile already exists for userId=" + userId, profile, ErrorCodes.ALREADY_EXISTS_USER_PROFILE);
+        } else if (!profileExists && !createOnly) {
+            throw new ResourceNotFoundException("profile for userId=" + userId + " doesn't exist", profile, ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
         if (createOnly) {
             userProfileDAO.initToDefaultValues(LocaleId.en_us); // userId will not be overwritten
@@ -242,7 +311,7 @@ public class UserManager implements ManagerInterface {
         }
 
         try {
-            if (update) {
+            if (profileExists) {
                 userProfileDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
             } else {
                 userProfileDAO._insert();
@@ -257,11 +326,11 @@ public class UserManager implements ManagerInterface {
      * Attempt to recover the user account
      *
      * @param localeId
-     * @param operation      The recovery operation. Valid values are:
-     *                       "e": request recovery by email address. The methodKey must contain an email address.
-     *                       "r": request recovery by recovery code. The methodKey must be null and the recovery code must be provided.
-     * @param methodKey      Required if operation is "e": this should be the email address.
-     * @param recoveryCode  Required if operation is "r": this should be the recovery code
+     * @param operation    The recovery operation. Valid values are:
+     *                     "e": request recovery by email address. The methodKey must contain an email address.
+     *                     "r": request recovery by recovery code. The methodKey must be null and the recovery code must be provided.
+     * @param methodKey    Required if operation is "e": this should be the email address.
+     * @param recoveryCode Required if operation is "r": this should be the recovery code
      */
     public UserProfilePayload recoverUser(LocaleId localeId, String operation, String methodKey, String recoveryCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
         if (operation == null) {
@@ -448,38 +517,73 @@ public class UserManager implements ManagerInterface {
     }
 
     /**
-     * Updates user fields.
+     * Updates username.
+     *
      *
      * @param localeId
-     * @param userId   The user's id
-     * @param updates  The fields to update.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @param request
+     *@param username  @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      */
-    public void updateUser(LocaleId localeId, String userId, UserPayload updates) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
-        if (CommonUtilities.isEmptyString(userId)) {
-            throw new InvalidRequestException("userId is required", ErrorCodes.MISSING_USER_ID);
-        }
-        final UserDAO dao = storeManager.createUser(userId);
-        if (!dao._exists()) { // TODO optimization: catch some ObjectNotExistsException from _update call below
-            throw new ResourceNotFoundException("no user exists with userId ", userId, ErrorCodes.NOT_FOUND_USER_ID);
-        }
-        final String username = updates.getUsername();
-        if (username != null) {
-            dao.setUsername(username);
-        }
-        dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+    public void updateUsername(LocaleId localeId, HttpServletRequest request, String username) throws InvalidAuthorizedStateException, InvalidRequestException,
+            StateConflictException, SystemErrorException, ResourceNotFoundException {
 
-        addUserToIndex(dao);
+        if (!BlahguaSession.isAuthenticated(request)) {
+            throw new InvalidAuthorizedStateException("user cannot perform this operation", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        final String userId = BlahguaSession.getUserId(request);
+
+        username = Login.ensureUsernameString(username);
+
+        ensureUserExistsByUsername(username);
+
+        // Must be changed in the accounts and username areas
+        final UserDAO userDAO = storeManager.createUser(userId);
+//        if (!userDAO._exists()) {
+//            throw new ResourceNotFoundException("no user exists with userId ", userId, ErrorCodes.NOT_FOUND_USER_ID);
+//        }
+        final UserAccountDAO userAccountDAO = storeManager.createUserAccount(userId);
+//        if (!userAccountDAO._exists()) {
+//            throw new ResourceNotFoundException("no account exists for userId=" + userId, ErrorCodes.NOT_FOUND_USER_ACCOUNT);
+//        }
+
+        userAccountDAO.setCanonicalUsername(makeCanonicalUsername(username));
+        userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+        userDAO.setUsername(username);
+        userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+        maybeUpdateUserInIndex(userDAO);
+    }
+
+    public void updatePassword(LocaleId en_us, HttpServletRequest request, String password) throws
+            InvalidAuthorizedStateException, InvalidRequestException, SystemErrorException {
+
+        if (!BlahguaSession.isAuthenticated(request)) {
+            throw new InvalidAuthorizedStateException("user cannot perform this operation", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        final String userId = BlahguaSession.getUserId(request);
+
+        password = Login.ensurePasswordString(password);
+        final String[] pwd;
+        try {
+            pwd = Login.createSaltedPassword(password);
+        } catch (Exception e) {
+            throw new SystemErrorException("Failed to update password due to system error", e, ErrorCodes.SERVER_SEVERE_ERROR);
+        }
+
+        final UserAccountDAO userAccountDAO = storeManager.createUserAccount(userId);
+        userAccountDAO.setDigest(pwd[0]);
+        userAccountDAO.setSalt(pwd[1]);
+        userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
 
     /**
-     *
      * @param localeId
-     * @param start    Optional start count or null if there is no paging
-     * @param count    Optional max number of users to return
+     * @param start         Optional start count or null if there is no paging
+     * @param count         Optional max number of users to return
      * @param sortFieldName
      * @return Object  Returns list of users
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
@@ -500,9 +604,9 @@ public class UserManager implements ManagerInterface {
      * Returns a user's data by user Id
      *
      * @param localeId
-     * @param userId   The userId to fetch with
-     * @param byUsername  If true, the userId is actually the username
-     * @param stats If true, return user stats
+     * @param userId         The userId to fetch with
+     * @param byUsername     If true, the userId is actually the username
+     * @param stats          If true, return user stats
      * @param statsStartDate if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
      * @param statsEndDate   if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
      * @return
@@ -517,7 +621,11 @@ public class UserManager implements ManagerInterface {
         }
         UserDAO dao = storeManager.createUser();
 
-        if (byUsername) {dao.setUsername(userId);} else {dao.setId(userId);}
+        if (byUsername) {
+            dao.setUsername(userId);
+        } else {
+            dao.setId(userId);
+        }
 
         dao = (UserDAO) (byUsername ? dao._findByCompositeId(null, UserDAO.USERNAME) : dao._findByPrimaryId());
         if (dao == null) {
@@ -603,7 +711,8 @@ public class UserManager implements ManagerInterface {
      * @param userId The user id
      * @param entity Any entity to pass in a resource not found exception
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     * @throws ResourceNotFoundException    Thrown when the user can't be found
+     *
+     * @throws ResourceNotFoundException Thrown when the user can't be found
      */
     public void checkUserById(String userId, Object entity) throws ResourceNotFoundException, InvalidRequestException, SystemErrorException {
         if (CommonUtilities.isEmptyString(userId)) {
@@ -815,7 +924,7 @@ public class UserManager implements ManagerInterface {
         }
     }
 
-    private void addUserToIndex(UserDAO user) throws SystemErrorException {
+    private void maybeUpdateUserInIndex(UserDAO user) throws SystemErrorException {
         if (!doIndex()) { // dbg
             return;
         }

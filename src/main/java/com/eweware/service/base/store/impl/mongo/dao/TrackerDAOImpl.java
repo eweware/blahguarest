@@ -20,15 +20,6 @@ import java.util.Map;
  */
 public class TrackerDAOImpl extends BaseDAOImpl implements TrackerDAO {
 
-
-//    TrackerDAOImpl() {
-//        super();
-//    }
-//
-//    TrackerDAOImpl(String id) throws SystemErrorException {
-//        super(id);
-//    }
-
     TrackerDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
         super(map, validateAndConvert);
     }

@@ -31,7 +31,7 @@ public class DateDataTypeValidator implements FieldValidator {
         if (value == null) {
             return true; // a null value is a command to delete the field or set the field's value to null
         } else if (value instanceof String) {
-            final String regexp = spec.getRegExp();
+            final String regexp = spec.getValidationRegexp();
             if ((regexp == null) || (Pattern.compile(regexp).matcher((String) value)).matches()) {
                 try {
                     DateUtils.fromISODateToUTC((String) value);

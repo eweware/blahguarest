@@ -27,6 +27,7 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_TYPE_ID, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DESCRIPTION, MongoFieldTypes.STRING);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DESCRIPTOR, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_VALIDATION_METHOD, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_VALIDATION_PARAMETERS, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
@@ -106,6 +107,16 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     @Override
     public void setDescription(String description) {
         put(DESCRIPTION, description);
+    }
+
+    @Override
+    public String getDescriptor() {
+        return (String) get(DESCRIPTOR);
+    }
+
+    @Override
+    public void setDescriptor(String descriptor) {
+        put(DESCRIPTOR, descriptor);
     }
 
     @Override

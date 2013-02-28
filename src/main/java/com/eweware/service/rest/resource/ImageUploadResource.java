@@ -104,6 +104,10 @@ public class ImageUploadResource {
 
     /**
      * TODO should be replaced by the OptionsMethodFilter class when necessary
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
      * @param req
      * @return
      */
@@ -120,6 +124,19 @@ public class ImageUploadResource {
         return response.build();
     }
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param objType
+     * @param objectId
+     * @param isPrimary
+     * @param in
+     * @param metadata
+     * @param request
+     * @return
+     */
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -132,14 +149,14 @@ public class ImageUploadResource {
             @FormDataParam("file") FormDataContentDisposition metadata,
             @Context HttpServletRequest request) {
         if (objectId == null) {
-            return RestUtilities.makeInvalidRequestResponse(
+            return RestUtilities.make400InvalidRequestResponse(
                     new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));
         }
         final ObjectType objectType;
         try {
             objectType = ObjectType.valueOf(objType);
         } catch (IllegalArgumentException e) {
-            return RestUtilities.makeInvalidRequestResponse(
+            return RestUtilities.make400InvalidRequestResponse(
                     new InvalidRequestException("missing or invalid objectType", ErrorCodes.INVALID_INPUT));
         }
 

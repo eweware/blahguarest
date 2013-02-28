@@ -45,7 +45,7 @@
     </session-config>
 
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<!--<welcome-file>blahgua/default.html</welcome-file>-->
+        <!-- The blahgua site's starting page; most pages and resources are in S3 -->
+		<welcome-file>blahgua/default.html</welcome-file>
 	</welcome-file-list>
 </web-app>

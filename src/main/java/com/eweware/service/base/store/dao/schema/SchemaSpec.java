@@ -21,12 +21,12 @@ public final class SchemaSpec extends HashMap<String, Object> implements SchemaC
         put(SCHEMA_SPEC_FIELD_ID, fieldId);
     }
 
-    public LinkedHashMap<String, Object> getData() {
-        return (LinkedHashMap<String, Object>) get(SCHEMA_SPEC_DATA);
+    public LinkedHashMap<String, Object> getValidationMap() {
+        return (LinkedHashMap<String, Object>) get(SCHEMA_SPEC_VALIDATION_MAP);
     }
 
-    public void setData(LinkedHashMap<String, Object> data) {
-        put(SCHEMA_SPEC_DATA, data);
+    public void setValidationMap(LinkedHashMap<String, Object> data) {
+        put(SCHEMA_SPEC_VALIDATION_MAP, data);
     }
 
     public SchemaDataType getDataType() {
@@ -61,12 +61,21 @@ public final class SchemaSpec extends HashMap<String, Object> implements SchemaC
         put(SCHEMA_SPEC_MAXIMUM, value);
     }
 
-    public String getRegExp() {
+    public String getValidationRegexp() {
         return (String) get(SCHEMA_SPEC_REGEXP);
     }
 
-    public void setRegExp(String regExp) {
+    public void setValidationRegexp(String regExp) {
         put(SCHEMA_SPEC_REGEXP, regExp);
+    }
+
+    public boolean hasDefaultValue() {
+        final Object v = get(SCHEMA_SPEC_HAS_DEFAULT_VALUE);
+        return (v != null && ((Boolean) v));
+    }
+
+    public void setDefaultValue(boolean v) {
+        put(SCHEMA_SPEC_HAS_DEFAULT_VALUE, new Boolean(v));
     }
 
     public Object getDefaultValue() {

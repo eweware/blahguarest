@@ -18,7 +18,7 @@ public class IndexedListValidator implements FieldValidator {
     @Override
     public boolean isValid(Object value, SchemaSpec spec) {
         if (value instanceof String) { // value is a key
-            final Map<String, Object> data = spec.getData();
+            final Map<String, Object> data = spec.getValidationMap();
             return data.containsKey(value);
         }
         // null not allowed: at worst, the default index value should be set

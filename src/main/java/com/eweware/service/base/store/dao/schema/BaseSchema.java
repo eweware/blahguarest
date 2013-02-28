@@ -75,10 +75,10 @@ public abstract class BaseSchema implements SchemaConstants {
         updatedSpec.setDataType(SchemaDataType.DT);
         baseFieldNameToSpecMap.put(BaseDAOConstants.UPDATED, updatedSpec);
 
+        // Doesn't need a default: get for boolean returns false if field is not set
         final SchemaSpec deletedSpec = new SchemaSpec();
         deletedSpec.setFieldId(BaseDAOConstants.IS_DELETED);
         deletedSpec.setDataType(SchemaDataType.B);
-        deletedSpec.setDefaultValue(Boolean.FALSE); // TODO omitted because it takes up space & we're not sure whether we'll really use it
         baseFieldNameToSpecMap.put(BaseDAOConstants.IS_DELETED, deletedSpec);
     }
 
@@ -148,21 +148,35 @@ public abstract class BaseSchema implements SchemaConstants {
         return fieldNameToSpecMap;
     }
 
-    public SchemaSpec createSpec(SchemaDataType dateType, String fieldName, String displayName, String regexp, LinkedHashMap<String, Object> data, boolean hasDefaultValue, Object defaultValue) {
+    /**
+     * Used to create a simple schema spec.
+     * @param dataType The type of data
+     * @param fieldName The name of the field for which this is a spec
+     * @param displayName   The display name for this field
+     * @param regexp    An optional regexp for validating this field
+     * @param validationMap An optional linked hash map for validating this field
+     * @param hasDefaultValue If true, then the defaultValue is to be used to initialize the DAO
+     * @param defaultValue  An optional default value. If hasDefaultValue is true and defaultValue is null,
+     *                      the field <i>will</i> be initialized to new
+     * @return  A simple schema spec for a field
+     * @see SchemaConstants for further explanation of fields
+     * TODO Generalize to use a validation class instead of a map and regexp.
+     */
+    public SchemaSpec createSpec(SchemaDataType dataType, String fieldName, String displayName, String regexp, LinkedHashMap<String, Object> validationMap, boolean hasDefaultValue, Object defaultValue) {
         final SchemaSpec spec = new SchemaSpec();
         spec.setFieldId(fieldName);
         if (displayName != null) {
-            spec.setDisplayName(displayName); // TODO obtain from i18n service
+            spec.setDisplayName(displayName);
         }
         if (regexp != null) {
-            spec.setRegExp(regexp);
+            spec.setValidationRegexp(regexp);
         }
-        spec.setDataType(dateType);
+        spec.setDataType(dataType);
         if (hasDefaultValue) {
             spec.setDefaultValue(defaultValue);
         }
-        if (data != null) {
-            spec.setData(data);
+        if (validationMap != null) {
+            spec.setValidationMap(validationMap);
         }
         getFieldNameToSpecMap().put(fieldName, spec);
         return spec;
@@ -171,6 +185,11 @@ public abstract class BaseSchema implements SchemaConstants {
     /**
      * Creates simple specs for specified field types. This is a convenience method.
      *
+     * String fields: no default value (the field is left in its natural state; e.g., in MongoDB, nonexistent)
+     * Integer: defaults to 0
+     * Real: defaults to 0.0
+     * Boolean: defaults to
+     *
      * @param schema     The schema
      * @param fieldTypes An array of maps from field names to their schema data types.
      */
@@ -178,20 +197,20 @@ public abstract class BaseSchema implements SchemaConstants {
         for (SchemaDataTypeFieldMap map : fieldTypes) {
             final SchemaDataType dataType = map.getDataType();
             if (dataType == SchemaDataType.S) {
-                for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(SchemaDataType.S, fieldName, null, null, null, false, null); // defaults to empty
+                for (String fieldName : map.getFieldNames()) { // no default
+                    schema.createSpec(SchemaDataType.S, fieldName, null, null, null, false, null);
                 }
             } else if (dataType == SchemaDataType.I) {
                 for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(SchemaDataType.I, fieldName, null, null, null, true, null); // defaults to 0
+                    schema.createSpec(SchemaDataType.I, fieldName, null, null, null, false, null);    // xxx was true
                 }
             } else if (dataType == SchemaDataType.R) {
                 for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(SchemaDataType.R, fieldName, null, null, null, true, null); // defaults to 0.0
+                    schema.createSpec(SchemaDataType.R, fieldName, null, null, null, false, null); // xxx was true
                 }
             } else if (dataType == SchemaDataType.B) {
                 for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(dataType, fieldName, null, null, null, true, null); // defaults to empty
+                    schema.createSpec(dataType, fieldName, null, null, null, false, null); //xxx was true
                 }
             } else if (dataType == SchemaDataType.GPS) {
                 for (String fieldName : map.getFieldNames()) {

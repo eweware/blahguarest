@@ -17,6 +17,7 @@ import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.base.type.TrackerType;
 import main.java.com.eweware.service.mgr.aux.InboxHandler;
+import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.search.index.blah.BlahCommentDataIndexable;
 import main.java.com.eweware.service.search.index.blah.BlahCommentDataIndexableInterpreter;
 import main.java.com.eweware.service.search.index.blah.BlahDataIndexable;
@@ -44,11 +45,13 @@ import proj.zoie.api.indexing.IndexReaderDecorator;
 import proj.zoie.impl.indexing.ZoieConfig;
 import proj.zoie.impl.indexing.ZoieSystem;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.Date;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
@@ -57,6 +60,8 @@ import java.util.Date;
  *         TODO add transaction-level management (rollbacks)
  */
 public final class BlahManager implements ManagerInterface {
+
+    private static final Logger logger = Logger.getLogger("BlahManager");
 
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH = 1000 * 60 * 10;
 
@@ -143,7 +148,7 @@ public final class BlahManager implements ManagerInterface {
     public void start() {
 
         try {
-            storeManager = MongoStoreManager.getInstance(); // TODO abstract this
+            storeManager = MongoStoreManager.getInstance();
 
             if (doIndex()) {
                 initializeBlahIndex();
@@ -623,6 +628,10 @@ public final class BlahManager implements ManagerInterface {
         group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
         count = ensureCount(count);
         final BlahDAO blahDAO = storeManager.createBlah();
@@ -1208,7 +1217,7 @@ public final class BlahManager implements ManagerInterface {
      * @param groupId       Optional group id for inbox. If not provided, picks
      *                      an arbitrary group in which user is active.
      * @param inboxNumber
-     * @param type
+     * @param blahTypeId
      * @param start
      * @param count         @return
      * @param sortFieldName
@@ -1218,7 +1227,8 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
-    public List<InboxBlahPayload> getUserInbox(LocaleId localeId, String userId, String groupId, Integer inboxNumber, String type, Integer start, Integer count, String sortFieldName, Integer sortDirection) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    public List<InboxBlahPayload> getUserInbox(LocaleId localeId, String userId, String groupId, Integer inboxNumber,
+                                               String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
         count = ensureCount(count);
         if (sortDirection == null) {
             sortDirection = -1;
@@ -1241,7 +1251,7 @@ public final class BlahManager implements ManagerInterface {
         searchUserGroupDAO.setState(AuthorizedState.A.toString()); // TODO really necessary to index on state?
         final UserGroupDAO found = (UserGroupDAO)
                 ((groupId == null) ?
-                        searchUserGroupDAO._findByCompositeId(new String[]{UserGroupDAO.GROUP_ID}, UserGroupDAO.USER_ID, UserGroupDAO.STATE) :
+                        searchUserGroupDAO._findByCompositeId(new String[]{UserGroupDAO.GROUP_ID}, UserGroupDAO.USER_ID, UserGroupDAO.STATE) : // returns the first userGroup if more than one
                         searchUserGroupDAO._findByCompositeId(new String[]{UserGroupDAO.GROUP_ID}, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID, UserGroupDAO.STATE));
         if (found == null) {
             if (groupId == null) {   // we're not directly validating the userID
@@ -1268,11 +1278,89 @@ public final class BlahManager implements ManagerInterface {
         userUpdateDAO.setLastInbox(lastInbox); // TODO this should be group-dependent! Store probably in UserGroupDAO. ok for alpha?
         userUpdateDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
 
-        final Inbox inbox = inboxHandler.getInboxFromCache(found.getGroupId(), lastInbox, type, start, count, sortFieldName, sortDirection);
+        final Inbox inbox = inboxHandler.getInboxFromCache(found.getGroupId(), lastInbox, blahTypeId, start, count, sortFieldName, sortDirection);
         if (inbox == null) {
             return new ArrayList<InboxBlahPayload>(0);
         }
         return inbox.getItems();
+    }
+
+    // TODO replace get user inbox with this: right now, trusts client that inbox is accessible by user
+    // TODO 1. if the groupId is not anonymous, check whether the user is authenticated and, if so, check whether he joined the group.
+    // TODO 2. require the group id
+    public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
+                                           String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
+            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException {
+
+        if (groupId == null) {
+            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+        }
+        count = ensureCount(count);
+        if (sortDirection == null || (sortDirection != 1 && sortDirection != -1)) {
+            sortDirection = -1;
+        }
+
+        checkGroupAccess(request, groupId);
+
+        // Cycle through inboxes
+        final Integer maxInbox = inboxHandler.getMaxInbox(groupId);
+        final Integer unknown = -1;
+        if (maxInbox == unknown) {
+            // we don't know the max: attempt to get the first inbox (getting an inbox from the inbox cache retrieves the max, if any)
+            inboxNumber = 0;
+        } else {
+            if (inboxNumber == null) { // if no inbox number is requested, find last
+                Integer lastInbox = BlahguaSession.getLastInboxNumber(request, groupId);
+                inboxNumber = (lastInbox == null) ? 0 : (++lastInbox);  // if we have last, increment it; else start at first inbox
+                if (inboxNumber >= maxInbox) { // rewind if past the maximum number of inboxes; else go to next
+                    inboxNumber = 0;
+                }
+            }
+        }
+        final Inbox inbox = inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
+        if (inbox == null) {
+            logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber + " when maxInbox=" + maxInbox);
+            return new ArrayList<InboxBlahPayload>(0);
+        }
+        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
+        return inbox.getItems();
+    }
+
+    /**
+     * <p>Checks whether the group may be accessed in this session.</p>
+     *
+     * @param request The http request (unchecked!)
+     * @param groupId The group id (unchecked!)
+     * @throws SystemErrorException If there's a problem. It may be that
+     *                              there's a race condition such that a session is being destroyed while
+     *                              this call is in progress. Instead of using locks (inefficient), we
+     *                              just take this risk: client should just retry.
+     * @throws InvalidAuthorizedStateException
+     *                              If the specified group
+     *                              is not open and the user does not have access to it because
+     *                              either he's not logged in and/or has not joined the group.
+     */
+    private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException {
+
+        final boolean isOpenGroup = GroupManager.getInstance().isOpenGroup(groupId);
+
+        if (!isOpenGroup) {
+            final boolean authenticated = BlahguaSession.isAuthenticated(request);
+            if (!authenticated) {
+                throw new InvalidAuthorizedStateException("user not authorized to access inbox", ErrorCodes.UNAUTHORIZED_USER);
+            }
+            String userId = BlahguaSession.getUserId(request);
+            if (userId == null) { // could be a race condition: client should retry
+                throw new SystemErrorException("No userId for session", ErrorCodes.SERVER_RECOVERABLE_ERROR);
+            }
+            final UserGroupDAO userGroupDAO = storeManager.createUserGroup();
+            userGroupDAO.setUserId(userId);
+            userGroupDAO.setGroupId(groupId);
+            userGroupDAO.setState(AuthorizedState.A.toString());
+            if (!userGroupDAO._exists()) {
+                throw new InvalidAuthorizedStateException("user not authorized to access inbox for groupId=" + groupId);
+            }
+        }
     }
 
     // Indexing -----------------

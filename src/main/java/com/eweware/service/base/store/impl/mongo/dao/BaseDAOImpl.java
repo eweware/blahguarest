@@ -90,9 +90,8 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             final String fieldName = entry.getKey();
             if (!containsField(fieldName)) {
                 final SchemaSpec spec = entry.getValue();
-                final Object defaultValue = spec.getDefaultValue();
-                if (defaultValue != null) {
-                    put(fieldName, defaultValue);
+                if (spec.hasDefaultValue()) {
+                    put(fieldName, spec.getDefaultValue());
                 }
             }
         }
@@ -123,6 +122,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     private void validateAndConvertFields(Map<String, Object> map) throws SystemErrorException {
 
         // TODO support embedded schemas (SchemaDataType.E): this would make this method recursive
+        // TODO sanity checks on string lengths
         final BaseSchema schema = getDAOSchema(LocaleId.en_us);
         if (schema == null) {
             System.out.println("validateAndConvertFields: Ignoring missing schema for " + this.getClass().getSimpleName()); // dbg
@@ -139,6 +139,11 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     it.remove();
                 } else {
                     final SchemaDataType dataType = spec.getDataType();
+                    if (dataType == SchemaDataType.S) {
+                        if (value != null && ((String) value).length() > 4000) {
+                            throw new SystemErrorException("String field '"+fieldName+"'s length was "+((String) value).length()+" but maximum allowed is 4000", ErrorCodes.INVALID_INPUT);
+                        }
+                    }
                     final FieldValidator converter = dataType.getConverter();
                     if (!converter.isValid(value, spec)) {
                         System.out.println("Ignored invalid value=" + value + " for fieldName=" + fieldName + " in: " + this.getClass().getSimpleName() + "\nspec=" + spec); // TODO dbg
@@ -294,10 +299,15 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (dao == null) {
                 return null;
             }
-            return getFindDAOConstructor().newInstance(dao, false);
+            return findDAOConstructor().newInstance(dao, false);
         } catch (Exception e) {
             throw new SystemErrorException("failed to find objects in " + this.getClass().getSimpleName() + " object=" + this, e);
         }
+    }
+
+    @Override
+    public List<? extends BaseDAO> _findMany() throws SystemErrorException {
+        return _findMany(null, null, null);
     }
 
     @Override
@@ -319,7 +329,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (found.count() == 0) {
                 return new ArrayList<BaseDAO>(0);
             }
-            final Constructor<? extends BaseDAO> constructor = getFindDAOConstructor();
+            final Constructor<? extends BaseDAO> constructor = findDAOConstructor();
             final List<BaseDAO> daos = new ArrayList<BaseDAO>(found.count());
             while (found.hasNext()) {
                 daos.add(constructor.newInstance(found.next(), false));
@@ -346,7 +356,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (cursor.count() == 0) {
                 return new ArrayList<BaseDAO>(0);
             }
-            final Constructor<? extends BaseDAO> constructor = getFindDAOConstructor();
+            final Constructor<? extends BaseDAO> constructor = findDAOConstructor();
             final List<BaseDAO> result = new ArrayList<BaseDAO>(cursor.count());
             while (cursor.hasNext()) {
                 result.add(constructor.newInstance(cursor.next(), false));
@@ -390,7 +400,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 return new ArrayList<BaseDAO>(0);
             }
 
-            final Constructor<? extends BaseDAO> constructor = getFindDAOConstructor();
+            final Constructor<? extends BaseDAO> constructor = findDAOConstructor();
             List<BaseDAO> daos = new ArrayList<BaseDAO>(cursor.count());
             while (cursor.hasNext()) {
                 daos.add(constructor.newInstance(cursor.next(), false));
@@ -420,7 +430,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (dao == null) {
                 return null;
             }
-            return getFindDAOConstructor().newInstance(dao, false);
+            return findDAOConstructor().newInstance(dao, false);
         } catch (Exception e) {
             throw new SystemErrorException("failed to find objects with compound id fields=" + idFieldNames + " in" + this.getClass().getSimpleName() + " object=" + this, e);
         }
@@ -442,7 +452,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         }
         final List<BaseDAO> matches = new ArrayList<BaseDAO>();
         try {
-            final Constructor<? extends BaseDAOImpl> constructor = getFindDAOConstructor();
+            final Constructor<? extends BaseDAOImpl> constructor = findDAOConstructor();
             final DBCollection col = _getCollection();
             for (DBObject obj : sort ? col.find(criteria).sort(new BasicDBObject(fieldName, 1)) : col.find(criteria)) {
                 matches.add(constructor.newInstance(obj, false));
@@ -668,7 +678,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         return fieldsToReturn;
     }
 
-    private Constructor<? extends BaseDAOImpl> getFindDAOConstructor() throws NoSuchMethodException {
+    private Constructor<? extends BaseDAOImpl> findDAOConstructor() throws NoSuchMethodException {
         final Class<? extends BaseDAOImpl> c = getClass();
         Constructor<? extends BaseDAOImpl> constructor = classToConstructorMap.get(c);
         if (constructor == null) {

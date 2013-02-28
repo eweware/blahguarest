@@ -4,285 +4,116 @@
     <meta  charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
-        .param {}
+        .param {
+        }
     </style>
     <title>Blahgua API Test Center</title>
 </head>
 
 <body>
 <script src="js/jquery-1.8.3.js"></script>
-<script>
-// Get blah type name to id map, etc...:
-$(document).ready(function() {configFromServer()});
-
-function rest(method, path, dataHandler, successFunction) {
-var endpoint = document.getElementById("endpoint").value;
-if (typeof(endpoint) == "undefined") {
-alert("Missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");
-return;
-}
-var fullUrl = 'http://'+endpoint+'/v2/'+path;
-$("#results").html("");
-$("#resultstatus").html("");
-$("#callmeth").attr("value", method);
-$("#callurl").attr("value", fullUrl);
-$.ajax({
-type: method,
-url: fullUrl,
-data: dataHandler,
-contentType: "application/json; charset=utf-8",
-dataType: "html",
-success:  successFunction == null?defaultSuccessFunction:successFunction,
-error: function (theErr, err, thrown) {
-$("#resultstatus").css({'color': 'red'}).html("(Http Status: "+err+": "+thrown+")");
-$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
-$("#results").css({'color': 'red'}).html(theErr.responseText);
-}});
-var payload = String(dataHandler);
-if (payload == 'null' || payload.indexOf("function") != -1) {
-payload = 'NO PAYLOAD';
-}
-$("#payload").css({'color': 'red'}).text(payload);
-}
-
-function defaultSuccessFunction(results, status) {
-$("#resultstatus").html("(Http Status: "+status+")");
-$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
-$("#results").css({'color': 'black'}).html(results)
-}
-
-function createUser() {
-
-var username = getUsername();
-var password = getPassword();
-if (!username || username.length == 0) { alert("Missing User Name"); return;}
-if (!password || password.length == 0) { alert("Missing Password"); return;}
-rest("POST", "users", '{"displayName": "'+username+'", "pwd": "'+password+'"}', setUserData);
-}
-
-function setPassword() {
-var userId = getUserId();
-var password = getPassword();
-if (username.length == 0) { alert("Missing User Name"); return;}
-rest("POST", "users", '{"userId": "'+userId+'", "pwd": "'+password+'"}', setUserData);
-}
-
-function loginUser() {
-var username = getUsername();
-var password = getPassword();
-if (username.length == 0 || password.length == 0) { alert("Missing username and/or password"); return; }
-rest("POST", "users/login", '{"displayName": "'+username+'", "pwd": "'+password+'"}', setUserData);
-}
-
-function userLoggedIn() {
-rest("GET", "users/login/check");
-}
-
-function setUserData(user) {
-defaultSuccessFunction(user);
-var obj = jQuery.parseJSON(user);
-//  alert(user);
-document.getElementById("username").value = obj.displayName;
-document.getElementById("userid").value = obj._id;
-}
-
-function getUserById() {
-var userId = getUserId();
-if (userId.length == 0) { alert("Missing User Id"); return;}
-rest("GET", "users/" + userId, setUserData);
-}
-
-function getUserByName() {
-var username = getUsername();
-if (username.length == 0) {
-alert("Missing User Name");
-return;
-}
-rest("GET", "users/" + username + "?u=true" , setUserData);
-}
-
-function joinChannel() {
-var channelId = getChannelId();
-var userId = getUserId();
-if (channelId.length == 0 || userId.length == 0) {
-alert("Missing Channel Id and/or User Id");
-return;
-}
-var data = '{"userId": "' + userId + '", "groupId": "' + channelId + '"}';
-rest("POST", "userGroups", data);
-}
-
-function createBlah() {
-var userId = getUserId();
-var typeId =  getTypeId();
-var channelId =  getChannelId();
-var text =  getBlahText();
-if (userId.length == 0 || typeId.length == 0 || channelId.length == 0 || text.length == 0) {
-alert("Missing User Id, and/or Blah Type Id, and/or Channel Id and/or Blah Text");
-return;
-}
-var data = '{"authorId": "' + userId + '", "groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
-rest("POST", "blahs", data, setBlahData1);
-}
-
-function getBlah() {
-var blahId = getBlahId();
-if (blahId.length == 0) {alert("Missing Blah Id parameter");}
-rest("GET", "blahs/"+blahId, null, setBlahData2);
-}
-
-function setBlahData1(blahinfo) {
-defaultSuccessFunction(blahinfo);
-var obj = jQuery.parseJSON(blahinfo);
-document.getElementById("blahid").value = obj._id;
-}
-
-function setBlahData2(blahinfo) {
-defaultSuccessFunction(blahinfo);
-var obj = jQuery.parseJSON(blahinfo);
-var img = obj.img;
-if (img && img.length > 0) {
-var url = "http://blahguaimages.s3-website-us-west-2.amazonaws.com/image/";
-//$("#imgs").css({"visibility", "visible"});
-for (var i=0;i<img.length;i++) {
-var im = img[i];
-$("#img_a").attr("src", url+im+"-A.jpg");
-$("#img_b").attr("src", url+im+"-B.jpg");
-$("#img_c").attr("src", url+im+"-C.jpg");
-$("#img_d").attr("src", url+im+"-D.jpg");
-}
-}
-}
-
-function getUserBlahs() {
-var userId = getUserId();
-if (userId.length == 0) {
-alert("Missing User id");
-return;
-}
-rest("GET", "blahs?authorId=" + userId);
-}
-
-function clearResults() {
-$("#results").css({'color': 'black'}).html("");
-$("#payload").css({'color': 'red'}).html("");
-$("#callmeth").attr("value", "");
-$("#callurl").attr("value", '');
-//$("#imgs").css({"visibility", "hidden"});
-}
-
-function clearParameters() {
-var obj = $(".param").val("");
-}
-
-function help() {
-$("#resultsArea").html('<div id="results"/>');
-$("#results").css({'color': 'blue'}).html("<h4>Help</h4><div>Create User: needs a User Name. If password is given, this will be used to later authenticate.</div><div>Login User: requires User Name and Password.</div><div>Get Users: needs no parameters</div><div>Get User By Id: needs User Id parameter -- returns users when not provided</div><div>Get User By Name: needs the User Name parameter.</div><div>Get User's Blahs: needs User Id parameter</div><div>Get Channels: needs no parameter</div><div>Join User To Channel: needs User Id and Channel Id parameters</div><div>Create Blah: Needs User Id parameter</div><div>Get Blah: Needs the Blah Id parameter. Returns any images.</div><div>Get User Blahs:: Needs User Id parameter</div><br/><div>Clear All Parameters: Clears parameter values</div><div>Clear All Results: clears results text</div>");
-}
-
-// Getters --------------------------------------
-function getUsername() {
-return document.getElementById("username").value;
-}
-function getPassword() {
-return document.getElementById("password").value;
-}
-function getUserId() {
-return document.getElementById("userid").value;
-}
-function getChannelId() {
-return document.getElementById("channelid").value;
-}
-function getTypeId() {
-return document.getElementById("blahtypeid").value;
-}
-function getBlahText() {
-return document.getElementById("blahtext").value;
-}
-function getBlahId() {
-return document.getElementById("blahid").value;
-}
-
-// Special
-function configFromServer() {
-help();
-var endpoint = document.getElementById("endpoint").value;
-if (typeof(endpoint) == "undefined") {
-alert("Config Error: missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");
-return;
-} // Get blah types for drop down menu
-var getBlahTypesUrl = "http://"+endpoint+"/v2/blahs/types";
-$.ajax({
-type: "GET",
-url: getBlahTypesUrl,
-data: null,
-contentType: "application/json; charset=utf-8",
-dataType: "html",
-success: configHandler,
-error: configErrorHandler
-});
-}
-function configHandler(result) {
-var items = $.parseJSON(result);
-var ar = Array.prototype.slice.call(items, 0);
-var selectHtml = "<select id='blahtypeid'>";
-    for (var i=0;i<ar.length;i++) {
-    var obj = ar[i];
-    var theId = "";
-    var theName = "";
-    for (var p in obj) {
-    if (p == '_id') theId = obj[p];
-    if (p == 'name') theName = obj[p];
-    }
-
-    selectHtml += "<option value='"+theId+"'>"+theName+"</option>";
-    }
-    selectHtml += "</select>";
-$("#blahTypes").html(selectHtml);
-}
-function configErrorHandler(result, error, thrown) {
-alert("Error: Failed to configure page:\n"+thrown+"\n"+result);
-}
-</script>
+<script src="js/api.js"></script>
 
 <style>
     .calls {
-    color: red; font-weight: bold;
+    color: red;
+    font-weight: bold;
     }
 </style>
 
 <h2>Actions</h2>
-<div><div><input style="color: blue" id="help" type="button" onclick="help()" value="Help"/> &nbsp;Host Endpoint: <input id="endpoint" type="text" value="localhost:8080"/></div>
+<div>
+    <div>
+        <input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
+        &nbsp;Host Endpoint:
+        <input id="endpoint" type="text" value="localhost:8080"/>
+    </div>
     <!-- Actions -->
-    <div style="margin-top: .5em"><input id="createUser" type="button" onclick="createUser()" value="Create User"/>
-        &nbsp;<input id="loginUser" type="button" onclick="loginUser()" value="Login User" />
-        &nbsp;<input id="userLoggedIn" type="button" onclick="userLoggedIn()" value="Check Login" />
-        &nbsp;<input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>&nbsp;
-        <input id="getUserById" type="button" onclick="getUserById();"  value="Get User By Id"/>&nbsp;
-        <input id="getUserByName" type="button" onclick="getUserByName();"  value="Get User By Name"/>&nbsp;
+    <div style="margin-top: .5em">
+        <input id="createUser" type="button" onclick="createUser()" value="Create User"/>
+        &nbsp;
+        <input id="checkUsername" type="button" onclick="checkUsername()" value="Check Username"/>
+        &nbsp;
+        <input id="loginUser" type="button" onclick="loginUser()" value="Login User" />
+        &nbsp;
+        <input id="userLoggedIn" type="button" onclick="userLoggedIn()" value="Check Login" />
+        &nbsp;
+        <input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>
+        &nbsp;
+        <input id="getUserById" type="button" onclick="getUserById();"  value="Get User By Id"/>
+        &nbsp;
+        <input id="getUserByName" type="button" onclick="getUserByName();"  value="Get User By Name"/>
+        &nbsp;
         <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
     </div>
-    <div style="margin-top: .5em"><input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get Channels"/>&nbsp;
-        <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>&nbsp;</div>
-    <div style="margin-top: .5em"><input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>&nbsp;<input id="getBlah" type="button" onclick="getBlah()" value="Get Blah"/></div>
+    <div style="margin-top: .5em">
+        <input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get All Channels"/>
+        &nbsp;
+        <input id="getOpenChannels" type="button" onclick="rest('GET', 'groups/featured')" value="Get Open Channels"/>
+        &nbsp;
+        <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
+        &nbsp;
+        <input id="getChannel" type="button" onclick="getChannel()" value="Get Channel"/>
+        &nbsp;
+    </div>
+    <div style="margin-top: .5em">
+        <input id="getInbox" type="button" onclick="getInbox();"  value="Get Inbox"/>
+        &nbsp;
+        <input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>
+        &nbsp;
+        <input id="getBlah" type="button" onclick="getBlah()" value="Get Blah"/>
+    </div>
     <h2>Parameters</h2>
     <input id="clearparams" type="button" onclick="clearParameters();" value="Clear All Parameters"/>
     <h3>User/Channel Parameters</h3>
-    <div>User Name: <input class="param" id="username" type="text" size=20 />&nbsp;Password: <input class="param" id="password" type="text" size="20"/>&nbsp;User Id: <input class="param" id="userid" type="text" size=35 /></div>
-    <div  style="margin-top: .5em">Channel Id: <input class="param" id="channelid" type="text" size=30 /></div>
+    <div>
+        User Name:
+        <input class="param" id="username" type="text" size=20 />
+        &nbsp;Password:
+        <input class="param" id="password" type="text" size="20"/>
+        &nbsp;User Id:
+        <input class="param" id="userid" type="text" size=35 />
+    </div>
+    <div  style="margin-top: .5em">
+        Channel Id:
+        <input class="param" id="channelid" type="text" size=30 />
+    </div>
     <h3>Blah Parameters</h3>
-    <div>Blah Id: <input class="param" id="blahid" type="text" size=30 />&nbsp;Blah Type: <span id="blahTypes"/></div>
+    <div>
+        Blah Id:
+        <input class="param" id="blahid" type="text" size=30 />
+        &nbsp;Blah Type: <span id="blahTypes"/>
+    </div>
 
-    <div><textarea class="param" id="blahtext" rows="2" cols="90" value="hello">Blah text goes here</textarea></div>
+    <div>
+        <textarea class="param" id="blahtext" rows="2" cols="90" value="hello">Blah text goes here</textarea>
+    </div>
     <br/>
 
     <h2>Call &amp; Results</h2>
-    <div style="margin-top: -1em;margin-bottom: 1em;"><input id="clear" type="button" onclick="clearResults();" value="Clear All Results"/></div>    <div style="font-weight: bold;;">Method: <input class="calls" type="text" size="4" id="callmeth" readonly="readonly"/> URL: <input class="calls" type="text" id="callurl" size="100" readonly="readonly"/></div>
-    <div style="font-weight: bold;">Outgoing Payload (POST/PUT):</div>
+    <div style="margin-top: -1em;margin-bottom: 1em;">
+        <input id="clear" type="button" onclick="clearResults();" value="Clear All Results"/>
+    </div>
+    <div style="font-weight: bold;;">
+        Method:
+        <input class="calls" type="text" size="4" id="callmeth" readonly="readonly"/>
+        URL:
+        <input class="calls" type="text" id="callurl" size="100" readonly="readonly"/>
+    </div>
+    <div style="font-weight: bold;">
+        Outgoing Payload (POST/PUT):
+    </div>
     <textarea id="payload" class="calls" cols="94" rows="5"></textarea>
-    <div style="font-weight: bold;">Results: <span id="resultstatus" class"calls"></span></div>
+    <div style="font-weight: bold;">
+        Results: <span id="resultstatus" class="calls"></span>
+    </div>
     <div id="resultsArea"></div>
-    <div id="imgs" style="top-margin: 2em;visibility: visible;"><b>Images:</b><br /><div><img id="img_a"/><img id="img_b"/><img id="img_c"/><img id="img_d"/></div></div>
+    <div id="imgs" style="top-margin: 2em;visibility: visible;">
+        <b>Images:</b>
+        <br />
+        <div><img id="img_a"/><img id="img_b"/><img id="img_c"/><img id="img_d"/>
+        </div>
+    </div>
 
 </body>
 </html>

@@ -41,7 +41,7 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
 
     public void setCommentVotes(Integer votes);
 
-    public Double getString();
+    public Double getStrength();
 
     public void setStrength(Double strength);
 

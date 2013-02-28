@@ -17,11 +17,9 @@ public interface UserDAOConstants {
     static final String STATS = "stats";
     static final String USER_STRENGTH = "s";
     static final String USER_CONTROVERSY_STRENGTH = "cs";
-    static final String DIGEST = "ud";
-    static final String SALT = "us";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-      new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USERNAME, DIGEST, SALT}),
+      new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USERNAME}),
       new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{LAST_INBOX}),
       new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{USER_STRENGTH, USER_CONTROVERSY_STRENGTH}),
       new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{STATS}),

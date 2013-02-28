@@ -16,6 +16,10 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setDescription(String description);
 
+    public String getDescriptor();
+
+    public void setDescriptor(String descriptor);
+
     public String getGroupTypeId();
 
     public void setGroupTypeId(String groupTypeId);

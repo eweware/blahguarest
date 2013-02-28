@@ -15,34 +15,23 @@ import java.util.logging.Logger;
  */
 public class BlahguaSessionListener implements HttpSessionListener {
 
-    private static final Logger logger = Logger.getLogger("BlahguaSessionListener");
-
+    /**
+     * <p>A new session is created in the anonymous user state.</p>
+     * @param se The session event
+     */
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-         se.getSession().setAttribute(BlahguaSession.AUTHENTICATION_STATE, SessionState.ANONYMOUS);
+        BlahguaSession.markAnonymous(se.getSession());
     }
 
+    /**
+     * <p>When a session is destroyed</p>
+     * @param se
+     */
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
 
         final HttpSession session = se.getSession();
-        try {
-            final Set<String> groupIds = (Set<String>) session.getAttribute(BlahguaSession.VIEWING_COUNT_GROUP_IDS);
-            String username = (String) session.getAttribute(BlahguaSession.USERNAME);
-            if (username == null) {username = "unknown";} // dbg username
-            logger.info("Session destroyed for username '"+ username +"': viewing group ids: " + ((groupIds == null) ? null : groupIds));
-            if (groupIds != null) {
-                for (String groupId : groupIds) {
-                    try {
-                        GroupManager.getInstance().updateViewerCount(groupId, false, null);
-                    } catch (Exception e) {
-                        logger.log(Level.WARNING, "Failed to reduce current viewer count for groupId '" + groupId + "'", e);
-                        // continue
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Error accessing session group viewer count", e);
-        }
+        BlahguaSession.sessionDestroyed(session);
     }
 }

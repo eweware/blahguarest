@@ -26,7 +26,7 @@ public class StringDataTypeValidator implements FieldValidator {
             if (minimumValue == null || val.length() >= minimumValue.intValue()) {
                 final Number maximumValue = spec.getMaximumValue();
                 if (maximumValue == null || val.length() <= maximumValue.intValue()) {
-                    final String regexp = spec.getRegExp();
+                    final String regexp = spec.getValidationRegexp();
                     return (regexp == null) || Pattern.compile(regexp).matcher(val).matches(); // TODO cache Pattern
                 }
             }

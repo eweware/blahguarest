@@ -89,16 +89,30 @@ public final class Login {
         return input;
     }
 
-    public static void checkPassword(String password) throws InvalidRequestException {
-        if (CommonUtilities.checkString(password, 6, 32)) {
-            throw new InvalidRequestException("Invalid password", ErrorCodes.INVALID_PASSWORD);
+    /**
+     * Checks password string and returns appropriate version of it
+     * @param password  The password. If null, it is interpreted as ""
+     * @return  The validated version of the password.
+     * @throws InvalidRequestException  Thrown if the password is unacceptable
+     */
+    public static String ensurePasswordString(String password) throws InvalidRequestException {
+        if (password == null) {password = "";} // empty string
+        if (!   CommonUtilities.checkString(password, 0, 64)) {
+            throw new InvalidRequestException("Invalid password. Length must not exceed 64.", ErrorCodes.INVALID_PASSWORD);
         }
+        return password;
     }
 
-    public static void checkUsername(String username) throws InvalidRequestException {
-        if (CommonUtilities.checkString(username, 3, 32)) {
-            throw new InvalidRequestException("Invalid username", ErrorCodes.INVALID_USERNAME);
+    /**
+     * Checks username string and returns appropriate version of it
+     * @param username  The username. If null, it is interpreted as ""
+     * @return  The validated version of the username.
+     * @throws InvalidRequestException  Thrown if the username is unacceptable
+     */
+    public static String ensureUsernameString(String username) throws InvalidRequestException {
+        if (!CommonUtilities.checkString(username, 3, 32)) {
+            throw new InvalidRequestException("Invalid username '" + username + "'. Length must be less than 33 and more than 2 characters.", ErrorCodes.INVALID_USERNAME);
         }
+        return username;
     }
-
 }

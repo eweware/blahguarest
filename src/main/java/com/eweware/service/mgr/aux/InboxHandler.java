@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import main.java.com.eweware.service.base.cache.BlahCache;
+import main.java.com.eweware.service.base.cache.Inbox;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
@@ -11,7 +12,6 @@ import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.InboxBlahDAO;
 import main.java.com.eweware.service.base.store.dao.InboxStateDAOConstants;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.base.cache.Inbox;
 import org.bson.types.ObjectId;
 
 import java.util.Arrays;
@@ -50,9 +50,17 @@ public class InboxHandler extends Thread {
 
     private MongoStoreManager storeManager;
 
+    /**
+     * Maps a group id to the maximum number of inboxes in the group
+     */
     private final java.util.Map<String, Integer> groupIdToMaxInbox = new HashMap<String, Integer>();
+
     private Random random; // thread safe
 
+    /**
+     * Constructor initializes the store manager and a random seed.
+     * @throws SystemErrorException
+     */
     public InboxHandler() throws SystemErrorException {
         this.storeManager = MongoStoreManager.getInstance();
         this.random = new Random();
@@ -67,9 +75,9 @@ public class InboxHandler extends Thread {
         synchronized (groupIdToMaxInbox) {
             final Integer maxInbox = groupIdToMaxInbox.get(groupId);
             if (maxInbox == null) {
-                final Integer minInbox = 0;
-                groupIdToMaxInbox.put(groupId, minInbox);
-                return minInbox;
+                final Integer unknown = -1;
+//                groupIdToMaxInbox.put(groupId, unknown);
+                return unknown;
             }
             return maxInbox;
         }
@@ -123,11 +131,14 @@ public class InboxHandler extends Thread {
         final List<String> imageIds = blahDAO.getImageIds();
         if (imageIds != null) {dao.setImageIds(imageIds);}
 
-//        dao.setStrength(0.85);
-//        dao.setRecentStrength(0.85);
+        // TODO Speculative for now: put new ones in the 85 percentile
+        dao.setStrength(0.85);
+        dao.setRecentStrength(0.85);
 
+        // TODO QA this:
         final Integer maxInbox = getMaxInbox(groupId);
-        final Integer inbox = (maxInbox == 0) ? 0 : random.nextInt(maxInbox + 1);
+        // maxinbox of -1 is unknown and 0 means no inboxes: in that case, start inbox 0
+        final Integer inbox = (maxInbox <= 0) ? 0 : random.nextInt(maxInbox + 1);
 
         dao.setInboxNumber(inbox);
 
@@ -141,18 +152,18 @@ public class InboxHandler extends Thread {
         BlahCache.getInstance().addInboxItem(dao.getId(), dao, inbox, groupId);
     }
 
-    private void updateInboxStateInDB(String groupId, Integer inbox, String itemId) {
+    private void updateInboxStateInDB(String groupId, Integer inbox, String inboxItemId) {
         final String stateId = BlahCache.getInstance().makeInboxStateKey(groupId, inbox);
         final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
         final DBCollection stateCol = storeManager.getCollection(storeManager.getInboxStateCollectionName());
         final DBObject state = stateCol.findOne(query);
         if (state == null) {
             final DBObject insert = new BasicDBObject(BaseDAOConstants.ID, stateId);
-            insert.put(InboxStateDAOConstants.INBOX_ITEM_IDS, Arrays.asList(new ObjectId[]{new ObjectId(itemId)}));
+            insert.put(InboxStateDAOConstants.INBOX_ITEM_IDS, Arrays.asList(new ObjectId[]{new ObjectId(inboxItemId)}));
             insert.put(InboxStateDAOConstants.INBOX_NUMBER_TOP, inbox);
             stateCol.insert(insert);
         } else {
-            final DBObject push = new BasicDBObject(InboxStateDAOConstants.INBOX_ITEM_IDS, new ObjectId(itemId));
+            final DBObject push = new BasicDBObject(InboxStateDAOConstants.INBOX_ITEM_IDS, new ObjectId(inboxItemId));
             final BasicDBObject update = new BasicDBObject("$push", push);
             stateCol.update(new BasicDBObject(BaseDAOConstants.ID, stateId), update);
         }

@@ -170,7 +170,7 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     }
 
     @Override
-    public Double getString() {
+    public Double getStrength() {
         return (Double) get(COMMENT_STRENGTH);
     }
 

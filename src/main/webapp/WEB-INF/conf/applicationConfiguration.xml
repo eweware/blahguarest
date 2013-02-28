@@ -31,25 +31,26 @@
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userDBName}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahDBName}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerDBName}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.trackuser}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.trackblah}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.trackcomment}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerdb.collection.tracker}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.users}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.userProfiles}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.groups}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.groupTypes}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.usergroups}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.media}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahs}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahTypes}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.comments}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.userBlahInfo}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.userCommentInfo}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.inboxstate}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahdb.collection.blahInbox}" />
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userdb.collection.demographics}" />
         <constructor-arg  type="java.lang.Integer" value="${blag.store.mongo.connectionsPerHost}" />
+        <property name="trackUserCollectionName" value="${blag.store.mongo.trackerdb.collection.trackuser}"/>
+        <property name="trackBlahCollectionName" value="${blag.store.mongo.trackerdb.collection.trackblah}"/>
+        <property name="trackCommentCollectionName" value="${blag.store.mongo.trackerdb.collection.trackcomment}"/>
+        <property name="trackerCollectionName" value="${blag.store.mongo.trackerdb.collection.tracker}"/>
+        <property name="userCollectionName" value="${blag.store.mongo.userdb.collection.users}"/>
+        <property name="userAccountsCollectionName" value="${blag.store.mongo.userdb.collection.user.accounts}"/>
+        <property name="userProfileCollectionName" value="${blag.store.mongo.userdb.collection.userProfiles}"/>
+        <property name="groupCollectionName" value="${blag.store.mongo.userdb.collection.groups}"/>
+        <property name="groupTypeCollectionName" value="${blag.store.mongo.userdb.collection.groupTypes}"/>
+        <property name="userGroupCollectionName" value="${blag.store.mongo.userdb.collection.usergroups}"/>
+        <property name="mediaCollectionName" value="${blag.store.mongo.blahdb.collection.media}"/>
+        <property name="blahCollectionName" value="${blag.store.mongo.blahdb.collection.blahs}"/>
+        <property name="blahTypeCollectionName" value="${blag.store.mongo.blahdb.collection.blahTypes}"/>
+        <property name="commentCollectionName" value="${blag.store.mongo.blahdb.collection.comments}"/>
+        <property name="userBlahInfoCollectionName" value="${blag.store.mongo.userdb.collection.userBlahInfo}"/>
+        <property name="userCommentInfoCollectionName" value="${blag.store.mongo.userdb.collection.userCommentInfo}"/>
+        <property name="inboxStateCollectionName" value="${blag.store.mongo.blahdb.collection.inboxstate}"/>
+        <property name="blahInboxCollectionName" value="${blag.store.mongo.blahdb.collection.blahInbox}"/>
+        <property name="demographicsCollectionName" value="${blag.store.mongo.userdb.collection.demographics}"/>
     </bean>
 
     <bean id="groupManager" class="main.java.com.eweware.service.mgr.GroupManager"

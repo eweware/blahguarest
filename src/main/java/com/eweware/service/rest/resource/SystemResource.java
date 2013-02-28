@@ -15,53 +15,82 @@ import javax.ws.rs.core.Response;
 
 @Path("/sys")
 public class SystemResource {
-	
+
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @return
+     */
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response sayBaaah() {
 		try {
-			return RestUtilities.makeOkResponse("No sheep here.\n");
-		} catch (RuntimeException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
+			return RestUtilities.make200OkResponse("No sheep here.\n");
+		} catch (Exception e) {
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
 		}
 	}
-	
+
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @return
+     */
 	@GET
 	@Path("/status")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatus() {
 		try {
-			return RestUtilities.makeOkResponse(BlahManager.getInstance().getState());
+			return RestUtilities.make200OkResponse(BlahManager.getInstance().getState());
 		} catch (SystemErrorException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
-		} catch (RuntimeException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
+		} catch (Exception e) {
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
 		}
 	}
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param reset
+     * @return
+     */
     @GET
     @Path("/stats")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStats(@QueryParam("reset") boolean reset) {
         try {
-            return RestUtilities.makeOkResponse(SystemManager.getInstance().getStats(reset));
+            return RestUtilities.make200OkResponse(SystemManager.getInstance().getStats(reset));
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @return
+     */
     @POST
     @Path("/refresh")
     public Response refreshCaches() {
         try {
             BlahManager.getInstance().refreshCaches();
-            return RestUtilities.makeAcceptedResponse();
+            return RestUtilities.make202AcceptedResponse();
         } catch (SystemErrorException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
-            return RestUtilities.makeAndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
 }

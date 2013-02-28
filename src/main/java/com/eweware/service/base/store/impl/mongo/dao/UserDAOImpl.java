@@ -81,26 +81,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     }
 
     @Override
-    public String getDigest() {
-        return (String) get(DIGEST);
-    }
-
-    @Override
-    public void setDigest(String digest) {
-        put(DIGEST, digest);
-    }
-
-    @Override
-    public String getSalt() {
-        return (String) get(SALT);
-    }
-
-    @Override
-    public void setSalt(String salt) {
-        put(SALT, salt);
-    }
-
-    @Override
     public Integer getLastInbox() {
         return (Integer) get(LAST_INBOX);
     }

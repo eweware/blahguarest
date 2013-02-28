@@ -19,6 +19,14 @@ import javax.ws.rs.core.Response;
 @Path("/media")
 public class MediaResource {
 
+    /**
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param filename
+     * @return
+     */
 	@GET
 	@Path("/{filename}")
 	@Produces("image/*,audio/*")
@@ -26,11 +34,11 @@ public class MediaResource {
 		try {
 			return MediaManager.getInstance().getImage(LocaleId.en_us, filename);
 		} catch (ResourceNotFoundException e) {
-			return RestUtilities.makeResourceNotFoundResponse(e);
+			return RestUtilities.make404ResourceNotFoundResponse(e);
 		} catch (SystemErrorException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
-		} catch (RuntimeException e) {
-			return RestUtilities.makeAndLogSystemErrorResponse(e);
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
+		} catch (Exception e) {
+			return RestUtilities.make500AndLogSystemErrorResponse(e);
 		}
 	}
 }

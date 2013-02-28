@@ -45,6 +45,14 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
         put(DESCRIPTION, description);
     }
 
+    public String getDescriptor() {
+        return (String) get(DESCRIPTOR);
+    }
+
+    public void setDescriptor(String descriptor) {
+        put(DESCRIPTOR, descriptor);
+    }
+
     public String getState() {
         return (String) get(STATE);
     }

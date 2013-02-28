@@ -107,36 +107,6 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
             this.viewCount = viewCount;
             this.openCount = openCount;
         }
-
-//        public String toString() {
-//            final StringBuilder b = new StringBuilder();
-//            b.append("[op=");
-//            b.append(operation);
-//            b.append(" userId=");
-//            b.append(userId);
-//            b.append(" authorId=");
-//            b.append(authorId);
-//            b.append(" isBlah=");
-//            b.append(isBlah);
-//            b.append(" isNewObject=");
-//            b.append(isNewObject);
-//            b.append(" objectId=");
-//            b.append(objectId);
-//            b.append(" subObjectId=");
-//            b.append(subObjectId);
-//            b.append("voteUp=");
-//            b.append(voteUp);
-//            b.append("voteDown=");
-//            b.append(voteDown);
-//            b.append(" pollOptionIndex=");
-//            b.append(pollOptionIndex);
-//            b.append("viewCount=");
-//            b.append(viewCount);
-//            b.append("openCount=");
-//            b.append(openCount);
-//            b.append("]");
-//            return b.toString();
-//        }
     }
 
     private static TrackingManager singleton;

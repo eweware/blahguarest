@@ -64,8 +64,19 @@ public final class CommonUtilities {
         return (string == null || string.length() == 0);
     }
 
+    /**
+     * Returns true if the string is within specs
+     * @param string    The string
+     * @param minimumLength A minimum
+     * @param maximumLength A maximum
+     * @return  True if the string is within the maximum and minimum.
+     * Returns false if string is null.
+     */
     public static boolean checkString(String string, int minimumLength, int maximumLength) {
+        if (string == null) {
+            return false;
+        }
         final int len = string.length();
-        return (string == null || len == 0 || len > maximumLength || len < minimumLength);
+        return (len <= maximumLength && len >= minimumLength);
     }
 }

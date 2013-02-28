@@ -56,7 +56,7 @@ public final class ErrorCodes {
     public static final Integer INVALID_YEAR = 46;
     public static final Integer SERVER_SEVERE_ERROR = 47;
     public static final Integer INVALID_DATE = 48;
-    public static final Integer SERVER_RECOVERABLE_ERROR = 49;
+    public static final Integer SERVER_RECOVERABLE_ERROR = 49; // server should retry operation
     public static final Integer INVALID_INPUT = 50;
     public static final Integer INVALID_USER_VALIDATION_PARAMS = 51;
     public static final Integer INVALID_EMAIL_ADDRESS = 52;
@@ -80,4 +80,17 @@ public final class ErrorCodes {
     public static final Integer INVALID_USER_ID = 70;
     public static final Integer UNAUTHORIZED_USER = 71;
     public static final Integer ALREADY_VOTED_ON_POLL = 72;
+    public static final Integer NOT_FOUND_USER_ACCOUNT = 73;
+
+    /**
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
+     */
+    public static final Integer MISSING_GROUP_DESCRIPTOR = 74;
+
+    /**
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
+     */
+    public static final Integer INVALID_GROUP_DESCRIPTOR = 75;
+
+    public static final Integer MISSING_DISPLAY_NAME = 76;
 }

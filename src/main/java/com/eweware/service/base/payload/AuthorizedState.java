@@ -9,7 +9,9 @@ import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
  *         Keeping it simple by not adding custom serialization apparatus.
  */
 public enum AuthorizedState {
-    P("joined"), A("activated"), S("suspended"), D("deleted");
+
+    P("pending"), A("activated"), S("suspended"), D("deleted"),;
+
     private String description;
 
     private AuthorizedState(String actionCode) {
@@ -32,16 +34,12 @@ public enum AuthorizedState {
         return getDefault().toString();
     }
 
-    public static String checkState(String stateAsString) throws InvalidAuthorizedStateException {
-        try {
-            AuthorizedState.valueOf(stateAsString);
-        } catch (IllegalArgumentException e) {
-
+    public static AuthorizedState find(String stateAsString) {
+        for (AuthorizedState s : AuthorizedState.values()) {
+            if (s.toString().equals(stateAsString)) {
+                return s;
+            }
         }
-        try {
-            return (AuthorizedState.valueOf(stateAsString) != null) ? stateAsString : null;
-        } catch (Exception e) {
-            throw new InvalidAuthorizedStateException("invalid state=" + stateAsString, e);
-        }
+        return null;
     }
 }

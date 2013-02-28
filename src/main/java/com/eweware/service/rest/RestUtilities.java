@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public final class RestUtilities {
 
-    public static final Response makeAndLogSystemErrorResponse(BaseException e) {
+    public static final Response make500AndLogSystemErrorResponse(BaseException e) {
         String msg = e.getMessage();
         if (e.getCause() != null && e.getCause().getMessage() != null) {
             msg += ": "+e.getCause().getMessage();
@@ -32,7 +32,7 @@ public final class RestUtilities {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
     }
 
-    public static final Response makeAndLogSystemErrorResponse(Throwable e) {
+    public static final Response make500AndLogSystemErrorResponse(Throwable e) {
         String msg = e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {
@@ -43,7 +43,7 @@ public final class RestUtilities {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, msg)).build();
     }
 
-    public static Response makeResourceNotFoundResponse(ResourceNotFoundException e) {
+    public static Response make404ResourceNotFoundResponse(ResourceNotFoundException e) {
         String msg = e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {
@@ -52,7 +52,11 @@ public final class RestUtilities {
         return Response.status(Response.Status.NOT_FOUND).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
     }
 
-    public static Response makeStateConflictResponse(StateConflictException e) {
+    public static Response make409StateConflictResponse(String msg, int errorCode) {
+        return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(errorCode, msg, null)).build();
+    }
+
+    public static Response make409StateConflictResponse(StateConflictException e) {
         String msg = new Date() + ": makeStateConflictResponse: " + e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {
@@ -61,7 +65,7 @@ public final class RestUtilities {
         return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
     }
 
-    public static Response makeInvalidRequestResponse(InvalidRequestException e) {
+    public static Response make400InvalidRequestResponse(InvalidRequestException e) {
         String msg = new Date() + ": makeInvalidRequestException: " + e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {
@@ -70,28 +74,28 @@ public final class RestUtilities {
         return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
     }
 
-    public static Response makeUnauthorizedRequestResponse(InvalidAuthorizedStateException e) {
+    public static Response make401UnauthorizedRequestResponse(InvalidAuthorizedStateException e) {
         String msg = new Date() + ": makeUnauthorizedException: " + e.getMessage();
         final String st = stackTraceAsString(e);
         if (st.length() > 0) {
             msg += "\n" + st;
         }
-        return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
+        return Response.status(Response.Status.UNAUTHORIZED).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
     }
 
-    public static final Response makeCreatedResourceResponse(Object entity, URI location) {
+    public static final Response make201CreatedResourceResponse(Object entity, URI location) {
         return Response.status(Response.Status.CREATED).header("Cache-Control", "no-cache").entity(entity).location(location).header("Content-Location",location).build();
     }
 
-    public static Response makeAcceptedResponse() {
+    public static Response make202AcceptedResponse() {
         return Response.status(Response.Status.ACCEPTED).header("Cache-Control", "no-cache").build();
     }
 
-    public static Response makeOkResponse(Object entity) {
+    public static Response make200OkResponse(Object entity) {
         return Response.status(Response.Status.OK).header("Cache-Control", "no-cache").entity(entity).build();
     }
 
-    public static Response makeOKNoContentResponse() {
+    public static Response make204OKNoContentResponse() {
         return Response.status(Response.Status.NO_CONTENT).header("Cache-Control", "no-cache").build();
     }
 
