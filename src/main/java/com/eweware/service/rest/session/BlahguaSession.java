@@ -2,14 +2,14 @@ package main.java.com.eweware.service.rest.session;
 
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
+import main.java.com.eweware.service.base.error.ResourceNotFoundException;
+import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.mgr.GroupManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +28,12 @@ public final class BlahguaSession {
      * A clumsy kludge to cheat so that QA tests can pass when REST runs on a Mac.
      * TODO eliminate this before Macs take over the world.
      */
-    private static boolean isMaster = System.getProperty("os.name").toLowerCase().startsWith("mac");
+    private static boolean securityOn = !System.getProperty("os.name").toLowerCase().startsWith("mac");
+
+    // TODO remove this before rollout
+    public static final void flipSecurity(boolean onOrOff) {
+        securityOn = onOrOff;
+    }
 
     /**
      * Set to a Boolean. Indicates whether the user was authenticated or not.
@@ -39,7 +44,7 @@ public final class BlahguaSession {
      * Set to a Set of Strings, each string is a group id
      * These are the groups that the user is currently watching.
      */
-    private static final String VIEWING_COUNT_GROUP_IDS = "G";
+    private static final String VIEWING_GROUP_ID = "G";
 
     /**
      * If the user is authenticated, this is the user's id.
@@ -104,7 +109,7 @@ public final class BlahguaSession {
      * @throws InvalidAuthorizedStateException If there is no authenticated session.
      */
     public static void ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
-        if (!isMaster && !isAuthenticated(request)) {
+        if (securityOn && !isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
     }
@@ -144,6 +149,39 @@ public final class BlahguaSession {
         return (session == null) ? null : (String) session.getAttribute(USER_ID);
     }
 
+    /** TODO temp for debugging only */
+    public static String getSessionInfo(HttpServletRequest request) {
+        final HttpSession s = request.getSession();
+        final StringBuilder b = new StringBuilder();
+        if (s != null) {
+            if (s.getAttribute(AUTHENTICATION_STATE) == SessionState.AUTHENTICATED) {
+                b.append("Authenticated Session");
+                final Object userId = s.getAttribute(USER_ID);
+                if (userId != null) {
+                    b.append("\nUser Id: ");
+                    b.append(userId);
+                }
+                final String username = (String) s.getAttribute(USERNAME);
+                if (username != null) {
+                    b.append("\nUsername: ");
+                    b.append(username);
+                }
+            } else {
+                b.append("Anonymous Session");
+            }
+            final String viewing = (String) s.getAttribute(BlahguaSession.VIEWING_GROUP_ID);
+            if (viewing != null) {
+                b.append("\nViewing Channel Id: ");
+                b.append(viewing);
+            } else {
+                b.append("\nNot Viewing Any Channels");
+            }
+        } else {
+            b.append("No User Session");
+        }
+        return b.toString();
+    }
+
     /**
      * Holds inbox state information.
      * Maps each groupId to the last inbox number fetched within that group.
@@ -172,7 +210,7 @@ public final class BlahguaSession {
      * @return The last inbox number or null if the inbox has not been visited during this session.
      */
     public static Integer getLastInboxNumber(HttpServletRequest request, String groupId) {
-        final InboxInfo info = getInboxInfo(request, groupId);
+        final InboxInfo info = getInboxInfo(request);
         return (info == null) ? null : info.getLastInboxNumber(groupId);
     }
 
@@ -183,30 +221,49 @@ public final class BlahguaSession {
      * @param groupId         The group id (unchecked!)
      * @param lastInboxNumber The last inbox number in the group to have been fetched.
      */
-    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber) {
-        final InboxInfo inboxInfo = getInboxInfo(request, groupId);
+    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber) throws SystemErrorException, ResourceNotFoundException {
+        final InboxInfo inboxInfo = getInboxInfo(request);
         if (inboxInfo != null) {
             inboxInfo.setLastInboxNumber(groupId, lastInboxNumber);
         } else {
             setInboxInfo(request, groupId, lastInboxNumber);
         }
+        setCurrentlyViewedGroup(request, groupId);
     }
 
     /**
-     * <p>Adds the group to the list of currently viewed groups by user.</p>
+     *<p>Sets the group as the currently viewed group in the session.
+     * If another group is currently watched, it decrements the viewer
+     * count for that group in the DB.</p>
      *
      * @param request The http request (unchecked!)
      * @param groupId The groupId (may be null but unchecked for validity)
      */
-    public static void addCurrentlyViewedGroup(HttpServletRequest request, String groupId) {
-        final HttpSession session = request.getSession(true);
+    public static void setCurrentlyViewedGroup(HttpServletRequest request, String groupId) throws SystemErrorException, ResourceNotFoundException {
         if (groupId != null) {
-            Set<String> groupIds = (Set<String>) session.getAttribute(VIEWING_COUNT_GROUP_IDS);
-            if (groupIds == null) {
-                groupIds = new HashSet<String>(5);
-                session.setAttribute(VIEWING_COUNT_GROUP_IDS, groupIds);
+            final HttpSession session = request.getSession(true);
+            final String currentlyWatched = (String) session.getAttribute(VIEWING_GROUP_ID);
+            session.setAttribute(VIEWING_GROUP_ID, groupId);
+
+            // Update DB
+            if (currentlyWatched != null) {
+                if (!currentlyWatched.equals(groupId)) { // decrement count in DB
+                    GroupManager.getInstance().updateViewerCount(currentlyWatched, false);
+                }
+            } else { // increment count in DB
+                GroupManager.getInstance().updateViewerCount(groupId, true);
             }
-            groupIds.add(groupId);
+        }
+    }
+
+    /**
+     * Destroys the current session.
+     * @param request   The http request object
+     */
+    public static void destroySession(HttpServletRequest request) {
+        final HttpSession session = request.getSession();
+        if (session != null) {
+            session.invalidate();
         }
     }
 
@@ -218,22 +275,20 @@ public final class BlahguaSession {
      * @param session The http session object
      */
     public static void sessionDestroyed(HttpSession session) {
-        final Set<String> groupIds = (Set<String>) session.getAttribute(BlahguaSession.VIEWING_COUNT_GROUP_IDS);
+        final String groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID);
         String username = (String) session.getAttribute(BlahguaSession.USERNAME);
         if (username == null) {
             username = "unknown";
         } // dbg username
-        logger.info("Session destroyed for username '" + username + "': viewing group ids: " + ((groupIds == null) ? null : groupIds));
-        if (groupIds != null) {
-            for (String groupId : groupIds) {
-                try {
-                    GroupManager.getInstance().updateViewerCount(groupId, false, null);
-                } catch (Exception e) {
-                    logger.log(Level.WARNING, "Failed to reduce current viewer count for groupId '" + groupId + "'", e);
-                    // continue
-                }
+        if (groupId != null) {
+            try {
+                GroupManager.getInstance().updateViewerCount(groupId, false);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Failed to reduce current viewer count for groupId '" + groupId + "'", e);
+                // continue
             }
         }
+        logger.info("Session destroyed for username '" + username + "': viewing group ids: " + ((groupId == null) ? null : groupId));
     }
 
 
@@ -241,7 +296,7 @@ public final class BlahguaSession {
         request.getSession().setAttribute(INBOX_INFO, new InboxInfo(groupId, lastInboxNumber));
     }
 
-    private static InboxInfo getInboxInfo(HttpServletRequest request, String groupId) {
+    private static InboxInfo getInboxInfo(HttpServletRequest request) {
         return (InboxInfo) request.getSession(true).getAttribute(INBOX_INFO);
     }
 }

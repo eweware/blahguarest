@@ -30,13 +30,17 @@
     </div>
     <!-- Actions -->
     <div style="margin-top: .5em">
-        <input id="createUser" type="button" onclick="createUser()" value="Create User"/>
+        <input id="createUser" type="button" onclick="createUser()" value="Register User"/>
         &nbsp;
         <input id="checkUsername" type="button" onclick="checkUsername()" value="Check Username"/>
         &nbsp;
-        <input id="loginUser" type="button" onclick="loginUser()" value="Login User" />
+        <input id="loginUser" type="button" onclick="loginUser()" value="Login" />
         &nbsp;
         <input id="userLoggedIn" type="button" onclick="userLoggedIn()" value="Check Login" />
+        &nbsp;
+        <input id="sessionInfo" type="button" onclick="rest('GET', 'sys/session')" value="Session Info" />
+        &nbsp;
+        <input id="logoutUser" type="button" onclick="rest('POST', 'users/logout')" value="Logout" />
         &nbsp;
         <input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>
         &nbsp;

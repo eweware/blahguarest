@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -80,19 +81,21 @@ public class UsersResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/login/check</div>
      *
-     * @param request Internal parameter: the request object.
-     * @return Returns http status 200 if the user session is authenticated, else
-     *         returns 404.
+     * @return Returns http status 200 with a JSON payload containing a field
+     * named 'loggedIn' which is set to 'Y' if the user is logged in and
+     * to 'N' if the user is not logged in.
      */
     @GET
     @Path("/login/check")
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkLogin(@Context HttpServletRequest request) {
+        final Map<String, String> entity = new HashMap<String, String>(1);
         if (BlahguaSession.isAuthenticated(request)) {
-            return Response.ok().build();
+            entity.put("loggedIn", "Y");
         } else {
-            return Response.status(404).build();
+            entity.put("loggedIn", "N");
         }
+        return RestUtilities.make200OkResponse(entity);
     }
 
     /**
@@ -136,8 +139,21 @@ public class UsersResource {
         }
     }
 
+    @POST
+    @Path("/logout")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response logoutUser(@Context HttpServletRequest request) {
+        try {
+            BlahguaSession.destroySession(request);
+            return RestUtilities.make202AcceptedResponse();
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
     /**
      * <p>Use this method to create a user profile.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users/profiles</div>
      *
@@ -201,7 +217,6 @@ public class UsersResource {
                                  @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
             final String username = (String) user.get(UserDAOConstants.USERNAME);
             final String password = (String) user.get(UserDAOConstants.PASSWORD);
             final UserPayload payload = UserManager.getInstance().registerUser(LocaleId.en_us, username, password);
@@ -212,8 +227,6 @@ public class UsersResource {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -223,6 +236,7 @@ public class UsersResource {
 
     /**
      * <p>Use this method to update profile fields.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> users/profiles/{userId}</div>
      *
@@ -231,6 +245,7 @@ public class UsersResource {
      * @return If successful, returns http code 204 (OK NO CONTENT).
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
+     *         If the user may not access this method, returns 401 (UNAUTHORIZED).
      *         On error conditions, a JSON object is returned with details.
      * @see UserProfilePayload
      */
@@ -268,6 +283,7 @@ public class UsersResource {
     /**
      * <p>User this method to update a user's username. The user
      * must be logged in.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> users/{userId}/username/{username}</div>
      *
@@ -277,6 +293,7 @@ public class UsersResource {
      *         If the input is invalid, returns 400 (BAD REQUEST).
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
+     * @see #checkUsername(String)
      */
     @PUT
     @Path("/{userId}/username/{username}")
@@ -307,7 +324,8 @@ public class UsersResource {
     }
 
     /**
-     * <p>User this method to update a user's password. The user must be logged in.</p>
+     * <p>User this method to update a user's password.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> users/{userId}/password/{password}</div>
      *
@@ -346,6 +364,7 @@ public class UsersResource {
     /**
      * <p>Returns the schema for the user profile record. The schema specifies
      * all fields in the user profile and their acceptable values (constraints), as appropriate.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/profiles</div>
      *
@@ -374,6 +393,7 @@ public class UsersResource {
 
     /**
      * <p>Use this method to get the user's profile by user id.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/profiles/{userId}</div>
      *
@@ -509,6 +529,7 @@ public class UsersResource {
 
     /**
      * <p>Use this method to get a user record by user id</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/{userId}</div>
      *

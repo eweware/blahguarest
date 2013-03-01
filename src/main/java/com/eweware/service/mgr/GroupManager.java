@@ -5,7 +5,6 @@ import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.payload.AuthorizedState;
-import main.java.com.eweware.service.base.payload.BlahPayload;
 import main.java.com.eweware.service.base.payload.GroupPayload;
 import main.java.com.eweware.service.base.payload.GroupTypePayload;
 import main.java.com.eweware.service.base.store.StoreManager;
@@ -447,18 +446,14 @@ public final class GroupManager implements ManagerInterface {
      *
      * @param groupId The group id
      * @param added   If true, add one to the count, else subtract one
-     * @param request
      */
-    public void updateViewerCount(String groupId, Boolean added, HttpServletRequest request) throws SystemErrorException, ResourceNotFoundException {
+    public void updateViewerCount(String groupId, Boolean added) throws SystemErrorException, ResourceNotFoundException {
         final GroupDAO group = storeManager.createGroup(groupId);
         if (!group._exists()) {
             throw new ResourceNotFoundException("No such group id '" + groupId + "'", ErrorCodes.NOT_FOUND_GROUP_ID);
         }
         group.setCurrentViewerCount(added ? 1 : -1);
         group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-        if (request != null) {
-            BlahguaSession.addCurrentlyViewedGroup(request, groupId);
-        }
     }
 
     /**

@@ -25,7 +25,8 @@ public class GroupsResource {
 
 
     /**
-     * <p><Use this method to create a group.  <i>User must be logged in to access this method.</i>/p>
+     * <p><Use this method to create a group./p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> groups</div>
      *
@@ -57,7 +58,8 @@ public class GroupsResource {
     }
 
     /**
-     * <p>Use this method to update a group. <i>User must be logged in to access this method.</i></p>
+     * <p>Use this method to update a group.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> groups/{groupId}</div>
      *
@@ -97,37 +99,38 @@ public class GroupsResource {
         }
     }
 
-    /**
-     * <p>Use this method to increment or decrement the number of
-     * viewers on a specific group.</p>
-     * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> groups/{groupId}/viewerCount/{added}</div>
-     *
-     * @param groupId The group's id
-     * @param added   If true, increment the current viewer count
-     *                for the group; else, decrement it.
-     * @return If successful, returns http status of 204 (NO CONTENT)
-     *         without an entity. Returns status of 401 if the user
-     *         is not authorized to make this change.
-     */
-    @PUT
-    @Path("/{groupId}/viewerCount/{added}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateViewerCount(@PathParam("groupId") String groupId,
-                                      @PathParam("added") Boolean added,
-                                      @Context HttpServletRequest request) {
-        try {
-            BlahguaSession.ensureAuthenticated(request);
-            GroupManager.getInstance().updateViewerCount(groupId, added, request);
-            return RestUtilities.make204OKNoContentResponse();
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
+//    /**
+//     * <p>Use this method to increment or decrement the number of
+//     * viewers on a specific group.</p>
+//     * <p><i>User must be logged in to use this method.</i></p>
+//     * <div><b>METHOD:</b> PUT</div>
+//     * <div><b>URL:</b> groups/{groupId}/viewerCount/{added}</div>
+//     *
+//     * @param groupId The group's id
+//     * @param added   If true, increment the current viewer count
+//     *                for the group; else, decrement it.
+//     * @return If successful, returns http status of 204 (NO CONTENT)
+//     *         without an entity. Returns status of 401 if the user
+//     *         is not authorized to make this change.
+//     */
+//    @PUT
+//    @Path("/{groupId}/viewerCount/{added}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response updateViewerCount(@PathParam("groupId") String groupId,
+//                                      @PathParam("added") Boolean added,
+//                                      @Context HttpServletRequest request) {
+//        try {
+//            BlahguaSession.ensureAuthenticated(request);
+//            GroupManager.getInstance().updateViewerCount(groupId, added, request);
+//            return RestUtilities.make204OKNoContentResponse();
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }
 
     /**
      * <p>Use this method to get the current viewer count for a group.</p>
@@ -155,8 +158,8 @@ public class GroupsResource {
      * <p>Returns features groups. Currently, the only featured groups
      * are open groups (those that can be accessed by anonymous users).</p>
      *
-     * @param start <b>Query Parameter: </b>(Optional:) The start index or null if starting at the base.
-     * @param count <b>Query Parameter: </b>(Optional:) The number of items to return.
+     * @param start<i>Query Parameter:</i>(Optional:) The start index or null if starting at the base.
+     * @param count<i>Query Parameter:</i>(Optional:) The number of items to return.
      * @return If successful, returns a possibly empty array of group ids with http status 200. These
      *         are the open group ids.
      */
@@ -177,16 +180,17 @@ public class GroupsResource {
 
     /**
      * <p>Use this method to obtain a list of all groups of a given type.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> groups</div>
      * TODO See https://eweware.atlassian.net/browse/WRS-181
      *
      * @param groupTypeId   The group type id
-     * @param name          <b>Query Parameter: </b>(Optional:) The group's display name
-     * @param state         <b>Query Parameter: </b>(Optional:) The group's state
-     * @param start         <b>Query Parameter: </b>(Optional:) The start index for the returned group items
-     * @param count         <b>Query Parameter: </b>(Optional:) The number of items to return
-     * @param sortFieldName <b>Query Parameter: </b>(Optional:) The name of a field by which to sort the results.
+     * @param name         <i>Query Parameter:</i>(Optional:) The group's display name
+     * @param state        <i>Query Parameter:</i>(Optional:) The group's state
+     * @param start        <i>Query Parameter:</i>(Optional:) The start index for the returned group items
+     * @param count        <i>Query Parameter:</i>(Optional:) The number of items to return
+     * @param sortFieldName<i>Query Parameter:</i>(Optional:) The name of a field by which to sort the results.
      *                      <b>TODO get rid of this!</b>
      * @return If successful, returns a JSON entity with http status 200 with the group entities that match the query parameters.
      *         If the request has an error, returns http status 400.

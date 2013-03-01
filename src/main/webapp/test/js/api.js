@@ -13,8 +13,8 @@ function rest(method, path, dataHandler, successFunction) {
 	var fullUrl = 'http://' + endpoint + '/v2/' + path;
 	$("#results").html("");
 	$("#resultstatus").html("");
-	$("#callmeth").attr("value", method);
-	$("#callurl").attr("value", fullUrl);
+	$("#callmeth").css({'color': 'blue'}).attr("value", method);
+	$("#callurl").css({'color': 'blue'}).attr("value", fullUrl);
 	$.ajax({
 		type : method,
 		url : fullUrl,
@@ -29,7 +29,7 @@ function rest(method, path, dataHandler, successFunction) {
 		payload = 'NO PAYLOAD';
 	}
 	$("#payload").css({
-		'color' : 'red'
+		'color' : 'blue'
 	}).text(payload);
 }
 
@@ -226,9 +226,7 @@ function clearResults() {
 	$("#results").css({
 		'color' : 'black'
 	}).html("");
-	$("#payload").css({
-		'color' : 'red'
-	}).html("");
+	$("#payload").html("");
 	$("#callmeth").attr("value", "");
 	$("#callurl").attr("value", '');
 	//$("#imgs").css({"visibility", "hidden"});

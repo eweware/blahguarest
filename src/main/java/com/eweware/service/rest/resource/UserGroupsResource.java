@@ -32,6 +32,7 @@ public class UserGroupsResource {
 
     /**
      * <p>Use this method to register a user in a group (to join a group).</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> userGroups</div>
      *
@@ -81,6 +82,7 @@ public class UserGroupsResource {
 
     /**
      * <p>Use this method to remove a user from a group (unjoin it).</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> DELETE</div>
      * <div><b>URL:</b> userGroups/{userId}/{groupId}</div>
      *
@@ -123,6 +125,7 @@ public class UserGroupsResource {
 
     /**
      * <p>User this method to get information about a user's relationship to a group, if any.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> userGroups/{userId}/{groupId}</div>
      *
@@ -161,6 +164,7 @@ public class UserGroupsResource {
 
     /**
      * <p>Use this to obtain user-to-group relations for this user by accessing via its id.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> userGroups/{userId}</div>
      *

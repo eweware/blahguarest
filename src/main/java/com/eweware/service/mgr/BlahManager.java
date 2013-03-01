@@ -192,6 +192,7 @@ public final class BlahManager implements ManagerInterface {
     public BlahPayload createBlah(LocaleId localeId, BlahPayload request) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
         // Check required fields
+//        BlahguaSession.getUserId()
         final String authorId = request.getAuthorId();
         if (CommonUtilities.isEmptyString(authorId)) {
             throw new InvalidRequestException("missing field authorId=" + authorId, request, ErrorCodes.MISSING_USER_ID);
@@ -968,22 +969,23 @@ public final class BlahManager implements ManagerInterface {
      * <p/>
      * TODO check injection problems: e.g., blahId or authorId changed, etc...
      *
+     *
      * @param localeId
      * @param request  The client request
+     * @param commentId
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
-    public void updateComment(LocaleId localeId, CommentPayload request) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    public void updateComment(LocaleId localeId, CommentPayload request, String commentId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
 
-        if (!CommonUtilities.isEmptyString(request.getText())) {
-            throw new InvalidRequestException("user may not edit comment text", request, ErrorCodes.CANNOT_EDIT_TEXT);
-        }
-        final String commentId = request.getId();
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", request, ErrorCodes.MISSING_COMMENT_ID);
+        }
+        if (!CommonUtilities.isEmptyString(request.getText())) {
+            throw new InvalidRequestException("user may not edit comment text", request, ErrorCodes.CANNOT_EDIT_TEXT);
         }
         final String userId = request.getAuthorId();
         if (CommonUtilities.isEmptyString(userId)) {
@@ -1290,7 +1292,7 @@ public final class BlahManager implements ManagerInterface {
     // TODO 2. require the group id
     public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
                                            String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
-            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException {
+            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException {
 
         if (groupId == null) {
             throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
@@ -1322,7 +1324,9 @@ public final class BlahManager implements ManagerInterface {
             logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber + " when maxInbox=" + maxInbox);
             return new ArrayList<InboxBlahPayload>(0);
         }
+
         BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
+
         return inbox.getItems();
     }
 

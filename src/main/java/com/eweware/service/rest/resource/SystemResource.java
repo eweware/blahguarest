@@ -4,8 +4,11 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
 import main.java.com.eweware.service.rest.RestUtilities;
+import main.java.com.eweware.service.rest.session.BlahguaSession;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -72,6 +75,21 @@ public class SystemResource {
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
+    }
+
+    @GET
+    @Path("/flip/{on}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response flipSecurity(@PathParam("on")boolean on) {
+        BlahguaSession.flipSecurity(on);
+        return Response.ok("security " + (on ? "ON" : "OFF")).build();
+    }
+
+    @GET
+    @Path("/session")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getSessionInfo(@Context HttpServletRequest request) {
+        return Response.ok(BlahguaSession.getSessionInfo(request)).build();
     }
 
     /**

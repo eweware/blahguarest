@@ -53,6 +53,7 @@ public class ImageUploadResource {
     private static StoreManager storeManager;
 
     private static final String canonicalFileFormat = ".jpg";
+
     private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
 
     static {
@@ -103,9 +104,7 @@ public class ImageUploadResource {
     }
 
     /**
-     * TODO should be replaced by the OptionsMethodFilter class when necessary
-     *
-     * <p></p>
+     * <p>Not really in use...</p>
      * <div><b>METHOD:</b> </div>
      * <div><b>URL:</b> </div>
      * @param req
@@ -126,16 +125,20 @@ public class ImageUploadResource {
 
     /**
      *
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     * @param objType
-     * @param objectId
-     * @param isPrimary
-     * @param in
-     * @param metadata
-     * @param request
-     * @return
+     * <p>Use this method to upload an image to be related to an object. Currently, only
+     * blah and comment images are supported. Each object can hold multiple images, but
+     * the semantics for their use are currently not well-defined.</p>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> images/upload</div>
+     * @param objType   The object type. 'B' means a Blah image, 'C' means a comment image.
+     * @param objectId  The object id (e.g., the blah id if the object type is 'B').
+     * @param isPrimary Designates whether the image is "primary". A crude way to get at
+     *                  the semantics, which are still to be defined.
+     * @param in        The input stream with the image data. TIF, PNG, JPG and GIF images
+     *                  are acceptable.
+     * @param metadata  Input metadata.
+     * @return  Http status of 200.
+     * If there is an error in the request, returns status 400.
      */
     @POST
     @Path("/upload")

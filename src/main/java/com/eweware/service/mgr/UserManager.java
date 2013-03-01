@@ -268,6 +268,10 @@ public class UserManager implements ManagerInterface {
         }
     }
 
+    public void logoutUser(LocaleId locale, HttpServletRequest request) {
+        request.getSession().invalidate();
+    }
+
     /**
      * Creates or updates the user profile.
      *

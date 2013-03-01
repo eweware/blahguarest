@@ -33,13 +33,16 @@ public class BlahsResource {
     private static final String GET_BLAHS_OPERATION = "getBlahs";
 
     /**
-     * <p>Creates a blah. <i>User must be logged in to use this method.</i></p>
+     * <p>Creates a blah.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> blahs</div>
      * @param entity The request entity. Expects a JSON object with an author id, a groupId, a blah type id,
      *                and the blah's tagline
-//     * @param uri  Internal (not supplied by JSON object). URI to use to build the http Location header
      * @return BlahPayload The created request with the new blah id
+     * If there is an error in the request, returns status 400.
+     * If the referenced blah or author can't be found, returns status 404.
+     * If a conflict would arise from satisfying the request, returns status 409.
      * @see BlahPayload
      */
     @POST
@@ -72,8 +75,8 @@ public class BlahsResource {
     }
 
     /**
-     * <p>Use this method to register a vote for one of the poll options or a blah.
-     *  <i>User must be logged in to use this method.</i></p>
+     * <p>Use this method to register a vote for one of the poll options or a blah.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> blahs/{blahId}/pollVote/{userId}/{pollOptionIndex}</div>
      *
@@ -84,10 +87,12 @@ public class BlahsResource {
      * @param userId    The user id
      * @param index The poll option index.
      * @return  If successful, returns status 204 (OK NO CONTENTS) without
-     * a content entity. If the user is not authorized to vote, returns
-     * status 401. If the request has an error, returned status 400.
-     * If the blah or a poll option doesn't exist, returns status 404.
-     * On error, an entity is returned with detailed error information.
+     * a content entity.
+     * If the user is not authorized to vote, returns status 401.
+     * If there is an error in the request, returns status 400.
+     * If the referenced blah or author can't be found, returns status 404.
+     * If a conflict would arise from satisfying the request, returns status 409.
+     * @see BlahPayload
      */
     @PUT
     @Path("/{blahId}/pollVote/{userId}/{pollOptionIndex}")
@@ -118,7 +123,8 @@ public class BlahsResource {
 
     /**
      * <p>Returns the poll option for which the user has voted and the time
-     * of the vote. <i>User must be logged in to use this method.</i></p>
+     * of the vote.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs/{blahId}/pollVote/{userId}</div>
      *
@@ -127,6 +133,7 @@ public class BlahsResource {
      * @return  An http status 200 response with the poll option index on which the
      * user has voted and the time of the vote. Returns empty object
      * if the user has not voted on this poll.
+     * If the user is not authorized to vote, returns status 401.
      * @see BlahInfoPayload
      */
     @GET
@@ -150,29 +157,33 @@ public class BlahsResource {
 
     /**
      * <p>Updates a blah's view, open, and or vote counts.
-     * Any other update requests in the payload are ignored. <i>User must be logged in to use this method.</i></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
+     * Any other update requests in the payload are ignored.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <div><b>METHOD:</b> PUT</div>
+     * <div><b>URL:</b> blahs/{blahId}</div>
      *
-     * METHOD: PUT
-     * URL: blahs/{blahId}
-     * @param blah   The blah payload with the fields to update.
+     * @param entity   The blah payload with the fields to update.
      * @param blahId The blah's id
      * @return An update response without content.
+     * If the user is not authorized to vote, returns status 401.
+     * If there is an error in the request, returns status 400.
+     * If the referenced blah or author can't be found, returns status 404.
+     * If a conflict would arise from satisfying the request, returns status 409.
+     * @see BlahPayload
      */
     @PUT
     @Path("/{blahId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateBlahVoteViewOrOpens(
-            BlahPayload blah,
+            BlahPayload entity,
             @PathParam("blahId") String blahId,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request);
-            blah.setId(blahId);
-            BlahManager.getInstance().updateBlahVoteViewOrOpens(LocaleId.en_us, blah);
+            entity.setId(blahId);
+            BlahManager.getInstance().updateBlahVoteViewOrOpens(LocaleId.en_us, entity);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -225,10 +236,10 @@ public class BlahsResource {
      * <div><b>URL:</b> blahs/{blahId}</div>
      *
      * @param blahId         The blah's id
-     * @param userId         <b>Query Parameter: </b>(Optional): a userId
-     * @param stats           <b>Query Parameter: </b>(Optional): if true, return statistics with blah
-     * @param statsStartDate  <b>Query Parameter: </b>If stats=true, return statistics starting with this date
-     * @param statsEndDate    <b>Query Parameter: </b>f stats=true, return statistics ending with this date
+     * @param userId         <i>Query Parameter:</i> Optional. a userId
+     * @param stats           <i>Query Parameter:</i> Optional. if true, return statistics with blah
+     * @param statsStartDate <i>Query Parameter:</i>If stats=true, return statistics starting with this date
+     * @param statsEndDate   <i>Query Parameter:</i>f stats=true, return statistics ending with this date
      * @return Returns an http status of 200 and a JSON entity containing the blah information.
      * If the blah doesn't exist, returns status 404.
      * If there is an error in the request, returns status 400.
