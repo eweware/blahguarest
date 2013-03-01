@@ -22,7 +22,12 @@
             <resource>
                 <targetPath>main/java/com/eweware/service/rest/resource</targetPath>
                 <directory> ${basedir}/src/main/resources</directory>
-                <includes><include>**/*.properties</include></includes>
+                <includes><include>**/AwsCredentials.properties</include></includes>
+            </resource>
+            <resource>
+                <targetPath>main</targetPath>
+                <directory> ${basedir}/src/main/resources</directory>
+                <includes><include>**/logging.properties</include></includes>
             </resource>
         </resources>
         <plugins>

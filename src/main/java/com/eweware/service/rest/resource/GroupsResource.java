@@ -99,39 +99,6 @@ public class GroupsResource {
         }
     }
 
-//    /**
-//     * <p>Use this method to increment or decrement the number of
-//     * viewers on a specific group.</p>
-//     * <p><i>User must be logged in to use this method.</i></p>
-//     * <div><b>METHOD:</b> PUT</div>
-//     * <div><b>URL:</b> groups/{groupId}/viewerCount/{added}</div>
-//     *
-//     * @param groupId The group's id
-//     * @param added   If true, increment the current viewer count
-//     *                for the group; else, decrement it.
-//     * @return If successful, returns http status of 204 (NO CONTENT)
-//     *         without an entity. Returns status of 401 if the user
-//     *         is not authorized to make this change.
-//     */
-//    @PUT
-//    @Path("/{groupId}/viewerCount/{added}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response updateViewerCount(@PathParam("groupId") String groupId,
-//                                      @PathParam("added") Boolean added,
-//                                      @Context HttpServletRequest request) {
-//        try {
-//            BlahguaSession.ensureAuthenticated(request);
-//            GroupManager.getInstance().updateViewerCount(groupId, added, request);
-//            return RestUtilities.make204OKNoContentResponse();
-//        } catch (InvalidAuthorizedStateException e) {
-//            return RestUtilities.make401UnauthorizedRequestResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }
-
     /**
      * <p>Use this method to get the current viewer count for a group.</p>
      * <div><b>METHOD:</b> GET </div>
@@ -247,3 +214,38 @@ public class GroupsResource {
         }
     }
 }
+
+
+
+//    /**
+//     * <p>Use this method to increment or decrement the number of
+//     * viewers on a specific group.</p>
+//     * <p><i>User must be logged in to use this method.</i></p>
+//     * <div><b>METHOD:</b> PUT</div>
+//     * <div><b>URL:</b> groups/{groupId}/viewerCount/{added}</div>
+//     *
+//     * @param groupId The group's id
+//     * @param added   If true, increment the current viewer count
+//     *                for the group; else, decrement it.
+//     * @return If successful, returns http status of 204 (NO CONTENT)
+//     *         without an entity. Returns status of 401 if the user
+//     *         is not authorized to make this change.
+//     */
+//    @PUT
+//    @Path("/{groupId}/viewerCount/{added}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response updateViewerCount(@PathParam("groupId") String groupId,
+//                                      @PathParam("added") Boolean added,
+//                                      @Context HttpServletRequest request) {
+//        try {
+//            BlahguaSession.ensureAuthenticated(request);
+//            GroupManager.getInstance().updateViewerCount(groupId, added, request);
+//            return RestUtilities.make204OKNoContentResponse();
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }

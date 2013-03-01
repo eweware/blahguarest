@@ -82,8 +82,8 @@ public class UsersResource {
      * <div><b>URL:</b> users/login/check</div>
      *
      * @return Returns http status 200 with a JSON payload containing a field
-     * named 'loggedIn' which is set to 'Y' if the user is logged in and
-     * to 'N' if the user is not logged in.
+     *         named 'loggedIn' which is set to 'Y' if the user is logged in and
+     *         to 'N' if the user is not logged in.
      */
     @GET
     @Path("/login/check")
@@ -152,51 +152,6 @@ public class UsersResource {
     }
 
     /**
-     * <p>Use this method to create a user profile.</p>
-     * <p><i>User must be logged in to use this method.</i></p>
-     * <div><b>METHOD:</b> POST</div>
-     * <div><b>URL:</b> users/profiles</div>
-     *
-     * @param profile A JSON object containing the user profile data.
-     * @param uri     Internal: a uri used to build the location header.
-     * @return If successful, returns an http status code of 201 (CREATED).
-     *         If a profile object already exists, it will return 409 (CONFLICT).
-     *         If the request is invalid, it will return 400 (BAD REQUEST).
-     *         If the user is not authorized to access this method, returns 401.
-     *         On error conditions, a JSON object is returned with details.
-     * @see UserProfilePayload
-     */
-    @POST
-    @Path("/profiles/")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUserProfile(
-            UserProfilePayload profile,
-            @Context UriInfo uri,
-            @Context HttpServletRequest request) {
-        try {
-            final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            profile = UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, profile, true);
-            final Response response = RestUtilities.make201CreatedResourceResponse(profile, new URI(uri.getAbsolutePath() + profile.getId()));
-            SystemManager.getInstance().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
-            return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
-
-    /**
      * <p>Use this method to register a user.</p>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users</div>
@@ -235,13 +190,57 @@ public class UsersResource {
     }
 
     /**
+     * <p>Use this method to create a user profile.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/profiles</div>
+     *
+     * @param profile A JSON object containing the user profile data.
+     * @param uri     Internal: a uri used to build the location header.
+     * @return If successful, returns an http status code of 201 (CREATED).
+     *         If a profile object already exists, it will return 409 (CONFLICT).
+     *         If the request is invalid, it will return 400 (BAD REQUEST).
+     *         If the user is not authorized to access this method, returns 401.
+     *         On error conditions, a JSON object is returned with details.
+     * @see UserProfilePayload
+     */
+    @POST
+    @Path("/profiles")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createUserProfile(
+            UserProfilePayload profile,
+            @Context UriInfo uri,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request);
+            profile = UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, profile, userId, true);
+            final Response response = RestUtilities.make201CreatedResourceResponse(profile, new URI(uri.getAbsolutePath() + profile.getId()));
+            SystemManager.getInstance().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
      * <p>Use this method to update profile fields.</p>
      * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> users/profiles/{userId}</div>
+     * <div><b>URL:</b> users/profiles</div>
      *
      * @param profile A JSON object containing the fields to update.
-     * @param userId  The user id
      * @return If successful, returns http code 204 (OK NO CONTENT).
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
@@ -250,18 +249,16 @@ public class UsersResource {
      * @see UserProfilePayload
      */
     @PUT
-    @Path("/profiles/{userId}")
+    @Path("/profiles")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUserProfile(
             UserProfilePayload profile,
-            @PathParam("userId") String userId,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            profile.setId(userId);
-            UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, profile, false);
+            final String userId = BlahguaSession.ensureAuthenticated(request);
+            UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, profile, userId, false);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -271,6 +268,104 @@ public class UsersResource {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Use this method to obtain a string descriptor of the user's profile.</p>
+     *
+     * @param userId The user's id.
+     * @return An http status of 200 with a JSON entity consisting of a
+     *         single field named 'd' whose value is a string--the descriptor.
+     *         If the request is invalid, returns 400 (BAD REQUEST).
+     *         If the profile has not been created, returns 404 (NOT FOUND).
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @GET
+    @Path("/profiles/descriptor/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUserDescriptorString(
+            @PathParam("userId") String userId,
+            @Context HttpServletRequest request) {
+        try {
+            return RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileDescriptor(LocaleId.en_us, request, userId));
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Returns the schema for the user profile record. The schema specifies
+     * all fields in the user profile and their acceptable values (constraints), as appropriate.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/profiles</div>
+     *
+     * @return Returns a user profile schema JSON object with an http status of 200.
+     * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
+     */
+    @GET
+    @Path("/profiles")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUserProfileSchema(@Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            BlahguaSession.ensureAuthenticated(request);
+            Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileSchema(LocaleId.en_us));
+            SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Use this method to get the user's profile by user id.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/profiles</div>
+     *
+     * @return If successful, returns an http code of 200 (OK) with a payload
+     *         containing the user profile settings.
+     *         If there is no profile for this user (or if user doesn't exist), returns 404 (NOT FOUND).
+     *         If the request is invalid, returns 400 (BAD REQUEST).
+     *         On error conditions, a JSON object is returned with details.
+     * @see UserProfilePayload
+     */
+    @GET
+    @Path("/profiles/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserProfileById(
+            @PathParam("userId") String userId,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String currUserId = BlahguaSession.ensureAuthenticated(request);
+            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileById(LocaleId.en_us, (userId == null) ? currUserId : userId));
+            SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (SystemErrorException e) {
@@ -349,76 +444,6 @@ public class UsersResource {
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
-
-
-    /**
-     * <p>Returns the schema for the user profile record. The schema specifies
-     * all fields in the user profile and their acceptable values (constraints), as appropriate.</p>
-     * <p><i>User must be logged in to use this method.</i></p>
-     * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/profiles</div>
-     *
-     * @return Returns a user profile schema JSON object with an http status of 200.
-     * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
-     */
-    @GET
-    @Path("/profiles")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getUserProfileSchema(@Context HttpServletRequest request) {
-        try {
-            final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileSchema(LocaleId.en_us));
-            SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
-            return response;
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
-
-    /**
-     * <p>Use this method to get the user's profile by user id.</p>
-     * <p><i>User must be logged in to use this method.</i></p>
-     * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/profiles/{userId}</div>
-     *
-     * @param userId The user id
-     * @return If successful, returns an http code of 200 (OK) with a payload
-     *         containing the user profile settings.
-     *         If there is no profile for this user (or if user doesn't exist), returns 404 (NOT FOUND).
-     *         If the request is invalid, returns 400 (BAD REQUEST).
-     *         On error conditions, a JSON object is returned with details.
-     * @see UserProfilePayload
-     */
-    @GET
-    @Path("/profiles/{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserProfileById(
-            @PathParam("userId") String userId,
-            @Context HttpServletRequest request) {
-        try {
-            final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileById(LocaleId.en_us, userId));
-            SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
-            return response;
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {

@@ -8,8 +8,6 @@ import java.util.Date;
  */
 public interface UserProfileDAO extends BaseDAO, UserProfileDAOConstants {
 
-    // public abstract static BaseSchema getSchema();
-
     public String getUserType();
 
     public void setUserType(String userType);
@@ -26,87 +24,87 @@ public interface UserProfileDAO extends BaseDAO, UserProfileDAOConstants {
 
     public void setNickname(String nickname);
 
-    public Object getNicknamePublic();
+    public Integer getNicknamePermissions();
 
-    public void setNicknamePublic(Boolean p);
+    public void setNicknamePermissions(Integer p);
 
     public String getEmailAddress();
 
     public void setEmailAddress(String emailAddress);
 
-    public Boolean getEmailAddressPublic();
+    public Integer getEmailAddressPermissions();
 
-    public void setEmailAddressPublic(Boolean p);
+    public void setEmailAddressPermissions(Integer p);
 
     public String getGender();
 
     public void setGender(String gender);
 
-    public Boolean getGenderPublic();
+    public Integer getGenderPermissions();
 
-    public void setGenderPublic(Boolean p);
+    public void setGenderPermissions(Integer p);
 
     public Date getDateOfBirth();
 
     public void setDateOfBirth(Date dob);
 
-    public Boolean getDateOfBirthPublic();
+    public Integer getDateOfBirthPermissions();
 
-    public void setDateOfBirthPublic(Boolean p);
+    public void setDateOfBirthPermissions(Integer p);
 
     public String getRace();
 
     public void setRace(String race);
 
-    public Boolean getRacePublic();
+    public Integer getRacePermissions();
 
-    public void setRacePublic(Boolean p);
+    public void setRacePermissions(Integer p);
 
     public String getIncomeRange();
 
     public void setIncomeRange(String range);
 
-    public Boolean getIncomeRangePublic();
+    public Integer getIncomeRangePermissions();
 
-    public void setIncomeRangePublic(Boolean p);
+    public void setIncomeRangePermissions(Integer p);
 
     public String getGPSLocation();
 
     public void setGPSLocation(String gpsLocation);
 
-    public Boolean getGPSLocationPublic();
+    public Integer getGPSLocationPermissions();
 
-    public void setGPSLocationPublic(Boolean p);
+    public void setGPSLocationPermissions(Integer p);
 
     public String getCity();
 
-    public void setCity(String city);  // TODO should this be canonicalized to a code?
+    public void setCity(String city);  // TODO this should be canonicalized
 
-    public Boolean getCityPublic();
+    public Integer getCityPermissions();
 
-    public void setCityPublic(Boolean p);
+    public void setCityPermissions(Integer p);
 
     public String getState();
 
-    public void setState(String state);  // TODO should this be canonicalized to a code?
+    public void setState(String state);  // TODO this should be canonicalized
 
-    public Boolean getStatePublic();
+    public Integer getStatePermissions();
 
-    public void setStatePublic(Boolean p);
+    public void setStatePermissions(Integer p);
 
     public String getZipCode();
 
-    public void setZipCode(String zipCode);  // TODO should this be canonicalized to a code?
+    public void setZipCode(String zipCode);  // TODO this should be canonicalized
 
-    public Boolean getZipCodePublic();
+    public Integer getZipCodePermissions();
 
-    public void setZipCodePublic(Boolean p);
+    public void setZipCodePermissions(Integer p);
 
     public String getCountry();
 
     public void setCountry(String country);
 
-    public Boolean getCountryPublic();
+    public Integer getCountryPermissions();
 
-    public void setCountryPublic(Boolean p);
+    public void setCountryPermissions(Integer p);
 }

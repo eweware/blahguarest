@@ -202,6 +202,15 @@ function getUserBlahs() {
 	rest("GET", "blahs?authorId=" + userId);
 }
 
+function getUserDescriptor() {
+	var userId = getUserId();
+	if (!userId) {
+		alert("Missing User Id");
+		return;
+	}
+	rest('GET', 'users/profiles/descriptor/' + userId);
+}
+
 function getInbox() {
 	var channelId = getChannelId();
 	if (channelId.length == 0) {

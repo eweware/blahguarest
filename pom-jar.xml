@@ -4,6 +4,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+    <!-- TODO fix this: currently using Intellij artifact feature to generate it -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.eweware</groupId>
     <artifactId>baselib</artifactId>

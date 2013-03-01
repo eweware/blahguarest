@@ -4,6 +4,9 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
+import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.user.validation.EmailUserValidationMethod;
 import main.java.com.eweware.service.base.mgr.ManagerState;
@@ -42,12 +45,10 @@ import proj.zoie.impl.indexing.ZoieSystem;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
+
+import static main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType.ILS;
 
 /**
  * @author rk@post.harvard.edu
@@ -148,10 +149,11 @@ public class UserManager implements ManagerInterface {
     /**
      * Registers a user. First a UserDAO is created with the username and
      * a user account with the username (lc), digest, and password.
+     *
      * @param localeId
-     * @param username  The username
-     * @param password  The password
-     * @return  The user payload with the userId and username.
+     * @param username The username
+     * @param password The password
+     * @return The user payload with the userId and username.
      * @throws InvalidRequestException
      * @throws SystemErrorException
      * @throws StateConflictException
@@ -230,8 +232,9 @@ public class UserManager implements ManagerInterface {
     /**
      * Returns the canonical form of a username. This form
      * is the unique form of the username.
-     * @param username  The username
-     * @return  The canonical username
+     *
+     * @param username The username
+     * @return The canonical username
      */
     private String makeCanonicalUsername(String username) {
         return username.toLowerCase();
@@ -277,6 +280,7 @@ public class UserManager implements ManagerInterface {
      *
      * @param localeId
      * @param profile    The profile to set or change
+     * @param userId     The user id
      * @param createOnly If true, we are creating the profile.
      * @return UserProfilePayload  Returns the profile with its current settings if createOnly is true; else
      *         returns null (since PUT operations don't return the payload)
@@ -284,17 +288,19 @@ public class UserManager implements ManagerInterface {
      * @throws SystemErrorException
      * @throws StateConflictException
      */
-    public UserProfilePayload createOrUpdateUserProfile(LocaleId localeId, UserProfilePayload profile, boolean createOnly)
-            throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
+    public UserProfilePayload createOrUpdateUserProfile(LocaleId localeId, UserProfilePayload profile, String userId, boolean createOnly)
+            throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException, InvalidAuthorizedStateException {
         if (profile == null) {
-            throw new InvalidRequestException("missing profile payload", profile, ErrorCodes.MISSING_INPUT_PAYLOAD);
+            throw new InvalidRequestException("missing profile entity", profile, ErrorCodes.MISSING_INPUT_ENTITY);
+        }
+        if (userId == null) {
+            throw new InvalidAuthorizedStateException("user id not available", ErrorCodes.INVALID_STATE_CODE);
         }
         if (profile.getUserType() != null) {
             throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
         }
-        final String userId = profile.getId();
-        if (CommonUtilities.isEmptyString(userId)) {
-            throw new InvalidRequestException("missing user id", profile, ErrorCodes.MISSING_USER_ID);
+        if (profile.getId() != null) {  // sanity check
+            throw new InvalidRequestException("user id received in a request entity not allowed", ErrorCodes.INVALID_INPUT);
         }
 
         UserProfileDAO userProfileDAO = storeManager.createUserProfile(userId);
@@ -523,11 +529,9 @@ public class UserManager implements ManagerInterface {
     /**
      * Updates username.
      *
-     *
      * @param localeId
      * @param request
-     *@param username  @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
+     * @param username @throws main.java.com.eweware.service.base.error.SystemErrorException
      * @throws InvalidRequestException
      */
     public void updateUsername(LocaleId localeId, HttpServletRequest request, String username) throws InvalidAuthorizedStateException, InvalidRequestException,
@@ -643,7 +647,159 @@ public class UserManager implements ManagerInterface {
         return new UserPayload(dao);
     }
 
-    public UserProfilePayload getUserProfileById(LocaleId localeId, String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    public UserProfilePayload getUserProfileById(LocaleId localeId, String userId)
+            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        return new UserProfilePayload(getUserProfileDAO(userId).toMap());
+    }
+
+    public UserProfileSchema getUserProfileSchema(LocaleId localeId) {
+        return UserProfileSchema.getSchema(localeId);
+    }
+
+    public Map<String, String> getUserProfileDescriptor(LocaleId localeId, HttpServletRequest request, String userId)
+            throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
+
+        final boolean authenticated = BlahguaSession.isAuthenticated(request);
+
+        final UserProfileDAO profile = getUserProfileDAO(userId);
+
+        final UserProfileSchema schema = UserProfileSchema.getSchema(localeId);
+        if (schema == null) {
+            throw new SystemErrorException("missing schema for user profile", ErrorCodes.SERVER_SEVERE_ERROR);
+        }
+
+        // TODO simplify the following blocks of code into an engine
+        boolean shownAge = false;
+        final StringBuilder descriptor = new StringBuilder();
+        final Integer dobPermissions = profile.getDateOfBirthPermissions();
+        if (hasProfilePermission(authenticated, dobPermissions)) {
+            final Date dob = profile.getDateOfBirth(); // no need to look up data type
+            if (dob != null) {
+                descriptor.append("A ");
+                descriptor.append(CommonUtilities.getAgeInYears(dob));
+                descriptor.append(" year old");
+                shownAge = true;
+            }
+        }
+
+        boolean shownGender = false;
+        final Integer genderPermissions = profile.getGenderPermissions();
+        if (hasProfilePermission(authenticated, genderPermissions)) {
+            final String genderKey = profile.getGender();
+            if (genderKey != null) {
+                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_GENDER);
+                if (spec != null) {
+                    switch (spec.getDataType()) {
+                        case ILS:
+                            final String gender = (String) spec.getValidationMap().get(genderKey);
+                            if (gender != null) {
+                                descriptor.append(shownAge?" ":"A ");
+                                descriptor.append(gender.toLowerCase());
+                                shownGender = true;
+                            }
+                            break;
+                        default:
+                            throw new SystemErrorException("gender data type has changed (expected list of string) and I don't know how to handle it");
+                    }
+                }
+            }
+        }
+
+        boolean shownCity = false;
+        final Integer cityPermissions = profile.getCityPermissions();
+        if (hasProfilePermission(authenticated, cityPermissions)) {
+            final String city = profile.getCity();
+            if (city != null) {
+                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_CITY);
+                if (spec != null) {
+                    switch (spec.getDataType()) {
+                        case S:
+                            if (!(shownAge || shownGender)) {
+                                descriptor.append("Someone");
+                            }
+                            descriptor.append(" from ");
+                            descriptor.append(city);
+                            shownCity = true;
+                            break;
+                        default:
+                            throw new SystemErrorException("city data type has changed (expected String) and I don't know how to handle it");
+                    }
+                }
+            }
+        }
+
+        boolean shownState = false;
+        final Integer statePermissions = profile.getStatePermissions();
+        if (hasProfilePermission(authenticated, statePermissions)) {
+            final String state = profile.getState();
+            if (state != null) {
+                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_STATE);
+                if (spec != null) {
+                    switch (spec.getDataType()) {
+                        case S:
+                            if (!(shownAge || shownGender || shownCity)) {
+                                descriptor.append("Someone");
+                            }
+                            if (!shownCity) {
+                                descriptor.append(" from");
+                            } else {
+                                descriptor.append(',');
+                            }
+                            descriptor.append(' ');
+                            descriptor.append(state);
+                            shownState = true;
+                            break;
+                        default:
+                            throw new SystemErrorException("state data type has changed (expected String) and I don't know how to handle it");
+                    }
+                }
+            }
+        }
+
+        final Integer countryPermissions = profile.getCountryPermissions();
+        if (hasProfilePermission(authenticated, countryPermissions)) {
+            final String countryKey = profile.getCountry();
+            if (countryKey != null) {
+                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_COUNTRY);
+                if (spec != null) {
+                    switch (spec.getDataType()) {
+                        case ILS:
+                            final String country = (String) spec.getValidationMap().get(countryKey);
+                            if (country != null) {
+                                if (!(shownAge || shownGender || shownCity || shownState)) {
+                                    descriptor.append("Someone");
+                                }
+                                if (!(shownCity || shownState)) {
+                                    descriptor.append(" from");
+                                } else {
+                                    descriptor.append(',');
+                                }
+                                descriptor.append(' ');
+                                descriptor.append(country);
+                            }
+                            break;
+                        default:
+                            throw new SystemErrorException("country data type has changed (expected list of string) and I don't know how to handle it");
+                    }
+                }
+            }
+        }
+        if (descriptor.length() == 0) {
+            descriptor.append("An anonymous person.");
+        }
+        final Map<String, String> map = new HashMap<String, String>(1);
+        map.put("d", descriptor.toString());
+        return map;
+
+    }
+
+    private boolean hasProfilePermission(boolean authenticated, Integer permissions) {
+        return (permissions != null &&
+                (permissions == UserProfilePermissions.PUBLIC.getCode()) ||
+                (authenticated && permissions == UserProfilePermissions.MEMBERS.getCode()));
+    }
+
+    private UserProfileDAO getUserProfileDAO(String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", userId, ErrorCodes.MISSING_USER_ID);
         }
@@ -651,11 +807,7 @@ public class UserManager implements ManagerInterface {
         if (profileDAO == null) {
             throw new ResourceNotFoundException("no user profile id=" + userId, ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
-        return new UserProfilePayload(profileDAO.toMap());
-    }
-
-    public UserProfileSchema getUserProfileSchema(LocaleId localeId) {
-        return UserProfileSchema.getSchema(localeId);
+        return profileDAO;
     }
 
 

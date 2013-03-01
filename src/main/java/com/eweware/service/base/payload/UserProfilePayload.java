@@ -1,10 +1,7 @@
 package main.java.com.eweware.service.base.payload;
 
-import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -59,12 +56,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getNicknamePublic() {
-        return (Boolean) get(USER_PROFILE_NICKNAME_PUBLIC);
+        return (Boolean) get(USER_PROFILE_NICKNAME_PERMISSIONS);
     }
 
     public void setNicknamePublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_NICKNAME_PUBLIC, p);
+            put(USER_PROFILE_NICKNAME_PERMISSIONS, p);
         }
     }
 
@@ -77,12 +74,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getEmailAddressPublic() {
-        return (Boolean) get(USER_PROFILE_EMAIL_ADDRESS_PUBLIC);
+        return (Boolean) get(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS);
     }
 
     public void setEmailAddressPublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_EMAIL_ADDRESS_PUBLIC, p);
+            put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, p);
         }
     }
 
@@ -95,12 +92,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getGenderPublic() {
-        return (Boolean) get(USER_PROFILE_GENDER_PUBLIC);
+        return (Boolean) get(USER_PROFILE_GENDER_PERMISSIONS);
     }
 
     public void setGenderPublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_GENDER_PUBLIC, p);
+            put(USER_PROFILE_GENDER_PERMISSIONS, p);
         }
     }
 
@@ -113,12 +110,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getDateOfBirthPublic() {
-        return (Boolean) get(USER_PROFILE_DATE_OF_BIRTH_PUBLIC);
+        return (Boolean) get(USER_PROFILE_DATE_OF_BIRTH_PERMISSIONS);
     }
 
     public void setDateOfBirthPublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_DATE_OF_BIRTH_PUBLIC, p);
+            put(USER_PROFILE_DATE_OF_BIRTH_PERMISSIONS, p);
         }
     }
 
@@ -131,12 +128,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getRacePublic() {
-        return (Boolean) get(USER_PROFILE_RACE_PUBLIC);
+        return (Boolean) get(USER_PROFILE_RACE_PERMISSIONS);
     }
 
     public void setRacePublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_RACE_PUBLIC, p);
+            put(USER_PROFILE_RACE_PERMISSIONS, p);
         }
     }
 
@@ -149,12 +146,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getIncomeRangePublic() {
-        return (Boolean) get(USER_PROFILE_INCOME_RANGE_PUBLIC);
+        return (Boolean) get(USER_PROFILE_INCOME_RANGE_PERMISSIONS);
     }
 
     public void setIncomeRangePublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_INCOME_RANGE_PUBLIC, p);
+            put(USER_PROFILE_INCOME_RANGE_PERMISSIONS, p);
         }
     }
 
@@ -167,12 +164,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getGPSLocationPublic() {
-        return (Boolean) get(USER_PROFILE_GPS_LOCATION_PUBLIC);
+        return (Boolean) get(USER_PROFILE_GPS_LOCATION_PERMISSIONS);
     }
 
     public void setGPSLocationPublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_GPS_LOCATION_PUBLIC, p);
+            put(USER_PROFILE_GPS_LOCATION_PERMISSIONS, p);
         }
     }
 
@@ -185,12 +182,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getCityPublic() {
-        return (Boolean) get(USER_PROFILE_CITY_PUBLIC);
+        return (Boolean) get(USER_PROFILE_CITY_PERMISSIONS);
     }
 
     public void setCityPublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_CITY_PUBLIC, p);
+            put(USER_PROFILE_CITY_PERMISSIONS, p);
         }
     }
 
@@ -203,12 +200,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getStatePublic() {
-        return (Boolean) get(USER_PROFILE_STATE_PUBLIC);
+        return (Boolean) get(USER_PROFILE_STATE_PERMISSIONS);
     }
 
     public void setStatePublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_STATE_PUBLIC, p);
+            put(USER_PROFILE_STATE_PERMISSIONS, p);
         }
     }
 
@@ -221,12 +218,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getZipCodePublic() {
-        return (Boolean) get(USER_PROFILE_ZIP_CODE_PUBLIC);
+        return (Boolean) get(USER_PROFILE_ZIP_CODE_PERMISSIONS);
     }
 
     public void setZipCodePublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_ZIP_CODE_PUBLIC, p);
+            put(USER_PROFILE_ZIP_CODE_PERMISSIONS, p);
         }
     }
 
@@ -239,12 +236,12 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     }
 
     public Boolean getCountryPublic() {
-        return (Boolean) get(USER_PROFILE_COUNTRY_PUBLIC);
+        return (Boolean) get(USER_PROFILE_COUNTRY_PERMISSIONS);
     }
 
     public void setCountryPublic(Boolean p) {
         if (p != null) {
-            put(USER_PROFILE_COUNTRY_PUBLIC, p);
+            put(USER_PROFILE_COUNTRY_PERMISSIONS, p);
         }
     }
 }

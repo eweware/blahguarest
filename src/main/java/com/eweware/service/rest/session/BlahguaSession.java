@@ -105,13 +105,15 @@ public final class BlahguaSession {
     /**
      * <p>Ensures that the user session is authenticated.</p>
      *
+     *
      * @param request The http request
      * @throws InvalidAuthorizedStateException If there is no authenticated session.
      */
-    public static void ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
+    public static String ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
         if (securityOn && !isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
+        return (String) request.getSession().getAttribute(USER_ID);
     }
 
     /**

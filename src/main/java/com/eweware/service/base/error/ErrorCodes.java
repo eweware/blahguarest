@@ -60,7 +60,7 @@ public final class ErrorCodes {
     public static final Integer INVALID_INPUT = 50;
     public static final Integer INVALID_USER_VALIDATION_PARAMS = 51;
     public static final Integer INVALID_EMAIL_ADDRESS = 52;
-    public static final Integer MISSING_INPUT_PAYLOAD = 53;
+    public static final Integer MISSING_INPUT_ENTITY = 53;
     public static final Integer NOT_FOUND_USER_PROFILE = 54;
     public static final Integer ALREADY_EXISTS_USER_PROFILE = 55;
     public static final Integer MISSING_AUTHORIZATION_STATE = 56;

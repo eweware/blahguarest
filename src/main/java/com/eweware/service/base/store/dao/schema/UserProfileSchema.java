@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 
 import java.util.LinkedHashMap;
 
@@ -76,7 +77,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         final LinkedHashMap<String, Object> data = null;
         final boolean hasDefaultValue = true;
         createSpec(SchemaDataType.S, USER_PROFILE_NICKNAME, "Nickname", regexp, data, hasDefaultValue, null);
-        createSpec(SchemaDataType.B, USER_PROFILE_NICKNAME_PUBLIC, "Public", regexp, data, hasDefaultValue, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_NICKNAME_PERMISSIONS, "Permissions", regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
     private void createEmailAddressSpec() {
@@ -84,7 +85,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         final LinkedHashMap<String, Object> data = null;
         final boolean hasDefaultValue = true;
         createSpec(SchemaDataType.S, USER_PROFILE_EMAIL_ADDRESS, "Email Address", regexp, data, hasDefaultValue, null);
-        createSpec(SchemaDataType.B, USER_PROFILE_EMAIL_ADDRESS_PUBLIC, "Public", regexp, data, hasDefaultValue, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, "Permissions", regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
     private void createCountrySpec() { // ISO 3166-1 alpha-2 code
@@ -101,7 +102,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         final String regexp = null;
         final boolean hasDefaultValue = true;
         createSpec(SchemaDataType.ILS, USER_PROFILE_COUNTRY, "Country", regexp, data, hasDefaultValue, defaultValue);
-        createSpec(SchemaDataType.B, USER_PROFILE_COUNTRY_PUBLIC, "Public", regexp, null, hasDefaultValue, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_COUNTRY_PERMISSIONS, "Permissions", regexp, null, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
     private void createZipCodeSpec() {
@@ -110,27 +111,27 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         final Object defaultValue = null;
         final String regexp = "^\\d{5}(?:[-\\s]\\d{4})?$";
         createSpec(SchemaDataType.S, USER_PROFILE_ZIP_CODE, "Zip Code", regexp, data, hasDefaultValue, defaultValue);
-        createSpec(SchemaDataType.B, USER_PROFILE_ZIP_CODE_PUBLIC, "Public", null, data, hasDefaultValue, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_ZIP_CODE_PERMISSIONS, "Permissions", null, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
     private void createStateSpec() {
         createSpec(SchemaDataType.S, USER_PROFILE_STATE, "State", null, null, true, null);
-        createSpec(SchemaDataType.B, USER_PROFILE_STATE_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_STATE_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createCitySpec() {
         createSpec(SchemaDataType.S, USER_PROFILE_CITY, "City", null, null, true, null);
-        createSpec(SchemaDataType.B, USER_PROFILE_CITY_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_CITY_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createDateOfBirthSpec() {
         createSpec(SchemaDataType.D, USER_PROFILE_DATE_OF_BIRTH, "Birth Date", DateUtils.ISO_DATE_FORMAT_REGEXP, null, true, null);
-        createSpec(SchemaDataType.B, USER_PROFILE_DATE_OF_BIRTH_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_DATE_OF_BIRTH_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createGPSLocationSpec() {
         createSpec(SchemaDataType.GPS, USER_PROFILE_GPS_LOCATION, "GPS", null, null, true, null);
-        createSpec(SchemaDataType.B, USER_PROFILE_GPS_LOCATION_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_GPS_LOCATION_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createIncomeRangeSpec() {
@@ -148,7 +149,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         data.put("9", "$250,000 and above");
         data.put(defaultValue, "Unspecified");
         createSpec(SchemaDataType.ILS, USER_PROFILE_INCOME_RANGE, "Income Range", null, data, true, defaultValue);
-        createSpec(SchemaDataType.B, USER_PROFILE_INCOME_RANGE_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_INCOME_RANGE_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createRaceSpec() {
@@ -162,7 +163,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         data.put("5", "Other");
         data.put(defaultValue, "Unspecified");
         createSpec(SchemaDataType.ILS, USER_PROFILE_RACE, "Race", null, data, true, defaultValue);
-        createSpec(SchemaDataType.B, USER_PROFILE_RACE_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_RACE_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createGenderSpec() {
@@ -172,7 +173,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         genderData.put("1", "Female");  // TODO obtain from i18n service
         genderData.put(defaultValue, "Unspecified");  // TODO obtain from i18n service
         createSpec(SchemaDataType.ILS, USER_PROFILE_GENDER, "Gender", null, genderData, true, defaultValue);
-        createSpec(SchemaDataType.B, USER_PROFILE_GENDER_PUBLIC, "Public", null, null, true, Boolean.FALSE);
+        createSpec(SchemaDataType.I, USER_PROFILE_GENDER_PERMISSIONS, "Permissions", null, null, true, UserProfilePermissions.PRIVATE);
     }
 }
 

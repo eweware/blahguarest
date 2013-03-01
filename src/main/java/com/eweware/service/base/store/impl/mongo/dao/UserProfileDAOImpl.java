@@ -28,27 +28,27 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVER_CODE_SET_METHOD, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_NICKNAME, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_NICKNAME_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_NICKNAME_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_DATE_OF_BIRTH, MongoFieldTypes.DATE);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_DATE_OF_BIRTH_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_DATE_OF_BIRTH_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GENDER, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GENDER_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GENDER_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_CITY, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_CITY_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_CITY_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_STATE, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_STATE_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_STATE_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_ZIP_CODE, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_ZIP_CODE_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_ZIP_CODE_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_COUNTRY, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_COUNTRY_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_COUNTRY_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RACE, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RACE_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RACE_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_INCOME_RANGE, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_INCOME_RANGE_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_INCOME_RANGE_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GPS_LOCATION, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GPS_LOCATION_PUBLIC, MongoFieldTypes.BOOLEAN);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GPS_LOCATION_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
     }
@@ -137,15 +137,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getNicknamePublic() {
-        return (Boolean) get(USER_PROFILE_NICKNAME_PUBLIC);
+    public Integer getNicknamePermissions() {
+        return (Integer) get(USER_PROFILE_NICKNAME_PERMISSIONS);
     }
 
     @Override
-    public void setNicknamePublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_NICKNAME_PUBLIC, p);
-        }
+    public void setNicknamePermissions(Integer p) {
+        put(USER_PROFILE_NICKNAME_PERMISSIONS, p);
     }
 
     @Override
@@ -159,15 +157,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getEmailAddressPublic() {
-        return (Boolean) get(USER_PROFILE_EMAIL_ADDRESS_PUBLIC);
+    public Integer getEmailAddressPermissions() {
+        return (Integer) get(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS);
     }
 
     @Override
-    public void setEmailAddressPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_EMAIL_ADDRESS_PUBLIC, p);
-        }
+    public void setEmailAddressPermissions(Integer p) {
+        put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, p);
     }
 
     @Override
@@ -176,15 +172,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getGenderPublic() {
-        return (Boolean) get(USER_PROFILE_GENDER_PUBLIC);
+    public Integer getGenderPermissions() {
+        return (Integer) get(USER_PROFILE_GENDER_PERMISSIONS);
     }
 
     @Override
-    public void setGenderPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_GENDER_PUBLIC, p);
-        }
+    public void setGenderPermissions(Integer p) {
+        put(USER_PROFILE_GENDER_PERMISSIONS, p);
     }
 
     @Override
@@ -198,15 +192,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getDateOfBirthPublic() {
-        return (Boolean) get(USER_PROFILE_DATE_OF_BIRTH_PUBLIC);
+    public Integer getDateOfBirthPermissions() {
+        return (Integer) get(USER_PROFILE_DATE_OF_BIRTH_PERMISSIONS);
     }
 
     @Override
-    public void setDateOfBirthPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_DATE_OF_BIRTH_PUBLIC, p);
-        }
+    public void setDateOfBirthPermissions(Integer p) {
+        put(USER_PROFILE_DATE_OF_BIRTH_PERMISSIONS, p);
     }
 
     @Override
@@ -220,15 +212,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getRacePublic() {
-        return (Boolean) get(USER_PROFILE_RACE_PUBLIC);
+    public Integer getRacePermissions() {
+        return (Integer) get(USER_PROFILE_RACE_PERMISSIONS);
     }
 
     @Override
-    public void setRacePublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_RACE_PUBLIC, p);
-        }
+    public void setRacePermissions(Integer p) {
+        put(USER_PROFILE_RACE_PERMISSIONS, p);
     }
 
     @Override
@@ -242,15 +232,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getIncomeRangePublic() {
-        return (Boolean) get(USER_PROFILE_INCOME_RANGE_PUBLIC);
+    public Integer getIncomeRangePermissions() {
+        return (Integer) get(USER_PROFILE_INCOME_RANGE_PERMISSIONS);
     }
 
     @Override
-    public void setIncomeRangePublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_INCOME_RANGE_PUBLIC, p);
-        }
+    public void setIncomeRangePermissions(Integer p) {
+        put(USER_PROFILE_INCOME_RANGE_PERMISSIONS, p);
     }
 
     @Override
@@ -264,15 +252,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getGPSLocationPublic() {
-        return (Boolean) get(USER_PROFILE_GPS_LOCATION_PUBLIC);
+    public Integer getGPSLocationPermissions() {
+        return (Integer) get(USER_PROFILE_GPS_LOCATION_PERMISSIONS);
     }
 
     @Override
-    public void setGPSLocationPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_GPS_LOCATION_PUBLIC, p);
-        }
+    public void setGPSLocationPermissions(Integer p) {
+        put(USER_PROFILE_GPS_LOCATION_PERMISSIONS, p);
     }
 
     @Override
@@ -286,15 +272,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getCityPublic() {
-        return (Boolean) get(USER_PROFILE_CITY_PUBLIC);
+    public Integer getCityPermissions() {
+        return (Integer) get(USER_PROFILE_CITY_PERMISSIONS);
     }
 
     @Override
-    public void setCityPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_CITY_PUBLIC, p);
-        }
+    public void setCityPermissions(Integer p) {
+        put(USER_PROFILE_CITY_PERMISSIONS, p);
     }
 
     @Override
@@ -308,15 +292,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getStatePublic() {
-        return (Boolean) get(USER_PROFILE_STATE_PUBLIC);
+    public Integer getStatePermissions() {
+        return (Integer) get(USER_PROFILE_STATE_PERMISSIONS);
     }
 
     @Override
-    public void setStatePublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_STATE_PUBLIC, p);
-        }
+    public void setStatePermissions(Integer p) {
+        put(USER_PROFILE_STATE_PERMISSIONS, p);
     }
 
     @Override
@@ -330,15 +312,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getZipCodePublic() {
-        return (Boolean) get(USER_PROFILE_ZIP_CODE_PUBLIC);
+    public Integer getZipCodePermissions() {
+        return (Integer) get(USER_PROFILE_ZIP_CODE_PERMISSIONS);
     }
 
     @Override
-    public void setZipCodePublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_ZIP_CODE_PUBLIC, p);
-        }
+    public void setZipCodePermissions(Integer p) {
+        put(USER_PROFILE_ZIP_CODE_PERMISSIONS, p);
     }
 
     @Override
@@ -352,15 +332,13 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public Boolean getCountryPublic() {
-        return (Boolean) get(USER_PROFILE_COUNTRY_PUBLIC);
+    public Integer getCountryPermissions() {
+        return (Integer) get(USER_PROFILE_COUNTRY_PERMISSIONS);
     }
 
     @Override
-    public void setCountryPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_COUNTRY_PUBLIC, p);
-        }
+    public void setCountryPermissions(Integer p) {
+        put(USER_PROFILE_COUNTRY_PERMISSIONS, p);
     }
 
     @Override

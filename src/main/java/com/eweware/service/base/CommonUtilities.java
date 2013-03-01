@@ -2,6 +2,10 @@ package main.java.com.eweware.service.base;
 
 import main.java.com.eweware.service.base.error.SystemErrorException;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * @author rk@post.harvard.edu
  *         Date: 10/22/12 Time: 3:52 PM
@@ -79,4 +83,23 @@ public final class CommonUtilities {
         final int len = string.length();
         return (len <= maximumLength && len >= minimumLength);
     }
+
+    public static final long getAgeInYears(Date dateOfBirth) {
+        if (dateOfBirth == null) {
+            return 0;
+        }
+        Calendar dob = Calendar.getInstance();
+        dob.setTime(dateOfBirth);
+        Calendar today = Calendar.getInstance();
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+        if (today.get(Calendar.DAY_OF_YEAR) <= dob.get(Calendar.DAY_OF_YEAR))
+            age--;
+        return age;
+//        final long time = System.currentTimeMillis() - dateOfBirth.getTime();
+//        final Calendar cal = Calendar.getInstance();
+//        cal.setTimeInMillis(time);
+//        return cal.get(Calendar.YEAR);
+    }
+
+
 }

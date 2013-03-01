@@ -8,22 +8,11 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<import resource="applicationPropertiesLoader.xml" />
-	
-	<!-- MAINTAIN BEAN ORDER -->
-	<bean id="mailManager" class="main.java.com.eweware.service.mgr.MailManager"
-		init-method="start" destroy-method="shutdown">
-		<constructor-arg value="${blag.mail.smtp.do.not.use}" />
-		<constructor-arg value="${blag.mail.smtp.auth}" />
-		<constructor-arg value="${blag.mail.smtp.starttls.enable}" />
-		<constructor-arg value="${blag.mail.smtp.host}" />
-		<constructor-arg value="${blag.mail.smtp.port}" />
-		<constructor-arg value="${blag.mail.smtp.account}" />
-		<constructor-arg value="${blag.mail.smtp.password}" />
-		<constructor-arg value="${blag.mail.smtp.replyto.address}" />
-	</bean>
+
+
 
     <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
-		init-method="start" destroy-method="shutdown">
+    init-method="start" destroy-method="shutdown">
 
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.hostname}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.port}" />
@@ -51,6 +40,19 @@
         <property name="inboxStateCollectionName" value="${blag.store.mongo.blahdb.collection.inboxstate}"/>
         <property name="blahInboxCollectionName" value="${blag.store.mongo.blahdb.collection.blahInbox}"/>
         <property name="demographicsCollectionName" value="${blag.store.mongo.userdb.collection.demographics}"/>
+    </bean>
+
+    <!-- MAINTAIN BEAN ORDER -->
+    <bean id="mailManager" class="main.java.com.eweware.service.mgr.MailManager"
+          init-method="start" destroy-method="shutdown">
+        <constructor-arg value="${blag.mail.smtp.do.not.use}" />
+        <constructor-arg value="${blag.mail.smtp.auth}" />
+        <constructor-arg value="${blag.mail.smtp.starttls.enable}" />
+        <constructor-arg value="${blag.mail.smtp.host}" />
+        <constructor-arg value="${blag.mail.smtp.port}" />
+        <constructor-arg value="${blag.mail.smtp.account}" />
+        <constructor-arg value="${blag.mail.smtp.password}" />
+        <constructor-arg value="${blag.mail.smtp.replyto.address}" />
     </bean>
 
     <bean id="groupManager" class="main.java.com.eweware.service.mgr.GroupManager"

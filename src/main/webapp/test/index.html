@@ -25,8 +25,8 @@
 <div>
     <div>
         <input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
-        &nbsp;Host Endpoint:
-        <input id="endpoint" type="text" value="localhost:8080"/>
+        &nbsp;
+        Host Endpoint:<input id="endpoint" type="text" value="localhost:8080"/>
     </div>
     <!-- Actions -->
     <div style="margin-top: .5em">
@@ -49,6 +49,8 @@
         <input id="getUserByName" type="button" onclick="getUserByName();"  value="Get User By Name"/>
         &nbsp;
         <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
+        &nbsp;
+        <input id="getUserDescriptor" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
     </div>
     <div style="margin-top: .5em">
         <input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get All Channels"/>
