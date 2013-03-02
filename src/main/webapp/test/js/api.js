@@ -198,8 +198,9 @@ function getChannel() {
 function createBlahType() {
 	var name = document.getElementById('blahtypename').value;
 	if (!name) {alert("Missing Blah Type Name"); return;}
-	rest('POST', )
+	alert('Create Blah Type not implemented!)');
 }
+
 function createBlah() {
 	var userId = getUserId();
 	var typeId = getTypeId();
