@@ -18,11 +18,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ *<p>User-related API methods.</p>
+ * <div>Note that some methods require authentication (previous login) to be accessed.</div>
+ *
  * @author rk@post.harvard.edu
  */
 
@@ -45,10 +47,11 @@ public class UsersResource {
     /**
      * <p>Use this method to check whether a username is available to use
      * as the username in a new user account.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/check/username/{username}</div>
      *
-     * @param username The username. Must be at least three
+     * @param username <i>Path Parameter:</i> The username. Must be at least three
      *                 and less than 64 characters long.
      * @return If successful (username is available), returns an http code of 204 (OK NO CONTENT).
      *         If the request is invalid, it returns 400 (BAD REQUEST).
@@ -78,6 +81,7 @@ public class UsersResource {
      * <p>Use this method to check whether a user is logged in as an authenticated user.
      * An authenticated user has logged in with a username and password scheme.</p>
      * <p>This call doesn't require any parameters: it uses the session object.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/login/check</div>
      *
@@ -100,11 +104,11 @@ public class UsersResource {
 
     /**
      * <p>Use this method to log in a user.</p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users/login</div>
      *
-     * @param user    A JSON object containing a username and a password.
-     * @param request Internal: the current request.
+     * @param entity A JSON entity (a UserPayload) containing a username and a password.
      * @return If it succeededs, returns an http status 202 (ACCEPTED).
      *         Else, the following http status codes are possible: 400 (either
      *         the request was invalid or the user is not authorized to login),
@@ -116,12 +120,12 @@ public class UsersResource {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loginUser(Map<String, Object> user,
+    public Response loginUser(UserPayload entity,
                               @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            final String username = (String) user.get(UserDAOConstants.USERNAME);
-            final String password = (String) user.get(UserDAOConstants.PASSWORD);
+            final String username = (String) entity.get(UserDAOConstants.USERNAME);
+            final String password = (String) entity.get(UserDAOConstants.PASSWORD);
             UserManager.getInstance().loginUser(LocaleId.en_us, username, password, request);
             final Response response = RestUtilities.make202AcceptedResponse();
             SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
@@ -139,6 +143,15 @@ public class UsersResource {
         }
     }
 
+    /**
+     * <p>Use this method to log out a user.</p>
+     * <p>This method does not require any parameters.</p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/login</div>
+     *
+     * @return If it succeeds, returns an http status 202 (ACCEPTED).
+     */
     @POST
     @Path("/logout")
     @Produces(MediaType.APPLICATION_JSON)
@@ -153,11 +166,11 @@ public class UsersResource {
 
     /**
      * <p>Use this method to register a user.</p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users</div>
      *
-     * @param user A JSON object containing a username and password.
-     * @param uri  Internal: the uri to build the location header
+     * @param entity A JSON entity (a UserPayload) containing the username and password.
      * @return If successful, returns an http status code of 201 (CREATED).
      *         If a user with the username already exists, it will return 409 (CONFLICT).
      *         If the request is invalid, it will return 400 (BAD REQUEST).
@@ -167,13 +180,13 @@ public class UsersResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response registerUser(Map<String, Object> user,
+    public Response registerUser(UserPayload entity,
                                  @Context UriInfo uri,
                                  @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String username = (String) user.get(UserDAOConstants.USERNAME);
-            final String password = (String) user.get(UserDAOConstants.PASSWORD);
+            final String username = (String) entity.get(UserDAOConstants.USERNAME);
+            final String password = (String) entity.get(UserDAOConstants.PASSWORD);
             final UserPayload payload = UserManager.getInstance().registerUser(LocaleId.en_us, username, password);
             final Response response = RestUtilities.make201CreatedResourceResponse(payload, new URI(uri.getAbsolutePath() + payload.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
@@ -192,11 +205,11 @@ public class UsersResource {
     /**
      * <p>Use this method to create a user profile.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users/profiles</div>
      *
-     * @param profile A JSON object containing the user profile data.
-     * @param uri     Internal: a uri used to build the location header.
+     * @param entity A JSON entity (a UserProfilePayload) containing the user profile data to set.
      * @return If successful, returns an http status code of 201 (CREATED).
      *         If a profile object already exists, it will return 409 (CONFLICT).
      *         If the request is invalid, it will return 400 (BAD REQUEST).
@@ -209,14 +222,14 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUserProfile(
-            UserProfilePayload profile,
+            UserProfilePayload entity,
             @Context UriInfo uri,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request);
-            profile = UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, profile, userId, true);
-            final Response response = RestUtilities.make201CreatedResourceResponse(profile, new URI(uri.getAbsolutePath() + profile.getId()));
+            entity = UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, true);
+            final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
@@ -237,10 +250,11 @@ public class UsersResource {
     /**
      * <p>Use this method to update profile fields.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> users/profiles</div>
      *
-     * @param profile A JSON object containing the fields to update.
+     * @param entity A JSON entity (a UserProfilePayload) containing the profile fields to change.
      * @return If successful, returns http code 204 (OK NO CONTENT).
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
@@ -253,12 +267,12 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUserProfile(
-            UserProfilePayload profile,
+            UserProfilePayload entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request);
-            UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, profile, userId, false);
+            UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, false);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -279,8 +293,11 @@ public class UsersResource {
 
     /**
      * <p>Use this method to obtain a string descriptor of the user's profile.</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/profiles/descriptor/{userId}</div>
      *
-     * @param userId The user's id.
+     * @param userId <i>Path Parameter</i>. The user's id.
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
      *         If the request is invalid, returns 400 (BAD REQUEST).
@@ -311,10 +328,12 @@ public class UsersResource {
      * <p>Returns the schema for the user profile record. The schema specifies
      * all fields in the user profile and their acceptable values (constraints), as appropriate.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/profiles</div>
      *
-     * @return Returns a user profile schema JSON object with an http status of 200.
+     * @return Returns a user profile schema JSON entity (a UserProfileSchema)
+     *         with an http status of 200.
      * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
      */
     @GET
@@ -340,10 +359,12 @@ public class UsersResource {
     /**
      * <p>Use this method to get the user's profile by user id.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/profiles</div>
+     * <div><b>URL:</b> users/profiles/{userId}</div>
      *
-     * @return If successful, returns an http code of 200 (OK) with a payload
+     * @param userId <i>Path Parameter</i>. The user's id.
+     * @return If successful, returns an http code of 200 (OK) with a JSON entity (a UserProfilePayload)
      *         containing the user profile settings.
      *         If there is no profile for this user (or if user doesn't exist), returns 404 (NOT FOUND).
      *         If the request is invalid, returns 400 (BAD REQUEST).
@@ -376,13 +397,13 @@ public class UsersResource {
     }
 
     /**
-     * <p>User this method to update a user's username. The user
-     * must be logged in.</p>
+     * <p>User this method to update a user's username.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> users/{userId}/username/{username}</div>
+     * <div><b>URL:</b> users/update/username/{username}</div>
      *
-     * @param username The new username
+     * @param username <i>Path Parameter</i>. The new username.
      * @return Returns http status code 204 (NO CONTENT) on success.
      *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
      *         If the input is invalid, returns 400 (BAD REQUEST).
@@ -391,7 +412,7 @@ public class UsersResource {
      * @see #checkUsername(String)
      */
     @PUT
-    @Path("/{userId}/username/{username}")
+    @Path("/update/username/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUsername(
             @PathParam("username") String username,
@@ -421,10 +442,11 @@ public class UsersResource {
     /**
      * <p>User this method to update a user's password.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> users/{userId}/password/{password}</div>
+     * <div><b>URL:</b> users/update/password/{password}</div>
      *
-     * @param password The new password
+     * @param password <i>Path Parameter</i>. The new password.
      * @return Returns http status code 204 (NO CONTENT) on success.
      *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
      *         If the input is invalid, returns 400 (BAD REQUEST).
@@ -432,7 +454,7 @@ public class UsersResource {
      *         On error conditions, a JSON object is returned with details.
      */
     @PUT
-    @Path("/{userId}/password/{password}")
+    @Path("/update/password/{password}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updatePassword(
             @PathParam("password") String password,
@@ -468,21 +490,21 @@ public class UsersResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/inbox</div>
      *
-     * @param groupId       Required <b>query parameter</b>: the inbox group id.
-     * @param inboxNumber   Optional <b>query parameter</b>: the inbox number to fetch. If not provided,
+     * @param groupId       <i>Query Parameter:</i> Required. The inbox group id.
+     * @param inboxNumber   <i>Query Parameter:</i> Optional. The inbox number to fetch. If not provided,
      *                      inboxes are fetched in sequential order within the group on each request.
-     * @param start         Optional <b>query parameter</b>: the start index of the inbox rows.
-     * @param count         Optional <b>query parameter</b>: the number of rows to fetch in a row.
-     * @param sortFieldName Optional <b>query parameter</b>: the name of an inbox field for sorting the results
-     * @param sortDirection Optional <b>query parameter</b>: the direction of the sort as
+     * @param start         <i>Query Parameter:</i> Optional. The start index of the inbox rows.
+     * @param count         <i>Query Parameter:</i> Optional. The number of rows to fetch in a row.
+     * @param sortFieldName <i>Query Parameter:</i> Optional. The name of an inbox field for sorting the results
+     * @param sortDirection <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> The direction of the sort as
      *                      an integer: +1 means ascending, -1 means descending. Default is descending.
-     * @param blahTypeId    Optional <b>query parameter</b>: a blah type id with which to filter the results.
-     * @param request       Internal: the request object
-     * @return Returns an inbox JSON object as an array of inbox blah items with http code 200.
+     * @param blahTypeId    <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> A blah type id with which to filter the results.
+     * @return Returns an inbox JSON object as an array of inbox blah entities (InboxBlahPayload entities) with http code 200.
      *         If a group has no blahs, this will return an empty array. If the inbox number if not specified,
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
      *         first inbox when the maximum inbox number has been reached.
      *         On error conditions, a JSON object is returned with details.
+     * @see main.java.com.eweware.service.base.payload.InboxBlahPayload
      */
     @GET
     @Path("/inbox")
@@ -492,8 +514,8 @@ public class UsersResource {
             @QueryParam("in") Integer inboxNumber,
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count,
-            @QueryParam("sort") String sortFieldName,
-            @QueryParam("sortDir") Integer sortDirection,
+            @QueryParam("sort") String sortFieldName,  // TODO would be nice to get rid of type option (to reduce db index size)
+            @QueryParam("sortDir") Integer sortDirection,  // TODO would be nice to get rid of type option (to reduce db index size)
             @QueryParam("type") String blahTypeId,  // TODO would be nice to get rid of type option (to reduce db index size)
             @Context HttpServletRequest request) {
         try {
@@ -508,75 +530,33 @@ public class UsersResource {
         }
     }
 
-//    /**
-//     * <p><This should now be obsoleted./p>
-//     * <div><b>METHOD:</b> </div>
-//     * <div><b>URL:</b> </div>
-//     * @param userId
-//     * @param groupId
-//     * @param inboxNumber
-//     * @param start
-//     * @param count
-//     * @param sortFieldName
-//     * @param sortDirection
-//     * @param blahTypeId
-//     * @return
-//     */
-//    @GET
-//    @Path("/{userId}/inbox")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getUserInbox(
-//            @PathParam("userId") String userId,
-//            @QueryParam("groupId") String groupId,
-//            @QueryParam("in") Integer inboxNumber,
-//            @QueryParam("start") Integer start,
-//            @QueryParam("count") Integer count,
-//            @QueryParam("sort") String sortFieldName,
-//            @QueryParam("sortDir") Integer sortDirection,
-//            @QueryParam("type") String blahTypeId) { // TODO would be nice to get rid of type option (to reduce db index size)
-//        try {
-//            final long s = System.currentTimeMillis();
-//            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getUserInbox(LocaleId.en_us, userId, groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
-//            SystemManager.getInstance().setResponseTime(GET_USER_INBOX_OPERATION, (System.currentTimeMillis() - s));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make400InvalidRequestResponse(e);
-//        } catch (ResourceNotFoundException e) {
-//            return RestUtilities.make404ResourceNotFoundResponse(e);
-//        } catch (StateConflictException e) {
-//            return RestUtilities.make409StateConflictResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }
-
     /**
      * <p>Use this method to get a user record by user id</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/{userId}</div>
      *
-     * @param userId         The user id
-     * @param stats          Optional <b>query parameter</b>: a boolean. If true, include
+     * @param userId         <i>Path Parameter</i>. The user id.
+     * @param stats          <i>Query Parameter:</i> Optional. If true, include
      *                       a user statistics record along with the standard user information.
      *                       Default is false.
-     * @param byUsername     Optional <b>query parameter</b>: If true, then the user id
+     * @param byUsername     <i>Query Parameter:</i> Optional. If true, then the user id
      *                       is interpreted as the username.
-     * @param statsStartDate Optional <b>query parameter</b>: when stats is true, this is used
+     * @param statsStartDate <i>Query Parameter:</i> Optional. When stats is true, this is used
      *                       to filter the stats records with this as a start date (inclusive).
      *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
-     * @param statsEndDate   Optional <b>query parameter</b>: when stats is true, this is used
+     * @param statsEndDate   <i>Query Parameter:</i> Optional. When stats is true, this is used
      *                       to filter the stats records with this as a end date (inclusive).
      *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
      *                       A start date is required whenever an end date is provided (we don't
      *                       want to retrieve stats until the beginning of time).
-     * @return Returns with the user record payload (possibly including statistics) with
+     * @return Returns with the user entity (a UserPayload) possibly including statistics) with
      *         an http status 200.
      *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
      *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
      *         On error conditions, a JSON object is returned with details.
+     * @see UserPayload
      */
     @GET
     @Path("/{userId}")
@@ -635,14 +615,7 @@ public class UsersResource {
 
 
     /**
-     * <p>No longer in use</p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     *
-     * @param validationCode
-     * @param methodKey
-     * @param operation
-     * @return
+     * <p><b>No longer in use</b></p>
      */
     @POST
     @Path("/recover")
@@ -673,12 +646,7 @@ public class UsersResource {
     }
 
     /**
-     * <p>No longer in use</p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     *
-     * @param validationCode
-     * @return
+     * <p><b>No longer in use</b></p>
      */
     @POST
     @Path("/validate/{validationCode}")
@@ -706,3 +674,48 @@ public class UsersResource {
         }
     }
 }
+
+
+//    /**
+//     * <p><This should now be obsoleted./p>
+//     * <div><b>METHOD:</b> </div>
+//     * <div><b>URL:</b> </div>
+//     * @param userId
+//     * @param groupId
+//     * @param inboxNumber
+//     * @param start
+//     * @param count
+//     * @param sortFieldName
+//     * @param sortDirection
+//     * @param blahTypeId
+//     * @return
+//     */
+//    @GET
+//    @Path("/{userId}/inbox")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getUserInbox(
+//            @PathParam("userId") String userId,
+//            @QueryParam("groupId") String groupId,
+//            @QueryParam("in") Integer inboxNumber,
+//            @QueryParam("start") Integer start,
+//            @QueryParam("count") Integer count,
+//            @QueryParam("sort") String sortFieldName,
+//            @QueryParam("sortDir") Integer sortDirection,
+//            @QueryParam("type") String blahTypeId) { // TODO would be nice to get rid of type option (to reduce db index size)
+//        try {
+//            final long s = System.currentTimeMillis();
+//            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getUserInbox(LocaleId.en_us, userId, groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
+//            SystemManager.getInstance().setResponseTime(GET_USER_INBOX_OPERATION, (System.currentTimeMillis() - s));
+//            return response;
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.make400InvalidRequestResponse(e);
+//        } catch (ResourceNotFoundException e) {
+//            return RestUtilities.make404ResourceNotFoundResponse(e);
+//        } catch (StateConflictException e) {
+//            return RestUtilities.make409StateConflictResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }

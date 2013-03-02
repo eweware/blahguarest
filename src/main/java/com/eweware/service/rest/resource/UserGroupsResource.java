@@ -16,9 +16,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
+ * <p>API methods related to user/group relationships.</p>
+ * <div>Note that some methods require authentication (previous login) to be accessed.</div>
  * @author rk@post.harvard.edu
  */
 
@@ -33,15 +34,13 @@ public class UserGroupsResource {
     /**
      * <p>Use this method to register a user in a group (to join a group).</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> userGroups</div>
      *
-     * @param payload Required content entity: A JSON object containing the
-     *                user id of the user and the group id of the group to join.
-     *                If necessary, a valdation email address should be included.
-     * @param uri     Internal: a uri for building the location header.
-     * @return If successful, returns an http status 201 (CREATED) and returns
-     *         an entity containing the user group payload.
+     * @param entity A JSON entity (a UserGroupPayload) containing the
+     *               user id of the user and the group id of the group to join.
+     * @return If successful, returns an http status 201 (CREATED).
      *         If there is an error with the request, returns status 400.
      *         If a resource is not found, returns status 404.
      *         If the user is not authorized to access this method, returns status 401.
@@ -53,13 +52,13 @@ public class UserGroupsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUserInGroup(
-            UserGroupPayload payload,
+            UserGroupPayload entity,
             @Context UriInfo uri,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request);
-            final UserGroupPayload userGroup = UserManager.getInstance().registerUserInGroup(LocaleId.en_us, payload.getUserId(), payload.getValidationEmailAddress(), payload.getGroupId());
+            final UserGroupPayload userGroup = UserManager.getInstance().registerUserInGroup(LocaleId.en_us, entity.getUserId(), entity.getValidationEmailAddress(), entity.getGroupId());
             final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath() + userGroup.getUserId() + "/" + userGroup.getGroupId()));
             SystemManager.getInstance().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -69,7 +68,7 @@ public class UserGroupsResource {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
-        }  catch (InvalidAuthorizedStateException e) {
+        } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (InvalidUserValidationKey e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
@@ -83,11 +82,12 @@ public class UserGroupsResource {
     /**
      * <p>Use this method to remove a user from a group (unjoin it).</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> DELETE</div>
      * <div><b>URL:</b> userGroups/{userId}/{groupId}</div>
      *
-     * @param userId  The user's id
-     * @param groupId The groups's id
+     * @param userId  <i>Path Parameter:</i> The user's id
+     * @param groupId <i>Path Parameter:</i> The groups's id
      * @return If successful, returns an http status 204 (NO CONTENT).
      *         If there's an error in the request, returns status 400.
      *         If there's a state conflict in the update, returns status 409.
@@ -125,12 +125,13 @@ public class UserGroupsResource {
 
     /**
      * <p>User this method to get information about a user's relationship to a group, if any.</p>
+     * <p/>
      * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> userGroups/{userId}/{groupId}</div>
      *
-     * @param userId  The user's id
-     * @param groupId The group's id
+     * @param userId  <i>Path Parameter:</i> The user's id
+     * @param groupId <i>Path Parameter:</i> The group's id
      * @return An http status of 200 with a user group payload if the method succeeds.
      *         If the request is invalid, returns status 400.
      *         If the user or group is not found, returns status 404.
@@ -165,14 +166,15 @@ public class UserGroupsResource {
     /**
      * <p>Use this to obtain user-to-group relations for this user by accessing via its id.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> userGroups/{userId}</div>
      *
-     * @param userId        The user id
-     * @param state         <b>Optional query parameter:</b> The user-to-group state (see AuthorizedState)
-     * @param start         <b>Optional query parameter:</b> The start index for the returned items
-     * @param count         <b>Optional query parameter:</b> The number of items to return in a page.
-     * @param sortFieldName <b>Optional query parameter:</b> A field to against. <b>Don't use sort: not very useful and should remove.</b>
+     * @param userId        <i>Path Parameter:</i> The user id
+     * @param state         <i>Query Parameter:</i> The user-to-group state (see AuthorizedState)
+     * @param start         <i>Query Parameter:</i> The start index for the returned items
+     * @param count         <i>Query Parameter:</i> The number of items to return in a page.
+     * @param sortFieldName <i>Query Parameter:</i> A field to against. <b>Don't use sort: not very useful and should remove.</b>
      * @return If successful, returns an http status of 200 and the returned
      *         entity is an array of user payload objects.
      *         If there is an error with the request, returns status 400.

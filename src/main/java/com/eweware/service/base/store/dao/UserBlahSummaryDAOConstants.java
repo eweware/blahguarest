@@ -1,6 +1,8 @@
 package main.java.com.eweware.service.base.store.dao;
 
 /**
+ * <p>Fields and corresponding data types for entity holding information about a user's activity with respoect to blahs.</p>
+ * <p><b>TODO: needs docs</b></p>
  * @author rk@post.harvard.edu
  *         Date: 9/12/12 Time: 1:42 PM
  */

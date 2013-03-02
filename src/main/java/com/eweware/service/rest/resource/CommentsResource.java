@@ -18,6 +18,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
+ * <p>Comment-specific API methods.</p>
+ * <div>Note that some methods require authentication (previous login) to be accessed.</div>
  * @author rk@post.harvard.edu
  *         Date: 6/27/12 Time: 6:00 PM
  */
@@ -25,7 +27,7 @@ import java.net.URISyntaxException;
 public class CommentsResource {
 
     private static final String CREATE_COMMENT_OPERATION = "createComment";
-//    private static final String DELETE_COMMENT_OPERATION = "deleteComment";
+    //    private static final String DELETE_COMMENT_OPERATION = "deleteComment";
     private static final String GET_COMMENT_BY_ID_OPERATION = "getCommentById";
     private static final String GET_COMMENTS_OPERATION = "getComments";
     private static final String UPDATE_COMMENT_OPERATION = "updateComment";
@@ -33,15 +35,17 @@ public class CommentsResource {
     /**
      * <p>Use this method to create a comment for a blah.></p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> comments</div>
-     * @param entity    The comment as a JSON payload. This must contain the following
-     *                  CommentPayload fields: the blah id to which this is a comment,
-     *                  the author id (user id of comment creator), the comment's text,
-     * @return  Returns an http status of 201 (CREATED) without a JSON entity.
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     *
+     * @param entity A JSON entity (a CommentPayload). This must contain the following
+     *               CommentPayload fields: the blah id to which this is a comment,
+     *               the author id (user id of comment creator), the comment's text.
+     * @return Returns an http status of 201 (CREATED) without a JSON entity.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see CommentPayload
      */
     @POST
@@ -76,16 +80,18 @@ public class CommentsResource {
     /**
      * <p>Use this method to update a comment.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> comments/{commentId}</div>
-     * @param entity  A JSON entity with the following CommentPayload fields:
-     *                The id of the user updating the comment is required.
-     *                Optional are a vote for the comment, a view count, and/or an open count for the comment.
-     * @param commentId  The comment id
+     *
+     * @param entity    A JSON entity (a CommentPayload) with the following CommentPayload fields:
+     *                  The id of the user updating the comment is required.
+     *                  Optional are a vote for the comment, a view count, and/or an open count for the comment.
+     * @param commentId The comment id
      * @return A response with http status 204 (NO CONTENT) without any JSON entity.
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see CommentPayload
      */
     @PUT
@@ -121,23 +127,25 @@ public class CommentsResource {
 
     /**
      * <p>Use this method to obtain a comment by its id.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> comments/{commentId}</div>
-     * @param commentId  The comment's id
-     * @param stats <i>Query Parameter:</i> A boolean. If true, comment statistics will
-     *              be included with the returned entity. <b>NOTE: this will be moved
-     *              to a separate method in the future.</b>
-     * @param userId  <i>Query Parameter:</i> REQUIRED. The id of the user
+     *
+     * @param commentId      <i>Path Parameter:</i> The comment's id
+     * @param stats          <i>Query Parameter:</i> A boolean. If true, comment statistics will
+     *                       be included with the returned entity. <b>NOTE: this will be moved
+     *                       to a separate method in the future.</b>
+     * @param userId         <i>Query Parameter:</i> REQUIRED. The id of the user
      * @param statsStartDate <i>Query Parameter:</i> OPTIONAL: If stats is true, this is a start date with which to filter
      *                       the returned stats. Format is yymmdd (e.g., August 27, 2012 is 120827).
-     * @param statsEndDate <i>Query Parameter:</i> OPTIONAL: If stats is true and there is a start date,
-     *                     this is an end date with which to filter
-     *                     the returned stats. An end date without a start date will be rejected.
-     *                     Format is yymmdd (e.g., August 27, 2012 is 120827).
+     * @param statsEndDate   <i>Query Parameter:</i> OPTIONAL: If stats is true and there is a start date,
+     *                       this is an end date with which to filter
+     *                       the returned stats. An end date without a start date will be rejected.
+     *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
      * @return A response with http status 200 (OK) with a JSON entity with the comment data.
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see CommentPayload
      */
     @GET
@@ -167,21 +175,22 @@ public class CommentsResource {
 
     /**
      * <p>Use this method to get the comments for a blah.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> comments</div>
      *
-     * @param blahId   The blah id
-     * @param userId <i>Query Parameter:</i> Optional. If provided, it will return view/open/vote information
-     *               on this comment for the specified user id. TODO make it implicit
-     * @param authorId <i>Query Parameter:</i> Optional. If provided, the returned comments will be
-     *                 filtered by the specified author's id.
-     * @param start <i>Query Parameter:</i> Optional.   The start index of the comments to return.
-     * @param count  <i>Query Parameter:</i> Optional. The number of comments to return. Default: returns all.
+     * @param blahId        <i>Path Parameter:</i> The blah id
+     * @param userId        <i>Query Parameter:</i> Optional. If provided, it will return view/open/vote information
+     *                      on this comment for the specified user id. TODO make it implicit
+     * @param authorId      <i>Query Parameter:</i> Optional. If provided, the returned comments will be
+     *                      filtered by the specified author's id.
+     * @param start         <i>Query Parameter:</i> Optional.   The start index of the comments to return.
+     * @param count         <i>Query Parameter:</i> Optional. The number of comments to return. Default: returns all.
      * @param sortFieldName <i>Query Parameter:</i> Optional. A field with which to sort the results.  TODO remove this?
-     * @return  Returns http status 200 with a list of comment entities.
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     * @return Returns http status 200 with a list of comment entities.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see CommentPayload
      */
     @GET
@@ -210,7 +219,6 @@ public class CommentsResource {
         }
     }
 }
-
 
 
 //    /**

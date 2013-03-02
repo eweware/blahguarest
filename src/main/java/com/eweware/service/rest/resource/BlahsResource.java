@@ -19,9 +19,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Hello there
+ * <p>Blah-specific API methods.</p>
+ * <div>Note that some methods require authentication (previous login) to be accessed.</div>
+ *
  * @author rk@post.harvard.edu
- * goodbye
+ *         goodbye
  */
 @Path("/blahs")
 public class BlahsResource {
@@ -35,14 +37,17 @@ public class BlahsResource {
     /**
      * <p>Creates a blah.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> blahs</div>
-     * @param entity The request entity. Expects a JSON object with an author id, a groupId, a blah type id,
-     *                and the blah's tagline
+     *
+     * @param entity The request entity. Requires a JSON entity (a BlahPayload) with an
+     *               author id, a groupId, a blah type id, and the blah's tagline. Body text
+     *               may optionally be supplied.
      * @return BlahPayload The created request with the new blah id
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see BlahPayload
      */
     @POST
@@ -69,7 +74,7 @@ public class BlahsResource {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
@@ -77,21 +82,22 @@ public class BlahsResource {
     /**
      * <p>Use this method to register a vote for one of the poll options or a blah.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> blahs/{blahId}/pollVote/{userId}/{pollOptionIndex}</div>
-     *
+     * <p/>
      * METHOD: PUT
      * URL: blahs/{blahId}/pollVote/{userId}/{pollOptionIndex}
      *
-     * @param blahId    The poll blah id
-     * @param userId    The user id
-     * @param index The poll option index.
-     * @return  If successful, returns status 204 (OK NO CONTENTS) without
-     * a content entity.
-     * If the user is not authorized to vote, returns status 401.
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     * @param blahId <i>Path Parameter</i>. The poll blah id
+     * @param userId <i>Path Parameter</i>. The user id
+     * @param index  <i>Path Parameter</i>. The poll option index.
+     * @return If successful, returns status 204 (OK NO CONTENTS) without
+     *         a content entity.
+     *         If the user is not authorized to vote, returns status 401.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see BlahPayload
      */
     @PUT
@@ -125,15 +131,16 @@ public class BlahsResource {
      * <p>Returns the poll option for which the user has voted and the time
      * of the vote.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs/{blahId}/pollVote/{userId}</div>
      *
-     * @param blahId    The poll blah id
-     * @param userId    The user id
-     * @return  An http status 200 response with the poll option index on which the
-     * user has voted and the time of the vote. Returns empty object
-     * if the user has not voted on this poll.
-     * If the user is not authorized to vote, returns status 401.
+     * @param blahId <i>Path Parameter</i>. The poll blah id
+     * @param userId <i>Path Parameter</i>. The user id
+     * @return An http status 200 response with the poll option index on which the
+     *         user has voted and the time of the vote. Returns empty object
+     *         if the user has not voted on this poll.
+     *         If the user is not authorized to vote, returns status 401.
      * @see BlahInfoPayload
      */
     @GET
@@ -159,16 +166,19 @@ public class BlahsResource {
      * <p>Updates a blah's view, open, and or vote counts.
      * Any other update requests in the payload are ignored.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> blahs/{blahId}</div>
      *
-     * @param entity   The blah payload with the fields to update.
-     * @param blahId The blah's id
+     * @param entity A JSON entity (a BlahPayload) with one or more of the following
+     *               fields to update: vote, views, opens. (Other fields are ignored
+     *               and might result in a status 400 response.)
+     * @param blahId <i>Path Parameter</i>. The blah's id
      * @return An update response without content.
-     * If the user is not authorized to vote, returns status 401.
-     * If there is an error in the request, returns status 400.
-     * If the referenced blah or author can't be found, returns status 404.
-     * If a conflict would arise from satisfying the request, returns status 409.
+     *         If the user is not authorized to vote, returns status 401.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
      * @see BlahPayload
      */
     @PUT
@@ -204,10 +214,13 @@ public class BlahsResource {
 
     /**
      * <p>Returns an array of blah type docs: all the blah types available.</p>
+     * <p>This method does not require any parameters.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs/types</div>
+     *
      * @return An http status of 200 with a JSON entity that is a list
-     * of blah type payload objects.
+     *         of BlahTypePayload entities.
      * @see main.java.com.eweware.service.base.payload.BlahTypePayload
      */
     @GET
@@ -229,21 +242,22 @@ public class BlahsResource {
     }
 
     /**
-     * <p>Returns information about a blah.
-     * If a userId is provided, the blah's data will include blah stats
+     * <p>Returns information about a blah.</p>
+     * <p>If a userId is provided, the blah's data will include blah stats
      * for the specified user instead of stats for the blah itself.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs/{blahId}</div>
      *
-     * @param blahId         The blah's id
+     * @param blahId         <i>Path Parameter</i>. The blah's id
      * @param userId         <i>Query Parameter:</i> Optional. a userId
-     * @param stats           <i>Query Parameter:</i> Optional. if true, return statistics with blah
-     * @param statsStartDate <i>Query Parameter:</i>If stats=true, return statistics starting with this date
-     * @param statsEndDate   <i>Query Parameter:</i>f stats=true, return statistics ending with this date
+     * @param stats          <i>Query Parameter:</i> Optional. if true, return statistics with blah
+     * @param statsStartDate <i>Query Parameter:</i> Optional. If stats=true, return statistics starting with this date
+     * @param statsEndDate   <i>Query Parameter:</i> Optional. If stats=true, return statistics ending with this date
      * @return Returns an http status of 200 and a JSON entity containing the blah information.
-     * If the blah doesn't exist, returns status 404.
-     * If there is an error in the request, returns status 400.
-     * On error, a JSON entity will be returned containing detailed error information.
+     *         If the blah doesn't exist, returns status 404.
+     *         If there is an error in the request, returns status 400.
+     *         On error, a JSON entity will be returned containing detailed error information.
      */
     @GET
     @Path("/{blahId}")
@@ -271,49 +285,52 @@ public class BlahsResource {
         }
     }
 
-//    /**
-//     * Returns information about the blahs.
-//     * If a userId is provided, the blah's data will include blah stats
-//     * for the specified user instead of stats for the blah itself.
-//     * If an authorId is provided, only blah's data for the author
-//     * will be returned.
-//     *
-//     * <p></p>
-//     * <div><b>METHOD:</b> </div>
-//     * <div><b>URL:</b> </div>
-//     * @param start         (Optional): The starting index to fetch when paging
-//     * @param count         (Optional): The max number of blahs to fetch
-//     * @param sortFieldName (Optional): name of the field to sort on
-//     * @param authorId      (Optional): The blah author's userId
-//     * @param userId        (Optional): The id of the user for whom blah stats will be returned
-//     * @param typeId        (Optional): The blah's type id. If not given, all types will be returned.
-//     * @return List<BlahPayload> An array of blahs
-//     * @deprecated
-//     */
-//    @Deprecated
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getBlahs(@QueryParam("start") Integer start,
-//                             @QueryParam("count") Integer count,
-//                             @QueryParam("sort") String sortFieldName,
-//                             @QueryParam("authorId") String authorId,
-//                             @QueryParam("userId") String userId,
-//                             @QueryParam("typeid") String typeId) {
-//        try {
-//            final long s = System.currentTimeMillis();
-//            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
-//            SystemManager.getInstance().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }
+    /**
+     * Returns information about the blahs.
+     * If a userId is provided, the blah's data will include blah stats
+     * for the specified user instead of stats for the blah itself.
+     * If an authorId is provided, only blah's data for the author
+     * will be returned.
+     *
+     * <p></p>
+     * <div><b>METHOD:</b> </div>
+     * <div><b>URL:</b> </div>
+     * @param start         (Optional): The starting index to fetch when paging
+     * @param count         (Optional): The max number of blahs to fetch
+     * @param sortFieldName (Optional): name of the field to sort on
+     * @param authorId      (Optional): The blah author's userId
+     * @param userId        (Optional): The id of the user for whom blah stats will be returned
+     * @param typeId        (Optional): The blah's type id. If not given, all types will be returned.
+     * @return List<BlahPayload> An array of blahs
+     * @deprecated
+     */
+    @Deprecated
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBlahs(@QueryParam("start") Integer start,
+                             @QueryParam("count") Integer count,
+                             @QueryParam("sort") String sortFieldName,
+                             @QueryParam("authorId") String authorId,
+                             @QueryParam("userId") String userId,
+                             @QueryParam("typeid") String typeId,
+                             @Context HttpServletRequest req) {
+        try {
+            final long s = System.currentTimeMillis();
+            BlahguaSession.ensureAuthenticated(req);
+            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
+            SystemManager.getInstance().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
 }
-
 
 
 /**

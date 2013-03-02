@@ -26,21 +26,52 @@
     <div>
         <input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
         &nbsp;
-        Host Endpoint:<input id="endpoint" type="text" value="localhost:8080"/>
+        Host Endpoint:
+        <input id="endpoint" type="text" value="localhost:8080"/>
     </div>
     <!-- Actions -->
     <div style="margin-top: .5em">
-        <input id="createUser" type="button" onclick="createUser()" value="Register User"/>
+        <input id="ping" style="background-color: #fc4949" type="button" onclick="rest('GET', 'sys')" value="Ping Server"/>
         &nbsp;
-        <input id="checkUsername" type="button" onclick="checkUsername()" value="Check Username"/>
+        <input id="getMetrics" style="background-color: #fc4949" type="button" onclick="rest('GET', 'sys/metrics')" value="Get Metrics"/>
         &nbsp;
-        <input id="loginUser" type="button" onclick="loginUser()" value="Login" />
+        <input id="resetMetrics" style="background-color: #fc4949" type="button" onclick="rest('GET', 'sys/metrics/reset')" value="Reset Metrics"/>
         &nbsp;
-        <input id="userLoggedIn" type="button" onclick="userLoggedIn()" value="Check Login" />
+        <input id="refreshCaches" style="background-color: #fc4949" type="button" onclick="rest('POST', 'sys/refresh')" value="Refresh Caches"/>
+    </div>
+    <div style="margin-top: .5em">
+        <input id="createChannelType" type="button" onclick="createChannelType()"  value="Create Channel Type"/>
         &nbsp;
-        <input id="sessionInfo" type="button" onclick="rest('GET', 'sys/session')" value="Session Info" />
+        <input id="updateChannelType" type="button" onclick="updateChannelTypeName()"  value="Update Channel Name"/>
+        &nbsp;
+        <input id="getChannelType" type="button" onclick="rest('GET', 'groupTypes')"  value="Get Channel Types"/>
+        &nbsp;
+        <input id="getChannelTypeById" type="button" onclick="getChannelTypeById()"  value="Get Channel Type By Id"/>
+        &nbsp;
+        <input id="createOpenChannel" type="button" onclick="createChannel('a')"  value="Create Open Channel"/>
+        &nbsp;
+        <input id="createChannel" type="button" onclick="createChannel('o')"  value="Create Closed Channel"/>
+        &nbsp;
+        <input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get Channels"/>
+        &nbsp;
+        <input id="getOpenChannels" style="background-color: #22bf0d" type="button" onclick="rest('GET', 'groups/featured')" value="Get Open Channels"/>
+        &nbsp;
+        <input id="getChannelById" type="button" onclick="getChannel()"  value="Get Channel By Id"/>
+    </div>
+    <div style="margin-top: .5em">
+        <input id="createUser" style="background-color: #22bf0d" type="button" onclick="createUser()" value="Register User"/>
+        &nbsp;
+        <input id="checkUsername" style="background-color: #22bf0d" type="button" onclick="checkUsername()" value="Check Username"/>
+        &nbsp;
+        <input id="loginUser" style="background-color: #22bf0d" type="button" onclick="loginUser()" value="Login" />
+        &nbsp;
+        <input id="userLoggedIn" style="background-color: #22bf0d" type="button" onclick="userLoggedIn()" value="Check Login" />
+        &nbsp;
+        <input id="sessionInfo" style="background-color: #fc4949" type="button" onclick="rest('GET', 'sys/session')" value="Session Info" />
         &nbsp;
         <input id="logoutUser" type="button" onclick="rest('POST', 'users/logout')" value="Logout" />
+        &nbsp;
+        <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
         &nbsp;
         <input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>
         &nbsp;
@@ -50,28 +81,29 @@
         &nbsp;
         <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
         &nbsp;
-        <input id="getUserDescriptor" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
+        <input id="getUserDescriptor" style="background-color: #22bf0d" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
     </div>
     <div style="margin-top: .5em">
-        <input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get All Channels"/>
-        &nbsp;
-        <input id="getOpenChannels" type="button" onclick="rest('GET', 'groups/featured')" value="Get Open Channels"/>
-        &nbsp;
-        <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
-        &nbsp;
-        <input id="getChannel" type="button" onclick="getChannel()" value="Get Channel"/>
-        &nbsp;
     </div>
     <div style="margin-top: .5em">
-        <input id="getInbox" type="button" onclick="getInbox();"  value="Get Inbox"/>
+        <input id="getInbox" style="background-color: #22bf0d" type="button" onclick="getInbox();"  value="Get Inbox"/>
         &nbsp;
-        <input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>
+        <input id="createBlahType" type="button" onclick="createBlahType()" value="Create Blah Type"/>
+        &nbsp;
+        <input id="createBlah" type="button" onclick="rest('GET', 'blahs/types')" value="Get Blah Types"/>
         &nbsp;
         <input id="getBlah" type="button" onclick="getBlah()" value="Get Blah"/>
     </div>
     <h2>Parameters</h2>
     <input id="clearparams" type="button" onclick="clearParameters();" value="Clear All Parameters"/>
-    <h3>User/Channel Parameters</h3>
+    <h3>Channel Parameters</h3>
+    <div  style="margin-top: .5em">
+        <span>Channel Type Id: <input class="param" id="channeltypeid" type="text" size=30 /></span>
+        <span> Channel Type Name: <input class="param" id="channeltypename" type="text" size=30 /></span>
+        <span>Channel Id: <input class="param" id="channelid" type="text" size=30 /></span>
+        <span> Channel Name: <input class="param" id="channelname" type="text" size=30 /></span>
+    </div>
+    <h3>User Parameters</h3>
     <div>
         User Name:
         <input class="param" id="username" type="text" size=20 />
@@ -80,11 +112,10 @@
         &nbsp;User Id:
         <input class="param" id="userid" type="text" size=35 />
     </div>
-    <div  style="margin-top: .5em">
-        Channel Id:
-        <input class="param" id="channelid" type="text" size=30 />
-    </div>
     <h3>Blah Parameters</h3>
+    <div>
+        Blah Type Name: <input class="param" id="blahtypename" type="text" size=30/>
+    </div>
     <div>
         Blah Id:
         <input class="param" id="blahid" type="text" size=30 />

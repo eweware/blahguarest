@@ -22,6 +22,7 @@ public enum UserProfilePermissions {
      * Anyone (including anonymous users) can see this profile datum
      */
     PUBLIC(2);
+
     private final int code;
 
     UserProfilePermissions(int code) {

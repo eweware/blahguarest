@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
+ * <p>Media-specific API methods.</p>
+ * <p><b>Not in use.</b></p>
  * @author rk@post.harvard.edu
  */
 
@@ -20,10 +22,7 @@ import javax.ws.rs.core.Response;
 public class MediaResource {
 
     /**
-     *
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
+     * <p><b>Not implemented.</b></p>
      * @param filename
      * @return
      */

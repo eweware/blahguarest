@@ -1,6 +1,8 @@
 package main.java.com.eweware.service.base.store.dao;
 
 /**
+ * Used internally by the tracker.
+ *
  * @author rk@post.harvard.edu
  *         Date: 8/16/12 Time: 4:48 PM
  */

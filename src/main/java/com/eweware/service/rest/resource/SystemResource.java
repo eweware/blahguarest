@@ -13,6 +13,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
+ * <p>System-level API.</p>
+ * <p>These methods are for development only and will be removed from
+ * public access once we launch.</p>
+ * <p><b>DANGER Mr. Robinson! DANGER!!!</b></p>
+ *
  * @author rk@post.harvard.edu
  */
 
@@ -20,56 +25,38 @@ import javax.ws.rs.core.Response;
 public class SystemResource {
 
     /**
+     * <p>Sheep stuff</p>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> sys</div>
      *
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     * @return
-     */
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response sayBaaah() {
-		try {
-			return RestUtilities.make200OkResponse("No sheep here.\n");
-		} catch (Exception e) {
-			return RestUtilities.make500AndLogSystemErrorResponse(e);
-		}
-	}
-
-    /**
-     *
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     * @return
-     */
-	@GET
-	@Path("/status")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getStatus() {
-		try {
-			return RestUtilities.make200OkResponse(BlahManager.getInstance().getState());
-		} catch (SystemErrorException e) {
-			return RestUtilities.make500AndLogSystemErrorResponse(e);
-		} catch (Exception e) {
-			return RestUtilities.make500AndLogSystemErrorResponse(e);
-		}
-	}
-
-    /**
-     *
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     * @param reset
-     * @return
+     * @return Tells you how many sheep we have in our bank.
      */
     @GET
-    @Path("/stats")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getStats(@QueryParam("reset") boolean reset) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response sayBaaah() {
         try {
-            return RestUtilities.make200OkResponse(SystemManager.getInstance().getStats(reset));
+            return RestUtilities.make200OkResponse("No sheep here.\n");
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Use this method to get REST API metrics.</p>
+     * <b>This method is for development only and will be removed from
+     * public access once we launch.</b>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> sys/metrics</div>
+     *
+     * @return A JSON entity with metrics.
+     */
+    @GET
+    @Path("/metrics")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatus() {
+        try {
+            return RestUtilities.make200OkResponse(SystemManager.getInstance().processMetrics(false));
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -77,14 +64,60 @@ public class SystemResource {
         }
     }
 
-    @GET
-    @Path("/flip/{on}")
+    /**
+     * <p>Use this method to reset the REST API metrics.</p>
+     * <b>This method is for development only and will be removed from
+     * public access once we launch.</b>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> sys/metrics/reset</div>
+     *
+     * @return Returns http status 202 (ACCEPTED).
+     */
+    @POST
+    @Path("/metrics/reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStats() {
+        try {
+            SystemManager.getInstance().processMetrics(true);
+            return RestUtilities.make202AcceptedResponse();
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Use this method to turn security on/off.</p>
+     * <b>This method is for development only and will be removed from
+     * public access once we launch.</b>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> sys/secure/{on}</div>
+     *
+     * @param on <i>Path Parameter:</i> If true, security is turned on; else off.
+     * @return Http status code 200 with plain text specifying the new security state.
+     */
+    @POST
+    @Path("/secure/{on}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response flipSecurity(@PathParam("on")boolean on) {
+    public Response flipSecurity(@PathParam("on") boolean on) {
         BlahguaSession.flipSecurity(on);
         return Response.ok("security " + (on ? "ON" : "OFF")).build();
     }
 
+
+    /**
+     * <p>Use this method to get information about the session state.</p>
+     * <b>This method is for development only and will be removed from
+     * public access once we launch.</b>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> sys/session</div>
+     *
+     * @return Returns plain text (status 200) with the session info.
+     */
     @GET
     @Path("/session")
     @Produces(MediaType.TEXT_PLAIN)
@@ -93,11 +126,14 @@ public class SystemResource {
     }
 
     /**
+     * <p>Use this method to refresh the local cache.</p>
+     * <b>This method is for development only and will be removed from
+     * public access once we launch.</b>
+     * <p/>
+     * <div><b>METHOD:</b> GET </div>
+     * <div><b>URL:</b> sys/refresh</div>
      *
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
-     * @return
+     * @return Returns http code 200 (ACCEPTED).
      */
     @POST
     @Path("/refresh")

@@ -1,6 +1,8 @@
 package main.java.com.eweware.service.base.store.dao;
 
 /**
+ * <p>Entity contains stats about a user.</p>
+ * <p><b>TODO: needs doc</b></p>
  * @author rk@post.harvard.edu
  *         Date: 8/16/12 Time: 4:15 PM
  *         }

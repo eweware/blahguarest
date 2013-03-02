@@ -44,11 +44,43 @@ function defaultErrorHandler(theErr, err, thrown) {
 }
 
 function defaultSuccessFunction(results, successOrNot, theStatus) {
-	$("#resultstatus").html("<span style='color:green'>Http Status: " + theStatus.status + "</span>");
+	if (theStatus) {
+		$("#resultstatus").html("<span style='color:green'>Http Status: " + theStatus.status + "</span>");
+	} else {
+		$("#resultstatus").html("<span style='color:green'>Http Status: Unknown</span>");
+	}
+	
 	$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
 	$("#results").css({
 		'color' : 'black'
 	}).html(results)
+}
+
+function createChannelType() {
+	var name = document.getElementById('channeltypename').value;
+	if (!name) {alert('Missing Channel Type Name'); return;}
+	rest('POST', 'groupTypes', JSON.stringify({'displayName': name}), setChannelTypeData);
+}
+
+function updateChannelTypeName() {
+	var name = document.getElementById('channeltypename').value;
+	var ctId = document.getElementById('channeltypeid').value;
+	if (!name || !ctId) {alert('Missing Channel Type Id and/or Name'); return;}
+	rest('PUT', 'groupTypes/'+ctId, JSON.stringify({'displayName': name}));
+}
+
+function getChannelTypeById() {
+	var ctId = document.getElementById('channeltypeid').value;
+	if (!ctId) {alert('Missing Channel Type Id'); return;}
+	rest('GET', 'groupTypes/'+ctId);
+}
+
+function createChannel(descriptor) {
+	var ctId = document.getElementById('channeltypeid').value;
+	var name = document.getElementById('channelname').value;
+	var validationMethod = 'n'; // normal validation
+	if (!ctId || !name) {alert('Missing Channel Type Id and/or Name'); return;}
+	rest('POST', 'groups', JSON.stringify({'displayName': name, 'groupTypeId': ctId, 's': descriptor, 'vmeth': validationMethod}), setChannelData);
 }
 
 function createUser() {
@@ -111,6 +143,20 @@ function setUserData(user) {
 	document.getElementById("userid").value = obj._id;
 }
 
+function setChannelTypeData(channelType) {
+	defaultSuccessFunction(channelType);
+	var obj = jQuery.parseJSON(channelType);
+	document.getElementById("channeltypename").value = obj.displayName;
+	document.getElementById("channeltypeid").value = obj._id;
+}
+
+function setChannelData(channel) {
+	defaultSuccessFunction(channel);
+	var obj = jQuery.parseJSON(channel);
+	document.getElementById("channelname").value = obj.displayName;
+	document.getElementById("channelid").value = obj._id;
+}
+
 function getUserById() {
 	var userId = getUserId();
 	if (userId.length == 0) {
@@ -146,9 +192,14 @@ function getChannel() {
 		alert("Missing Channel Id");
 		return;
 	}
-	rest("GET", "groups/"+channelId);
+	rest("GET", "groups/"+channelId, JSON.stringify(null), setChannelData);
 }
 
+function createBlahType() {
+	var name = document.getElementById('blahtypename').value;
+	if (!name) {alert("Missing Blah Type Name"); return;}
+	rest('POST', )
+}
 function createBlah() {
 	var userId = getUserId();
 	var typeId = getTypeId();

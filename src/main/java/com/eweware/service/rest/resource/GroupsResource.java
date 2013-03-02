@@ -17,6 +17,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
+ * <p>Group-specific API methods.</p>
+ * <div>Note that some methods require authentication (previous login) to be accessed.</div>
  * @author rk@post.harvard.edu
  */
 
@@ -27,11 +29,13 @@ public class GroupsResource {
     /**
      * <p><Use this method to create a group./p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> groups</div>
      *
-     * @param entity A JSON entity requiring the group type's id, the group's display name,
+     * @param entity A JSON entity (a GroupPayload) requiring the group type's id, the group's display name,
      *               a group descriptor, and a validation method.
+     * @see GroupPayload
      * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
      * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
      * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
@@ -60,17 +64,19 @@ public class GroupsResource {
     /**
      * <p>Use this method to update a group.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> groups/{groupId}</div>
      *
-     * @param entity  A JSON entity providing the fields to update.
-     * @param groupId The group's id
+     * @param entity  A JSON entity (a GroupPayload) providing the fields to update.
+     * @param groupId <i>Path Parameter</i>: The group's id
      * @return If successful, returns http status 204 (NO CONTENT)
      *         without any entity. If there is an error in the request,
      *         returns status 400. If the group resource can't be found,
      *         returns 404. If there is a state conflict implied by
      *         the change, returns status 409.
      *         On errors, a detailed error entity will be returned.
+     * @see GroupPayload
      */
     @PUT
     @Path("/{groupId}")
@@ -101,12 +107,14 @@ public class GroupsResource {
 
     /**
      * <p>Use this method to get the current viewer count for a group.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET </div>
      * <div><b>URL:</b> groups/{groupId}/viewerCount</div>
      *
-     * @param groupId The group's id
-     * @return If successful, returns http status 200 with a JSON entity
+     * @param groupId <i>Path Parameter</i>: The group's id
+     * @return If successful, returns http status 200 with a JSON entity (a GroupPayload)
      *         containing the group id and the current viewer count for the group.
+     * @see GroupPayload
      */
     @GET
     @Path("/{groupId}/viewerCount")
@@ -123,7 +131,10 @@ public class GroupsResource {
 
     /**
      * <p>Returns features groups. Currently, the only featured groups
-     * are open groups (those that can be accessed by anonymous users).</p>
+     * are <b>open groups</b> (those that can be accessed by anonymous users).</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET </div>
+     * <div><b>URL:</b> groups/featured</div>
      *
      * @param start<i>Query Parameter:</i>(Optional:) The start index or null if starting at the base.
      * @param count<i>Query Parameter:</i>(Optional:) The number of items to return.
@@ -148,18 +159,21 @@ public class GroupsResource {
     /**
      * <p>Use this method to obtain a list of all groups of a given type.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <p>TODO See https://eweware.atlassian.net/browse/WRS-181</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> groups</div>
-     * TODO See https://eweware.atlassian.net/browse/WRS-181
      *
-     * @param groupTypeId   The group type id
-     * @param name         <i>Query Parameter:</i>(Optional:) The group's display name
-     * @param state        <i>Query Parameter:</i>(Optional:) The group's state
-     * @param start        <i>Query Parameter:</i>(Optional:) The start index for the returned group items
-     * @param count        <i>Query Parameter:</i>(Optional:) The number of items to return
-     * @param sortFieldName<i>Query Parameter:</i>(Optional:) The name of a field by which to sort the results.
-     *                      <b>TODO get rid of this!</b>
-     * @return If successful, returns a JSON entity with http status 200 with the group entities that match the query parameters.
+     * @param groupTypeId           <i>Path Parameter:</i> The group type id
+     * @param name                  <i>Query Parameter:</i> Optional. The group's display name
+     * @param state                 <i>Query Parameter:</i> Optional. The group's state
+     * @param start                 <i>Query Parameter:</i> Optional. The start index for the returned group items
+     * @param count                 <i>Query Parameter:</i> Optional. The number of items to return
+     * @param sortFieldName<i>Query Parameter:</i> Optional. The name of a field by which to sort the results.
+     *                              <b>TODO get rid of this!</b>
+     * @return If successful, returns a JSON entity (a GroupPayload) with http status 200
+     *         with the group entities that match the query parameters.
      *         If the request has an error, returns http status 400.
      * @see GroupPayload
      */
@@ -189,12 +203,13 @@ public class GroupsResource {
 
     /**
      * <p>Use this method to get details about a group id.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> groups/{groupId}</div>
      *
-     * @param groupId The group's id
+     * @param groupId <i>Path Parameter:</i> The group's id
      * @return If successful, returns http status 200 with a JSON entity
-     *         containing the group's info.
+     *         (a GroupPayload) containing the group's info.
      * @see GroupPayload
      */
     @GET
@@ -214,7 +229,6 @@ public class GroupsResource {
         }
     }
 }
-
 
 
 //    /**

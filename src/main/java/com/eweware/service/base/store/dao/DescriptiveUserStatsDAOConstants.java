@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
+ * <p>Fields for descriptive user statistics.<b>TODO: needs better doc</b></p>
  * @author rk@post.harvard.edu
  *         Date: 9/25/12 Time: 1:37 PM
  *

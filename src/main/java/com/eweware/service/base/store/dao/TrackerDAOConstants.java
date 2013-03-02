@@ -4,11 +4,10 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
+ * <p>A tracker object for internal use.</p>
+ * <p>This object will eventually be queued for offline, but real-time, processing.</p>
  * @author rk@post.harvard.edu
  *         Date: 9/22/12 Time: 2:55 PM
- *
- *         This object will probably be a queue object rather than
- *         a db object.
  */
 public interface TrackerDAOConstants {
 

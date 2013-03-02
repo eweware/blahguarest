@@ -7,10 +7,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.CommentDAO;
@@ -19,6 +16,7 @@ import main.java.com.eweware.service.base.store.dao.MediaDAO;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.MediaManager;
 import main.java.com.eweware.service.rest.RestUtilities;
+import main.java.com.eweware.service.rest.session.BlahguaSession;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
@@ -34,9 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * <p>Image upload API methods.</p>
+ * <div>Note that some methods require authentication (previous login) to be accessed.</div>
+ *         TODO Need to create jersey-multipart-config.properties and add the following:  bufferThreshold = 128000
  * @author rk@post.harvard.edu
  *         Date: 12/14/12 Time: 3:44 PM
- *         TODO Need to create jersey-multipart-config.properties and add the following:  bufferThreshold = 128000
  */
 @Path("/images")
 public class ImageUploadResource {
@@ -151,16 +151,21 @@ public class ImageUploadResource {
             @FormDataParam("file") InputStream in,
             @FormDataParam("file") FormDataContentDisposition metadata,
             @Context HttpServletRequest request) {
-        if (objectId == null) {
-            return RestUtilities.make400InvalidRequestResponse(
-                    new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));
-        }
         final ObjectType objectType;
         try {
+            BlahguaSession.ensureAuthenticated(request);
+            if (objectId == null) {
+                return RestUtilities.make400InvalidRequestResponse(
+                        new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));
+            }
             objectType = ObjectType.valueOf(objType);
         } catch (IllegalArgumentException e) {
             return RestUtilities.make400InvalidRequestResponse(
                     new InvalidRequestException("missing or invalid objectType", ErrorCodes.INVALID_INPUT));
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
 
         AmazonS3 s3 = null;

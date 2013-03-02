@@ -1,15 +1,13 @@
 package main.java.com.eweware.service.base.store.dao;
 
 /**
- * @author rk@post.harvard.edu
- *         Date: 10/6/12 Time: 11:10 AM
- *
- *  _id for this blah is a String composite of:
+ * <p>_id for this blah is a String composite of:
  *  "i:" + groupId + "-" + inboxNumber
  *  e.g., "i:506cd1480364e675a6571308-1 is inbox #1 for group id 506cd1480364e675a6571308
- *  The "i:" prefix is used as a "namespace" selector
- *
- *  TODO needs schema
+ *  The "i:" prefix is used as a "namespace" selector</p>
+ * <p><b> TODO: needs schema</b></p>
+ * @author rk@post.harvard.edu
+ *         Date: 10/6/12 Time: 11:10 AM
  *
  */
 public interface InboxStateDAOConstants {

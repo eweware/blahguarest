@@ -109,17 +109,15 @@ public final class SystemManager implements ManagerInterface {
         // TODO tracking mgr, media mgr.
 	}
 
-    public Map<String, OperationInfo> getStats(boolean reset) {
-        Map<String, OperationInfo> stats = null;
+    public Map<String, OperationInfo> processMetrics(boolean reset) {
         synchronized (infomapLock) {
             if (reset) {
-                stats = operationToOpInfoMap;
                 operationToOpInfoMap = new HashMap<String, OperationInfo>();
+                return null;
             } else {
-                stats = new HashMap<String, OperationInfo>(operationToOpInfoMap);
+                return new HashMap<String, OperationInfo>(operationToOpInfoMap);
             }
         }
-        return stats;
     }
 
     public class OperationInfo implements Serializable {

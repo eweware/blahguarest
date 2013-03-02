@@ -4,22 +4,78 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
+ * <p>Field names and value data types for comment entities.</p>
  * @author rk@post.harvard.edu
  *         Date: 8/28/12 Time: 8:22 PM
  */
 public interface CommentDAOConstants {
 
+    /**
+     * <p>The comment's blah id. A string.</p>
+     */
     static final String BLAH_ID = "blahId";
+
+    /**
+     * <p>The comments text. A string.</p>
+     */
     static final String TEXT = "text";
+
+    /**
+     * <p>The comment's author's user id. A string.</p>
+     */
     static final String AUTHOR_ID = "authorId";
+
+    /**
+     * <p>The vote, if any, of the comment on the blah.
+     * An integer.</p>
+     */
     static final String BLAH_VOTE = "blahVote";
+
+    /**
+     * <p>The total number of votes on this comment. An integer. <b>TODO: get rid of this: can be inferred from sum of up/down votes</b></p>
+     */
     static final String COMMENT_VOTES = "commentVotes";
+
+    /**
+     * <p>The number of up votes for this comment. An integer.</p>
+     */
     static final String COMMENT_UP_VOTES = "cuv";
+
+    /**
+     * <p>The number of down votes for this comment. An integer.</p>
+     */
     static final String COMMENT_DOWN_VOTES = "cdv";
+
+    /**
+     * <p>This comment's current strength. A float between 0 and 1, inclusive.</p>
+     */
     static final String COMMENT_STRENGTH = "s";
+
+    /**
+     * <p>The number of times this comment has been viewed. An integer.</p>
+     */
     static final String VIEWS = "views";
+
+    /**
+     * <p>The number of times this comment has been opened. An integer.</p>
+     */
     static final String OPENS = "opens";
+
+    /**
+     * <p>Optional stats entity for this comment. <b>TODO: need better doc for this.</b></p>
+     */
     static final String STATS = "stats";
+
+    /**
+     * <p>An optional array of image ids for the comment. The semantics
+     * of the array are currently not well-defined, subject to
+     * experimentation. The image id points to the metadata for
+     * the image, stored in a media record. Image data itself is
+     * stored in S3.
+     * An array of string.</p>
+     * @see MediaDAOConstants
+     * @see MediaDAO
+     */
     static final String IMAGE_IDS = "img";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{

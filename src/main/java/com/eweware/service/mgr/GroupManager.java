@@ -11,11 +11,13 @@ import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
+import main.java.com.eweware.service.user.validation.DefaultUserValidationMethod;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -241,7 +243,7 @@ public final class GroupManager implements ManagerInterface {
             throw new InvalidRequestException("a group with this name already exists in the given display name and group type", dao, ErrorCodes.ALREADY_EXISTS_GROUP_WITH_DISPLAY_NAME);
         }
         dao.addFromMap(group, true); // filters out injected material
-        dao.setState(AuthorizedState.getDefaultState());
+        dao.setState((vmeth instanceof DefaultUserValidationMethod) ? AuthorizedState.A.toString() : AuthorizedState.getDefaultState());
         dao.initToDefaultValues(localeId);
         dao._insert();
 
@@ -392,17 +394,18 @@ public final class GroupManager implements ManagerInterface {
      * Returns all active anonymous groups in the system.
      *
      *
+     *
      * @param localeId The locale id
      * @param start    Start index into a page
      * @param count    Item count per page
      * @return All active anonymous groups in the system
      * @throws SystemErrorException
      */
-    public Enumeration<String> getOpenGroups(LocaleId localeId, Integer start, Integer count) throws SystemErrorException {
-        if (count == null) {
-            count = returnedObjectLimit;
-        }
-        return groupMap.keys();
+    public Collection<GroupPayload> getOpenGroups(LocaleId localeId, Integer start, Integer count) throws SystemErrorException {
+//        if (count == null) {
+//            count = returnedObjectLimit;
+//        }
+        return groupMap.values();
 
 //        final GroupDAO groupDAO = storeManager.createGroup();
 //        groupDAO.setDescriptor(GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode());
