@@ -12,6 +12,7 @@ import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *<p>User-related API methods.</p>
+ * <p>User-related API methods.</p>
  * <div>Note that some methods require authentication (previous login) to be accessed.</div>
  *
  * @author rk@post.harvard.edu
@@ -478,6 +479,84 @@ public class UsersResource {
     }
 
     /**
+     * <p>Use this method when the user forgets his password.</p>
+     * <p>The user must have an email address in his profile. If so, the user
+     * will receive an email with a link that will automatically log him into his account.</p>
+     * <p>This method requires two inputs:</p>
+     * <div>The user's username</div>
+     * <div>The user's email address. This is just a security challenge: it is verified
+     * against the email address in the user's profile.</div>
+     * <div>The answer to the one and only challenge question.</div>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/recover/user</div>
+     *
+     * @param entity An entity containing the following fields: 'u' whose value is a string, the username.
+     *               'a' whose value is a string, the answer to the one and only security question.
+     *               'e' whose value is a string, the user-supplied email address. Note that the latter
+     *               is only used as one more way to try to confirm that the user knows his email address
+     *               (which is not enough by itself to give us much confidence, but with the challenge
+     *               answer it might be more of a deterrent).
+     * @return If user has registered an email account, returns http status 204 (NO CONTENT),
+     *         in which case it means that an email has been sent with a link that will log in the user.
+     *         If the user doesn't have a registered email address, returns http status 404 (NOT FOUND).
+     *         Never returns a payload.
+     */
+    @POST
+    @Path("/recover/user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response recoverUser(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            UserManager.getInstance().recoverUser(LocaleId.en_us, request, entity.get("u"), entity.get("e"), entity.get("a"));
+            return RestUtilities.make204OKNoContentResponse();
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        }
+    }
+
+//
+//    /**
+//     * <p>Directly or indirectly received from user clicking on a recovery URL.</p>
+//     * <p><b>TODO: </b>deal with UI page.</p>
+//     * <p/>
+//     * <div><b>METHOD:</b> GET</div>
+//     * <div><b>URL:</b> users/recover/user/{recoveryCode}</div>
+//     *
+//     * @param recoveryCode <i>Path Parameter:</i> The recovery code sent to the user in an email or whatever.
+//     * @return Returns an http status 202 (ACCEPTED) if the user is now logged in.
+//     *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
+//     *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
+//     *         If there is an authorization or security problem, returns 401 (UNAUTHORIZED).
+//     *         On error conditions, a JSON object is returned with details.
+//     */
+//    @GET
+//    @Path("/recover/user/{recoveryCode}/{username}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response recoverUser(
+//            @PathParam("recoveryCode") String recoveryCode,
+//            @PathParam("username") String encryptedCanonicalUsername,
+//            @Context HttpServletResponse httpResponse) {
+//        try {
+//            final long start = System.currentTimeMillis();
+//            UserManager.getInstance().recoverUserAndRedirectToMainPage(LocaleId.en_us, httpResponse, recoveryCode, encryptedCanonicalUsername);
+//            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
+//            return
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        }
+//    }
+
+    /**
      * <p><Use this method to get an inbox for the current session./p>
      * <p>This method may be used by both anonymous and logged in (authenticated) users.
      * If the user is <i>anonymous</i> (not logged in), only a group open to anonymous
@@ -487,6 +566,7 @@ public class UsersResource {
      * to anonymous users, then the user must have already logged in to access it.
      * Moreover, the user must have already joined (i.e., be a member of) the group.</p>
      * <p>Various query parameters are available to modify this query.</p>
+     * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/inbox</div>
      *
@@ -606,38 +686,6 @@ public class UsersResource {
             return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
-
-
-    /**
-     * <p><b>No longer in use</b></p>
-     */
-    @POST
-    @Path("/recover")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response recoverUser(
-            @QueryParam("r") String validationCode,  // if recoveryMethod == "r", this is the validation code
-            @QueryParam("k") String methodKey, // e.g., if recoveryMethod == "e", this is an email address
-            @QueryParam("m") String operation,
-            @Context HttpServletRequest request) {   // either "e" (email) or "r" (recover via code)
-        try {
-            final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            final UserProfilePayload payload = UserManager.getInstance().recoverUser(LocaleId.en_us, operation, methodKey, validationCode);
-            final Response response = (payload == null) ? RestUtilities.make202AcceptedResponse() : RestUtilities.make200OkResponse(payload);
-            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
-            return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {

@@ -9,16 +9,14 @@ import main.java.com.eweware.service.base.payload.GroupPayload;
 import main.java.com.eweware.service.base.payload.GroupTypePayload;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
+import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.user.validation.DefaultUserValidationMethod;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 

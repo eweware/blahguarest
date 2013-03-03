@@ -31,8 +31,8 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
 
     public BasePayload(Map<String, Object> map) {
         super(map);
-        ensureStringId(map);
-        ensureDates(map);
+        ensureStringAsId(map);
+        ensureCanonicalDates(map);
     }
 
     /**
@@ -98,14 +98,14 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
 
     // TODO not too elegant: the payload (client) expects a string representation, not a date. Would be nice to have a per-field autoconversion method
     @JsonIgnore
-    protected void ensureDate(String dateFieldName) {
+    protected void ensureCanonicalDateDate(String dateFieldName) {
         final Object dob = get(dateFieldName);
         if (dob != null && (dob instanceof Date)) {
             put(dateFieldName, DateUtils.formatDate((Date) dob));
         }
     }
     @JsonIgnore
-    protected void ensureDateTime(String dateFieldName) {
+    protected void ensureCanonicalDateTime(String dateFieldName) {
         final Object dob = get(dateFieldName);
         if (dob != null && (dob instanceof Date)) {
             put(dateFieldName, DateUtils.formatDateTime((Date) dob));
@@ -114,7 +114,7 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
 
     // TODO this is already handled by the schema validateandconvert: check it out
     @JsonIgnore
-    private void ensureDates(Map<String, Object> map) {
+    private void ensureCanonicalDates(Map<String, Object> map) {
         Object created = map.get(CREATED);
         if (created != null && (created instanceof Date)) {
             put(CREATED, DateUtils.formatDateTime((Date) created));
@@ -126,7 +126,7 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
     }
 
     @JsonIgnore
-    private void ensureStringId(Map<String, Object> obj) {
+    private void ensureStringAsId(Map<String, Object> obj) {
         Object id = obj.get(ID);
         if (id != null && !(id instanceof String)) {
             setId(id.toString()); // e.g., ObjectId.toString()

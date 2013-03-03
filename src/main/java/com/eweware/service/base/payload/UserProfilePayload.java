@@ -20,7 +20,15 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
 
     public UserProfilePayload(Map<String, Object> map) {
         super(map);
-        ensureDate(USER_PROFILE_DATE_OF_BIRTH);
+        ensureCanonicalDateDate(USER_PROFILE_DATE_OF_BIRTH);  // TODO use schema for this!
+        ensureRemoved();
+    }
+
+    private void ensureRemoved() {  // TODO use schema for this!
+        remove(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
+        remove(USER_PROFILE_RECOVERY_CODE);
+        remove(USER_PROFILE_RECOVER_CODE_SET_METHOD);
+        remove(USER_PROFILE_CHALLENGE_ANSWER);
     }
 
     public String getUserType() {
@@ -29,22 +37,6 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
 
     public void setUserType(String userType) {
         put(USER_PROFILE_USER_TYPE, userType);
-    }
-
-    public String getRecoveryCode() {
-        return (String) get(USER_PROFILE_RECOVERY_CODE);
-    }
-
-    public void setRecoveryCode(String code) {
-        put(USER_PROFILE_RECOVERY_CODE, code);
-    }
-
-    public String getRecoverySetMethod() {
-        return (String) get(USER_PROFILE_RECOVER_CODE_SET_METHOD);
-    }
-
-    public void setRecoverySetMethod(String method) {
-        put(USER_PROFILE_RECOVER_CODE_SET_METHOD, method);
     }
 
     public String getNickname() {

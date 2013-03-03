@@ -11,7 +11,7 @@ import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.CommentDAO;
-import main.java.com.eweware.service.base.store.dao.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.dao.MediaDAO;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.MediaManager;

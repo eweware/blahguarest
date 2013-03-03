@@ -83,7 +83,7 @@ public final class BlahguaSession {
      * @param userId   The user id (unchecked!)
      * @param username TODO remove (dbg)
      */
-    public static void markAuthenticated(HttpSession session, String userId, String username) {
+    private static void markAuthenticated(HttpSession session, String userId, String username) {
         if (username != null) {     // TODO remove (dbg)
             session.setAttribute(USERNAME, username);
         }

@@ -56,8 +56,9 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         final LinkedHashMap<String, Object> data = null;
         final boolean hasDefaultValue = false;
         createSpec(SchemaDataType.S, USER_PROFILE_RECOVERY_CODE, "Recovery Code", regexp, data, hasDefaultValue, null);
-
         createSpec(SchemaDataType.S, USER_PROFILE_RECOVER_CODE_SET_METHOD, "RC Method", null, null, false, null);
+        createSpec(SchemaDataType.DT, USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, "Recovery Exp", null, null, false, null);
+        createSpec(SchemaDataType.S, USER_PROFILE_CHALLENGE_ANSWER, "Sec Ans", null, null, false, null);
     }
 
     private void createUserTypeSpec() {

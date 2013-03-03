@@ -12,7 +12,7 @@ public interface UserAccountDAOConstants {
 
     /**
      * <p> The canonical version of the username. A string.</p>
-     * @see main.java.com.eweware.service.mgr.UserManager#makeCanonicalUsername(String)
+     * @see main.java.com.eweware.service.user.validation.Login#makeCanonicalUsername(String)
      */
     static String CANONICAL_USERNAME = "u";
 

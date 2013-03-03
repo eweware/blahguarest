@@ -2,6 +2,7 @@ package main.java.com.eweware.service.mgr;
 
 import main.java.com.eweware.service.base.cache.BlahCache;
 import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
@@ -17,29 +18,33 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
  */
 public final class SystemManager implements ManagerInterface {
 
-	private static SystemManager singleton;
+    private static final Logger logger = Logger.getLogger("SystemManager");
+
+    private static SystemManager singleton;
 
     private ManagerState state = ManagerState.UNINITIALIZED;
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
     private BlahCache blahCache;
     private final BlahCacheConfiguration blahCacheConfiguration;
-    
+
 
     public static SystemManager getInstance() throws SystemErrorException {
-		if (SystemManager.singleton == null) {
-			throw new SystemErrorException("SystemManager not initialized");
-		}
-		return SystemManager.singleton;
-	}
+        if (SystemManager.singleton == null) {
+            throw new SystemErrorException("SystemManager not initialized");
+        }
+        return SystemManager.singleton;
+    }
 
-	public SystemManager(String cacheHostname, String cachePort) {
+    public SystemManager(String cacheHostname, String cachePort) {
         try {
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(cacheHostname, cachePort).setInboxBlahExpirationTime(expirationTime);
@@ -53,23 +58,22 @@ public final class SystemManager implements ManagerInterface {
         System.out.println("*** SystemManager initialized ***");
     }
 
-    private static int code = 1;
-    public String makeShortRandomCode() {
+
+    public String makeShortRandomCode() throws SystemErrorException {
         try {
             String s = new String(Base64.encodeBase64(Long.toHexString(UUID.randomUUID().getLeastSignificantBits()).getBytes("UTF-8")), "UTF-8");
             return s.substring(2, Math.min(14, s.length() - 1)); // TODO does well for 10000+ trials: as a safety valve, the DB will drop a dup code
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
+            throw new SystemErrorException("Unable to generate recovery codes", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
     public ManagerState getState() {
-		return state;
-	}
+        return state;
+    }
 
-	public void start() {
-		try {
+    public void start() {
+        try {
             this.blahCache = new BlahCache(blahCacheConfiguration);
             final MongoStoreManager storeMgr = (MongoStoreManager) MongoStoreManager.getInstance();
             checkManagers(storeMgr);
@@ -77,9 +81,9 @@ public final class SystemManager implements ManagerInterface {
             this.state = ManagerState.STARTED;
             System.out.println("*** SystemManager started ***");
         } catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            throw new WebServiceException("Problem starting SystemManager", e);
+        }
+    }
 
     public BlahCache getBlahCache() {
         return blahCache;
@@ -91,23 +95,25 @@ public final class SystemManager implements ManagerInterface {
         System.out.println("*** System shut down ***");
     }
 
-	/** Ensures all managers are STARTED **/
-	private void checkManagers(MongoStoreManager storeMgr)
-			throws SystemErrorException {
-		if (storeMgr.getState() != ManagerState.STARTED) {
-			throw new SystemErrorException("MongoStoreManager failed to start");
-		}
-		if (BlahManager.getInstance().getState() != ManagerState.STARTED) {
-			throw new SystemErrorException("BlahManager failed to start");
-		}
-		if (GroupManager.getInstance().getState() != ManagerState.STARTED) {
-			throw new SystemErrorException("GroupManager failed to start");
-		}
-		if (UserManager.getInstance().getState() != ManagerState.STARTED) {
-			throw new SystemErrorException("UserManager failed to start");
-		}
+    /**
+     * Ensures all managers are STARTED *
+     */
+    private void checkManagers(MongoStoreManager storeMgr)
+            throws SystemErrorException {
+        if (storeMgr.getState() != ManagerState.STARTED) {
+            throw new SystemErrorException("MongoStoreManager failed to start");
+        }
+        if (BlahManager.getInstance().getState() != ManagerState.STARTED) {
+            throw new SystemErrorException("BlahManager failed to start");
+        }
+        if (GroupManager.getInstance().getState() != ManagerState.STARTED) {
+            throw new SystemErrorException("GroupManager failed to start");
+        }
+        if (UserManager.getInstance().getState() != ManagerState.STARTED) {
+            throw new SystemErrorException("UserManager failed to start");
+        }
         // TODO tracking mgr, media mgr.
-	}
+    }
 
     public Map<String, OperationInfo> processMetrics(boolean reset) {
         synchronized (infomapLock) {

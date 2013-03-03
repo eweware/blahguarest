@@ -143,6 +143,21 @@ function setUserData(user) {
 	document.getElementById("userid").value = obj._id;
 }
 
+function createDummyProfile() {
+	var email = document.getElementById("email").value;
+	var userId = getUserId();
+	if (!email || !userId) {alert("Missing UserId and/or Email Address"); return;}
+	rest('POST', 'users/profiles', JSON.stringify({"_id": userId, "e": email, "a": "hi"}));
+}
+
+function recoverUser() {
+	var username = getUsername();
+	var email = document.getElementById("email").value;
+	if (!email || !userId) {alert("Missing User Name and/or Email Address"); return;}
+	var challengeAnswer = "hi";
+	rest('POST', "recover/user", JSON.stringify({"u": username, "e": email, "a": "hi"}));
+}
+
 function setChannelTypeData(channelType) {
 	defaultSuccessFunction(channelType);
 	var obj = jQuery.parseJSON(channelType);

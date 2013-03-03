@@ -31,10 +31,19 @@
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 
+    <servlet>
+        <servlet-name>User Account Recovery Servlet</servlet-name>
+        <servlet-class>main.java.com.eweware.service.servlet.UserSessionRecoveryServlet</servlet-class>
+    </servlet>
+
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/v2/*</url-pattern>
 	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>User Account Recovery Servlet</servlet-name>
+        <url-pattern>/recover</url-pattern>
+    </servlet-mapping>
 
     <session-config>
         <session-timeout>30</session-timeout>

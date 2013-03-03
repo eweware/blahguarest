@@ -20,7 +20,7 @@ public interface BlahTypeDAOConstants {
     /**
      * <p>The blah type's category. It's value is a category id, an integer.</p>
      *
-     * @see BlahTypeCategoryType
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType
      */
     static final String CATEGORY_ID = "c";
 

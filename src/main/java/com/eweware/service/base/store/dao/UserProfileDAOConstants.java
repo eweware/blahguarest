@@ -9,6 +9,7 @@ package main.java.com.eweware.service.base.store.dao;
  * <p>The id key of this entity is the user's id.</p>
  * <p>Each setting might have a permission</p>
  * <p>Fields and data types for this entity.</p>
+ * <p><i>Note that the schema is created directly within the UserProfileSchema class</i></p>
  * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
  * @author rk@post.harvard.edu
  *         Date: 9/2/12 Time: 3:07 PM
@@ -23,10 +24,20 @@ public interface UserProfileDAOConstants {
     static final String USER_PROFILE_USER_TYPE = "t";
 
     /**
-     * <p><b>Do not use (alpha appendage).</b></p>
+     * <p>This is an encrypted recovery code for users who have forgotten their passwords.</p>
      */
     static final String USER_PROFILE_RECOVERY_CODE = "v";
     static final String USER_PROFILE_RECOVER_CODE_SET_METHOD = "vm";
+
+    /**
+     * <p>The date after which the currently set recovery code expires.</p>
+     */
+    static final String USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE = "x";
+
+    /**
+     * <p>A challenge security answer from the user. We just have one for now.</p>
+     */
+    static final String USER_PROFILE_CHALLENGE_ANSWER = "a";
 
     /**
      * <p>An optional email address. A string.</p>

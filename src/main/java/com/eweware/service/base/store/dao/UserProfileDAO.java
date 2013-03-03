@@ -20,6 +20,14 @@ public interface UserProfileDAO extends BaseDAO, UserProfileDAOConstants {
 
     public void setRecoverySetMethod(String method);
 
+    public Date getRecoveryCodeExpiration();
+
+    public void setRecoveryCodeExpiration(Date expirationDate);
+
+    public String getSecurityChallengeAnswer1();
+
+    public void setSecurityChallengeAnswer1(String answer1);
+
     public String getNickname();
 
     public void setNickname(String nickname);

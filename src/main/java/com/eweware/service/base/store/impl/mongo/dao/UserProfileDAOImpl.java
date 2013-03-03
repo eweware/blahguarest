@@ -27,6 +27,8 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_USER_TYPE, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVER_CODE_SET_METHOD, MongoFieldTypes.STRING);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, MongoFieldTypes.DATE);
+        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_CHALLENGE_ANSWER, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_NICKNAME, MongoFieldTypes.STRING);
@@ -119,6 +121,26 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     @Override
     public void setRecoverySetMethod(String method) {
         put(USER_PROFILE_RECOVER_CODE_SET_METHOD, method);
+    }
+
+    @Override
+    public Date getRecoveryCodeExpiration() {
+        return (Date) get(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
+    }
+
+    @Override
+    public void setRecoveryCodeExpiration(Date expirationDate) {
+        put(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, expirationDate);
+    }
+
+    @Override
+    public String getSecurityChallengeAnswer1() {
+        return (String) get(USER_PROFILE_CHALLENGE_ANSWER);
+    }
+
+    @Override
+    public void setSecurityChallengeAnswer1(String answer1) {
+        put(USER_PROFILE_CHALLENGE_ANSWER, answer1);
     }
 
     @Override

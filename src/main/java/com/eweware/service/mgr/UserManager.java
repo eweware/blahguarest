@@ -5,8 +5,9 @@ import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
+import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.user.validation.EmailUserValidationMethod;
 import main.java.com.eweware.service.base.mgr.ManagerState;
@@ -42,13 +43,14 @@ import proj.zoie.api.indexing.ZoieIndexableInterpreter;
 import proj.zoie.impl.indexing.ZoieConfig;
 import proj.zoie.impl.indexing.ZoieSystem;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
-
-import static main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType.ILS;
 
 /**
  * @author rk@post.harvard.edu
@@ -62,7 +64,7 @@ public class UserManager implements ManagerInterface {
 
     private static UserManager singleton;
 
-    private static final String userSetRecoveryCodeMethod = "u";
+    private static final String USER_SET_RECOVERY_CODE_METHOD = "u";
 
 
     private final boolean debug;
@@ -178,7 +180,7 @@ public class UserManager implements ManagerInterface {
             final UserAccountDAO userAccount = storeManager.createUserAccount(userDAO.getId());
             try {
                 final String[] saltedPassword = Login.createSaltedPassword(password);
-                userAccount.setCanonicalUsername(makeCanonicalUsername(username));
+                userAccount.setCanonicalUsername(Login.makeCanonicalUsername(username));
                 userAccount.setDigest(saltedPassword[0]);
                 userAccount.setSalt(saltedPassword[1]);
                 userAccount._insert();
@@ -223,21 +225,10 @@ public class UserManager implements ManagerInterface {
             throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
         }
         final UserAccountDAO dao = storeManager.createUserAccount();
-        dao.setCanonicalUsername(makeCanonicalUsername(username));
+        dao.setCanonicalUsername(Login.makeCanonicalUsername(username));
         if (dao._exists()) {
             throw new StateConflictException("username already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
         }
-    }
-
-    /**
-     * Returns the canonical form of a username. This form
-     * is the unique form of the username.
-     *
-     * @param username The username
-     * @return The canonical username
-     */
-    private String makeCanonicalUsername(String username) {
-        return username.toLowerCase();
     }
 
     /**
@@ -256,7 +247,8 @@ public class UserManager implements ManagerInterface {
         password = Login.ensurePasswordString(password);
 
         UserAccountDAO accountDAO = storeManager.createUserAccount();
-        accountDAO.setCanonicalUsername(makeCanonicalUsername(username));
+        final String canonicalUsername = Login.makeCanonicalUsername(username);
+        accountDAO.setCanonicalUsername(canonicalUsername);
 
         accountDAO = (UserAccountDAO) accountDAO._findByCompositeId(new String[]{UserAccountDAO.PASSWORD_DIGEST, UserAccountDAO.PASSWORD_SALT}, UserAccountDAO.CANONICAL_USERNAME);
         if (accountDAO == null) {
@@ -264,7 +256,7 @@ public class UserManager implements ManagerInterface {
         }
 
         if (Login.authenticate(accountDAO.getDigest(), accountDAO.getSalt(), password)) {
-            BlahguaSession.markAuthenticated(request, accountDAO.getId(), username);
+            BlahguaSession.markAuthenticated(request, accountDAO.getId(), canonicalUsername);
         } else {
             BlahguaSession.markAnonymous(request);
             throw new InvalidAuthorizedStateException("User not authorized", ErrorCodes.UNAUTHORIZED_USER);
@@ -316,10 +308,6 @@ public class UserManager implements ManagerInterface {
         }
         userProfileDAO.addFromMap(profile, true);
 
-        if (profile.getRecoveryCode() != null) {
-            userProfileDAO.setRecoverySetMethod(userSetRecoveryCodeMethod);
-        }
-
         try {
             if (profileExists) {
                 userProfileDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
@@ -332,97 +320,146 @@ public class UserManager implements ManagerInterface {
         return createOnly ? new UserProfilePayload(userProfileDAO.toMap()) : null; // nothing returned on an update
     }
 
+
     /**
-     * Attempt to recover the user account
+     * <p>Logs in user if recovery code is correct. Calling servlet will redirect to blahgua main page.</p>
      *
-     * @param localeId
-     * @param operation    The recovery operation. Valid values are:
-     *                     "e": request recovery by email address. The methodKey must contain an email address.
-     *                     "r": request recovery by recovery code. The methodKey must be null and the recovery code must be provided.
-     * @param methodKey    Required if operation is "e": this should be the email address.
-     * @param recoveryCode Required if operation is "r": this should be the recovery code
+     * @param en_us                      The localte
+     * @param request                    The http servlet request
+     * @param recoveryCode               The encrypted recovery code
+     * @param encryptedCanonicalUsername The encrypted canonical username
+     * @return True if all checks out and the user is logged in.
      */
-    public UserProfilePayload recoverUser(LocaleId localeId, String operation, String methodKey, String recoveryCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
-        if (operation == null) {
-            throw new InvalidRequestException("missing recovery operation", ErrorCodes.MISSING_QUERY_PARAMETER);
+    public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String recoveryCode, String encryptedCanonicalUsername) throws SystemErrorException, InvalidAuthorizedStateException {
+        final String canonicalUsername = Login.decrypt2Way(encryptedCanonicalUsername);
+        final UserAccountDAO userAccountDAO = storeManager.createUserAccount();
+        userAccountDAO.setCanonicalUsername(canonicalUsername);
+        final BaseDAO baseDAO = userAccountDAO._findByCompositeId(null, UserAccountDAO.ID);
+        if (baseDAO == null) {
+            throw new InvalidAuthorizedStateException("Illegal attempt to access system - no ac", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        final String userId = baseDAO.getId();
+        final UserProfileDAO userProfileDAO = (UserProfileDAO) storeManager.createUserProfile(userId)._findByPrimaryId(UserProfileDAO.USER_PROFILE_RECOVERY_CODE, UserProfileDAO.USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
+        if (userProfileDAO == null) {
+            throw new InvalidAuthorizedStateException("Illegal attempt to access system - no prof", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        final Date expiration = userProfileDAO.getRecoveryCodeExpiration();
+        if (expiration.after(new Date())) {
+            // TODO leave it in the system and let an overnight job delete the date.. maybe not worth even deleting it
+            throw new InvalidAuthorizedStateException("Recovery code has expired", ErrorCodes.UNAUTHORIZED_USER);
         }
 
-        final boolean isEmailRecovery = operation.equals("e");
-        final boolean isRecoveryCodeRecovery = operation.equals("r");
-
-        if (isEmailRecovery && methodKey == null) {
-            throw new InvalidRequestException("missing method key (e.g., email address) parameter", ErrorCodes.MISSING_QUERY_PARAMETER);
-        } else if (isRecoveryCodeRecovery && recoveryCode == null) {
-            throw new InvalidRequestException("missing recovery code parameter", ErrorCodes.MISSING_QUERY_PARAMETER);
-        } else if (!isEmailRecovery && !isRecoveryCodeRecovery) {
-            throw new InvalidRequestException("invalid recovery request", ErrorCodes.INVALID_INPUT);
+        final String code = userProfileDAO.getRecoveryCode();
+        if (code == null) {
+            throw new InvalidAuthorizedStateException("Invalid attempt to access system - no prof rc", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        if (!code.equals(recoveryCode)) {
+            throw new InvalidAuthorizedStateException("Invalid attempt to access system - diff rc", ErrorCodes.UNAUTHORIZED_USER);
         }
 
-        final UserProfileDAO profileDAO = storeManager.createUserProfile();
-        if (isRecoveryCodeRecovery) {
-            profileDAO.setRecoveryCode(recoveryCode);
-            final UserProfileDAO dao = (UserProfileDAO) profileDAO._findByCompositeId(new String[]{UserProfileDAO.ID, UserProfileDAO.USER_PROFILE_RECOVER_CODE_SET_METHOD}, UserProfileDAO.USER_PROFILE_RECOVERY_CODE);
-            if (dao == null) {
-                throw new StateConflictException("cannot recover user with given validation code", ErrorCodes.REQUEST_NOT_GRANTED);
-            }
-            if (dao.getRecoverySetMethod() == null || !dao.getRecoverySetMethod().equals(userSetRecoveryCodeMethod)) { // delete one-use validation code if set by anyone but user
-                dao.setRecoveryCode(null);
-                dao._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
-            }
-            return new UserProfilePayload(dao); // contains id
-        } else if (isEmailRecovery) {
-            profileDAO.setEmailAddress(methodKey);
-            final UserProfileDAO dao = (UserProfileDAO) profileDAO._findByCompositeId(new String[]{UserProfileDAO.ID}, UserProfileDAO.USER_PROFILE_EMAIL_ADDRESS);
-            if (dao == null) {
-                throw new StateConflictException("no user with specified methodKey=" + methodKey, ErrorCodes.NOT_FOUND_USER_ID);
-            }
-            recoveryCode = SystemManager.getInstance().makeShortRandomCode();
-            dao.setRecoveryCode(recoveryCode);
-            dao._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
-
-            sendRecoveryCodeEmail(methodKey, recoveryCode);
-
-            // return nothing
+        // Match user id and username against entered components
+        // TODO this may be overkill: the idea is frustrate an internal DB hacks (not that any Blahgua employee would ever do this!)
+        final Login.RecoveryCodeComponents inputComponents = Login.getRecoveryCodeComponents(recoveryCode);
+        if (!userId.equals(inputComponents.getUserId())) {
+            throw new InvalidAuthorizedStateException("Invalid attempt to access system - id", ErrorCodes.UNAUTHORIZED_USER);
         }
-        return null;
+        final String inputCanonicalUsername = Login.decrypt2Way(encryptedCanonicalUsername);
+        if (!inputCanonicalUsername.equals(canonicalUsername)) {
+            throw new InvalidAuthorizedStateException("Invalid attempt to access system - u", ErrorCodes.UNAUTHORIZED_USER);
+        }
+
+        // Enable session!
+        BlahguaSession.markAuthenticated(request, userId, canonicalUsername);
+
+        // redirect to blahgua
+        return true;
     }
 
-    private void sendRecoveryCodeEmail(String emailAddress, final String recoveryCode) throws InvalidRequestException, SystemErrorException {
-        if (!EmailUserValidationMethod.emailPattern.matcher(emailAddress).matches()) {
-            throw new InvalidRequestException("Invalid syntax for email address=" + emailAddress, ErrorCodes.INVALID_INPUT);
-        } else {
-            // TODO definitely queue email call and config reply email
-            try {  // won't error if MailManager has not started
-                MailManager.getInstance().send(emailAddress, makeRecoverySubject(emailAddress), makeRecoveryBody(recoveryCode));
-            } catch (Exception e) {
-                throw new SystemErrorException("Couldn't send recovery code email to user at " + emailAddress, e, ErrorCodes.VALIDATION_EMAIL_NOT_SENT_DUE_TO_MAIL_SYSTEM_ERROR);
-            }
+    /**
+     * <p>When a user forgets his password, sends email to the user with a recovery url.</p>
+     * <p>The user must have registered an email address in his profile.</p>
+     *
+     * @param localeId        The locale id
+     * @param request         The request
+     * @param username        The username
+     * @param emailAddress    The email address submitted by the user (for verification only)
+     * @param challengeAnswer The challenge answer submitted by the user (for verification)
+     */
+    public void recoverUser(LocaleId localeId, HttpServletRequest request, String username, String emailAddress, String challengeAnswer)
+            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException {
+
+        if (username == null) {
+            throw new InvalidRequestException("missing username", ErrorCodes.MISSING_USERNAME);
+        }
+        if (emailAddress == null) {
+            throw new InvalidRequestException("missing email address", ErrorCodes.MISSING_EMAIL_ADDRESS);
+        }
+        if (challengeAnswer == null) {
+            throw new InvalidAuthorizedStateException("missing challenge answer", ErrorCodes.INVALID_INPUT);
+        }
+
+        final UserAccountDAO userAccountDAO = storeManager.createUserAccount();
+        final String canonicalUsername = Login.makeCanonicalUsername(username);
+        userAccountDAO.setCanonicalUsername(canonicalUsername);
+        final BaseDAO baseDAO = userAccountDAO._findByCompositeId(new String[]{UserAccountDAO.ID}, UserAccountDAO.CANONICAL_USERNAME);
+        if (baseDAO == null) {
+            throw new ResourceNotFoundException("user not registered", ErrorCodes.NOT_FOUND_USER_ACCOUNT);
+        }
+        final String userId = baseDAO.getId();
+
+        // User eligible only if there's an email address in the profile
+        final UserProfileDAO userProfileDAO = (UserProfileDAO) storeManager.createUserProfile(userId)._findByPrimaryId(UserProfileDAO.USER_PROFILE_EMAIL_ADDRESS, UserProfileDAO.USER_PROFILE_CHALLENGE_ANSWER);
+        if (userProfileDAO == null || userProfileDAO.getEmailAddress() == null) {
+            throw new ResourceNotFoundException("no way to recover account", ErrorCodes.NOT_FOUND_USER_PROFILE);
+        }
+
+        // Check supplied email address and challenge question answer against profile
+        final String userProfileEmailAddress = userProfileDAO.getEmailAddress();
+        if (!userProfileEmailAddress.equals(emailAddress)) {
+            throw new InvalidAuthorizedStateException("invalid email address provided by user", ErrorCodes.INVALID_EMAIL_ADDRESS);
+        }
+        final String profileChallengeAnswer = userProfileDAO.getSecurityChallengeAnswer1();
+        if (profileChallengeAnswer == null || !profileChallengeAnswer.equals(challengeAnswer)) {
+            throw new InvalidAuthorizedStateException("invalid answer to challenge question", ErrorCodes.INVALID_INPUT);
+        }
+
+        // Stash recovery code in user profile
+        final String recoveryCode = Login.makeRecoveryCode(userId, username);
+        final UserProfileDAO updateProfileDAO = storeManager.createUserProfile(userId);
+        updateProfileDAO.setRecoveryCode(recoveryCode);
+        updateProfileDAO.setRecoverySetMethod(RecoveryMethodType.EMAIL.getCode());
+
+        final String encryptedUsername = Login.encrypt2Way(canonicalUsername);
+
+        notifyUser(userId, recoveryCode, encryptedUsername, userProfileDAO.getEmailAddress());
+    }
+
+    private void notifyUser(String userAccountDAOId, String recoveryCode, String encryptedUsername, String emailAddress) throws SystemErrorException {
+        try {
+            MailManager.getInstance().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, encryptedUsername));
+        } catch (MessagingException e) {
+            throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
     }
 
-    private String makeRecoveryBody(String recoveryCode) {
-        final StringBuilder b = new StringBuilder("Dear Blahgua User,\n\nYou have asked for a recovery code for your account and here it is.\n\n");
-        b.append("CODE: " + recoveryCode);
-        b.append("\n\nYou can recover your account by following these methods:\n");
-        b.append("\nMethod 1: click on the following URL to recover your account in this machine: ");
-        b.append("http://app.blahgua.com/recovery.aspx?code=");
-        b.append(recoveryCode);
-        b.append("\n\nMethod 2: Follow these steps:\n\n1. Open Blahgua in any device or browser.");
-        b.append("\n2. Go to the Account Info section.");
-        b.append("\n3. Click on Account Recovery if it is not already opened.");
-        b.append("\n4. Enter the recovery code in the text box labeled 'Recovery Token'.");
-        b.append("\n5. Click on the Recover Account button.");
-        b.append("\n\nAfter step 5, you should have recovered your account in the device or browser.");
-        b.append("\n\nThanks for using Blahgua.");
-        return b.toString();
-    }
-
-    private String makeRecoverySubject(String emailAddress) {
-        return "Blahgua Recovery Code";
+    private String makeAccountRecoveryBody(String recoveryCode, String encryptedUsername) {
+        final StringBuilder msg = new StringBuilder("The password to your Blahgua account has been changed.");
+        msg.append(" If you have not requested this change, please visit the following link to notify us.\nhttp://this-link-doesnt-work-yet.com/whatever");
+        msg.append("\nVisit the following link to recover your account:\n");
+        // TODO dbg check
+        final boolean mac = System.getProperty("os.name").toLowerCase().startsWith("mac");
+        final String endpoint = mac ? "localhost:8080" : "beta.blahgua.com";
+        msg.append("http://" + endpoint + "/recover?c=" + recoveryCode + "&n=" + encryptedUsername); // The API should redirect the user to the main page
+        msg.append("\n\nThis link will expire in two days.");
+        msg.append("\nPlease don't respond to this message");
+        msg.append("\n\nCheers,\nYour Blahgua Account Manager");
+        msg.append("\n\n\nYou have received this mandatory email service announcement to update you about important changes to your Blahgua account");
+        return msg.toString();
     }
 
     /**
      * Initiates registration of a user into a group.
+     * <p><b>Not in use.</b></p>
      *
      * @param localeId
      * @param userId        The user's id.
@@ -479,6 +516,7 @@ public class UserManager implements ManagerInterface {
     }
 
     /**
+     * <p><b>Not in use.</b></p>
      * A user entered a validation code in a client. Looks for the
      * code in a usergroup association and, if it is there, advances
      * the user to the active (A) state. The code is deleted from
@@ -556,7 +594,7 @@ public class UserManager implements ManagerInterface {
 //            throw new ResourceNotFoundException("no account exists for userId=" + userId, ErrorCodes.NOT_FOUND_USER_ACCOUNT);
 //        }
 
-        userAccountDAO.setCanonicalUsername(makeCanonicalUsername(username));
+        userAccountDAO.setCanonicalUsername(Login.makeCanonicalUsername(username));
         userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         userDAO.setUsername(username);
@@ -565,12 +603,20 @@ public class UserManager implements ManagerInterface {
         maybeUpdateUserInIndex(userDAO);
     }
 
+    /**
+     * <p>Updates a user's password. <i>Assumes that the user is authenticated!</i></p>
+     *
+     * @param en_us
+     * @param request
+     * @param password
+     * @throws InvalidAuthorizedStateException
+     *
+     * @throws InvalidRequestException
+     * @throws SystemErrorException
+     */
     public void updatePassword(LocaleId en_us, HttpServletRequest request, String password) throws
             InvalidAuthorizedStateException, InvalidRequestException, SystemErrorException {
 
-        if (!BlahguaSession.isAuthenticated(request)) {
-            throw new InvalidAuthorizedStateException("user cannot perform this operation", ErrorCodes.UNAUTHORIZED_USER);
-        }
         final String userId = BlahguaSession.getUserId(request);
 
         password = Login.ensurePasswordString(password);
@@ -693,7 +739,7 @@ public class UserManager implements ManagerInterface {
                         case ILS:
                             final String gender = (String) spec.getValidationMap().get(genderKey);
                             if (gender != null) {
-                                descriptor.append(shownAge?" ":"A ");
+                                descriptor.append(shownAge ? " " : "A ");
                                 descriptor.append(gender.toLowerCase());
                                 shownGender = true;
                             }
@@ -1188,3 +1234,105 @@ public class UserManager implements ManagerInterface {
         return config;
     }
 }
+
+
+//    /**
+//     * <p><b>Not in use.</b></p>
+//     * <p> Attempt to recover the user account.</p>
+//     *
+//     * @param localeId
+//     * @param operation    The recovery operation. Valid values are:
+//     *                     "e": request recovery by email address. The methodKey must contain an email address.
+//     *                     "r": request recovery by recovery code. The methodKey must be null and the recovery code must be provided.
+//     * @param methodKey    Required if operation is "e": this should be the email address.
+//     * @param recoveryCode Required if operation is "r": this should be the recovery code
+//     * @see #recoverUserNew(main.java.com.eweware.service.base.i18n.LocaleId, javax.servlet.http.HttpServletRequest, String)
+//     */
+//    public UserProfilePayload recoverUser(LocaleId localeId, String operation, String methodKey, String recoveryCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
+//        if (operation == null) {
+//            throw new InvalidRequestException("missing recovery operation", ErrorCodes.MISSING_QUERY_PARAMETER);
+//        }
+//
+//        final boolean isEmailRecovery = operation.equals("e");
+//        final boolean isRecoveryCodeRecovery = operation.equals("r");
+//
+//        if (isEmailRecovery && methodKey == null) {
+//            throw new InvalidRequestException("missing method key (e.g., email address) parameter", ErrorCodes.MISSING_QUERY_PARAMETER);
+//        } else if (isRecoveryCodeRecovery && recoveryCode == null) {
+//            throw new InvalidRequestException("missing recovery code parameter", ErrorCodes.MISSING_QUERY_PARAMETER);
+//        } else if (!isEmailRecovery && !isRecoveryCodeRecovery) {
+//            throw new InvalidRequestException("invalid recovery request", ErrorCodes.INVALID_INPUT);
+//        }
+//
+//        final UserProfileDAO profileDAO = storeManager.createUserProfile();
+//        if (isRecoveryCodeRecovery) {
+//            profileDAO.setRecoveryCode(recoveryCode);
+//            final UserProfileDAO dao = (UserProfileDAO) profileDAO._findByCompositeId(new String[]{UserProfileDAO.ID, UserProfileDAO.USER_PROFILE_RECOVER_CODE_SET_METHOD}, UserProfileDAO.USER_PROFILE_RECOVERY_CODE);
+//            if (dao == null) {
+//                throw new StateConflictException("cannot recover user with given validation code", ErrorCodes.REQUEST_NOT_GRANTED);
+//            }
+//            if (dao.getRecoverySetMethod() == null || !dao.getRecoverySetMethod().equals(USER_SET_RECOVERY_CODE_METHOD)) { // delete one-use validation code if set by anyone but user
+//                dao.setRecoveryCode(null);
+//                dao._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+//            }
+//            return new UserProfilePayload(dao); // contains id
+//        } else if (isEmailRecovery) {
+//            profileDAO.setEmailAddress(methodKey);
+//            final UserProfileDAO dao = (UserProfileDAO) profileDAO._findByCompositeId(new String[]{UserProfileDAO.ID}, UserProfileDAO.USER_PROFILE_EMAIL_ADDRESS);
+//            if (dao == null) {
+//                throw new StateConflictException("no user with specified methodKey=" + methodKey, ErrorCodes.NOT_FOUND_USER_ID);
+//            }
+//            recoveryCode = SystemManager.getInstance().makeShortRandomCode();
+//            dao.setRecoveryCode(recoveryCode);
+//            dao._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+//
+//            sendRecoveryCodeEmail(methodKey, recoveryCode);
+//
+//            // return nothing
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * <p>No longer used. (Part of alpha validation method.)</p>
+//     * <p><b>Not in use.</b></p>
+//     * @param emailAddress
+//     * @param recoveryCode
+//     * @throws InvalidRequestException
+//     * @throws SystemErrorException
+//     */
+//    private void sendRecoveryCodeEmail(String emailAddress, final String recoveryCode) throws InvalidRequestException, SystemErrorException {
+//        if (!EmailUserValidationMethod.emailPattern.matcher(emailAddress).matches()) {
+//            throw new InvalidRequestException("Invalid syntax for email address=" + emailAddress, ErrorCodes.INVALID_INPUT);
+//        } else {
+//            try {  // won't error if MailManager has not started
+//                MailManager.getInstance().send(emailAddress, makeRecoverySubject(emailAddress), makeRecoveryBody(recoveryCode));
+//            } catch (Exception e) {
+//                throw new SystemErrorException("Couldn't send recovery code email to user at " + emailAddress, e, ErrorCodes.VALIDATION_EMAIL_NOT_SENT_DUE_TO_MAIL_SYSTEM_ERROR);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * <p><b>Not in use.</b></p>
+//     */
+//    private String makeRecoveryBody(String recoveryCode) {
+//        final StringBuilder b = new StringBuilder("Dear Blahgua User,\n\nYou have asked for a recovery code for your account and here it is.\n\n");
+//        b.append("CODE: " + recoveryCode);
+//        b.append("\n\nYou can recover your account by following these methods:\n");
+//        b.append("\nMethod 1: click on the following URL to recover your account in this machine: ");
+//        b.append("http://app.blahgua.com/recovery.aspx?code=");
+//        b.append(recoveryCode);
+//        b.append("\n\nMethod 2: Follow these steps:\n\n1. Open Blahgua in any device or browser.");
+//        b.append("\n2. Go to the Account Info section.");
+//        b.append("\n3. Click on Account Recovery if it is not already opened.");
+//        b.append("\n4. Enter the recovery code in the text box labeled 'Recovery Token'.");
+//        b.append("\n5. Click on the Recover Account button.");
+//        b.append("\n\nAfter step 5, you should have recovered your account in the device or browser.");
+//        b.append("\n\nThanks for using Blahgua.");
+//        return b.toString();
+//    }
+//
+//    private String makeRecoverySubject(String emailAddress) {
+//        return "Blahgua Recovery Code";
+//    }

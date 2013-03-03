@@ -71,6 +71,8 @@
         &nbsp;
         <input id="logoutUser" type="button" onclick="rest('POST', 'users/logout')" value="Logout" />
         &nbsp;
+        <input id="recoverUser" type="button" onclick="recoverUser()"  value="Recover User"/>
+        &nbsp;
         <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
         &nbsp;
         <input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>
@@ -82,6 +84,10 @@
         <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
         &nbsp;
         <input id="getUserDescriptor" style="background-color: #22bf0d" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
+    </div>
+    <div style="margin-top: .5em">
+        <input id="createDummyProfile" style="background-color: #22bf0d" type="button" onclick="createDummyProfile()" value="Create Dummy Profile"/>
+        &nbsp;
     </div>
     <div style="margin-top: .5em">
     </div>
@@ -111,6 +117,8 @@
         <input class="param" id="password" type="text" size="20"/>
         &nbsp;User Id:
         <input class="param" id="userid" type="text" size=35 />
+        &nbsp;Email Address (Dummy Profile):
+        <input class="param" id="email" type="text" value="rk@eweware.com" size="20"/>
     </div>
     <h3>Blah Parameters</h3>
     <div>

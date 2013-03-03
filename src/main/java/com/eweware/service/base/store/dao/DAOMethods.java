@@ -3,6 +3,7 @@ package main.java.com.eweware.service.base.store.dao;
 import main.java.com.eweware.service.base.error.DuplicateKeyException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 
 import java.util.List;
 import java.util.Map;

@@ -24,7 +24,7 @@ public interface BlahTypeDAO extends BaseDAO, BlahTypeDAOConstants {
      * Returns this blah type category id, if any.
      *
      * @return The blah type category id
-     * @see BlahTypeCategoryType
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType
      */
     public Integer getCategoryId();
 
@@ -32,7 +32,7 @@ public interface BlahTypeDAO extends BaseDAO, BlahTypeDAOConstants {
      * Sets this blah type's category id
      *
      * @param categorid The blah type category id
-     * @see BlahTypeCategoryType
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType
      */
     public void setCategoryId(Integer categorid);
 }

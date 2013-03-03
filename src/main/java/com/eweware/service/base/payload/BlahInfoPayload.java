@@ -24,7 +24,7 @@ public class BlahInfoPayload extends BasePayload implements UserBlahInfoDAOConst
 
     public BlahInfoPayload(Map<String, Object> map) {
         super(map);
-        ensureDateTime(POLL_VOTE_TIMESTAMP);
+        ensureCanonicalDateTime(POLL_VOTE_TIMESTAMP);
     }
 
     public BlahInfoPayload(String userId, String blahId) {
