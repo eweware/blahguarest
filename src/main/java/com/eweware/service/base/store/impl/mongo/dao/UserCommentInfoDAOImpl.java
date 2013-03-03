@@ -28,8 +28,7 @@ public class UserCommentInfoDAOImpl extends BaseDAOImpl implements UserCommentIn
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VOTE, MongoFieldTypes.NUMBER);
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
-        UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

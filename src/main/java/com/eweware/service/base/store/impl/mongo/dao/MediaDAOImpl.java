@@ -25,8 +25,7 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
         MediaDAOImpl.FIELD_TO_TYPE_MAP.put(TYPE, MongoFieldTypes.STRING);
         MediaDAOImpl.FIELD_TO_TYPE_MAP.put(BUCKET, MongoFieldTypes.STRING);
         MediaDAOImpl.FIELD_TO_TYPE_MAP.put(PATHNAME, MongoFieldTypes.STRING);
-        MediaDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        MediaDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

@@ -32,8 +32,7 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(VALIDATION_CODE, MongoFieldTypes.STRING);
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
-        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

@@ -38,8 +38,7 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
-        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

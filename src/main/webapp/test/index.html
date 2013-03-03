@@ -71,7 +71,9 @@
         &nbsp;
         <input id="logoutUser" type="button" onclick="rest('POST', 'users/logout')" value="Logout" />
         &nbsp;
-        <input id="recoverUser" type="button" onclick="recoverUser()"  value="Recover User"/>
+        <input id="changePassword" type="button" onclick="changePassword()" value="Change Password" />
+        &nbsp;
+        <input id="recoverUser" style="background-color: #22bf0d" type="button" onclick="recoverUser()"  value="Recover User"/>
         &nbsp;
         <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
         &nbsp;
@@ -86,7 +88,7 @@
         <input id="getUserDescriptor" style="background-color: #22bf0d" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
     </div>
     <div style="margin-top: .5em">
-        <input id="createDummyProfile" style="background-color: #22bf0d" type="button" onclick="createDummyProfile()" value="Create Dummy Profile"/>
+        <input id="createDummyProfile" type="button" onclick="createDummyProfile()" value="Create Dummy Profile"/>
         &nbsp;
     </div>
     <div style="margin-top: .5em">

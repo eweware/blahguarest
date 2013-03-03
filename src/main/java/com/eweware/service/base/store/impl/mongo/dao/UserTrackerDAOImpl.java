@@ -77,8 +77,7 @@ public class UserTrackerDAOImpl extends BaseDAOImpl implements UserTrackerDAO {
         UserTrackerDAOImpl.FIELD_TO_TYPE_MAP.put(UT_DAILY_STATS_ARRAY, MongoFieldTypes.NUMBER);
         UserTrackerDAOImpl.FIELD_TO_TYPE_MAP.put(UT_DAILY_STATS_ARRAY, MongoFieldTypes.NUMBER);
 
-        UserTrackerDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        UserTrackerDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

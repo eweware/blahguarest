@@ -9,7 +9,6 @@ import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermi
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
-import main.java.com.eweware.service.user.validation.EmailUserValidationMethod;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
 import main.java.com.eweware.service.base.payload.*;
@@ -45,10 +44,9 @@ import proj.zoie.impl.indexing.ZoieSystem;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -64,8 +62,7 @@ public class UserManager implements ManagerInterface {
 
     private static UserManager singleton;
 
-    private static final String USER_SET_RECOVERY_CODE_METHOD = "u";
-
+    private static final int ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
     private final boolean debug;
     private final boolean doIndex;
@@ -291,9 +288,6 @@ public class UserManager implements ManagerInterface {
         if (profile.getUserType() != null) {
             throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
         }
-        if (profile.getId() != null) {  // sanity check
-            throw new InvalidRequestException("user id received in a request entity not allowed", ErrorCodes.INVALID_INPUT);
-        }
 
         UserProfileDAO userProfileDAO = storeManager.createUserProfile(userId);
         final boolean profileExists = userProfileDAO._exists();
@@ -326,50 +320,41 @@ public class UserManager implements ManagerInterface {
      *
      * @param en_us                      The localte
      * @param request                    The http servlet request
-     * @param recoveryCode               The encrypted recovery code
-     * @param encryptedCanonicalUsername The encrypted canonical username
+     * @param recoveryCodeAsString               The encrypted recovery code
      * @return True if all checks out and the user is logged in.
      */
-    public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String recoveryCode, String encryptedCanonicalUsername) throws SystemErrorException, InvalidAuthorizedStateException {
-        final String canonicalUsername = Login.decrypt2Way(encryptedCanonicalUsername);
-        final UserAccountDAO userAccountDAO = storeManager.createUserAccount();
-        userAccountDAO.setCanonicalUsername(canonicalUsername);
-        final BaseDAO baseDAO = userAccountDAO._findByCompositeId(null, UserAccountDAO.ID);
-        if (baseDAO == null) {
-            throw new InvalidAuthorizedStateException("Illegal attempt to access system - no ac", ErrorCodes.UNAUTHORIZED_USER);
+    public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String recoveryCodeAsString) throws SystemErrorException, InvalidAuthorizedStateException {
+
+        final Login.RecoveryCodeComponents inputComponents = Login.RecoveryCode.fromString(recoveryCodeAsString);
+
+        // Check recovery components against account
+        final String userId = inputComponents.getUserId();
+        final UserAccountDAO userAccountDAO = (UserAccountDAO) storeManager.createUserAccount(userId)._findByPrimaryId(UserAccountDAO.CANONICAL_USERNAME);
+        if (userAccountDAO == null) {
+            throw new InvalidAuthorizedStateException("Illegal attempt to access system - no ac", ErrorCodes.NOT_FOUND_USER_ACCOUNT);
         }
-        final String userId = baseDAO.getId();
+        if (!userAccountDAO.getCanonicalUsername().equals(inputComponents.getCanonicalUsername())) {
+            throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.INVALID_USERNAME);
+        }
+
+
         final UserProfileDAO userProfileDAO = (UserProfileDAO) storeManager.createUserProfile(userId)._findByPrimaryId(UserProfileDAO.USER_PROFILE_RECOVERY_CODE, UserProfileDAO.USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
         if (userProfileDAO == null) {
-            throw new InvalidAuthorizedStateException("Illegal attempt to access system - no prof", ErrorCodes.UNAUTHORIZED_USER);
+            throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
         final Date expiration = userProfileDAO.getRecoveryCodeExpiration();
-        if (expiration.after(new Date())) {
+        if (new Date().after(expiration)) {
             // TODO leave it in the system and let an overnight job delete the date.. maybe not worth even deleting it
-            throw new InvalidAuthorizedStateException("Recovery code has expired", ErrorCodes.UNAUTHORIZED_USER);
+            throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.RECOVERY_CODE_EXPIRED);
         }
 
-        final String code = userProfileDAO.getRecoveryCode();
-        if (code == null) {
-            throw new InvalidAuthorizedStateException("Invalid attempt to access system - no prof rc", ErrorCodes.UNAUTHORIZED_USER);
-        }
-        if (!code.equals(recoveryCode)) {
-            throw new InvalidAuthorizedStateException("Invalid attempt to access system - diff rc", ErrorCodes.UNAUTHORIZED_USER);
-        }
-
-        // Match user id and username against entered components
-        // TODO this may be overkill: the idea is frustrate an internal DB hacks (not that any Blahgua employee would ever do this!)
-        final Login.RecoveryCodeComponents inputComponents = Login.getRecoveryCodeComponents(recoveryCode);
-        if (!userId.equals(inputComponents.getUserId())) {
-            throw new InvalidAuthorizedStateException("Invalid attempt to access system - id", ErrorCodes.UNAUTHORIZED_USER);
-        }
-        final String inputCanonicalUsername = Login.decrypt2Way(encryptedCanonicalUsername);
-        if (!inputCanonicalUsername.equals(canonicalUsername)) {
-            throw new InvalidAuthorizedStateException("Invalid attempt to access system - u", ErrorCodes.UNAUTHORIZED_USER);
+        final Login.RecoveryCode code = userProfileDAO.getRecoveryCode();
+        if (code == null || !code.toString().equals(recoveryCodeAsString)) {
+            throw new InvalidAuthorizedStateException("Invalid access", ErrorCodes.RECOVERY_CODE_INVALID);
         }
 
         // Enable session!
-        BlahguaSession.markAuthenticated(request, userId, canonicalUsername);
+        BlahguaSession.markAuthenticated(request, userId, inputComponents.getCanonicalUsername());
 
         // redirect to blahgua
         return true;
@@ -424,34 +409,39 @@ public class UserManager implements ManagerInterface {
         }
 
         // Stash recovery code in user profile
-        final String recoveryCode = Login.makeRecoveryCode(userId, username);
+        final Login.RecoveryCode recoveryCode = Login.RecoveryCode.makeRecoveryCode(userId, canonicalUsername);
         final UserProfileDAO updateProfileDAO = storeManager.createUserProfile(userId);
         updateProfileDAO.setRecoveryCode(recoveryCode);
+        updateProfileDAO.setRecoveryCodeExpiration(new Date(System.currentTimeMillis() + (ONE_DAY_IN_MILLIS)));
         updateProfileDAO.setRecoverySetMethod(RecoveryMethodType.EMAIL.getCode());
+        updateProfileDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-        final String encryptedUsername = Login.encrypt2Way(canonicalUsername);
-
-        notifyUser(userId, recoveryCode, encryptedUsername, userProfileDAO.getEmailAddress());
+        notifyUser(recoveryCode, userProfileDAO.getEmailAddress());
     }
 
-    private void notifyUser(String userAccountDAOId, String recoveryCode, String encryptedUsername, String emailAddress) throws SystemErrorException {
+    private void notifyUser(Login.RecoveryCode recoveryCode, String emailAddress) throws SystemErrorException {
         try {
-            MailManager.getInstance().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, encryptedUsername));
+            MailManager.getInstance().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode));
         } catch (MessagingException e) {
             throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+        } catch (UnsupportedEncodingException e) {
+            throw new SystemErrorException("encd", ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
-    private String makeAccountRecoveryBody(String recoveryCode, String encryptedUsername) {
+    private String makeAccountRecoveryBody(Login.RecoveryCode recoveryCode) throws UnsupportedEncodingException {
         final StringBuilder msg = new StringBuilder("The password to your Blahgua account has been changed.");
-        msg.append(" If you have not requested this change, please visit the following link to notify us.\nhttp://this-link-doesnt-work-yet.com/whatever");
-        msg.append("\nVisit the following link to recover your account:\n");
-        // TODO dbg check
+        msg.append(" Visit the following link to recover your account:\n\n");
         final boolean mac = System.getProperty("os.name").toLowerCase().startsWith("mac");
         final String endpoint = mac ? "localhost:8080" : "beta.blahgua.com";
-        msg.append("http://" + endpoint + "/recover?c=" + recoveryCode + "&n=" + encryptedUsername); // The API should redirect the user to the main page
+//        final String query = URLEncoder.encode(params.toString(), "UTF-8");
+        msg.append("http://");
+        msg.append(endpoint);
+        msg.append("/recover?n=");
+        msg.append(recoveryCode);
         msg.append("\n\nThis link will expire in two days.");
-        msg.append("\nPlease don't respond to this message");
+        msg.append(" If you have not requested this change, please visit the following link to notify us.\n\nhttp://this-link-doesnt-work-yet.com/whatever");
+        msg.append("\n\nPlease don't respond to this message");
         msg.append("\n\nCheers,\nYour Blahgua Account Manager");
         msg.append("\n\n\nYou have received this mandatory email service announcement to update you about important changes to your Blahgua account");
         return msg.toString();

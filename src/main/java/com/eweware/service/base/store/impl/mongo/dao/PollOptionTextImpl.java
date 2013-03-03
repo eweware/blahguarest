@@ -8,6 +8,7 @@ import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 import java.util.Map;
 
 /**
+ * <p>Embedded in a blah.</p>
  * @author rk@post.harvard.edu
  *         Date: 2/15/13 Time: 5:58 PM
  */

@@ -10,14 +10,12 @@ import org.apache.commons.codec.binary.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-import java.io.IOException;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
 import java.util.Arrays;
 
 /**
@@ -36,7 +34,7 @@ public final class Login {
      */
     private static final String ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER = "|";
     private static final String ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP = "\\|";
-    private static final String EMPTY_STRING = "";
+//    private static final String EMPTY_STRING = "";
 
     /**
      * Authenticates the user with the given password.
@@ -106,13 +104,16 @@ public final class Login {
 
     /**
      * Checks password string and returns appropriate version of it
-     * @param password  The password. If null, it is interpreted as ""
-     * @return  The validated version of the password.
-     * @throws InvalidRequestException  Thrown if the password is unacceptable
+     *
+     * @param password The password. If null, it is interpreted as ""
+     * @return The validated version of the password.
+     * @throws InvalidRequestException Thrown if the password is unacceptable
      */
     public static String ensurePasswordString(String password) throws InvalidRequestException {
-        if (password == null) {password = "";} // empty string
-        if (!   CommonUtilities.checkString(password, 0, 64)) {
+        if (password == null) {
+            password = "";
+        } // empty string
+        if (!CommonUtilities.checkString(password, 0, 64)) {
             throw new InvalidRequestException("Invalid password. Length must not exceed 64.", ErrorCodes.INVALID_PASSWORD);
         }
         return password;
@@ -120,9 +121,10 @@ public final class Login {
 
     /**
      * Checks username string and returns appropriate version of it
-     * @param username  The username. If null, it is interpreted as ""
-     * @return  The validated version of the username.
-     * @throws InvalidRequestException  Thrown if the username is unacceptable
+     *
+     * @param username The username. If null, it is interpreted as ""
+     * @return The validated version of the username.
+     * @throws InvalidRequestException Thrown if the username is unacceptable
      */
     public static String ensureUsernameString(String username) throws InvalidRequestException {
         if (!CommonUtilities.checkString(username, 3, 32)) {
@@ -135,14 +137,6 @@ public final class Login {
     }
 
     // Two-way Encrypt
-
-//    public static void main(String[] args) throws Exception {
-//        String code = makeRecoveryCode("51315780036486e5ec83ff9a", "");
-//        System.out.println("Encrypted: " + code);
-//        final RecoveryCodeComponents comp = getRecoveryCodeComponents(code);
-//        System.out.println("userId: " + "="+comp.getUserId()+"=");
-//        System.out.println("username: " + "="+comp.getCanonicalUsername()+"=");
-//    }
 
     // TODO: the master password and salt needs to be secured!
     private static final char[] MASTER_PASSWORD = "23&-*/F43v02!s_83jJ@=a".toCharArray();
@@ -162,74 +156,107 @@ public final class Login {
             this.userId = userId;
             this.canonicalUsername = canonicalUsername;
         }
+
         public String getCanonicalUsername() {
             return canonicalUsername;
         }
+
         public String getUserId() {
             return userId;
         }
     }
-    /**
-     * Creates a temporary recovery code.
-     * @param userId The user's id
-     * @param canonicalUsername The user's canonical name
-     * @return  An encrypted recovery code
-     * @throws SystemErrorException  If there is a system problem with encryption.
-     */
-    public static String makeRecoveryCode(String userId, String canonicalUsername) throws SystemErrorException {
-        final StringBuilder b = new StringBuilder(userId);
-        b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
-        b.append(canonicalUsername);
-        return encrypt2Way(b.toString());
+
+
+    public static void main(String[] args) throws Exception {
+        RecoveryCode code = RecoveryCode.makeRecoveryCode("51315780036486e5ec83ff9a", "ruben");
+        System.out.println("CODE:" + code);
+        System.out.println();
+
+        RecoveryCode.fromString(code.toString());
+        System.out.println("Encrypted: " + code);
+        final RecoveryCodeComponents comp = RecoveryCode.fromString(code.toString());
+        System.out.println("userId: " + "=" + comp.getUserId() + "=");
+        System.out.println("username: " + "=" + comp.getCanonicalUsername() + "=");
     }
 
-    public static RecoveryCodeComponents getRecoveryCodeComponents(String recoveryCode) throws SystemErrorException {
-        if (recoveryCode == null) {
-            throw new SystemErrorException("Invalid recovery code", ErrorCodes.SERVER_RECOVERABLE_ERROR);
-        }
-        final String[] components = decrypt2Way(recoveryCode).split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
-        if (components.length == 0) {
-            throw new SystemErrorException("recovery code has empty components", ErrorCodes.SERVER_RECOVERABLE_ERROR);
-        }
-        return new RecoveryCodeComponents(components[0], (components.length < 2) ? EMPTY_STRING : components[1]);
+    public static String getStringFromSecretKey(SecretKey secretKey) {
+        return Base64.encodeBase64String(secretKey.getEncoded());
     }
 
-    /**
-     * <p>Encrypts the string using a two-way encryption method.</p>
-     * <p><b>IMPORTANT:</b> The master key is subject to change. You should
-     * only use this for temporary encryption (e.g., email recovery codes, etc).</p>
-     * @param string
-     * @return  An encrypted string
-     * @throws GeneralSecurityException
-     * @throws UnsupportedEncodingException
-     * @see #decrypt2Way(String)
-     */
-    public static String encrypt2Way(String string) throws SystemErrorException {
+    public static SecretKey getSecretKeyFromString(String secretKey) {
+        byte[] encodedKey     = Base64.decodeBase64(secretKey);
+        return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
+    }
+
+    public static class RecoveryCode implements Serializable {
+        public String cipherBase64;
+        public String ivBase64;
+        public String secretKeyBase64;
+
+        public static final RecoveryCodeComponents fromString(String string) throws SystemErrorException {
+            final String[] foo = string.split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
+            final String cipher = foo[0];
+            final String iv = foo[1];
+            final String secretKey = foo[2];
+            final String text = decrypt2Way(cipher, iv, secretKey);
+            final String[] components = text.split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
+            if (components.length < 1) {
+                throw new SystemErrorException("recovery components", ErrorCodes.SERVER_RECOVERABLE_ERROR);
+            }
+            return new RecoveryCodeComponents(components[0], (components.length == 1) ? "" : components[1]);
+        }
+
+        /**
+         * Creates a temporary recovery code.
+         *
+         * @param userId            The user's id
+         * @param canonicalUsername The user's canonical name
+         * @return An encrypted recovery code
+         * @throws SystemErrorException If there is a system problem with encryption.
+         */
+        public static RecoveryCode makeRecoveryCode(String userId, String canonicalUsername) throws SystemErrorException {
+            final StringBuilder b = new StringBuilder(userId);
+            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
+            b.append(canonicalUsername);
+            return encrypt2Way(b.toString());
+        }
+
+        public String toString() {
+            final StringBuilder b = new StringBuilder();
+            b.append(cipherBase64);
+            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
+            b.append(ivBase64);
+            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
+            b.append(secretKeyBase64);
+            return b.toString();
+        }
+    }
+
+    public static RecoveryCode encrypt2Way(String string) throws SystemErrorException {
         try {
-            SecretKeyFactory fac = SecretKeyFactory.getInstance(TWO_WAY_CRYPT_METHOD);
-            SecretKey key = fac.generateSecret(new PBEKeySpec(MASTER_PASSWORD));
-            Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
-            cipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(MASTER_SALT, 20));
-            return new String(Base64.encodeBase64(cipher.doFinal(string.getBytes("UTF-8"))));
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            PBEKeySpec spec = new PBEKeySpec(MASTER_PASSWORD, MASTER_SALT, 65536, 256);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secret);
+            AlgorithmParameters params = cipher.getParameters();
+            final RecoveryCode recoveryCode = new RecoveryCode();
+            recoveryCode.ivBase64 = Base64.encodeBase64String(params.getParameterSpec(IvParameterSpec.class).getIV());
+            recoveryCode.cipherBase64 = Base64.encodeBase64String(cipher.doFinal(string.getBytes("UTF-8")));
+            recoveryCode.secretKeyBase64 = getStringFromSecretKey(secret);
+            return recoveryCode;
         } catch (Exception e) {
             throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
-    /**
-     * Decrypt the encrypted string
-     * @param string    Encrypted string
-     * @return  The decrypted string
-     * @throws SystemErrorException
-     * @see #encrypt2Way(String)
-     */
-    public static String decrypt2Way(String string) throws SystemErrorException {
+    public static String decrypt2Way(String cipherBase64, String ivBase64, String secret) throws SystemErrorException {
         try {
-            SecretKeyFactory fac = SecretKeyFactory.getInstance(TWO_WAY_CRYPT_METHOD);
-            SecretKey key = fac.generateSecret(new PBEKeySpec(MASTER_PASSWORD));
-            Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
-            cipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(MASTER_SALT, 20));
-            return new String(cipher.doFinal(Base64.decodeBase64(string)), "UTF-8");
+            SecretKey secretKey = getSecretKeyFromString(secret);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(Base64.decodeBase64(ivBase64)));
+            return new String(cipher.doFinal(Base64.decodeBase64(cipherBase64)), "UTF-8");
         } catch (Exception e) {
             throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }

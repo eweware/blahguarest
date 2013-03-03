@@ -34,8 +34,7 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENTS_ON_THIS_BLAH, MongoFieldTypes.NUMBER);
-        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

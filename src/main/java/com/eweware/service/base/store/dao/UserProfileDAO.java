@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import main.java.com.eweware.service.user.validation.Login;
+
 import java.util.Date;
 
 /**
@@ -12,9 +14,9 @@ public interface UserProfileDAO extends BaseDAO, UserProfileDAOConstants {
 
     public void setUserType(String userType);
 
-    public String getRecoveryCode();
+    public Login.RecoveryCode getRecoveryCode();
 
-    public void setRecoveryCode(String code);
+    public void setRecoveryCode(Login.RecoveryCode code);
 
     public String getRecoverySetMethod();
 

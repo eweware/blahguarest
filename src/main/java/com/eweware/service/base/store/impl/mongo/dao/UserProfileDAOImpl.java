@@ -7,6 +7,7 @@ import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import main.java.com.eweware.service.user.validation.Login;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -51,8 +52,7 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_INCOME_RANGE_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GPS_LOCATION, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_GPS_LOCATION_PERMISSIONS, MongoFieldTypes.NUMBER);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override
@@ -104,12 +104,12 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     }
 
     @Override
-    public String getRecoveryCode() {
-        return (String) get(USER_PROFILE_RECOVERY_CODE);
+    public Login.RecoveryCode getRecoveryCode() {
+        return (Login.RecoveryCode) get(USER_PROFILE_RECOVERY_CODE);
     }
 
     @Override
-    public void setRecoveryCode(String code) {
+    public void setRecoveryCode(Login.RecoveryCode code) {
         put(USER_PROFILE_RECOVERY_CODE, code);
     }
 

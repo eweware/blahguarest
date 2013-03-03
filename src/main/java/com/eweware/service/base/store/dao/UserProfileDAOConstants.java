@@ -25,6 +25,7 @@ public interface UserProfileDAOConstants {
 
     /**
      * <p>This is an encrypted recovery code for users who have forgotten their passwords.</p>
+     * @see main.java.com.eweware.service.user.validation.Login.RecoveryCode
      */
     static final String USER_PROFILE_RECOVERY_CODE = "v";
     static final String USER_PROFILE_RECOVER_CODE_SET_METHOD = "vm";

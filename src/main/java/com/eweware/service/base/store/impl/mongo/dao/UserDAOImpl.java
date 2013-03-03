@@ -28,8 +28,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_CONTROVERSY_STRENGTH, MongoFieldTypes.NUMBER);
-        UserDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        UserDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

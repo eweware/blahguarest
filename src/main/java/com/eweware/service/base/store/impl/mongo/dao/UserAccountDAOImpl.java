@@ -23,6 +23,7 @@ public class UserAccountDAOImpl extends BaseDAOImpl implements UserAccountDAO {
         UserAccountDAOImpl.FIELD_TO_TYPE_MAP.put(CANONICAL_USERNAME, MongoFieldTypes.STRING);
         UserAccountDAOImpl.FIELD_TO_TYPE_MAP.put(PASSWORD_DIGEST, MongoFieldTypes.STRING);
         UserAccountDAOImpl.FIELD_TO_TYPE_MAP.put(PASSWORD_SALT, MongoFieldTypes.STRING);
+        addInheritedFieldToTypeMapItems(UserAccountDAOImpl.FIELD_TO_TYPE_MAP);
     }
 
     @Override

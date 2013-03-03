@@ -34,8 +34,7 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CURRENT_VIEWER_COUNT, MongoFieldTypes.NUMBER);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

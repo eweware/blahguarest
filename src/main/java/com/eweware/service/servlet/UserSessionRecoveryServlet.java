@@ -21,11 +21,10 @@ public class UserSessionRecoveryServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
-        final String recoveryCode = (String) req.getAttribute("c");
-        final String userCode = (String) req.getAttribute("n");
-        try {
-            final boolean doRedirect = UserManager.getInstance().recoverUserAndRedirectToMainPage(LocaleId.en_us, req, recoveryCode, userCode);
+//        super.doGet(req, resp);
+        final String recoveryCode = (String) req.getParameter("n");
+        try { // TODO if any is null, redirect to error page
+            final boolean doRedirect = UserManager.getInstance().recoverUserAndRedirectToMainPage(LocaleId.en_us, req, recoveryCode);
             if (doRedirect) {
                 resp.sendRedirect("http://beta.blahgua.com");
             } else {

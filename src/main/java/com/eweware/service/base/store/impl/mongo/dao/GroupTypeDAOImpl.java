@@ -24,8 +24,7 @@ public class GroupTypeDAOImpl extends BaseDAOImpl implements GroupTypeDAO {
     static {  // TODO should be derived from schema
         GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
         GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_COUNT, MongoFieldTypes.NUMBER);
-        GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override
@@ -83,5 +82,10 @@ public class GroupTypeDAOImpl extends BaseDAOImpl implements GroupTypeDAO {
     @Override
     public void setGroupCount(Integer groupCount) {
         put(GROUP_COUNT, groupCount);
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
     }
 }

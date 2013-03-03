@@ -31,6 +31,15 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;
 
     /**
+     * Provides Mongo field types for BaseDAOImpl fields to subclasses.
+     * @param map   A map to which to add the Mongo data types.
+     */
+    protected static void addInheritedFieldToTypeMapItems(Map<String, MongoFieldTypes> map) {
+        map.put(CREATED, MongoFieldTypes.DATE);
+        map.put(UPDATED, MongoFieldTypes.DATE);
+    }
+
+    /**
      * General constructor.
      */
     BaseDAOImpl() {
@@ -622,7 +631,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             }
             final MongoFieldTypes type = _getFieldNameToTypeMap().get(fieldName);
             if (type == null) {
-                throw new SystemErrorException("missing field name to type map for fieldName " + fieldName + " in " + this.getClass().getSimpleName() + " object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("missing field name to type map for fieldName '" + fieldName + "' in " + this.getClass().getSimpleName() + " object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
             }
 
             final Object value = entry.getValue();

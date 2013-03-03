@@ -26,8 +26,7 @@ public class BlahTypeDAOImpl extends BaseDAOImpl implements BlahTypeDAO {
     static {   // TODO should be derived from schema
         BlahTypeDAOImpl.FIELD_TO_TYPE_MAP.put(NAME, MongoFieldTypes.STRING);
         BlahTypeDAOImpl.FIELD_TO_TYPE_MAP.put(CATEGORY_ID, MongoFieldTypes.NUMBER);
-        BlahTypeDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
-        BlahTypeDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

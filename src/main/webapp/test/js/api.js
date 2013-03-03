@@ -107,14 +107,15 @@ function checkUsername() {
 	rest("GET", "users/check/username/" + username)
 }
 
-function setPassword() {
+
+function changePassword() {
 	var userId = getUserId();
 	var password = getPassword();
 	if (username.length == 0) {
 		alert("Missing User Name");
 		return;
 	}
-	rest("POST", "users", '{"userId": "' + userId + '", "pwd": "' + password + '"}', setUserData);
+	rest("PUT", "users/update/password/"+password);
 }
 
 function loginUser() {
@@ -150,12 +151,13 @@ function createDummyProfile() {
 	rest('POST', 'users/profiles', JSON.stringify({"_id": userId, "e": email, "a": "hi"}));
 }
 
+
 function recoverUser() {
 	var username = getUsername();
 	var email = document.getElementById("email").value;
-	if (!email || !userId) {alert("Missing User Name and/or Email Address"); return;}
+	if (!username || !email) {alert("Missing User Name and/or Email Address"); return;}
 	var challengeAnswer = "hi";
-	rest('POST', "recover/user", JSON.stringify({"u": username, "e": email, "a": "hi"}));
+	rest('POST', "users/recover/user", JSON.stringify({"u": username, "e": email, "a": "hi"}));
 }
 
 function setChannelTypeData(channelType) {
