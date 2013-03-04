@@ -249,6 +249,60 @@ public class UsersResource {
     }
 
     /**
+     * <p>Use this method to set, update or delete either the user's email address
+     * or challenge question from his account.</p>
+     * <p>Note that the email address is no longer set in the profile: it is set in the user's account.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     *
+     * @param entity A JSON entity containing the following fields:
+     *               <div>'e' := the value is an email address string. If set to null,
+     *               the email address will be removed from the user account. If this
+     *               field is not provided in the entity, it is ignored (it is neither
+     *               set, updated, nor deleted).</div>
+     *               <div>'q' := an answer to a challenge question (a string). If set to null,
+     *               the challenge question will be removed from the user account. If this
+     *               field is not provided in the entity, it is ignored (it is neither
+     *               set, updated, nor deleted).</div>
+     * @return Returns an http status of 202 (ACCEPTED) if the address was accepted.
+     *         If there is a security problem, returns status of 401.
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @POST
+    @Path("/account")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setAccountInfo(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final String userId = BlahguaSession.ensureAuthenticated(request);
+            UserManager.getInstance().setUserAccountData(userId, entity.containsKey("e"), entity.get("e"), entity.containsKey("q"), entity.get("q"));
+            return RestUtilities.make204OKNoContentResponse();
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Same as POST version of this method.</p>
+     *
+     * @see #setAccountInfo(java.util.Map, javax.servlet.http.HttpServletRequest)
+     */
+    @PUT
+    @Path("/account")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateAccount(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        return setAccountInfo(entity, request);
+    }
+
+    /**
      * <p>Use this method to update profile fields.</p>
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>

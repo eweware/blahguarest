@@ -49,11 +49,16 @@ function defaultSuccessFunction(results, successOrNot, theStatus) {
 	} else {
 		$("#resultstatus").html("<span style='color:green'>Http Status: Unknown</span>");
 	}
-	
+
 	$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
 	$("#results").css({
 		'color' : 'black'
 	}).html(results)
+}
+
+function changeSecurity() {
+	var on = document.getElementById('security').checked;
+	rest('POST', 'sys/secure/' + on);
 }
 
 function createChannelType() {
@@ -144,11 +149,10 @@ function setUserData(user) {
 	document.getElementById("userid").value = obj._id;
 }
 
-function createDummyProfile() {
+function createUserAcctData() {
 	var email = document.getElementById("email").value;
-	var userId = getUserId();
-	if (!email || !userId) {alert("Missing UserId and/or Email Address"); return;}
-	rest('POST', 'users/profiles', JSON.stringify({"_id": userId, "e": email, "a": "hi"}));
+	if (!email) {alert("Missing Email Address"); return;}
+	rest('POST', 'users/account', JSON.stringify({"e": email, "q": "hi"}));
 }
 
 

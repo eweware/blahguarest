@@ -17,39 +17,39 @@ package main.java.com.eweware.service.base.store.dao;
 public interface UserProfileDAOConstants {
 
     /**
-     * <p>The user type. A string.</p>
+     * <p>The user type. A string.</p>   TODO obsolete this and use the account dao's type!
      * <p>This is currently an ad-hoc field, but the point is distinguish among different
      * types of users who might have different global permissions.</p>
      */
     static final String USER_PROFILE_USER_TYPE = "t";
 
-    /**
-     * <p>This is an encrypted recovery code for users who have forgotten their passwords.</p>
-     * @see main.java.com.eweware.service.user.validation.Login.RecoveryCode
-     */
-    static final String USER_PROFILE_RECOVERY_CODE = "v";
-    static final String USER_PROFILE_RECOVER_CODE_SET_METHOD = "vm";
+//    /**
+//     * <p>This is an encrypted recovery code for users who have forgotten their passwords.</p>
+//     * @see main.java.com.eweware.service.user.validation.Login.RecoveryCode
+//     */
+//    static final String USER_PROFILE_RECOVERY_CODE = "v";
+//    static final String USER_PROFILE_RECOVER_CODE_SET_METHOD = "vm";
 
-    /**
-     * <p>The date after which the currently set recovery code expires.</p>
-     */
-    static final String USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE = "x";
+//    /**
+//     * <p>The date after which the currently set recovery code expires.</p>
+//     */
+//    static final String USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE = "x";
 
-    /**
-     * <p>A challenge security answer from the user. We just have one for now.</p>
-     */
-    static final String USER_PROFILE_CHALLENGE_ANSWER = "a";
+//    /**
+//     * <p>A challenge security answer from the user. We just have one for now.</p>
+//     */
+//    static final String USER_PROFILE_CHALLENGE_ANSWER = "a";
 
-    /**
-     * <p>An optional email address. A string.</p>
-     * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
-     */
-    static final String USER_PROFILE_EMAIL_ADDRESS = "e";
-    /**
-     * <p>Permissions associated with the email address field.</p>
-     * @see main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions
-     */
-    static final String USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS = "ep";
+//    /**
+//     * <p>An optional email address. A string.</p>
+//     * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
+//     */
+//    static final String USER_PROFILE_EMAIL_ADDRESS = "e";
+//    /**
+//     * <p>Permissions associated with the email address field.</p>
+//     * @see main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions
+//     */
+//    static final String USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS = "ep";
 
     /**
      * <p>An optional nickname for the user. A string</p>

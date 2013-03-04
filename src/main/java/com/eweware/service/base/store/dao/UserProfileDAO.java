@@ -14,22 +14,6 @@ public interface UserProfileDAO extends BaseDAO, UserProfileDAOConstants {
 
     public void setUserType(String userType);
 
-    public Login.RecoveryCode getRecoveryCode();
-
-    public void setRecoveryCode(Login.RecoveryCode code);
-
-    public String getRecoverySetMethod();
-
-    public void setRecoverySetMethod(String method);
-
-    public Date getRecoveryCodeExpiration();
-
-    public void setRecoveryCodeExpiration(Date expirationDate);
-
-    public String getSecurityChallengeAnswer1();
-
-    public void setSecurityChallengeAnswer1(String answer1);
-
     public String getNickname();
 
     public void setNickname(String nickname);
@@ -37,14 +21,6 @@ public interface UserProfileDAO extends BaseDAO, UserProfileDAOConstants {
     public Integer getNicknamePermissions();
 
     public void setNicknamePermissions(Integer p);
-
-    public String getEmailAddress();
-
-    public void setEmailAddress(String emailAddress);
-
-    public Integer getEmailAddressPermissions();
-
-    public void setEmailAddressPermissions(Integer p);
 
     public String getGender();
 

@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -31,10 +30,15 @@ public final class SystemManager implements ManagerInterface {
     private static SystemManager singleton;
 
     private ManagerState state = ManagerState.UNINITIALIZED;
+    private boolean devMode;
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
     private BlahCache blahCache;
     private final BlahCacheConfiguration blahCacheConfiguration;
+    private String restEndpoint;
+    private final String restServiceEndpoint;
+
+    /** for dev mode */
 
 
     public static SystemManager getInstance() throws SystemErrorException {
@@ -44,8 +48,20 @@ public final class SystemManager implements ManagerInterface {
         return SystemManager.singleton;
     }
 
-    public SystemManager(String cacheHostname, String cachePort) {
+    public SystemManager(
+            String restServiceEndpoint,
+            String cacheHostname,
+            String cachePort,
+            String devMemcachedHostname,
+            String devRestPort
+            ) {
         try {
+            maybeSetDevelopmentMode();
+            if (isDevMode()) {
+                cacheHostname = devMemcachedHostname; // same port 21191
+                restEndpoint = "localhost:" + devRestPort;
+            }
+            this.restServiceEndpoint = restServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(cacheHostname, cachePort).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance("SHA1PRNG");
@@ -56,6 +72,33 @@ public final class SystemManager implements ManagerInterface {
         SystemManager.singleton = this;
         this.state = ManagerState.INITIALIZED;
         System.out.println("*** SystemManager initialized ***");
+    }
+
+    private void maybeSetDevelopmentMode() {
+        final String dev = System.getenv("BLAHGUA_DEV_MODE");
+        devMode = (dev != null && dev.equals("true"));
+    }
+
+    /**
+     * <p>Get the local REST service endpoint (hostname+port) only if in dev mode.</p>
+     * @return Local hostname and port for Catalina service
+     * @see #isDevMode()
+     */
+    public String getDevRestEndpoint() {
+        return restEndpoint;
+    }
+
+    /**
+     * <p>Returns true if we're in development mode.</p>
+     * @return true if we're in development mode
+     * @see #getDevRestEndpoint()
+     */
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    public String getRestServiceEndpoint() {
+        return restServiceEndpoint;
     }
 
 
@@ -75,9 +118,6 @@ public final class SystemManager implements ManagerInterface {
     public void start() {
         try {
             this.blahCache = new BlahCache(blahCacheConfiguration);
-            final MongoStoreManager storeMgr = (MongoStoreManager) MongoStoreManager.getInstance();
-            checkManagers(storeMgr);
-//            initializeDateFormats();
             this.state = ManagerState.STARTED;
             System.out.println("*** SystemManager started ***");
         } catch (Exception e) {
@@ -93,26 +133,6 @@ public final class SystemManager implements ManagerInterface {
         blahCache.shutdown();
         this.state = ManagerState.SHUTDOWN;
         System.out.println("*** System shut down ***");
-    }
-
-    /**
-     * Ensures all managers are STARTED *
-     */
-    private void checkManagers(MongoStoreManager storeMgr)
-            throws SystemErrorException {
-        if (storeMgr.getState() != ManagerState.STARTED) {
-            throw new SystemErrorException("MongoStoreManager failed to start");
-        }
-        if (BlahManager.getInstance().getState() != ManagerState.STARTED) {
-            throw new SystemErrorException("BlahManager failed to start");
-        }
-        if (GroupManager.getInstance().getState() != ManagerState.STARTED) {
-            throw new SystemErrorException("GroupManager failed to start");
-        }
-        if (UserManager.getInstance().getState() != ManagerState.STARTED) {
-            throw new SystemErrorException("UserManager failed to start");
-        }
-        // TODO tracking mgr, media mgr.
     }
 
     public Map<String, OperationInfo> processMetrics(boolean reset) {

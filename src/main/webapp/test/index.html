@@ -27,7 +27,9 @@
         <input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
         &nbsp;
         Host Endpoint:
-        <input id="endpoint" type="text" value="localhost:8080"/>
+        <input id="endpoint" type="text" value="beta.blahgua.com"/>
+        &nbsp;
+        <label><input id="security" style="background-color: #fc4949" type="checkbox" checked="true" onchange="changeSecurity();"/>Security On</label>
     </div>
     <!-- Actions -->
     <div style="margin-top: .5em">
@@ -76,6 +78,9 @@
         <input id="recoverUser" style="background-color: #22bf0d" type="button" onclick="recoverUser()"  value="Recover User"/>
         &nbsp;
         <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
+    </div>
+    <div style="margin-top: .5em">
+        <input id="setDummyAcct" type="button" onclick="createUserAcctData()" value="Set Dummy Email/Challenge"/>
         &nbsp;
         <input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>
         &nbsp;
@@ -86,10 +91,6 @@
         <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
         &nbsp;
         <input id="getUserDescriptor" style="background-color: #22bf0d" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
-    </div>
-    <div style="margin-top: .5em">
-        <input id="createDummyProfile" type="button" onclick="createDummyProfile()" value="Create Dummy Profile"/>
-        &nbsp;
     </div>
     <div style="margin-top: .5em">
     </div>

@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
 import main.java.com.eweware.service.mgr.GroupManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +26,14 @@ public final class BlahguaSession {
     private static final Logger logger = Logger.getLogger("BlahguaSession");
 
     /**
+     * <p>Dubious workaround by yours truly to facilitate debugging and testing.</p>
+     */
+    private static boolean securityOn = true;
+
+    /**
      * A clumsy kludge to cheat so that QA tests can pass when REST runs on a Mac.
      * TODO eliminate this before Macs take over the world.
      */
-    private static boolean securityOn = !System.getProperty("os.name").toLowerCase().startsWith("mac");
 
     // TODO remove this before rollout
     public static final void flipSecurity(boolean onOrOff) {
@@ -36,23 +41,29 @@ public final class BlahguaSession {
     }
 
     /**
+     * <p>Marks whether the account is authenticated or not.</p>
+     * <p>If set, it's set to Boolean.TRUE</p>
+     */
+    private static final String ACCOUNT_TYPE_ATTRIBUTE = "T";
+
+    /**
      * Set to a Boolean. Indicates whether the user was authenticated or not.
      */
-    private static final String AUTHENTICATION_STATE = "A";
+    private static final String AUTHENTICATION_STATE_ATTRIBUTE = "A";
 
     /**
      * Set to a Set of Strings, each string is a group id
      * These are the groups that the user is currently watching.
      */
-    private static final String VIEWING_GROUP_ID = "G";
+    private static final String VIEWING_GROUP_ID_ATTRIBUTE = "G";
 
     /**
      * If the user is authenticated, this is the user's id.
      */
-    private static final String USER_ID = "I";
+    private static final String USER_ID_ATTRIBUTE = "I";
 
     // TODO debugging
-    private static final String USERNAME = "U";
+    private static final String USERNAME_ATTRIBUTE_DBG = "U";
 
     /**
      * An InboxInfo instance.
@@ -60,35 +71,40 @@ public final class BlahguaSession {
      *
      * @see InboxInfo
      */
-    private static final String INBOX_INFO = "i";
+    private static final String INBOX_INFO_ATTRIBUTE = "i";
 
 
     /**
      * Marks the user session as authenticated.
      * Input parameters are not checked!
      *
-     * @param request  The http request object (unchecked!)
-     * @param userId   The user id  (unchecked!)
-     * @param username TODO remove (dbg)
+     * @param request     The http request object (unchecked!)
+     * @param userId      The user id  (unchecked!)
+     * @param accountType The account type. Currently is set only if it is an admin account
+     * @param username    TODO remove (dbg)
      */
-    public static void markAuthenticated(HttpServletRequest request, String userId, String username) {
+    public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username) {
         final HttpSession session = request.getSession(true);
-        markAuthenticated(session, userId, username);
+        markAuthenticated(session, userId, accountType, username);
     }
 
     /**
      * Marks the user session as authenticated.
      * Input parameters are not checked!
      *
-     * @param userId   The user id (unchecked!)
-     * @param username TODO remove (dbg)
+     * @param userId      The user id (unchecked!)
+     * @param username    TODO remove (dbg)
+     * @param accountType The account type. Currently is set only if it is an admin account
      */
-    private static void markAuthenticated(HttpSession session, String userId, String username) {
+    private static void markAuthenticated(HttpSession session, String userId, String accountType, String username) {
         if (username != null) {     // TODO remove (dbg)
-            session.setAttribute(USERNAME, username);
+            session.setAttribute(USERNAME_ATTRIBUTE_DBG, username);
         }
-        session.setAttribute(USER_ID, userId);
-        session.setAttribute(AUTHENTICATION_STATE, SessionState.AUTHENTICATED);
+        if (accountType != null && accountType.equals(UserAccountType.ADMIN.getCode())) {
+            session.setAttribute(ACCOUNT_TYPE_ATTRIBUTE, Boolean.TRUE);
+        }
+        session.setAttribute(USER_ID_ATTRIBUTE, userId);
+        session.setAttribute(AUTHENTICATION_STATE_ATTRIBUTE, SessionState.AUTHENTICATED);
     }
 
     /**
@@ -99,21 +115,41 @@ public final class BlahguaSession {
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
         final HttpSession session = request.getSession(); // don't create a session
-        return (session != null) && ((SessionState) session.getAttribute(AUTHENTICATION_STATE) == SessionState.AUTHENTICATED);
+        return (session != null) && ((SessionState) session.getAttribute(AUTHENTICATION_STATE_ATTRIBUTE) == SessionState.AUTHENTICATED);
     }
 
     /**
      * <p>Ensures that the user session is authenticated.</p>
      *
-     *
      * @param request The http request
-     * @throws InvalidAuthorizedStateException If there is no authenticated session.
+     * @throws InvalidAuthorizedStateException
+     *          If there is no authenticated session.
      */
     public static String ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
         if (securityOn && !isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
-        return (String) request.getSession().getAttribute(USER_ID);
+        return (String) request.getSession().getAttribute(USER_ID_ATTRIBUTE);
+    }
+
+    /**
+     * <p>Ensures that the session is authenticated and that the user is an administrator.</p>
+     * <p>Check disabled if security is turned off!</p>
+     *
+     * @param request
+     */
+    public static void ensureAdmin(HttpServletRequest request) throws ResourceNotFoundException {
+        final HttpSession session = request.getSession();
+        if (!securityOn) {    // !!
+            return;
+        }
+        if (session != null) {
+            final Object attribute = session.getAttribute(ACCOUNT_TYPE_ATTRIBUTE);
+            if (attribute != null && attribute.equals(Boolean.TRUE)) {
+                return;
+            }
+        }
+        throw new ResourceNotFoundException("Incapable", ErrorCodes.UNAUTHORIZED_USER);
     }
 
     /**
@@ -133,9 +169,9 @@ public final class BlahguaSession {
      */
     public static void markAnonymous(HttpSession session) {
         if (session != null) {
-            session.removeAttribute(USER_ID);
-            session.removeAttribute(USERNAME);
-            session.setAttribute(AUTHENTICATION_STATE, SessionState.ANONYMOUS);
+            session.removeAttribute(USER_ID_ATTRIBUTE);
+            session.removeAttribute(USERNAME_ATTRIBUTE_DBG);
+            session.setAttribute(AUTHENTICATION_STATE_ATTRIBUTE, SessionState.ANONYMOUS);
         }
     }
 
@@ -148,22 +184,24 @@ public final class BlahguaSession {
      */
     public static String getUserId(HttpServletRequest request) {
         final HttpSession session = request.getSession();
-        return (session == null) ? null : (String) session.getAttribute(USER_ID);
+        return (session == null) ? null : (String) session.getAttribute(USER_ID_ATTRIBUTE);
     }
 
-    /** TODO temp for debugging only */
+    /**
+     * TODO temp for debugging only
+     */
     public static String getSessionInfo(HttpServletRequest request) {
         final HttpSession s = request.getSession();
         final StringBuilder b = new StringBuilder();
         if (s != null) {
-            if (s.getAttribute(AUTHENTICATION_STATE) == SessionState.AUTHENTICATED) {
+            if (s.getAttribute(AUTHENTICATION_STATE_ATTRIBUTE) == SessionState.AUTHENTICATED) {
                 b.append("Authenticated Session");
-                final Object userId = s.getAttribute(USER_ID);
+                final Object userId = s.getAttribute(USER_ID_ATTRIBUTE);
                 if (userId != null) {
                     b.append("\nUser Id: ");
                     b.append(userId);
                 }
-                final String username = (String) s.getAttribute(USERNAME);
+                final String username = (String) s.getAttribute(USERNAME_ATTRIBUTE_DBG);
                 if (username != null) {
                     b.append("\nUsername: ");
                     b.append(username);
@@ -171,7 +209,7 @@ public final class BlahguaSession {
             } else {
                 b.append("Anonymous Session");
             }
-            final String viewing = (String) s.getAttribute(BlahguaSession.VIEWING_GROUP_ID);
+            final String viewing = (String) s.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
             if (viewing != null) {
                 b.append("\nViewing Channel Id: ");
                 b.append(viewing);
@@ -234,7 +272,7 @@ public final class BlahguaSession {
     }
 
     /**
-     *<p>Sets the group as the currently viewed group in the session.
+     * <p>Sets the group as the currently viewed group in the session.
      * If another group is currently watched, it decrements the viewer
      * count for that group in the DB.</p>
      *
@@ -244,8 +282,8 @@ public final class BlahguaSession {
     public static void setCurrentlyViewedGroup(HttpServletRequest request, String groupId) throws SystemErrorException, ResourceNotFoundException {
         if (groupId != null) {
             final HttpSession session = request.getSession(true);
-            final String currentlyWatched = (String) session.getAttribute(VIEWING_GROUP_ID);
-            session.setAttribute(VIEWING_GROUP_ID, groupId);
+            final String currentlyWatched = (String) session.getAttribute(VIEWING_GROUP_ID_ATTRIBUTE);
+            session.setAttribute(VIEWING_GROUP_ID_ATTRIBUTE, groupId);
 
             // Update DB
             if (currentlyWatched != null) {
@@ -260,7 +298,8 @@ public final class BlahguaSession {
 
     /**
      * Destroys the current session.
-     * @param request   The http request object
+     *
+     * @param request The http request object
      */
     public static void destroySession(HttpServletRequest request) {
         final HttpSession session = request.getSession();
@@ -277,8 +316,8 @@ public final class BlahguaSession {
      * @param session The http session object
      */
     public static void sessionDestroyed(HttpSession session) {
-        final String groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID);
-        String username = (String) session.getAttribute(BlahguaSession.USERNAME);
+        final String groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
+        String username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE_DBG);
         if (username == null) {
             username = "unknown";
         } // dbg username
@@ -295,10 +334,10 @@ public final class BlahguaSession {
 
 
     private static void setInboxInfo(HttpServletRequest request, String groupId, Integer lastInboxNumber) {
-        request.getSession().setAttribute(INBOX_INFO, new InboxInfo(groupId, lastInboxNumber));
+        request.getSession().setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber));
     }
 
     private static InboxInfo getInboxInfo(HttpServletRequest request) {
-        return (InboxInfo) request.getSession(true).getAttribute(INBOX_INFO);
+        return (InboxInfo) request.getSession(true).getAttribute(INBOX_INFO_ATTRIBUTE);
     }
 }

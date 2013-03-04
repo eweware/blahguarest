@@ -9,12 +9,20 @@
 
 	<import resource="applicationPropertiesLoader.xml" />
 
-
+    <bean id="systemManager" class="main.java.com.eweware.service.mgr.SystemManager"
+          init-method="start" destroy-method="shutdown">
+        <constructor-arg value="${blah.rest.service.endpoint}" />
+        <constructor-arg value="${blag.memcached.hostname}" />
+        <constructor-arg value="${blag.memcached.port}" />
+        <constructor-arg value="${blag.dev.memcached.hostname}" />
+        <constructor-arg value="${blag.dev.rest.port}" />
+    </bean>
 
     <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
     init-method="start" destroy-method="shutdown">
 
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.hostname}" />
+        <constructor-arg  type="java.lang.String" value="${blag.dev.mongo.hostname}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.port}" />
         <!--<constructor-arg  type="java.lang.String" value="${blag.store.mongo.mediaDBName}" />-->
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.userDBName}" />
@@ -95,12 +103,6 @@
         <constructor-arg  type="java.lang.String" value="${blag.media.images.bucket.name}" />
         <constructor-arg  type="java.lang.String" value="${blag.media.images.bucket.image.dirpath}" />
         <constructor-arg  type="java.lang.String" value="${blag.media.images.bucket.original.dirpath}" />
-	</bean>
-	
-	<bean id="systemManager" class="main.java.com.eweware.service.mgr.SystemManager"
-		init-method="start" destroy-method="shutdown">
-        <constructor-arg value="${blag.memcache.hostname}" />
-        <constructor-arg value="${blag.memcache.port}" />
 	</bean>
 
  	<bean id="testManager" class="main.java.com.eweware.service.mgr.TestManager"

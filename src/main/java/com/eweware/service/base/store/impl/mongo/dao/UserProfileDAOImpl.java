@@ -26,12 +26,12 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
 
     static { // TODO should be derived from schema
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_USER_TYPE, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVER_CODE_SET_METHOD, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, MongoFieldTypes.DATE);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_CHALLENGE_ANSWER, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS, MongoFieldTypes.STRING);
-        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, MongoFieldTypes.NUMBER);
+//        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE, MongoFieldTypes.STRING);
+//        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVER_CODE_SET_METHOD, MongoFieldTypes.STRING);
+//        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, MongoFieldTypes.DATE);
+//        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_CHALLENGE_ANSWER, MongoFieldTypes.STRING);
+//        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS, MongoFieldTypes.STRING);
+//        UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_NICKNAME, MongoFieldTypes.STRING);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_NICKNAME_PERMISSIONS, MongoFieldTypes.NUMBER);
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_DATE_OF_BIRTH, MongoFieldTypes.DATE);
@@ -103,45 +103,35 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
         put(USER_PROFILE_USER_TYPE, userType);
     }
 
-    @Override
-    public Login.RecoveryCode getRecoveryCode() {
-        return (Login.RecoveryCode) get(USER_PROFILE_RECOVERY_CODE);
-    }
-
-    @Override
-    public void setRecoveryCode(Login.RecoveryCode code) {
-        put(USER_PROFILE_RECOVERY_CODE, code);
-    }
-
-    @Override
-    public String getRecoverySetMethod() {
-        return (String) get(USER_PROFILE_RECOVER_CODE_SET_METHOD);
-    }
-
-    @Override
-    public void setRecoverySetMethod(String method) {
-        put(USER_PROFILE_RECOVER_CODE_SET_METHOD, method);
-    }
-
-    @Override
-    public Date getRecoveryCodeExpiration() {
-        return (Date) get(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
-    }
-
-    @Override
-    public void setRecoveryCodeExpiration(Date expirationDate) {
-        put(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, expirationDate);
-    }
-
-    @Override
-    public String getSecurityChallengeAnswer1() {
-        return (String) get(USER_PROFILE_CHALLENGE_ANSWER);
-    }
-
-    @Override
-    public void setSecurityChallengeAnswer1(String answer1) {
-        put(USER_PROFILE_CHALLENGE_ANSWER, answer1);
-    }
+//    @Override
+//    public String getRecoverySetMethod() {
+//        return (String) get(USER_PROFILE_RECOVER_CODE_SET_METHOD);
+//    }
+//
+//    @Override
+//    public void setRecoverySetMethod(String method) {
+//        put(USER_PROFILE_RECOVER_CODE_SET_METHOD, method);
+//    }
+//
+//    @Override
+//    public Date getRecoveryCodeExpiration() {
+//        return (Date) get(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
+//    }
+//
+//    @Override
+//    public void setRecoveryCodeExpiration(Date expirationDate) {
+//        put(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, expirationDate);
+//    }
+//
+//    @Override
+//    public String getSecurityChallengeAnswer1() {
+//        return (String) get(USER_PROFILE_CHALLENGE_ANSWER);
+//    }
+//
+//    @Override
+//    public void setSecurityChallengeAnswer1(String answer1) {
+//        put(USER_PROFILE_CHALLENGE_ANSWER, answer1);
+//    }
 
     @Override
     public String getGender() {
@@ -168,25 +158,25 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
         put(USER_PROFILE_NICKNAME_PERMISSIONS, p);
     }
 
-    @Override
-    public String getEmailAddress() {
-        return (String) get(USER_PROFILE_EMAIL_ADDRESS);
-    }
-
-    @Override
-    public void setEmailAddress(String emailAddress) {
-        put(USER_PROFILE_EMAIL_ADDRESS, emailAddress);
-    }
-
-    @Override
-    public Integer getEmailAddressPermissions() {
-        return (Integer) get(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS);
-    }
-
-    @Override
-    public void setEmailAddressPermissions(Integer p) {
-        put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, p);
-    }
+//    @Override
+//    public String getEmailAddress() {
+//        return (String) get(USER_PROFILE_EMAIL_ADDRESS);
+//    }
+//
+//    @Override
+//    public void setEmailAddress(String emailAddress) {
+//        put(USER_PROFILE_EMAIL_ADDRESS, emailAddress);
+//    }
+//
+//    @Override
+//    public Integer getEmailAddressPermissions() {
+//        return (Integer) get(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS);
+//    }
+//
+//    @Override
+//    public void setEmailAddressPermissions(Integer p) {
+//        put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, p);
+//    }
 
     @Override
     public void setGender(String gender) {

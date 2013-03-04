@@ -6,6 +6,7 @@ import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
+import main.java.com.eweware.service.mgr.SystemManager;
 import org.bson.types.ObjectId;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public final class MongoStoreManager implements StoreManager {
 
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
+    private String devMongoDbHostname;
 
     public static MongoStoreManager getInstance() throws SystemErrorException {
         if (MongoStoreManager.singleton == null) {
@@ -31,8 +33,8 @@ public final class MongoStoreManager implements StoreManager {
     }
 
     private ManagerState status = ManagerState.UNINITIALIZED;
-    private int port;
-    private String hostname;
+    private int mongoDbPort;
+    private String mongoDbHostname;
     private Integer connectionsPerHost = 10; // default
     private Mongo mongo;
     private Map<String, DB> dbNameToDbMap;
@@ -63,6 +65,34 @@ public final class MongoStoreManager implements StoreManager {
     private String demographicsCollectionName;
 
     Map<String, DBCollection> collectionNameToCollectionMap = new HashMap<String, DBCollection>();
+
+
+    /**
+     * Constructor for testing, etc.
+     */
+    public MongoStoreManager() {
+        MongoStoreManager.singleton = this;
+    }
+
+    /**
+     * Production-time constructor called by the Spring framework.
+     */
+    public MongoStoreManager(
+
+            String mongoDbHostname,
+            String devMongoDbHostname,
+            String mongoDbPort,
+
+            String userDbName,
+            String blahDbName,
+            String trackerDbName,
+
+            Integer connectionsPerHost
+    ) {
+        this.devMongoDbHostname = devMongoDbHostname;
+        doInitialize(mongoDbHostname, mongoDbPort, userDbName, blahDbName, trackerDbName,
+                connectionsPerHost);
+    }
 
 
     public String getInboxStateCollectionName() {
@@ -223,31 +253,6 @@ public final class MongoStoreManager implements StoreManager {
      */
 
     /**
-     * Constructor for testing, etc.
-     */
-    public MongoStoreManager() {
-        MongoStoreManager.singleton = this;
-    }
-
-    /**
-     * Production-time constructor called by the Spring framework.
-     */
-    public MongoStoreManager(
-
-            String hostname,
-            String port,
-
-            String userDbName,
-            String blahDbName,
-            String trackerDbName,
-
-            Integer connectionsPerHost
-            ) {
-        doInitialize(hostname, port, userDbName, blahDbName, trackerDbName,
-                connectionsPerHost);
-    }
-
-    /**
      * Initializes the store manager. This method is public to allow
      * test units to initialize it outside the context of the web server.
      * @param hostname
@@ -259,8 +264,8 @@ public final class MongoStoreManager implements StoreManager {
      */
     public void doInitialize(String hostname, String port, String userDbName, String blahDbName, String trackerDbName,
                              Integer connectionsPerHost) {
-        this.hostname = hostname;
-        this.port = Integer.parseInt(port);
+        this.mongoDbHostname = hostname;
+        this.mongoDbPort = Integer.parseInt(port);
         this.connectionsPerHost = connectionsPerHost;
 
         this.dbNameToDbMap = new HashMap<String, DB>(3);
@@ -276,7 +281,7 @@ public final class MongoStoreManager implements StoreManager {
         dbNameToDbMap.put(blahDbName, null);
         dbNameToDbMap.put(trackerDbName, null);
 
-        System.out.println("*STORE MGR: known database names: " + dbNameToDbMap.keySet());
+        System.out.println("*STORE MGR: known databases: " + dbNameToDbMap.keySet());
         MongoStoreManager.singleton = this;
         this.status = ManagerState.INITIALIZED;
     }
@@ -291,9 +296,12 @@ public final class MongoStoreManager implements StoreManager {
 
     public void start() {
         try {
+            if (SystemManager.getInstance().isDevMode()) {
+                this.mongoDbHostname = devMongoDbHostname;  // same default 21191 port
+            }
             final MongoOptions mongoOptions = new MongoOptions();
             mongoOptions.connectionsPerHost = connectionsPerHost; // Use >db.serverStatus() to check number of connections in mongo server
-            final ServerAddress serverAddress = new ServerAddress(hostname, port);
+            final ServerAddress serverAddress = new ServerAddress(mongoDbHostname, mongoDbPort);
 
             this.mongo = new Mongo(serverAddress, mongoOptions);
 
@@ -343,7 +351,7 @@ public final class MongoStoreManager implements StoreManager {
 
             this.status = ManagerState.STARTED;
 
-            System.out.println("*** MongoStoreManager started *** (connected to MongoDB at " + hostname + ":" + port +
+            System.out.println("*** MongoStoreManager started *** (connected to MongoDB at " + mongoDbHostname + ":" + mongoDbPort +
                     " for dbs: " + dbNameToDbMap + ") # pooled connections=" + connectionsPerHost);
 
         } catch (Exception e) {

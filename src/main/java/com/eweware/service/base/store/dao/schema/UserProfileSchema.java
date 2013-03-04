@@ -33,7 +33,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         schema = new UserProfileSchema(localeId);
 
         schema.createUserTypeSpec();
-        schema.createRecoveryCodeSpec();
+//        schema.createRecoveryCodeSpec();
         schema.createGenderSpec();
         schema.createRaceSpec();
         schema.createIncomeRangeSpec();
@@ -44,22 +44,22 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         schema.createZipCodeSpec();
         schema.createCountrySpec();
         schema.createNicknameSpec();
-        schema.createEmailAddressSpec();
+//        schema.createEmailAddressSpec();
 
         cacheSchema(UserProfileSchema.class, localeId, schema);
 
         return schema;
     }
 
-    private void createRecoveryCodeSpec() {
-        final String regexp = null;
-        final LinkedHashMap<String, Object> data = null;
-        final boolean hasDefaultValue = false;
-        createSpec(SchemaDataType.S, USER_PROFILE_RECOVERY_CODE, "Recovery Code", regexp, data, hasDefaultValue, null);
-        createSpec(SchemaDataType.S, USER_PROFILE_RECOVER_CODE_SET_METHOD, "RC Method", null, null, false, null);
-        createSpec(SchemaDataType.DT, USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, "Recovery Exp", null, null, false, null);
-        createSpec(SchemaDataType.S, USER_PROFILE_CHALLENGE_ANSWER, "Sec Ans", null, null, false, null);
-    }
+//    private void createRecoveryCodeSpec() {
+//        final String regexp = null;
+//        final LinkedHashMap<String, Object> data = null;
+//        final boolean hasDefaultValue = false;
+//        createSpec(SchemaDataType.S, USER_PROFILE_RECOVERY_CODE, "Recovery Code", regexp, data, hasDefaultValue, null);
+//        createSpec(SchemaDataType.S, USER_PROFILE_RECOVER_CODE_SET_METHOD, "RC Method", null, null, false, null);
+//        createSpec(SchemaDataType.DT, USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE, "Recovery Exp", null, null, false, null);
+//        createSpec(SchemaDataType.S, USER_PROFILE_CHALLENGE_ANSWER, "Sec Ans", null, null, false, null);
+//    }
 
     private void createUserTypeSpec() {
         final String defaultValue = "0";
@@ -81,13 +81,13 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         createSpec(SchemaDataType.I, USER_PROFILE_NICKNAME_PERMISSIONS, "Permissions", regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
-    private void createEmailAddressSpec() {
-        final String regexp = null;
-        final LinkedHashMap<String, Object> data = null;
-        final boolean hasDefaultValue = true;
-        createSpec(SchemaDataType.S, USER_PROFILE_EMAIL_ADDRESS, "Email Address", regexp, data, hasDefaultValue, null);
-        createSpec(SchemaDataType.I, USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, "Permissions", regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
-    }
+//    private void createEmailAddressSpec() {
+//        final String regexp = null;
+//        final LinkedHashMap<String, Object> data = null;
+//        final boolean hasDefaultValue = true;
+//        createSpec(SchemaDataType.S, USER_PROFILE_EMAIL_ADDRESS, "Email Address", regexp, data, hasDefaultValue, null);
+//        createSpec(SchemaDataType.I, USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, "Permissions", regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
+//    }
 
     private void createCountrySpec() { // ISO 3166-1 alpha-2 code
         final String defaultValue = "-1";

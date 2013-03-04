@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.rest.resource;
 
+import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
@@ -45,6 +46,7 @@ public class SystemResource {
      * <p>Use this method to get REST API metrics.</p>
      * <b>This method is for development only and will be removed from
      * public access once we launch.</b>
+     * <p><i>User must be authenticated and have an admin account.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> sys/metrics</div>
@@ -54,9 +56,12 @@ public class SystemResource {
     @GET
     @Path("/metrics")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatus() {
+    public Response getStatus(@Context HttpServletRequest request) {
         try {
+            BlahguaSession.ensureAdmin(request);
             return RestUtilities.make200OkResponse(SystemManager.getInstance().processMetrics(false));
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -68,6 +73,7 @@ public class SystemResource {
      * <p>Use this method to reset the REST API metrics.</p>
      * <b>This method is for development only and will be removed from
      * public access once we launch.</b>
+     * <p><i>User must be authenticated and have an admin account.</i></p>
      * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> sys/metrics/reset</div>
@@ -77,10 +83,13 @@ public class SystemResource {
     @POST
     @Path("/metrics/reset")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStats() {
+    public Response getStats(@Context HttpServletRequest request) {
         try {
+            BlahguaSession.ensureAdmin(request);
             SystemManager.getInstance().processMetrics(true);
             return RestUtilities.make202AcceptedResponse();
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -92,6 +101,7 @@ public class SystemResource {
      * <p>Use this method to turn security on/off.</p>
      * <b>This method is for development only and will be removed from
      * public access once we launch.</b>
+     * <p><i>User must be authenticated and have an admin account.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> sys/secure/{on}</div>
@@ -102,9 +112,16 @@ public class SystemResource {
     @POST
     @Path("/secure/{on}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response flipSecurity(@PathParam("on") boolean on) {
-        BlahguaSession.flipSecurity(on);
-        return Response.ok("security " + (on ? "ON" : "OFF")).build();
+    public Response flipSecurity(@PathParam("on") boolean on, @Context HttpServletRequest request) {
+        try {
+            BlahguaSession.ensureAdmin(request);
+            BlahguaSession.flipSecurity(on);
+            return Response.ok("security " + (on ? "ON" : "OFF")).build();
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
     }
 
 
@@ -112,6 +129,7 @@ public class SystemResource {
      * <p>Use this method to get information about the session state.</p>
      * <b>This method is for development only and will be removed from
      * public access once we launch.</b>
+     * <p><i>User must be authenticated and have an admin account.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> sys/session</div>
@@ -122,7 +140,14 @@ public class SystemResource {
     @Path("/session")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getSessionInfo(@Context HttpServletRequest request) {
-        return Response.ok(BlahguaSession.getSessionInfo(request)).build();
+        try {
+//            BlahguaSession.ensureAdmin(request);
+            return Response.ok(BlahguaSession.getSessionInfo(request)).build();
+//        } catch (ResourceNotFoundException e) {
+//            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
     }
 
     /**
@@ -137,7 +162,7 @@ public class SystemResource {
      */
     @POST
     @Path("/refresh")
-    public Response refreshCaches() {
+    public Response refreshCaches() { // TODO not using
         try {
             BlahManager.getInstance().refreshCaches();
             return RestUtilities.make202AcceptedResponse();

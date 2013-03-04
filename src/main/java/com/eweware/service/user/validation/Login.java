@@ -13,7 +13,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.Arrays;
@@ -29,11 +28,6 @@ public final class Login {
     private final static int ITERATIONS = 1000;
     private static final String TWO_WAY_CRYPT_METHOD = "PBEWithMD5AndDES";
 
-    /**
-     * Recovery codes use this delimiter to separate meaningful segments.
-     */
-    private static final String ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER = "|";
-    private static final String ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP = "\\|";
 //    private static final String EMPTY_STRING = "";
 
     /**
@@ -130,10 +124,21 @@ public final class Login {
         if (!CommonUtilities.checkString(username, 3, 32)) {
             throw new InvalidRequestException("Invalid username '" + username + "'. Length must be less than 33 and more than 2 characters.", ErrorCodes.INVALID_USERNAME);
         }
-        if (username.indexOf(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER) != -1) {
+        if (username.indexOf(RecoveryCode.ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER) != -1) {
             throw new InvalidRequestException("Username must not use the character '|'", ErrorCodes.INVALID_USERNAME);
         }
         return username;
+    }
+
+    /**
+     * Returns the canonical form of a username. This form
+     * is the unique form of the username.
+     *
+     * @param username The username
+     * @return The canonical username
+     */
+    public static final String makeCanonicalUsername(String username) {
+        return username.toLowerCase();
     }
 
     // Two-way Encrypt
@@ -145,36 +150,14 @@ public final class Login {
             (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
     };
 
-    /**
-     * Class holds the userId and canonicalUsername of a recovery code
-     */
-    public static class RecoveryCodeComponents {
-        private String userId;
-        private String canonicalUsername;
-
-        private RecoveryCodeComponents(String userId, String canonicalUsername) {
-            this.userId = userId;
-            this.canonicalUsername = canonicalUsername;
-        }
-
-        public String getCanonicalUsername() {
-            return canonicalUsername;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-    }
 
 
     public static void main(String[] args) throws Exception {
-        RecoveryCode code = RecoveryCode.makeRecoveryCode("51315780036486e5ec83ff9a", "ruben");
-        System.out.println("CODE:" + code);
+        RecoveryCode recoveryCode = RecoveryCode.createRecoveryCode("51315780036486e5ec83ff9a", "ruben");
+        System.out.println("RECOVERY CODE:" + recoveryCode);
         System.out.println();
-
-        RecoveryCode.fromString(code.toString());
-        System.out.println("Encrypted: " + code);
-        final RecoveryCodeComponents comp = RecoveryCode.fromString(code.toString());
+        System.out.println("Encrypted: " + recoveryCode.toString());
+        final RecoveryCodeComponents comp = RecoveryCode.getRecoveryComponents(recoveryCode.toString());
         System.out.println("userId: " + "=" + comp.getUserId() + "=");
         System.out.println("username: " + "=" + comp.getCanonicalUsername() + "=");
     }
@@ -188,50 +171,6 @@ public final class Login {
         return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
     }
 
-    public static class RecoveryCode implements Serializable {
-        public String cipherBase64;
-        public String ivBase64;
-        public String secretKeyBase64;
-
-        public static final RecoveryCodeComponents fromString(String string) throws SystemErrorException {
-            final String[] foo = string.split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
-            final String cipher = foo[0];
-            final String iv = foo[1];
-            final String secretKey = foo[2];
-            final String text = decrypt2Way(cipher, iv, secretKey);
-            final String[] components = text.split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
-            if (components.length < 1) {
-                throw new SystemErrorException("recovery components", ErrorCodes.SERVER_RECOVERABLE_ERROR);
-            }
-            return new RecoveryCodeComponents(components[0], (components.length == 1) ? "" : components[1]);
-        }
-
-        /**
-         * Creates a temporary recovery code.
-         *
-         * @param userId            The user's id
-         * @param canonicalUsername The user's canonical name
-         * @return An encrypted recovery code
-         * @throws SystemErrorException If there is a system problem with encryption.
-         */
-        public static RecoveryCode makeRecoveryCode(String userId, String canonicalUsername) throws SystemErrorException {
-            final StringBuilder b = new StringBuilder(userId);
-            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
-            b.append(canonicalUsername);
-            return encrypt2Way(b.toString());
-        }
-
-        public String toString() {
-            final StringBuilder b = new StringBuilder();
-            b.append(cipherBase64);
-            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
-            b.append(ivBase64);
-            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
-            b.append(secretKeyBase64);
-            return b.toString();
-        }
-    }
-
     public static RecoveryCode encrypt2Way(String string) throws SystemErrorException {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -241,10 +180,11 @@ public final class Login {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secret);
             AlgorithmParameters params = cipher.getParameters();
-            final RecoveryCode recoveryCode = new RecoveryCode();
-            recoveryCode.ivBase64 = Base64.encodeBase64String(params.getParameterSpec(IvParameterSpec.class).getIV());
-            recoveryCode.cipherBase64 = Base64.encodeBase64String(cipher.doFinal(string.getBytes("UTF-8")));
-            recoveryCode.secretKeyBase64 = getStringFromSecretKey(secret);
+            final RecoveryCode recoveryCode = new RecoveryCode(
+                    Base64.encodeBase64String(cipher.doFinal(string.getBytes("UTF-8"))),
+                    Base64.encodeBase64String(params.getParameterSpec(IvParameterSpec.class).getIV()),
+                    getStringFromSecretKey(secret)
+            );
             return recoveryCode;
         } catch (Exception e) {
             throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_SEVERE_ERROR);
@@ -255,21 +195,74 @@ public final class Login {
         try {
             SecretKey secretKey = getSecretKeyFromString(secret);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(Base64.decodeBase64(ivBase64)));
+            final byte[] bytes = Base64.decodeBase64(ivBase64);
+            final IvParameterSpec ivParameterSpec = new IvParameterSpec(bytes);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec);
             return new String(cipher.doFinal(Base64.decodeBase64(cipherBase64)), "UTF-8");
         } catch (Exception e) {
             throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
-
-    /**
-     * Returns the canonical form of a username. This form
-     * is the unique form of the username.
-     *
-     * @param username The username
-     * @return The canonical username
-     */
-    public static final String makeCanonicalUsername(String username) {
-        return username.toLowerCase();
-    }
 }
+
+
+
+//    public static class RecoveryCode extends BasicDBObject implements Serializable {
+//
+//        public RecoveryCode(String cipherBase64, String ivBase64, String secretKeyBase64) {
+//            put("c", cipherBase64);
+//            put("i", ivBase64);
+//            put("s", secretKeyBase64);
+//            put("test", MASTER_SALT);
+//        }
+//
+//        public static final RecoveryCodeComponents fromString(String string) throws SystemErrorException {
+//            final String[] foo = string.split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
+//            final String cipher = foo[0];
+//            final String iv = foo[1];
+//            final String secretKey = foo[2];
+//            final String text = decrypt2Way(cipher, iv, secretKey);
+//            final String[] components = text.split(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER_REGEXP);
+//            if (components.length < 1) {
+//                throw new SystemErrorException("recovery components", ErrorCodes.SERVER_RECOVERABLE_ERROR);
+//            }
+//            return new RecoveryCodeComponents(components[0], (components.length == 1) ? "" : components[1]);
+//        }
+//
+//        public String toString() {
+//            final StringBuilder b = new StringBuilder();
+//            b.append(getCipherBase64());
+//            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
+//            b.append(getIvBase64());
+//            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
+//            b.append(getSecretKeyBase64());
+//            return b.toString();
+//        }
+//
+//        /**
+//         * Creates a temporary recovery code.
+//         *
+//         * @param userId            The user's id
+//         * @param canonicalUsername The user's canonical name
+//         * @return An encrypted recovery code
+//         * @throws SystemErrorException If there is a system problem with encryption.
+//         */
+//        public static RecoveryCode createRecoveryCode(String userId, String canonicalUsername) throws SystemErrorException {
+//            final StringBuilder b = new StringBuilder(userId);
+//            b.append(ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER);
+//            b.append(canonicalUsername);
+//            return encrypt2Way(b.toString());
+//        }
+//
+//        public String getCipherBase64() {
+//            return (String) get("c");
+//        }
+//
+//        public String getIvBase64() {
+//            return (String) get("i");
+//        }
+//
+//        public String getSecretKeyBase64() {
+//            return (String) get("s");
+//        }
+//    }

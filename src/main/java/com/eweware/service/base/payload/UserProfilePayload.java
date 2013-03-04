@@ -21,14 +21,6 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     public UserProfilePayload(Map<String, Object> map) {
         super(map);
         ensureCanonicalDateDate(USER_PROFILE_DATE_OF_BIRTH);  // TODO use schema for this!
-        ensureRemoved();
-    }
-
-    private void ensureRemoved() {  // TODO use schema for this!
-        remove(USER_PROFILE_RECOVERY_CODE_EXPIRATION_DATE);
-        remove(USER_PROFILE_RECOVERY_CODE);
-        remove(USER_PROFILE_RECOVER_CODE_SET_METHOD);
-        remove(USER_PROFILE_CHALLENGE_ANSWER);
     }
 
     public String getUserType() {
@@ -54,24 +46,6 @@ public class UserProfilePayload extends BasePayload implements UserProfileDAOCon
     public void setNicknamePublic(Boolean p) {
         if (p != null) {
             put(USER_PROFILE_NICKNAME_PERMISSIONS, p);
-        }
-    }
-
-    public String getEmailAddress() {
-        return (String) get(USER_PROFILE_EMAIL_ADDRESS);
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        put(USER_PROFILE_EMAIL_ADDRESS, emailAddress);
-    }
-
-    public Boolean getEmailAddressPublic() {
-        return (Boolean) get(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS);
-    }
-
-    public void setEmailAddressPublic(Boolean p) {
-        if (p != null) {
-            put(USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, p);
         }
     }
 
