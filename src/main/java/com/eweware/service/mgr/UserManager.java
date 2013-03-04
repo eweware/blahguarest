@@ -506,7 +506,7 @@ public class UserManager implements ManagerInterface {
         final StringBuilder msg = new StringBuilder("The password to your Blahgua account has been changed.");
         msg.append(" Visit the following link to recover your account:\n\n");
         final SystemManager mgr = SystemManager.getInstance();
-        final String endpoint = mgr.isDevMode() ? SystemManager.getInstance().getDevRestEndpoint() : mgr.getRestServiceEndpoint();
+        final String endpoint = mgr.isDevMode() ? SystemManager.getInstance().getDevRestEndpoint() : mgr.getClientServiceEndpoint();
         msg.append("http://");
         msg.append(endpoint);
         msg.append("/recover?n=");

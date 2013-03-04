@@ -5,7 +5,6 @@ import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import org.apache.commons.codec.binary.Base64;
 
@@ -37,7 +36,7 @@ public final class SystemManager implements ManagerInterface {
     private BlahCache blahCache;
     private final BlahCacheConfiguration blahCacheConfiguration;
     private String restEndpoint;
-    private final String restServiceEndpoint;
+    private final String clientServiceEndpoint;
 
     /** for dev mode */
 
@@ -50,7 +49,7 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public SystemManager(
-            String restServiceEndpoint,
+            String clientServiceEndpoint,
             String cacheHostname,
             String cachePort,
             String devMemcachedHostname,
@@ -63,7 +62,7 @@ public final class SystemManager implements ManagerInterface {
                 restEndpoint = "localhost:" + devRestPort;
                 BlahguaSession.setSecurity(false);
             }
-            this.restServiceEndpoint = restServiceEndpoint;
+            this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(cacheHostname, cachePort).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance("SHA1PRNG");
@@ -99,8 +98,8 @@ public final class SystemManager implements ManagerInterface {
         return devMode;
     }
 
-    public String getRestServiceEndpoint() {
-        return restServiceEndpoint;
+    public String getClientServiceEndpoint() {
+        return clientServiceEndpoint;
     }
 
 

@@ -1,8 +1,7 @@
 package main.java.com.eweware.service.servlet;
 
-import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.UserManager;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * <p>Handles user session recovery</p>
@@ -26,7 +24,7 @@ public class UserSessionRecoveryServlet extends HttpServlet {
         try { // TODO if any is null, redirect to error page
             final boolean doRedirect = UserManager.getInstance().recoverUserAndRedirectToMainPage(LocaleId.en_us, req, recoveryCode);
             if (doRedirect) {
-                resp.sendRedirect("http://beta.blahgua.com");
+                resp.sendRedirect("http://" + SystemManager.getInstance().getClientServiceEndpoint());
             } else {
                 resp.sendError(401, "NOT ALLOWED");
             }
