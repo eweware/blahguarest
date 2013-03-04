@@ -25,6 +25,7 @@ import main.java.com.eweware.service.user.validation.Login;
 import main.java.com.eweware.service.user.validation.RecoveryCode;
 import main.java.com.eweware.service.user.validation.RecoveryCodeComponents;
 import main.java.com.eweware.service.user.validation.UserValidationMethod;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -368,10 +369,27 @@ public class UserManager implements ManagerInterface {
      */
     public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String inputRecoveryCode) throws SystemErrorException, InvalidAuthorizedStateException {
 
-        final RecoveryCodeComponents inputComponents = RecoveryCode.getRecoveryComponents(inputRecoveryCode);
+        String userId = null;
+        String canonicalUsername = null;
+        if (tempWorkaroundToEncryptionIssue) {
+            try {
+                final String workaroundCode = new String(Base64.decodeBase64(inputRecoveryCode.getBytes("UTF-8")), "UTF8");
+                final String[] parts = workaroundCode.split("\\|");
+                if (parts.length != 2) {
+                    throw new SystemErrorException("Workaround failed; has " + parts.length + " components");
+                }
+                userId = parts[0];
+                canonicalUsername = parts[1];
+            } catch (UnsupportedEncodingException e) {
+                throw new SystemErrorException("error decoding base64", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+        } else {
+            final RecoveryCodeComponents inputComponents = RecoveryCode.getRecoveryComponents(inputRecoveryCode);
+            userId = inputComponents.getUserId();
+            canonicalUsername = inputComponents.getCanonicalUsername();
+        }
 
         // Check recovery components against account
-        final String userId = inputComponents.getUserId();
         final UserAccountDAO userAccountDAO =
                 (UserAccountDAO) storeManager.createUserAccount(userId)
                         ._findByPrimaryId(UserAccountDAO.CANONICAL_USERNAME, UserAccountDAO.USER_ACCOUNT_TYPE,
@@ -379,7 +397,7 @@ public class UserManager implements ManagerInterface {
         if (userAccountDAO == null) {
             throw new InvalidAuthorizedStateException("Illegal attempt to access system - no ac", ErrorCodes.NOT_FOUND_USER_ACCOUNT);
         }
-        if (!userAccountDAO.getCanonicalUsername().equals(inputComponents.getCanonicalUsername())) {
+        if (!userAccountDAO.getCanonicalUsername().equals(canonicalUsername)) {
             throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.INVALID_USERNAME);
         }
 
@@ -397,7 +415,7 @@ public class UserManager implements ManagerInterface {
         }
 
         // Enable session!
-        BlahguaSession.markAuthenticated(request, userId, userAccountDAO.getAccountType(), inputComponents.getCanonicalUsername());
+        BlahguaSession.markAuthenticated(request, userId, userAccountDAO.getAccountType(), canonicalUsername);
 
         // redirect to blahgua
         return true;
@@ -450,19 +468,31 @@ public class UserManager implements ManagerInterface {
         }
 
         // Stash recovery code data in user account
-        final RecoveryCode recoveryCode = RecoveryCode.createRecoveryCode(userId, canonicalUsername);
         final UserAccountDAO updateAccountDAO = storeManager.createUserAccount(userId);
-        updateAccountDAO.setRecoveryCode(recoveryCode.makeRecoveryCodeString());
+        RecoveryCode recoveryCode = null;
+        String workaroundCode = null;
+        if (tempWorkaroundToEncryptionIssue) {
+            try {
+                final String codeString = userId + "|" + canonicalUsername;
+                workaroundCode = URLEncoder.encode(Base64.encodeBase64String(codeString.getBytes("UTF-8")), "UTF-8");
+                updateAccountDAO.setRecoveryCode(workaroundCode);
+            } catch (UnsupportedEncodingException e) {
+                throw new SystemErrorException("workaround error", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+        } else {
+            recoveryCode = RecoveryCode.createRecoveryCode(userId, canonicalUsername);
+            updateAccountDAO.setRecoveryCode(recoveryCode.makeRecoveryCodeString());
+        }
         updateAccountDAO.setRecoveryCodeExpiration(new Date(System.currentTimeMillis() + (ONE_DAY_IN_MILLIS)));
         updateAccountDAO.setRecoverySetMethod(RecoveryMethodType.EMAIL.getCode());
         updateAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-        contactUser(recoveryCode, email);
+        contactUser(recoveryCode, email, workaroundCode);
     }
 
-    private void contactUser(RecoveryCode recoveryCode, String emailAddress) throws SystemErrorException {
+    private void contactUser(RecoveryCode recoveryCode, String emailAddress, String workaroundCode) throws SystemErrorException {
         try {
-            MailManager.getInstance().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode));
+            MailManager.getInstance().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, workaroundCode));
         } catch (MessagingException e) {
             throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         } catch (UnsupportedEncodingException e) {
@@ -470,7 +500,9 @@ public class UserManager implements ManagerInterface {
         }
     }
 
-    private String makeAccountRecoveryBody(RecoveryCode recoveryCode) throws UnsupportedEncodingException, SystemErrorException {
+    public static final boolean tempWorkaroundToEncryptionIssue = true;
+
+    private String makeAccountRecoveryBody(RecoveryCode recoveryCode, String workaroundCode) throws UnsupportedEncodingException, SystemErrorException {
         final StringBuilder msg = new StringBuilder("The password to your Blahgua account has been changed.");
         msg.append(" Visit the following link to recover your account:\n\n");
         final SystemManager mgr = SystemManager.getInstance();
@@ -478,7 +510,11 @@ public class UserManager implements ManagerInterface {
         msg.append("http://");
         msg.append(endpoint);
         msg.append("/recover?n=");
-        msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));
+        if (tempWorkaroundToEncryptionIssue) {
+            msg.append(workaroundCode);
+        } else {
+            msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));
+        }
         msg.append("\n\nThis link will expire in 24 hours.");
         msg.append(" If you have not requested this change, please visit the following link to notify us.\n\nhttp://this-link-doesnt-work-yet.com/whatever");
         msg.append("\n\nPlease don't respond to this message");
