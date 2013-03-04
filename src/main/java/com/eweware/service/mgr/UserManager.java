@@ -217,17 +217,24 @@ public class UserManager implements ManagerInterface {
     /**
      * <p>Set, update, or delete user account fields.</p>
      *
-     * @param userId
+     * @param username         The canonical username
      * @param setEmail            If true, set or update email address; else, ignore it.
      * @param emailAddress           The email address. If null and setEmail is true, it will be deleted.
      * @param setChallenge ditto
      * @param challengeAnswer1       ditto
      */
-    public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException {
+    public void setUserAccountData(String username, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException {
         if (!setEmail && !setChallenge) {
             return; // nothing to do
         }
-        final UserAccountDAO userAccountDAO = storeManager.createUserAccount(userId);
+        if (username == null) {
+            throw new InvalidAuthorizedStateException("no username in session", ErrorCodes.MISSING_USERNAME);
+        }
+
+        final UserAccountDAO userAccountDAO = storeManager.createUserAccount();
+        userAccountDAO.setCanonicalUsername(username);
+        final boolean update = userAccountDAO._exists();
+
         if (setEmail) {
             // TODO: validate it!
             userAccountDAO.setEmailAddress(emailAddress);
@@ -235,7 +242,11 @@ public class UserManager implements ManagerInterface {
         if (setChallenge) {
             userAccountDAO.setSecurityChallengeAnswer1(challengeAnswer1);
         }
-        userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        if (update) {
+            userAccountDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserAccountDAO.CANONICAL_USERNAME);
+        } else {
+            userAccountDAO._insert();
+        }
     }
 
     /**
@@ -468,7 +479,7 @@ public class UserManager implements ManagerInterface {
         msg.append(endpoint);
         msg.append("/recover?n=");
         msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));
-        msg.append("\n\nThis link will expire in two days.");
+        msg.append("\n\nThis link will expire in 24 hours.");
         msg.append(" If you have not requested this change, please visit the following link to notify us.\n\nhttp://this-link-doesnt-work-yet.com/whatever");
         msg.append("\n\nPlease don't respond to this message");
         msg.append("\n\nCheers,\nYour Blahgua Account Manager");

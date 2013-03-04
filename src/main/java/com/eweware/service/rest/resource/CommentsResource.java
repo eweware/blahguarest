@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * <p>Comment-specific API methods.</p>
@@ -57,7 +56,7 @@ public class CommentsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             entity = BlahManager.getInstance().createComment(LocaleId.en_us, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
@@ -104,7 +103,7 @@ public class CommentsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             entity.setId(commentId); // ensure this
             BlahManager.getInstance().updateComment(LocaleId.en_us, entity, commentId);
             final Response response = RestUtilities.make204OKNoContentResponse();

@@ -36,8 +36,12 @@ public final class BlahguaSession {
      */
 
     // TODO remove this before rollout
-    public static final void flipSecurity(boolean onOrOff) {
+    public static final void setSecurity(boolean onOrOff) {
         securityOn = onOrOff;
+    }
+
+    public static final boolean getSecurity() {
+        return securityOn;
     }
 
     /**
@@ -121,15 +125,17 @@ public final class BlahguaSession {
     /**
      * <p>Ensures that the user session is authenticated.</p>
      *
-     * @param request The http request
+     * @param request  The http request
+     * @param returnId If true, returns user id, else returns canonical username
+     * @return Returns user id or canonical username
      * @throws InvalidAuthorizedStateException
      *          If there is no authenticated session.
      */
-    public static String ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
+    public static String ensureAuthenticated(HttpServletRequest request, boolean returnId) throws InvalidAuthorizedStateException {
         if (securityOn && !isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
-        return (String) request.getSession().getAttribute(USER_ID_ATTRIBUTE);
+        return (String) request.getSession().getAttribute(returnId?USER_ID_ATTRIBUTE:USERNAME_ATTRIBUTE_DBG);
     }
 
     /**

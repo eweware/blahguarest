@@ -153,7 +153,7 @@ public class ImageUploadResource {
             @Context HttpServletRequest request) {
         final ObjectType objectType;
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             if (objectId == null) {
                 return RestUtilities.make400InvalidRequestResponse(
                         new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));

@@ -57,7 +57,7 @@ public class UserGroupsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             final UserGroupPayload userGroup = UserManager.getInstance().registerUserInGroup(LocaleId.en_us, entity.getUserId(), entity.getValidationEmailAddress(), entity.getGroupId());
             final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath() + userGroup.getUserId() + "/" + userGroup.getGroupId()));
             SystemManager.getInstance().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
@@ -103,7 +103,7 @@ public class UserGroupsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             UserManager.getInstance().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString(), null);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
@@ -146,7 +146,7 @@ public class UserGroupsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserGroup(LocaleId.en_us, userId, groupId));
             SystemManager.getInstance().setResponseTime(GET_USER_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -195,7 +195,7 @@ public class UserGroupsResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserGroups(LocaleId.en_us, userId, state, start, count, sortFieldName));
             SystemManager.getInstance().setResponseTime(GET_USER_GROUPS_OPERATION, (System.currentTimeMillis() - s));
             return response;

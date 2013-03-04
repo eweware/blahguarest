@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * <p>Group-specific API methods.</p>
@@ -47,7 +46,7 @@ public class GroupsResource {
                                 @Context UriInfo uri,
                                 @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             GroupPayload g = GroupManager.getInstance().createGroup(LocaleId.en_us, entity);
             return RestUtilities.make201CreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
         } catch (InvalidRequestException e) {
@@ -87,7 +86,7 @@ public class GroupsResource {
             @PathParam("groupId") String groupId,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             GroupManager.getInstance().updateGroup(LocaleId.en_us, groupId, entity);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
@@ -188,7 +187,7 @@ public class GroupsResource {
             @QueryParam("sort") String sortFieldName,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             return RestUtilities.make200OkResponse(GroupManager.getInstance().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);

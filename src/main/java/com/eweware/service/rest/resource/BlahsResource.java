@@ -16,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * <p>Blah-specific API methods.</p>
@@ -59,7 +58,7 @@ public class BlahsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             entity = BlahManager.getInstance().createBlah(LocaleId.en_us, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
@@ -109,7 +108,7 @@ public class BlahsResource {
                              @PathParam("pollOptionIndex") Integer index,
                              @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             BlahManager.getInstance().pollVote(LocaleId.en_us, blahId, userId, index);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
@@ -150,7 +149,7 @@ public class BlahsResource {
                                     @PathParam("userId") String userId,
                                     @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             final BlahInfoPayload info = BlahManager.getInstance().getPollVoteInfo(LocaleId.en_us, blahId, userId);
             return RestUtilities.make200OkResponse(info);
         } catch (InvalidAuthorizedStateException e) {
@@ -191,7 +190,7 @@ public class BlahsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             entity.setId(blahId);
             BlahManager.getInstance().updateBlahVoteViewOrOpens(LocaleId.en_us, entity);
             final Response response = RestUtilities.make204OKNoContentResponse();
@@ -316,7 +315,7 @@ public class BlahsResource {
                              @Context HttpServletRequest req) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(req);
+            BlahguaSession.ensureAuthenticated(req, true);
             final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
             SystemManager.getInstance().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
             return response;

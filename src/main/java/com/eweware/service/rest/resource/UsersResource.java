@@ -12,7 +12,6 @@ import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -44,6 +43,7 @@ public class UsersResource {
     private static final String CREATE_USER_PROFILE_OPERATION = "createUserProfile";
     private static final String VALIDATE_USER_OPERATION = "validateUser";
     private static final String RECOVER_USER_OPERATION = "recoverUser";
+    private static final String LOGIN_USER_OPERATION = "loginUser";
 
     /**
      * <p>Use this method to check whether a username is available to use
@@ -129,7 +129,7 @@ public class UsersResource {
             final String password = (String) entity.get(UserDAOConstants.PASSWORD);
             UserManager.getInstance().loginUser(LocaleId.en_us, username, password, request);
             final Response response = RestUtilities.make202AcceptedResponse();
-            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
+            SystemManager.getInstance().setResponseTime(LOGIN_USER_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -228,7 +228,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String userId = BlahguaSession.ensureAuthenticated(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
             entity = UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, true);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
@@ -274,8 +274,8 @@ public class UsersResource {
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
-            final String userId = BlahguaSession.ensureAuthenticated(request);
-            UserManager.getInstance().setUserAccountData(userId, entity.containsKey("e"), entity.get("e"), entity.containsKey("q"), entity.get("q"));
+            final String username = BlahguaSession.ensureAuthenticated(request, false);
+            UserManager.getInstance().setUserAccountData(username, entity.containsKey("e"), entity.get("e"), entity.containsKey("q"), entity.get("q"));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
@@ -326,7 +326,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String userId = BlahguaSession.ensureAuthenticated(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
             UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, false);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
@@ -398,7 +398,7 @@ public class UsersResource {
     public Response getUserProfileSchema(@Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileSchema(LocaleId.en_us));
             SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -434,7 +434,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String currUserId = BlahguaSession.ensureAuthenticated(request);
+            final String currUserId = BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileById(LocaleId.en_us, (userId == null) ? currUserId : userId));
             SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -474,7 +474,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             UserManager.getInstance().updateUsername(LocaleId.en_us, request, username);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_USER_OPERATION, (System.currentTimeMillis() - s));
@@ -516,7 +516,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             UserManager.getInstance().updatePassword(LocaleId.en_us, request, password);
             final Response response = RestUtilities.make204OKNoContentResponse();
             SystemManager.getInstance().setResponseTime(UPDATE_USER_OPERATION, (System.currentTimeMillis() - s));
@@ -563,8 +563,11 @@ public class UsersResource {
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             UserManager.getInstance().recoverUser(LocaleId.en_us, request, entity.get("u"), entity.get("e"), entity.get("a"));
-            return RestUtilities.make204OKNoContentResponse();
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (ResourceNotFoundException e) {
@@ -705,7 +708,7 @@ public class UsersResource {
 
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserById(LocaleId.en_us, userId, byUsername, stats, statsStartDate, statsEndDate));
             SystemManager.getInstance().setResponseTime(GET_USER_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -734,7 +737,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUsers(LocaleId.en_us, start, count, sortFieldName));
             SystemManager.getInstance().setResponseTime(GET_USERS_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -758,7 +761,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            BlahguaSession.ensureAuthenticated(request, true);
             UserManager.getInstance().validateUser(LocaleId.en_us, validationCode);
             final Response response = RestUtilities.make202AcceptedResponse();
             SystemManager.getInstance().setResponseTime(VALIDATE_USER_OPERATION, (System.currentTimeMillis() - s));

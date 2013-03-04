@@ -106,19 +106,24 @@ public class SystemResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> sys/secure/{on}</div>
      *
-     * @param on <i>Path Parameter:</i> If true, security is turned on; else off.
+     * @param action <i>Path Parameter:</i> If "on" turns security on.
+     *               If "get" returns security state. Any other value turns security off.
      * @return Http status code 200 with plain text specifying the new security state.
      */
     @POST
-    @Path("/secure/{on}")
+    @Path("/security/{action}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response flipSecurity(@PathParam("on") boolean on, @Context HttpServletRequest request) {
+    public Response flipSecurity(
+            @PathParam("action") String action,
+            @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAdmin(request);
-            BlahguaSession.flipSecurity(on);
+//            BlahguaSession.ensureAdmin(request);
+            if (action.equals("get")) {
+                return Response.ok(BlahguaSession.getSecurity() ? "on" : "off").build();
+            }
+            final boolean on = action.equals("on");
+            BlahguaSession.setSecurity(on);
             return Response.ok("security " + (on ? "ON" : "OFF")).build();
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }

@@ -56,11 +56,6 @@ function defaultSuccessFunction(results, successOrNot, theStatus) {
 	}).html(results)
 }
 
-function changeSecurity() {
-	var on = document.getElementById('security').checked;
-	rest('POST', 'sys/secure/' + on);
-}
-
 function createChannelType() {
 	var name = document.getElementById('channeltypename').value;
 	if (!name) {alert('Missing Channel Type Name'); return;}
