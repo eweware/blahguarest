@@ -37,6 +37,7 @@ public final class SystemManager implements ManagerInterface {
     private final BlahCacheConfiguration blahCacheConfiguration;
     private String restEndpoint;
     private final String clientServiceEndpoint;
+    private final boolean cryptoOn;
 
     /** for dev mode */
 
@@ -49,6 +50,7 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public SystemManager(
+            boolean cryptoOn,
             String clientServiceEndpoint,
             String cacheHostname,
             String cachePort,
@@ -56,6 +58,7 @@ public final class SystemManager implements ManagerInterface {
             String devRestPort
             ) {
         try {
+            this.cryptoOn = cryptoOn;
             maybeSetDevelopmentMode();
             if (isDevMode()) {
                 cacheHostname = devMemcachedHostname; // same port 21191
@@ -73,6 +76,10 @@ public final class SystemManager implements ManagerInterface {
         SystemManager.singleton = this;
         this.state = ManagerState.INITIALIZED;
         System.out.println("*** SystemManager initialized ***");
+    }
+
+    public boolean isCryptoOn() {
+        return cryptoOn;
     }
 
     private void maybeSetDevelopmentMode() {

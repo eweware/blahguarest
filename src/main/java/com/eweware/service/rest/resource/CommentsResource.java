@@ -45,7 +45,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see CommentPayload
+     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see CommentPayload
+     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @PUT
     @Path("/{commentId}")
@@ -145,7 +145,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see CommentPayload
+     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @GET
     @Path("/{commentId}")
@@ -190,7 +190,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see CommentPayload
+     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

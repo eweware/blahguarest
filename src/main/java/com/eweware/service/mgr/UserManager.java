@@ -371,7 +371,7 @@ public class UserManager implements ManagerInterface {
 
         String userId = null;
         String canonicalUsername = null;
-        if (tempWorkaroundToEncryptionIssue) {
+        if (!SystemManager.getInstance().isCryptoOn()) {
             try {
                 final String workaroundCode = new String(Base64.decodeBase64(inputRecoveryCode.getBytes("UTF-8")), "UTF8");
                 final String[] parts = workaroundCode.split("\\|");
@@ -471,7 +471,7 @@ public class UserManager implements ManagerInterface {
         final UserAccountDAO updateAccountDAO = storeManager.createUserAccount(userId);
         RecoveryCode recoveryCode = null;
         String workaroundCode = null;
-        if (tempWorkaroundToEncryptionIssue) {
+        if (!SystemManager.getInstance().isCryptoOn()) {
             try {
                 final String codeString = userId + "|" + canonicalUsername;
                 workaroundCode = URLEncoder.encode(Base64.encodeBase64String(codeString.getBytes("UTF-8")), "UTF-8");
@@ -500,17 +500,15 @@ public class UserManager implements ManagerInterface {
         }
     }
 
-    public static final boolean tempWorkaroundToEncryptionIssue = true;
-
     private String makeAccountRecoveryBody(RecoveryCode recoveryCode, String workaroundCode) throws UnsupportedEncodingException, SystemErrorException {
-        final StringBuilder msg = new StringBuilder("The password to your Blahgua account has been changed.");
-        msg.append(" Visit the following link to recover your account:\n\n");
+        final StringBuilder msg = new StringBuilder("You have requested to recover your Blahgua account.");
+        msg.append(" Please visit the following link to recover it:\n\n");
         final SystemManager mgr = SystemManager.getInstance();
         final String endpoint = mgr.isDevMode() ? SystemManager.getInstance().getDevRestEndpoint() : mgr.getClientServiceEndpoint();
         msg.append("http://");
         msg.append(endpoint);
         msg.append("/recover?n=");
-        if (tempWorkaroundToEncryptionIssue) {
+        if (!SystemManager.getInstance().isCryptoOn()) {
             msg.append(workaroundCode);
         } else {
             msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));

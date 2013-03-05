@@ -58,6 +58,7 @@ public class UsersResource {
      *         If the request is invalid, it returns 400 (BAD REQUEST).
      *         If the username already exists, it returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
+     * @see UserDAOConstants
      */
     @GET
     @Path("/check/username/{username}")
@@ -89,6 +90,7 @@ public class UsersResource {
      * @return Returns http status 200 with a JSON payload containing a field
      *         named 'loggedIn' which is set to 'Y' if the user is logged in and
      *         to 'N' if the user is not logged in.
+     * @see UserDAOConstants
      */
     @GET
     @Path("/login/check")
@@ -115,7 +117,7 @@ public class UsersResource {
      *         the request was invalid or the user is not authorized to login),
      *         or 404 (user resource does not exist). In either case a JSON
      *         error message will specify more details.
-     * @see UserPayload
+     * @see UserDAOConstants
      */
     @POST
     @Path("/login")
@@ -152,6 +154,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/login</div>
      *
      * @return If it succeeds, returns an http status 202 (ACCEPTED).
+     * @see UserDAOConstants
      */
     @POST
     @Path("/logout")
@@ -176,7 +179,7 @@ public class UsersResource {
      *         If a user with the username already exists, it will return 409 (CONFLICT).
      *         If the request is invalid, it will return 400 (BAD REQUEST).
      *         On error conditions, a JSON object is returned with details.
-     * @see UserPayload
+     * @see UserDAOConstants
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -216,7 +219,7 @@ public class UsersResource {
      *         If the request is invalid, it will return 400 (BAD REQUEST).
      *         If the user is not authorized to access this method, returns 401.
      *         On error conditions, a JSON object is returned with details.
-     * @see UserProfilePayload
+     * @see UserDAOConstants
      */
     @POST
     @Path("/profiles")
@@ -266,6 +269,7 @@ public class UsersResource {
      * @return Returns an http status of 202 (ACCEPTED) if the address was accepted.
      *         If there is a security problem, returns status of 401.
      *         On error conditions, a JSON object is returned with details.
+     * @see UserDAOConstants
      */
     @POST
     @Path("/account")
@@ -292,6 +296,8 @@ public class UsersResource {
      * <p>Same as POST version of this method.</p>
      *
      * @see #setAccountInfo(java.util.Map, javax.servlet.http.HttpServletRequest)
+     * @see UserDAOConstants
+     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     @PUT
     @Path("/account")
@@ -315,7 +321,7 @@ public class UsersResource {
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         If the user may not access this method, returns 401 (UNAUTHORIZED).
      *         On error conditions, a JSON object is returned with details.
-     * @see UserProfilePayload
+     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @PUT
     @Path("/profiles")
@@ -358,6 +364,7 @@ public class UsersResource {
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         On error conditions, a JSON object is returned with details.
+     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @GET
     @Path("/profiles/descriptor/{userId}")
@@ -389,6 +396,7 @@ public class UsersResource {
      *
      * @return Returns a user profile schema JSON entity (a UserProfileSchema)
      *         with an http status of 200.
+     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
      */
     @GET
@@ -424,7 +432,7 @@ public class UsersResource {
      *         If there is no profile for this user (or if user doesn't exist), returns 404 (NOT FOUND).
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         On error conditions, a JSON object is returned with details.
-     * @see UserProfilePayload
+     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @GET
     @Path("/profiles/{userId}")
@@ -465,6 +473,7 @@ public class UsersResource {
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
      * @see #checkUsername(String)
+     * @see UserDAOConstants
      */
     @PUT
     @Path("/update/username/{username}")
@@ -507,6 +516,7 @@ public class UsersResource {
      *         If the input is invalid, returns 400 (BAD REQUEST).
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
+     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     @PUT
     @Path("/update/password/{password}")
@@ -555,6 +565,8 @@ public class UsersResource {
      *         in which case it means that an email has been sent with a link that will log in the user.
      *         If the user doesn't have a registered email address, returns http status 404 (NOT FOUND).
      *         Never returns a payload.
+     *         @see UserDAOConstants
+     *         @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     @POST
     @Path("/recover/user")
@@ -641,7 +653,7 @@ public class UsersResource {
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
      *         first inbox when the maximum inbox number has been reached.
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.payload.InboxBlahPayload
+     * @see main.java.com.eweware.service.base.store.dao.InboxBlahDAOConstants
      */
     @GET
     @Path("/inbox")
@@ -693,7 +705,7 @@ public class UsersResource {
      *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
      *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
      *         On error conditions, a JSON object is returned with details.
-     * @see UserPayload
+     * @see UserDAOConstants
      */
     @GET
     @Path("/{userId}")

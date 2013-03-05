@@ -46,7 +46,7 @@ public class UserGroupsResource {
      *         If the user is not authorized to access this method, returns status 401.
      *         If there is a state conflict in satisfying this request, returns status 409.
      *         On error, a JSON entity detailing the error will be returned.
-     * @see UserGroupPayload
+     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -93,6 +93,7 @@ public class UserGroupsResource {
      *         If there's a state conflict in the update, returns status 409.
      *         If the user or group is not found, returns status 404.
      *         On error, details are provided in a JSON entity.
+     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @DELETE
     @Path("/{userId}/{groupId}")
@@ -136,6 +137,7 @@ public class UserGroupsResource {
      *         If the request is invalid, returns status 400.
      *         If the user or group is not found, returns status 404.
      *         On error, details are provided in a JSON entity.
+     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @GET
     @Path("/{userId}/{groupId}")
@@ -182,6 +184,7 @@ public class UserGroupsResource {
      *         On error, a JSON entity detailing the error will be returned.
      * @see UserGroupsResource
      * @see AuthorizedState
+     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @GET
     @Path("/{userId}")

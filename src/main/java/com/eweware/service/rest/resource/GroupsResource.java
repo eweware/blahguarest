@@ -34,7 +34,7 @@ public class GroupsResource {
      *
      * @param entity A JSON entity (a GroupPayload) requiring the group type's id, the group's display name,
      *               a group descriptor, and a validation method.
-     * @see GroupPayload
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
      * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
      * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
@@ -75,7 +75,7 @@ public class GroupsResource {
      *         returns 404. If there is a state conflict implied by
      *         the change, returns status 409.
      *         On errors, a detailed error entity will be returned.
-     * @see GroupPayload
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @PUT
     @Path("/{groupId}")
@@ -113,7 +113,7 @@ public class GroupsResource {
      * @param groupId <i>Path Parameter</i>: The group's id
      * @return If successful, returns http status 200 with a JSON entity (a GroupPayload)
      *         containing the group id and the current viewer count for the group.
-     * @see GroupPayload
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Path("/{groupId}/viewerCount")
@@ -139,6 +139,7 @@ public class GroupsResource {
      * @param count<i>Query Parameter:</i>(Optional:) The number of items to return.
      * @return If successful, returns a possibly empty array of group ids with http status 200. These
      *         are the open group ids.
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Path("/featured")
@@ -174,7 +175,7 @@ public class GroupsResource {
      * @return If successful, returns a JSON entity (a GroupPayload) with http status 200
      *         with the group entities that match the query parameters.
      *         If the request has an error, returns http status 400.
-     * @see GroupPayload
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -209,7 +210,7 @@ public class GroupsResource {
      * @param groupId <i>Path Parameter:</i> The group's id
      * @return If successful, returns http status 200 with a JSON entity
      *         (a GroupPayload) containing the group's info.
-     * @see GroupPayload
+     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Path("/{groupId}")
