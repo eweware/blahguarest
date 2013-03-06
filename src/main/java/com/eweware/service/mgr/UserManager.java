@@ -501,11 +501,13 @@ public class UserManager implements ManagerInterface {
     }
 
     private String makeAccountRecoveryBody(RecoveryCode recoveryCode, String workaroundCode) throws UnsupportedEncodingException, SystemErrorException {
-        final StringBuilder msg = new StringBuilder("You have requested to recover your Blahgua account.");
-        msg.append(" Please visit the following link to recover it:\n\n");
+        final StringBuilder msg = new StringBuilder("Hi there!");
+        msg.append("<p>Someone requested an account recovery for your email address on Blahgua.</p>");
+        msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
+        msg.append("<p>If you do want to reset your password, ");
         final SystemManager mgr = SystemManager.getInstance();
         final String endpoint = mgr.isDevMode() ? SystemManager.getInstance().getDevRestEndpoint() : mgr.getClientServiceEndpoint();
-        msg.append("http://");
+        msg.append("<a href='http://");
         msg.append(endpoint);
         msg.append("/recover?n=");
         if (!SystemManager.getInstance().isCryptoOn()) {
@@ -513,11 +515,8 @@ public class UserManager implements ManagerInterface {
         } else {
             msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));
         }
-        msg.append("\n\nThis link will expire in 24 hours.");
-        msg.append(" If you have not requested this change, please visit the following link to notify us.\n\nhttp://this-link-doesnt-work-yet.com/whatever");
-        msg.append("\n\nPlease don't respond to this message");
-        msg.append("\n\nCheers,\nYour Blahgua Account Manager");
-        msg.append("\n\n\nYou have received this mandatory email service announcement to update you about important changes to your Blahgua account");
+        msg.append("'>just follow this link</a> within the next 24 hours. We'll show you what to do.</p>");
+        msg.append("<div>Thanks!</div><div>The Blahgua Team</div>");
         return msg.toString();
     }
 

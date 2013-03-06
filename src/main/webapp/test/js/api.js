@@ -221,13 +221,35 @@ function createBlah() {
 	var userId = getUserId();
 	var typeId = getTypeId();
 	var channelId = getChannelId();
-	var text = getBlahText();
+	var text = getBlahOrCommentText();
 	if (userId.length == 0 || typeId.length == 0 || channelId.length == 0 || text.length == 0) {
 		alert("Missing User Id, and/or Blah Type Id, and/or Channel Id and/or Blah Text");
 		return;
 	}
 	var data = '{"authorId": "' + userId + '", "groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
 	rest("POST", "blahs", data, setBlahData1);
+}
+
+function createAComment() {
+	var blahId = getBlahId();
+	var text = getBlahOrCommentText();
+	if (!blahId || !text || text.length == 0) {alert('Missing Blah Id and/or Comment Text'); return;}
+	var data = JSON.stringify({"blahId": blahId, "text": text});
+	rest('POST', 'comments', data);
+}
+
+function getBlahComments() {
+	var blahId = getBlahId();
+	if (!blahId) {alert('Missing Blah Id'); return;}
+	rest('GET', 'comments?blahId='+blahId);
+}
+
+function voteBlah() {
+	var blahId = getBlahId();
+	if (!blahId) {alert('Missing Blah Id'); return;}
+	var vote = document.getElementById('blahvote').checked;
+	var voteval = vote? 1 : -1;
+	rest('PUT', 'blahs/'+blahId, JSON.stringify({"v": voteval}))
 }
 
 function getBlah() {
@@ -341,8 +363,8 @@ function getTypeId() {
 	return document.getElementById("blahtypeid").value;
 }
 
-function getBlahText() {
-	return document.getElementById("blahtext").value;
+function getBlahOrCommentText() {
+	return document.getElementById("blahcommenttext").value;
 }
 
 function getBlahId() {

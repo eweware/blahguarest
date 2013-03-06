@@ -58,8 +58,8 @@ public class BlahsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
-            entity = BlahManager.getInstance().createBlah(LocaleId.en_us, entity);
+            final String authorId = BlahguaSession.ensureAuthenticated(request, true);
+            entity = BlahManager.getInstance().createBlah(LocaleId.en_us, authorId, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -190,7 +190,8 @@ public class BlahsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            entity.setAuthorId(userId);
             entity.setId(blahId);
             BlahManager.getInstance().updateBlahVoteViewOrOpens(LocaleId.en_us, entity);
             final Response response = RestUtilities.make204OKNoContentResponse();

@@ -97,9 +97,19 @@
         &nbsp;
         <input id="createBlahType" type="button" onclick="createBlahType()" value="Create Blah Type"/>
         &nbsp;
-        <input id="createBlah" type="button" onclick="rest('GET', 'blahs/types')" value="Get Blah Types"/>
+        <input id="getBlahTypes" type="button" onclick="rest('GET', 'blahs/types')" value="Get Blah Types"/>
+        &nbsp;
+        <input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>
+        &nbsp;
+        <input id="voteBlah" type="button" onclick="voteBlah()" value="Vote Blah"/>
         &nbsp;
         <input id="getBlah" type="button" onclick="getBlah()" value="Get Blah"/>
+    </div>
+    <div style="margin-top: .5em">
+        <input id="createComment" type="button" onclick="createAComment();"  value="Create Comment"/>
+        &nbsp;
+        <input id="getBlahComments" type="button" onclick="getBlahComments();"  value="Get Blah Comments"/>
+        &nbsp;
     </div>
     <h2>Parameters</h2>
     <input id="clearparams" type="button" onclick="clearParameters();" value="Clear All Parameters"/>
@@ -124,6 +134,7 @@
     <h3>Blah Parameters</h3>
     <div>
         Blah Type Name: <input class="param" id="blahtypename" type="text" size=30/>
+        &nbsp;<label><input class="param" id="blahvote" type="checkbox" checked="checked"/> Vote For Blah</label>
     </div>
     <div>
         Blah Id:
@@ -132,7 +143,7 @@
     </div>
 
     <div>
-        <textarea class="param" id="blahtext" rows="2" cols="90" value="hello">Blah text goes here</textarea>
+        <textarea class="param" id="blahcommenttext" rows="2" cols="90" value="hello">Blah or Comment text goes here</textarea>
     </div>
     <br/>
 

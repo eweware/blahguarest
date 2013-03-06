@@ -1,38 +1,48 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
- <meta name="viewport" content="width=device-width, initial-scale=1"/> 
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.js" type="text/javascript"></script>
-    <script src="http://files.blahgua.com/webapp/scripts/jquery.animate-colors-min.js" type="text/javascript"></script>
+    <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.cookie.js" type="text/javascript"></script>
+    <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.animate-colors-min.js" type="text/javascript"></script>
 
-      <link rel="stylesheet" href="http://files.blahgua.com/webapp/css/blahgua.css" /> 
 
-   <!-- <link rel="stylesheet" href="./aws/css/blahgua.css" />-->
+    <link rel="stylesheet" href="http://blahgua-webapp.s3.amazonaws.com/css/blahgua.css" />
+    <!--   <link rel="stylesheet" href="./aws/css/blahgua.css" />
+   -->
 
-   <title></title>
-         <meta http-equiv="CACHE-CONTROL" content="NO-CACHE, must-revalidate, max-age=0" />
-     <meta http-equiv="expires" content="0" />
-     <meta http-equiv="Pragma" content="no-cache" />
+    <title></title>
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE, must-revalidate, max-age=0" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
 
 </head>
 <body>
-   	<script src="http://files.blahgua.com/webapp/scripts/jquery.event.move.js" type="text/javascript"></script>
-       <script src="http://files.blahgua.com/webapp/scripts/jquery.event.swipe.js" type="text/javascript"></script>
 
-       <script type="text/javascript" src="http://files.blahgua.com/webapp/scripts/blahgua_restapi.js"></script>
-    <script type="text/javascript" src="http://files.blahgua.com/webapp/scripts/blahgua.js"></script>
+<script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.event.move.js" type="text/javascript"></script>
+<script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.event.swipe.js" type="text/javascript"></script>
+<script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.flippy.min.js" type="text/javascript"></script>
 
-    <!--<script type="text/javascript" src="aws/scripts/blahgua_restapi.js"></script>
-    <script type="text/javascript" src="aws/scripts/blahgua.js"></script>
--->
+<script type="text/javascript" src="http://blahgua-webapp.s3.amazonaws.com/scripts/blahgua_restapi.js"></script>
+<script type="text/javascript" src="http://blahgua-webapp.s3.amazonaws.com/scripts/blahgua.js"></script>
 
-   <div class="PageBody">
-        <div id="ChannelBanner" class="ChannelBanner"></div>
-        <div id="BlahContainer" class="BlahContainer"></div>
-        <div id="LightBox" class="LightBox"></div>
-        <div id="BlahPreviewItem" class="BlahPreview"></div>
-        <div id="BlahFullItem" class="BlahFullItem"></div>
-        
+
+<!--<script type="text/javascript" src="aws/scripts/blahgua_restapi.js"></script>
+<script type="text/javascript" src="aws/scripts/blahgua.js"></script>-->
+
+
+<div class="PageBody">
+    <div id="ChannelBanner" class="ChannelBanner"></div>
+    <div id="BlahContainer" class="BlahContainer"></div>
+    <div id="ChannelDropMenu" class="ChannelDropMenu" style="display:none">
+        <a id="ViewProfileBtn" onclick="InstallUserChannel(); return false;">view your profile</a>
+        <ul id="ChannelList"></ul>
+        <a id="BrowseChannelBtn" onclick="DoBrowseChannels(); return false;">Browse & Join Channels</a>
     </div>
+    <div id="LightBox" class="LightBox"></div>
+    <div id="BlahPreviewItem" class="BlahPreview"></div>
+    <div id="BlahFullItem" class="BlahFullItem"></div>
+
+</div>
 </body>
 </html>

@@ -135,7 +135,7 @@ public final class BlahguaSession {
         if (securityOn && !isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
-        return (String) request.getSession().getAttribute(returnId?USER_ID_ATTRIBUTE:USERNAME_ATTRIBUTE_DBG);
+        return (String) request.getSession().getAttribute(returnId ? USER_ID_ATTRIBUTE : USERNAME_ATTRIBUTE_DBG);
     }
 
     /**
@@ -293,8 +293,13 @@ public final class BlahguaSession {
 
             // Update DB
             if (currentlyWatched != null) {
-                if (!currentlyWatched.equals(groupId)) { // decrement count in DB
+                if (!currentlyWatched.equals(groupId)) { // watching a different group
+                    // decrement count in DB for current
                     GroupManager.getInstance().updateViewerCount(currentlyWatched, false);
+                    // increment count in DB for new
+                    GroupManager.getInstance().updateViewerCount(groupId, true);
+                } else { // watching same group as before
+                    // do nothing
                 }
             } else { // increment count in DB
                 GroupManager.getInstance().updateViewerCount(groupId, true);

@@ -183,19 +183,18 @@ public final class BlahManager implements ManagerInterface {
     /**
      * Creates a new blah authored by user.
      *
+     *
      * @param localeId
-     * @param request  The request object
-     * @return BlahPayload A blah payload including the new blah id
+     * @param authorId
+     *@param request  The request object  @return BlahPayload A blah payload including the new blah id
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
      */
-    public BlahPayload createBlah(LocaleId localeId, BlahPayload request) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+    public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload request) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
         // Check required fields
-//        BlahguaSession.getUserId()
-        final String authorId = request.getAuthorId();
         if (CommonUtilities.isEmptyString(authorId)) {
             throw new InvalidRequestException("missing field authorId=" + authorId, request, ErrorCodes.MISSING_USER_ID);
         }
@@ -881,16 +880,17 @@ public final class BlahManager implements ManagerInterface {
      * When a comment is created, it may optionally include a vote for the blah upon which
      * it comments. The author of the blah is permitted to comment on it, but his vote is ignored.
      *
+     *
      * @param localeId
-     * @param request
-     * @return
+     * @param commentAuthorId
+     *@param request  @return
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
-    public CommentPayload createComment(LocaleId localeId, CommentPayload request) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    public CommentPayload createComment(LocaleId localeId, String commentAuthorId, CommentPayload request) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
 
         // Check parameters
         if (request.getCommentVotes() != null) {
@@ -900,7 +900,6 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", request, ErrorCodes.MISSING_BLAH_ID);
         }
-        final String commentAuthorId = request.getAuthorId();
         if (CommonUtilities.isEmptyString(commentAuthorId)) {
             throw new InvalidRequestException("missing authorId", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
@@ -1322,12 +1321,14 @@ public final class BlahManager implements ManagerInterface {
             }
         }
         final Inbox inbox = inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
+
+        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
+
         if (inbox == null) {
             logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber + " when maxInbox=" + maxInbox);
             return new ArrayList<InboxBlahPayload>(0);
         }
 
-        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
 
         return inbox.getItems();
     }

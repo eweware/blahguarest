@@ -93,10 +93,13 @@ public class MailManager implements ManagerInterface {
         final MimeMessage message = new MimeMessage(session);
         final MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
 
-        message.setReplyTo(new InternetAddress[]{new InternetAddress(getReplyToEmailAddress())});
+        message.setFrom(new InternetAddress(getReplyToEmailAddress()));
+        //message.setReplyTo(new InternetAddress[]{new InternetAddress(getReplyToEmailAddress())});
         message.setRecipients(Message.RecipientType.TO, recipient);
+
         message.setSubject(subject);
-        helper.setText(body);
+        message.setContent(body, "text/html; charset=utf-8");
+//        helper.setText(body);
         Transport.send(message);
     }
 

@@ -39,8 +39,7 @@ public class CommentsResource {
      * <div><b>URL:</b> comments</div>
      *
      * @param entity A JSON entity (a CommentPayload). This must contain the following
-     *               CommentPayload fields: the blah id to which this is a comment,
-     *               the author id (user id of comment creator), the comment's text.
+     *               CommentPayload fields: the blah id to which this is a comment and the comment's text.
      * @return Returns an http status of 201 (CREATED) without a JSON entity.
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
@@ -56,8 +55,8 @@ public class CommentsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
-            entity = BlahManager.getInstance().createComment(LocaleId.en_us, entity);
+            final String authorId = BlahguaSession.ensureAuthenticated(request, true);
+            entity = BlahManager.getInstance().createComment(LocaleId.en_us, authorId, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             SystemManager.getInstance().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
