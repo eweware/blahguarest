@@ -31,12 +31,8 @@ public final class BlahguaSession {
      */
     private static boolean securityOn = true;
 
-    /**
-     * A clumsy kludge to cheat so that QA tests can pass when REST runs on a Mac.
-     * TODO eliminate this before Macs take over the world.
-     */
 
-    // TODO remove this before rollout
+    // TODO remove this before rollout: security must always be on
     public static final void setSecurity(boolean onOrOff) {
         securityOn = onOrOff;
     }
@@ -67,8 +63,10 @@ public final class BlahguaSession {
      */
     private static final String USER_ID_ATTRIBUTE = "I";
 
-    // TODO debugging
-    private static final String USERNAME_ATTRIBUTE_DBG = "U";
+    /**
+     * If the user is authenticated, this is the username.
+     */
+    private static final String USERNAME_ATTRIBUTE = "U";
 
     /**
      * An InboxInfo instance.
@@ -85,8 +83,8 @@ public final class BlahguaSession {
      *
      * @param request     The http request object (unchecked!)
      * @param userId      The user id  (unchecked!)
-     * @param accountType The account type. Currently is set only if it is an admin account
-     * @param username    TODO remove (dbg)
+     * @param accountType The account type. Currently is set only if it is an admin account. (unchecked!)
+     * @param username    The username (unchecked!)
      */
     public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username) {
         final HttpSession session = request.getSession(true);
@@ -98,12 +96,12 @@ public final class BlahguaSession {
      * Input parameters are not checked!
      *
      * @param userId      The user id (unchecked!)
-     * @param username    TODO remove (dbg)
+     * @param username    The username (unchecked!)
      * @param accountType The account type. Currently is set only if it is an admin account
      */
     private static void markAuthenticated(HttpSession session, String userId, String accountType, String username) {
-        if (username != null) {     // TODO remove (dbg)
-            session.setAttribute(USERNAME_ATTRIBUTE_DBG, username);
+        if (username != null) {
+            session.setAttribute(USERNAME_ATTRIBUTE, username);
         }
         if (accountType != null && accountType.equals(UserAccountType.ADMIN.getCode())) {
             session.setAttribute(ACCOUNT_TYPE_ATTRIBUTE, Boolean.TRUE);
@@ -124,7 +122,7 @@ public final class BlahguaSession {
     }
 
     /**
-     * <p>Ensures that the user session is authenticated.</p>
+     * <p>Ensures that the user session is authenticated and returns either the session's user id or the username.</p>
      *
      * @param request  The http request
      * @param returnId If true, returns user id, else returns canonical username
@@ -133,10 +131,19 @@ public final class BlahguaSession {
      *          If there is no authenticated session.
      */
     public static String ensureAuthenticated(HttpServletRequest request, boolean returnId) throws InvalidAuthorizedStateException {
+        ensureAuthenticated(request);
+        return (String) request.getSession().getAttribute(returnId ? USER_ID_ATTRIBUTE : USERNAME_ATTRIBUTE);
+    }
+
+    /**
+     * <p>Ensures that user is authenticated.</p>
+     * @param request   The request
+     * @throws InvalidAuthorizedStateException Thrown if the user is not authenticated
+     */
+    public static void ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
         if (securityOn && !isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
-        return (String) request.getSession().getAttribute(returnId ? USER_ID_ATTRIBUTE : USERNAME_ATTRIBUTE_DBG);
     }
 
     /**
@@ -147,7 +154,7 @@ public final class BlahguaSession {
     public static void setUsername(HttpServletRequest request, String username) {
         final HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute(USERNAME_ATTRIBUTE_DBG, username);
+            session.setAttribute(USERNAME_ATTRIBUTE, username);
         }
     }
 
@@ -189,7 +196,7 @@ public final class BlahguaSession {
     public static void markAnonymous(HttpSession session) {
         if (session != null) {
             session.removeAttribute(USER_ID_ATTRIBUTE);
-            session.removeAttribute(USERNAME_ATTRIBUTE_DBG);
+            session.removeAttribute(USERNAME_ATTRIBUTE);
             session.setAttribute(AUTHENTICATION_STATE_ATTRIBUTE, SessionState.ANONYMOUS);
         }
     }
@@ -207,7 +214,7 @@ public final class BlahguaSession {
     }
 
     /**
-     * TODO temp for debugging only
+     * TODO for debugging only
      */
     public static String getSessionInfo(HttpServletRequest request) {
         final HttpSession s = request.getSession();
@@ -220,7 +227,7 @@ public final class BlahguaSession {
                     b.append("\nUser Id: ");
                     b.append(userId);
                 }
-                final String username = (String) s.getAttribute(USERNAME_ATTRIBUTE_DBG);
+                final String username = (String) s.getAttribute(USERNAME_ATTRIBUTE);
                 if (username != null) {
                     b.append("\nUsername: ");
                     b.append(username);
@@ -360,7 +367,7 @@ public final class BlahguaSession {
      */
     public static void sessionDestroyed(HttpSession session) {
         final String groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
-        String username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE_DBG);
+        String username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE);
         if (username == null) {
             username = "unknown";
         } // dbg username

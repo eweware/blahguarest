@@ -1,7 +1,5 @@
 package main.java.com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.user.validation.Login;
-
 import java.util.Date;
 
 /**

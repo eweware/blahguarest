@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Map;
 
 /**
  * <p>Comment-specific API methods.</p>
@@ -30,9 +31,53 @@ public class CommentsResource {
     private static final String GET_COMMENT_BY_ID_OPERATION = "getCommentById";
     private static final String GET_COMMENTS_OPERATION = "getComments";
     private static final String UPDATE_COMMENT_OPERATION = "updateComment";
+    private static final String GET_COMMENT_AUTHOR_OPERATION = "getCommentAuthor";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;
+
+
+
+    /**
+     * <p>Returns user information about the comment's author</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> comments/author</div>
+     *
+     * @param entity The request entity. Requires a JSON entity with an
+     *               field named 'i' whose value is the comment id.
+     * @return Returns an http status 200 with the author's data
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     *         If the user is not authorized to make this request, returns status 401.
+     * @see main.java.com.eweware.service.base.store.dao.UserDAOConstants
+     */
+    @POST
+    @Path("/author")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBlahAuthor(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            BlahguaSession.ensureAuthenticated(request);
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getAuthorFromComment(LocaleId.en_us, entity.get("i")));
+            getSystemManager().setResponseTime(GET_COMMENT_AUTHOR_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
 
     /**
      * <p>Use this method to create a comment for a blah.></p>
@@ -47,6 +92,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
+     *         If the user is not authorized to make this request, returns status 401.
      * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @POST
@@ -69,10 +115,10 @@ public class CommentsResource {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
@@ -93,6 +139,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
+     *         If the user is not authorized to make this request, returns status 401.
      * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @PUT
@@ -105,7 +152,7 @@ public class CommentsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             entity.setId(commentId); // ensure this
             getBlahManager().updateComment(LocaleId.en_us, entity, commentId);
             final Response response = RestUtilities.make204OKNoContentResponse();
@@ -117,10 +164,10 @@ public class CommentsResource {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (RuntimeException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
@@ -196,7 +243,7 @@ public class CommentsResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getComments(
+    public Response getCommentForBlah(
             @QueryParam("blahId") String blahId,
             @QueryParam("userId") String userId,
             @QueryParam("authorId") String authorId,

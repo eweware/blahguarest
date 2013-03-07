@@ -1,7 +1,6 @@
 package main.java.com.eweware.service.base.store.impl.mongo.dao;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.WriteResult;
 import main.java.com.eweware.service.base.error.ErrorCodes;
@@ -13,7 +12,6 @@ import main.java.com.eweware.service.base.store.dao.PollOptionTextDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
-import org.bson.types.ObjectId;
 
 import java.util.HashMap;
 import java.util.List;

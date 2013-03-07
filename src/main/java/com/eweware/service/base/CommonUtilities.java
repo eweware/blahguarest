@@ -3,18 +3,12 @@ package main.java.com.eweware.service.base;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import org.apache.commons.io.IOUtils;
-import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.html.HtmlParser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.apache.tika.sax.TextContentHandler;
-import org.apache.tika.sax.ToHTMLContentHandler;
-import org.apache.tika.sax.XHTMLContentHandler;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;

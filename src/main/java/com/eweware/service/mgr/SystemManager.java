@@ -5,7 +5,6 @@ import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.xml.ws.WebServiceException;

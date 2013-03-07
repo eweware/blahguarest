@@ -422,7 +422,7 @@ public class UsersResource {
     public Response getUserProfileSchema(@Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileSchema(LocaleId.en_us));
             getSystemManager().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -500,7 +500,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             final String username = entity.get("u");
             getUserManager().updateUsername(LocaleId.en_us, request, username);
             final Response response = RestUtilities.make204OKNoContentResponse();

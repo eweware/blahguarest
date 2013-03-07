@@ -7,7 +7,6 @@ import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
-import main.java.com.eweware.service.user.validation.Login;
 
 import java.util.Date;
 import java.util.HashMap;

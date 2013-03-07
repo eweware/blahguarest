@@ -49,7 +49,7 @@ public class GroupTypesResource {
                                     @Context UriInfo uri,
                                     @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             entity = getGroupManager().createGroupType(LocaleId.en_us, entity.getDisplayName());
             return RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + "/" + entity.getId()));
         } catch (InvalidRequestException e) {
@@ -89,7 +89,7 @@ public class GroupTypesResource {
             @PathParam("groupTypeId") String groupTypeId,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             getGroupManager().updateGroupTypeDisplayName(LocaleId.en_us, groupTypeId, entity.getDisplayName());
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {

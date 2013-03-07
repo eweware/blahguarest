@@ -3,7 +3,6 @@ package main.java.com.eweware.service.base.store.impl.mongo.dao;
 import com.mongodb.DBCollection;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.store.dao.UserAccountDAO;
-import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.Date;

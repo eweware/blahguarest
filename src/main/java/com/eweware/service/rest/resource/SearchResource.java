@@ -45,7 +45,7 @@ public class SearchResource {
             @Context HttpServletRequest request
 			) {
 		try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             BlahManager blahMgr = BlahManager.getInstance();
             return RestUtilities.make200OkResponse(blahMgr.search(LocaleId.en_us, fieldName, query, subset, count));
 		} catch (InvalidAuthorizedStateException e) {
@@ -69,7 +69,7 @@ public class SearchResource {
             @Context HttpServletRequest request
     ) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             UserManager userManager = UserManager.getInstance();
             return RestUtilities.make200OkResponse(userManager.searchUserIndex(LocaleId.en_us, fieldName, query));
         } catch (InvalidAuthorizedStateException e) {

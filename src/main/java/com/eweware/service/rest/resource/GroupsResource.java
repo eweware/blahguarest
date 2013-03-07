@@ -47,7 +47,7 @@ public class GroupsResource {
                                 @Context UriInfo uri,
                                 @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true); // TODO should register user who created it
+            BlahguaSession.ensureAuthenticated(request); // TODO register user who created group?
             final String groupTypeId = entity.getGroupTypeId();
             final String displayName = entity.getDisplayName();
             final String description = entity.getDescription();
@@ -96,7 +96,7 @@ public class GroupsResource {
             @PathParam("groupId") String groupId,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);  // TODO mark who updated it last
+            BlahguaSession.ensureAuthenticated(request);  // TODO mark who updated group last?
             final String displayName = entity.getDisplayName();
             final String description = entity.getDescription();
             final String state = entity.getState();
@@ -201,7 +201,7 @@ public class GroupsResource {
             @QueryParam("sort") String sortFieldName,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             return RestUtilities.make200OkResponse(getGroupManager().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);

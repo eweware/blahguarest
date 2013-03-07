@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Map;
 
 /**
  * <p>Blah-specific API methods.</p>
@@ -32,9 +33,51 @@ public class BlahsResource {
     private static final String GET_BLAH_TYPES_OPERATION = "getBlahTypes";
     private static final String GET_BLAH_BY_ID_OPERATION = "getBlahById";
     private static final String GET_BLAHS_OPERATION = "getBlahs";
+    private static final String GET_BLAH_AUTHOR_OPERATION = "getBlahAuthor";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;
+
+
+    /**
+     * <p>Returns user information about the blah author</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> blahs/author</div>
+     *
+     * @param entity The request entity. Requires a JSON entity with an
+     *               field named 'i' whose value is the blah id.
+     * @return Returns an http status 200 with the author's data
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     * @see main.java.com.eweware.service.base.store.dao.UserDAOConstants
+     */
+    @POST
+    @Path("/author")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBlahAuthor(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            BlahguaSession.ensureAuthenticated(request);
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getAuthorFromBlah(LocaleId.en_us, entity.get("i")));
+            getSystemManager().setResponseTime(GET_BLAH_AUTHOR_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
 
     /**
      * <p>Creates a blah.</p>
@@ -111,7 +154,7 @@ public class BlahsResource {
                              @PathParam("pollOptionIndex") Integer index,
                              @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             getBlahManager().pollVote(LocaleId.en_us, blahId, userId, index);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
@@ -152,7 +195,7 @@ public class BlahsResource {
                                     @PathParam("userId") String userId,
                                     @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             final BlahInfoPayload info = getBlahManager().getPollVoteInfo(LocaleId.en_us, blahId, userId);
             return RestUtilities.make200OkResponse(info);
         } catch (InvalidAuthorizedStateException e) {
@@ -336,6 +379,7 @@ public class BlahsResource {
         }
         return blahManager;
     }
+
     private SystemManager getSystemManager() throws SystemErrorException {
         if (systemManager == null) {
             systemManager = SystemManager.getInstance();

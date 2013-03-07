@@ -52,7 +52,6 @@ import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -387,6 +386,39 @@ public final class BlahManager implements ManagerInterface {
 
         getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
     }
+
+    public UserPayload getAuthorFromComment(LocaleId en_us, String commentId)
+            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        if (CommonUtilities.isEmptyString(commentId)) {
+            throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
+        }
+        final CommentDAO commentDAO = (CommentDAO) getStoreManager().createComment(commentId)._findByPrimaryId(CommentDAO.AUTHOR_ID);
+        if (commentDAO == null) {
+            throw new ResourceNotFoundException("no such comment", ErrorCodes.NOT_FOUND_COMMENT_ID);
+        }
+        final String authorId = commentDAO.getAuthorId();
+        if (authorId == null) {
+            throw new SystemErrorException("no author for comment", ErrorCodes.MISSING_AUTHOR_ID);
+        }
+        return getUserManager().getUserInfo(en_us, authorId, false, null, null);
+    }
+
+    public UserPayload getAuthorFromBlah(LocaleId en_us, String blahId)
+            throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+        if (CommonUtilities.isEmptyString(blahId)) {
+            throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
+        }
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID);
+        if (blahDAO == null) {
+            throw new ResourceNotFoundException("no such blah", ErrorCodes.NOT_FOUND_BLAH_ID);
+        }
+        final String authorId = blahDAO.getAuthorId();
+        if (authorId == null) {
+            throw new SystemErrorException("no author for blah", ErrorCodes.MISSING_AUTHOR_ID);
+        }
+        return getUserManager().getUserInfo(en_us, authorId, false, null, null);
+    }
+
 
     /**
      * Returns true if this blah type id is a poll category type of blah

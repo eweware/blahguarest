@@ -2,9 +2,7 @@ package main.java.com.eweware.service.rest;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.payload.ErrorResponsePayload;
-import main.java.com.eweware.service.rest.session.SessionState;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;

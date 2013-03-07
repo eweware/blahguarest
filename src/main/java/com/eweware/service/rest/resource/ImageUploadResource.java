@@ -11,8 +11,8 @@ import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.CommentDAO;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.dao.MediaDAO;
+import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.MediaManager;
 import main.java.com.eweware.service.rest.RestUtilities;
@@ -44,8 +44,8 @@ public class ImageUploadResource {
     /**
      * These paths should be part of the config
      */
-    private static final String localOriginalImagePath = "/app/blahguarest/images/original/";
-    private static final String localFormattedImagePath = "/app/blahguarest/images/image/";
+    private static final String localOriginalImagePath = "/app/blahguarest/images/original/";   // TODO add to config
+    private static final String localFormattedImagePath = "/app/blahguarest/images/image/";     // TODO add to config
     private static String s3BucketName;
     private static String s3OriginalImageDirname;
     private static String s3FormattedImageDirname;
@@ -153,7 +153,7 @@ public class ImageUploadResource {
             @Context HttpServletRequest request) {
         final ObjectType objectType;
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             if (objectId == null) {
                 return RestUtilities.make400InvalidRequestResponse(
                         new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));

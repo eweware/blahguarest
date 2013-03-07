@@ -1,7 +1,6 @@
 package main.java.com.eweware.service.base.store.dao.schema;
 
 import main.java.com.eweware.service.base.store.dao.MediaDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 
 
 /**

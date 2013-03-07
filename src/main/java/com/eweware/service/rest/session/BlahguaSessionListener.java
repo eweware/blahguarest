@@ -1,13 +1,8 @@
 package main.java.com.eweware.service.rest.session;
 
-import main.java.com.eweware.service.mgr.GroupManager;
-
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu

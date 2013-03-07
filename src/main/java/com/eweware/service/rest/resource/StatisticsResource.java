@@ -46,7 +46,7 @@ public class StatisticsResource {
             @PathParam("groupId") String groupId,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             final long start = System.currentTimeMillis();
             final Response response = RestUtilities.make200OkResponse(StatisticsManager.getInstance().getGroupDemographics(groupId));
             SystemManager.getInstance().setResponseTime(GET_GROUP_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
@@ -79,7 +79,7 @@ public class StatisticsResource {
             @QueryParam("type") boolean type,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             final long start = System.currentTimeMillis();
             final Response response = RestUtilities.make200OkResponse(StatisticsManager.getInstance().getBlahDemographics(type));
             SystemManager.getInstance().setResponseTime(GET_BLAH_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
@@ -107,7 +107,7 @@ public class StatisticsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCommentDemographics(@Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
+            BlahguaSession.ensureAuthenticated(request);
             final long start = System.currentTimeMillis();
             final Response response = RestUtilities.make200OkResponse(StatisticsManager.getInstance().getCommentDemographics());
             SystemManager.getInstance().setResponseTime(GET_COMMENT_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));

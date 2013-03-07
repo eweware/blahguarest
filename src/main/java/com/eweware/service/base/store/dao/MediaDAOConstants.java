@@ -1,7 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 /**
  * <p>This is a metadata entity for media (e.g., audio, images, video).</p>
  * <p>Field names and value data types for media entities.</p>
