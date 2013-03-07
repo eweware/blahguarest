@@ -167,6 +167,7 @@ public class SystemResource {
      */
     @POST
     @Path("/refresh")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response refreshCaches() { // TODO not using
         try {
             BlahManager.getInstance().refreshCaches();

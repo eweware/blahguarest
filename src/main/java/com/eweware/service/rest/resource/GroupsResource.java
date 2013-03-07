@@ -24,6 +24,7 @@ import java.net.URI;
 @Path("/groups")
 public class GroupsResource {
 
+    private static GroupManager groupManager;
 
     /**
      * <p><Use this method to create a group./p>
@@ -33,7 +34,7 @@ public class GroupsResource {
      * <div><b>URL:</b> groups</div>
      *
      * @param entity A JSON entity (a GroupPayload) requiring the group type's id, the group's display name,
-     *               a group descriptor, and a validation method.
+     *               a group descriptor, a description, and a validation method.
      * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
      * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
      * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
@@ -46,8 +47,14 @@ public class GroupsResource {
                                 @Context UriInfo uri,
                                 @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
-            GroupPayload g = GroupManager.getInstance().createGroup(LocaleId.en_us, entity);
+            BlahguaSession.ensureAuthenticated(request, true); // TODO should register user who created it
+            final String groupTypeId = entity.getGroupTypeId();
+            final String displayName = entity.getDisplayName();
+            final String description = entity.getDescription();
+            final String descriptor = entity.getDescriptor();
+            final String validationMethod = entity.getValidationMethod();
+            GroupPayload g = getGroupManager().createGroup(LocaleId.en_us,
+                    groupTypeId,  displayName, description,  descriptor, validationMethod);
             return RestUtilities.make201CreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -68,6 +75,9 @@ public class GroupsResource {
      * <div><b>URL:</b> groups/{groupId}</div>
      *
      * @param entity  A JSON entity (a GroupPayload) providing the fields to update.
+     *                The following fields may be updated: the groups display name,
+     *                the description, and/or the group's state.
+     *                Note that the descriptor may not be changed usig this API.
      * @param groupId <i>Path Parameter</i>: The group's id
      * @return If successful, returns http status 204 (NO CONTENT)
      *         without any entity. If there is an error in the request,
@@ -86,8 +96,11 @@ public class GroupsResource {
             @PathParam("groupId") String groupId,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request, true);
-            GroupManager.getInstance().updateGroup(LocaleId.en_us, groupId, entity);
+            BlahguaSession.ensureAuthenticated(request, true);  // TODO mark who updated it last
+            final String displayName = entity.getDisplayName();
+            final String description = entity.getDescription();
+            final String state = entity.getState();
+            getGroupManager().updateGroup(LocaleId.en_us, groupId, displayName, description, state);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -120,7 +133,7 @@ public class GroupsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewerAdded(@PathParam("groupId") String groupId) {
         try {
-            return RestUtilities.make200OkResponse(GroupManager.getInstance().getViewerCount(groupId));
+            return RestUtilities.make200OkResponse(getGroupManager().getViewerCount(groupId));
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -148,7 +161,7 @@ public class GroupsResource {
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count) {
         try {
-            return RestUtilities.make200OkResponse(GroupManager.getInstance().getOpenGroups(LocaleId.en_us, start, count));
+            return RestUtilities.make200OkResponse(getGroupManager().getOpenGroups(LocaleId.en_us, start, count));
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -189,7 +202,7 @@ public class GroupsResource {
             @Context HttpServletRequest request) {
         try {
             BlahguaSession.ensureAuthenticated(request, true);
-            return RestUtilities.make200OkResponse(GroupManager.getInstance().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
+            return RestUtilities.make200OkResponse(getGroupManager().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
@@ -217,7 +230,7 @@ public class GroupsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroupById(@PathParam("groupId") String groupId) {
         try {
-            return RestUtilities.make200OkResponse(GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId));
+            return RestUtilities.make200OkResponse(getGroupManager().getGroupById(LocaleId.en_us, groupId));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
@@ -227,6 +240,13 @@ public class GroupsResource {
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
+    }
+
+    private GroupManager getGroupManager() throws SystemErrorException {
+        if (groupManager == null) {
+            groupManager = GroupManager.getInstance();
+        }
+        return groupManager;
     }
 }
 
@@ -253,7 +273,7 @@ public class GroupsResource {
 //                                      @Context HttpServletRequest request) {
 //        try {
 //            BlahguaSession.ensureAuthenticated(request);
-//            GroupManager.getInstance().updateViewerCount(groupId, added, request);
+//            getGroupManager().updateViewerCount(groupId, added, request);
 //            return RestUtilities.make204OKNoContentResponse();
 //        } catch (InvalidAuthorizedStateException e) {
 //            return RestUtilities.make401UnauthorizedRequestResponse(e);

@@ -79,6 +79,10 @@
         <constructor-arg type="java.lang.Integer" value="${blag.maximum.returned.object.limit}" />
     </bean>
 
+    <bean id="trackingManager" class="main.java.com.eweware.service.mgr.TrackingManager"
+          init-method="start" destroy-method="shutdown">
+    </bean>
+
     <bean id="blahManager" class="main.java.com.eweware.service.mgr.BlahManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Boolean" value="${blag.debug}" />
@@ -89,10 +93,6 @@
         <constructor-arg value="${blag.blah.index.time.in.ms.before.flush}" />
         <constructor-arg value="${blag.blah.max.opens.or.views.per.update}" />
         <constructor-arg type="java.lang.Integer" value="${blag.maximum.returned.object.limit}" />
-    </bean>
-
-    <bean id="trackingManager" class="main.java.com.eweware.service.mgr.TrackingManager"
-          init-method="start" destroy-method="shutdown">
     </bean>
 
     <bean id="statisticsManager" class="main.java.com.eweware.service.mgr.StatisticsManager"

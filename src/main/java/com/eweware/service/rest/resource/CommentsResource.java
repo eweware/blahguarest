@@ -31,6 +31,9 @@ public class CommentsResource {
     private static final String GET_COMMENTS_OPERATION = "getComments";
     private static final String UPDATE_COMMENT_OPERATION = "updateComment";
 
+    private static BlahManager blahManager;
+    private static SystemManager systemManager;
+
     /**
      * <p>Use this method to create a comment for a blah.></p>
      * <p><i>User must be logged in to use this method.</i></p>
@@ -56,9 +59,9 @@ public class CommentsResource {
         try {
             final long start = System.currentTimeMillis();
             final String authorId = BlahguaSession.ensureAuthenticated(request, true);
-            entity = BlahManager.getInstance().createComment(LocaleId.en_us, authorId, entity);
+            entity = getBlahManager().createComment(LocaleId.en_us, authorId, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
-            SystemManager.getInstance().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -104,9 +107,9 @@ public class CommentsResource {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
             entity.setId(commentId); // ensure this
-            BlahManager.getInstance().updateComment(LocaleId.en_us, entity, commentId);
+            getBlahManager().updateComment(LocaleId.en_us, entity, commentId);
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(UPDATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(UPDATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -157,8 +160,8 @@ public class CommentsResource {
             @QueryParam("e") String statsEndDate) {
         try {
             final long start = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getCommentById(LocaleId.en_us, commentId, userId, stats, statsStartDate, statsEndDate));
-            SystemManager.getInstance().setResponseTime(GET_COMMENT_BY_ID_OPERATION, (System.currentTimeMillis() - start));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getCommentById(LocaleId.en_us, commentId, userId, stats, statsStartDate, statsEndDate));
+            getSystemManager().setResponseTime(GET_COMMENT_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -203,8 +206,8 @@ public class CommentsResource {
     ) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getComments(LocaleId.en_us, blahId, userId, authorId, start, count, sortFieldName));
-            SystemManager.getInstance().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getComments(LocaleId.en_us, blahId, userId, authorId, start, count, sortFieldName));
+            getSystemManager().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -215,6 +218,20 @@ public class CommentsResource {
         } catch (RuntimeException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
+    }
+
+
+    private BlahManager getBlahManager() throws SystemErrorException {
+        if (blahManager == null) {
+            blahManager = BlahManager.getInstance();
+        }
+        return blahManager;
+    }
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 }
 
@@ -232,9 +249,9 @@ public class CommentsResource {
 //    public Response deleteComment(@PathParam("commentId") String commentId) {
 //        try {
 //            final long start = System.currentTimeMillis();
-//            BlahManager.getInstance().deleteComment(LocaleId.en_us, commentId);
+//            getBlahManager().deleteComment(LocaleId.en_us, commentId);
 //            final Response response = RestUtilities.make204OKNoContentResponse();
-//            SystemManager.getInstance().setResponseTime(DELETE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
+//            getSystemManager().setResponseTime(DELETE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
 //            return response;
 //        } catch (InvalidRequestException e) {
 //            return RestUtilities.make400InvalidRequestResponse(e);

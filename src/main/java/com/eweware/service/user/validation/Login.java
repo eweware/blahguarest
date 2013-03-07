@@ -104,11 +104,8 @@ public final class Login {
      * @throws InvalidRequestException Thrown if the password is unacceptable
      */
     public static String ensurePasswordString(String password) throws InvalidRequestException {
-        if (password == null) {
-            password = "";
-        } // empty string
-        if (!CommonUtilities.checkString(password, 0, 64)) {
-            throw new InvalidRequestException("Invalid password. Length must not exceed 64.", ErrorCodes.INVALID_PASSWORD);
+        if (!CommonUtilities.checkString(password, 1, 64)) {
+            throw new InvalidRequestException("Invalid password. Must have at least one and not more than 64 characters.", ErrorCodes.INVALID_PASSWORD);
         }
         return password;
     }

@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.rest.session;
 
+import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
@@ -139,6 +140,18 @@ public final class BlahguaSession {
     }
 
     /**
+     * <p>Updates the username</p>
+     * @param request   The request
+     * @param username  The username
+     */
+    public static void setUsername(HttpServletRequest request, String username) {
+        final HttpSession session = request.getSession();
+        if (session != null) {
+            session.setAttribute(USERNAME_ATTRIBUTE_DBG, username);
+        }
+    }
+
+    /**
      * <p>Ensures that the session is authenticated and that the user is an administrator.</p>
      * <p>Check disabled if security is turned off!</p>
      *
@@ -222,11 +235,30 @@ public final class BlahguaSession {
             } else {
                 b.append("\nNot Viewing Any Channels");
             }
+            b.append("\nSession Started: ");
+            b.append(DateUtils.formatDateTime(s.getCreationTime()));
+            b.append("\nLast Session Activity: ");
+            final long lastAccessedTime = s.getLastAccessedTime();
+            b.append(DateUtils.formatDateTime(lastAccessedTime));
+            b.append("\nWill expire in ");
+            long elapsed = (System.currentTimeMillis() - lastAccessedTime) / 1000;
+            long timeLeft = s.getMaxInactiveInterval() - elapsed;
+            long minutesLeft = (timeLeft / 60);
+            long secondsLeft = (timeLeft % 60);
+            if (minutesLeft > 0) {
+                b.append(minutesLeft);
+                b.append(" minutes ");
+            }
+            if (secondsLeft > 0) {
+                b.append(secondsLeft);
+                b.append(" seconds");
+            }
         } else {
             b.append("No User Session");
         }
         return b.toString();
     }
+
 
     /**
      * Holds inbox state information.

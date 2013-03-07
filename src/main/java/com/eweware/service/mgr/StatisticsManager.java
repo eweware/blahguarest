@@ -25,6 +25,7 @@ public class StatisticsManager implements ManagerInterface {
     private static StatisticsManager singleton;
     private ManagerState state = ManagerState.UNINITIALIZED;
     private MongoStoreManager storeManager;
+    private BlahManager blahManager;
     private DBCollection demoCollection;
 
     public static StatisticsManager getInstance() throws SystemErrorException {
@@ -44,6 +45,7 @@ public class StatisticsManager implements ManagerInterface {
     public void start() {
         try {
             storeManager = MongoStoreManager.getInstance();
+            blahManager = BlahManager.getInstance();
             this.demoCollection = storeManager.getCollection(storeManager.getDemographicsCollectionName());
             this.state = ManagerState.STARTED;
             System.out.println("*** StatisticsManager started ***");
@@ -101,7 +103,7 @@ public class StatisticsManager implements ManagerInterface {
     }
 
     public Object getBlahTypeDemographics() throws SystemErrorException {
-        final List<BlahTypePayload> types = BlahManager.getInstance().getBlahTypes(); // TODO right now, it can dynamically change so it can't be cached
+        final List<BlahTypePayload> types = blahManager.getBlahTypes(); // TODO right now, it can dynamically change so it can't be cached
         final String[] ids = new String[types.size()];
         int i = 0;
         for (BlahTypePayload bt : types) {

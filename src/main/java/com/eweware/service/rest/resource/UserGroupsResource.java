@@ -31,6 +31,9 @@ public class UserGroupsResource {
     private static final String REMOVE_USER_FROM_GROUP_OPERATION = "removeUserFromGroup";
     private static final String REGISTER_USER_IN_GROUP_OPERATION = "registerUserInGroup";
 
+    private UserManager userManager;
+    private SystemManager systemManager;
+
     /**
      * <p>Use this method to register a user in a group (to join a group).</p>
      * <p><i>User must be logged in to use this method.</i></p>
@@ -58,9 +61,9 @@ public class UserGroupsResource {
         try {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
-            final UserGroupPayload userGroup = UserManager.getInstance().registerUserInGroup(LocaleId.en_us, entity.getUserId(), entity.getValidationEmailAddress(), entity.getGroupId());
+            final UserGroupPayload userGroup = getUserManager().registerUserInGroup(LocaleId.en_us, entity.getUserId(), entity.getValidationEmailAddress(), entity.getGroupId());
             final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath() + userGroup.getUserId() + "/" + userGroup.getGroupId()));
-            SystemManager.getInstance().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -105,9 +108,9 @@ public class UserGroupsResource {
         try {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
-            UserManager.getInstance().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString(), null);
+            getUserManager().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString(), null);
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -149,8 +152,8 @@ public class UserGroupsResource {
         try {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
-            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserGroup(LocaleId.en_us, userId, groupId));
-            SystemManager.getInstance().setResponseTime(GET_USER_GROUP_OPERATION, (System.currentTimeMillis() - start));
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserGroup(LocaleId.en_us, userId, groupId));
+            getSystemManager().setResponseTime(GET_USER_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -199,8 +202,8 @@ public class UserGroupsResource {
         try {
             final long s = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
-            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserGroups(LocaleId.en_us, userId, state, start, count, sortFieldName));
-            SystemManager.getInstance().setResponseTime(GET_USER_GROUPS_OPERATION, (System.currentTimeMillis() - s));
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserGroups(LocaleId.en_us, userId, state, start, count, sortFieldName));
+            getSystemManager().setResponseTime(GET_USER_GROUPS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -211,5 +214,18 @@ public class UserGroupsResource {
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
+    }
+
+    private UserManager getUserManager() throws SystemErrorException {
+        if (userManager == null) {
+            userManager = UserManager.getInstance();
+        }
+        return userManager;
+    }
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 }

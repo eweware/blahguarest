@@ -63,7 +63,7 @@ public final class SystemManager implements ManagerInterface {
             if (isDevMode()) {
                 cacheHostname = devMemcachedHostname; // same port 21191
                 restEndpoint = "localhost:" + devRestPort;
-                BlahguaSession.setSecurity(false);
+                cryptoOn = true;
             }
             this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?

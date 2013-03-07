@@ -206,9 +206,15 @@
             <version>2.2.2</version>
         </dependency -->
 
+        <!-- used to parse html TODO might want to just use TagSoup instead (which is used by the Tika HTML parse)...  -->
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
             <version>1.3</version>
         </dependency>
 

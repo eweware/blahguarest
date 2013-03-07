@@ -1,10 +1,23 @@
 package main.java.com.eweware.service.base;
 
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import org.apache.commons.io.IOUtils;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.html.HtmlParser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.apache.tika.sax.TextContentHandler;
+import org.apache.tika.sax.ToHTMLContentHandler;
+import org.apache.tika.sax.XHTMLContentHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * @author rk@post.harvard.edu
@@ -100,6 +113,31 @@ public final class CommonUtilities {
 //        cal.setTimeInMillis(time);
 //        return cal.get(Calendar.YEAR);
     }
+
+    /**
+     * <p>Returns plain text from potentially marked up HTML text.</p>
+     *
+     * @param maybeMarkedUpText  The text to clean  up.
+     * @return  The plain text (HTML tag data and compromising characters stripped out).
+     */
+    public static String getPlainText(String maybeMarkedUpText) throws SystemErrorException {
+        try {
+            final InputStream input = IOUtils.toInputStream(maybeMarkedUpText);
+            ContentHandler handler = new BodyContentHandler();
+            Metadata metadata = new Metadata();
+            new HtmlParser().parse(input, handler, metadata, new ParseContext());
+            String plainText = handler.toString();
+            return plainText;
+        } catch (Exception e) {
+            throw new SystemErrorException("Problem evaluation marked up text", e, ErrorCodes.INVALID_TEXT_INPUT);
+        }
+    }
+
+//    public static void main(String[] s) {
+//        System.out.println(getPlainText("<html><p>hello</p><p>there</p>\n\n\n\n\n\nHello there.\n" +
+//                "&nbsp;    &#933;&#933; People of the world.\n" +
+//                "<a href=\"rubenkleiman.com\">Ruben</a>\n"));
+//    }
 
 
 }

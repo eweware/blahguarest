@@ -104,25 +104,34 @@ function checkUsername() {
 		alert("Missing User Name");
 		return;
 	}
-	rest("GET", "users/check/username/" + username)
+	var data = JSON.stringify({"u": username});
+	rest("POST", "users/check/username", data);
 }
 
 
 function changePassword() {
-	var userId = getUserId();
 	var password = getPassword();
-	if (username.length == 0) {
-		alert("Missing User Name");
-		return;
+	if (password.length == 0) {
+	    alert('Missing Password (must be at least 1 char long');
+	    return;
 	}
-	rest("PUT", "users/update/password/"+password);
+	var data = JSON.stringify({'p': password});
+	rest("PUT", "users/update/password", data);
+}
+
+
+function changeUsername() {
+    var username = getUsername();
+    if (username.length == 0) { alert("Missing username"); return;}
+    var data = JSON.stingify({"u": username});
+    rest('PUT', 'users/update/username/', data);
 }
 
 function loginUser() {
 	var username = getUsername();
 	var password = getPassword();
 	if (username.length == 0 || password.length == 0) {
-		alert("Missing username and/or password");
+		alert("Missing User Name and/or Password");
 		return;
 	}
 	rest("POST", "users/login", '{"displayName": "' + username + '", "pwd": "' + password + '"}');
@@ -173,24 +182,6 @@ function setChannelData(channel) {
 	document.getElementById("channelid").value = obj._id;
 }
 
-function getUserById() {
-	var userId = getUserId();
-	if (userId.length == 0) {
-		alert("Missing User Id");
-		return;
-	}
-	rest("GET", "users/" + userId, setUserData);
-}
-
-function getUserByName() {
-	var username = getUsername();
-	if (username.length == 0) {
-		alert("Missing User Name");
-		return;
-	}
-	rest("GET", "users/" + username + "?u=true", setUserData);
-}
-
 function joinChannel() {
 	var channelId = getChannelId();
 	var userId = getUserId();
@@ -218,15 +209,14 @@ function createBlahType() {
 }
 
 function createBlah() {
-	var userId = getUserId();
 	var typeId = getTypeId();
 	var channelId = getChannelId();
 	var text = getBlahOrCommentText();
-	if (userId.length == 0 || typeId.length == 0 || channelId.length == 0 || text.length == 0) {
-		alert("Missing User Id, and/or Blah Type Id, and/or Channel Id and/or Blah Text");
+	if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
+		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
 		return;
 	}
-	var data = '{"authorId": "' + userId + '", "groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
+	var data = '{"groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
 	rest("POST", "blahs", data, setBlahData1);
 }
 
@@ -298,7 +288,8 @@ function getUserDescriptor() {
 		alert("Missing User Id");
 		return;
 	}
-	rest('GET', 'users/profiles/descriptor/' + userId);
+	var data = JSON.stringify({'i': userId});
+	rest('POST', 'users/descriptor', data);
 }
 
 function getInbox() {
@@ -335,12 +326,12 @@ function clearParameters() {
 	var obj = $(".param").val("");
 }
 
-function help() {
-	$("#resultsArea").html('<div id="results"/>');
-	$("#results").css({
-		'color' : 'blue'
-	}).html("<h4>Help</h4><div>Create User: needs a User Name. If password is given, this will be used to later authenticate.</div><div>Login User: requires User Name and Password.</div><div>Get Users: needs no parameters</div><div>Get User By Id: needs User Id parameter -- returns users when not provided</div><div>Get User By Name: needs the User Name parameter.</div><div>Get User's Blahs: needs User Id parameter</div><div>Get Channels: needs no parameter</div><div>Join User To Channel: needs User Id and Channel Id parameters</div><div>Create Blah: Needs User Id parameter</div><div>Get Blah: Needs the Blah Id parameter. Returns any images.</div><div>Get User Blahs:: Needs User Id parameter</div><br/><div>Clear All Parameters: Clears parameter values</div><div>Clear All Results: clears results text</div>");
-}
+//function help() {
+//	$("#resultsArea").html('<div id="results"/>');
+//	$("#results").css({
+//		'color' : 'blue'
+//	}).html("<h4>Help</h4><div>Create User: needs a User Name. If password is given, this will be used to later authenticate.</div><div>Login User: requires User Name and Password.</div><div>Get Users: needs no parameters</div><div>Get User By Id: needs User Id parameter -- returns users when not provided</div><div>Get User By Name: needs the User Name parameter.</div><div>Get User's Blahs: needs User Id parameter</div><div>Get Channels: needs no parameter</div><div>Join User To Channel: needs User Id and Channel Id parameters</div><div>Create Blah: Needs User Id parameter</div><div>Get Blah: Needs the Blah Id parameter. Returns any images.</div><div>Get User Blahs:: Needs User Id parameter</div><br/><div>Clear All Parameters: Clears parameter values</div><div>Clear All Results: clears results text</div>");
+//}
 
 // Getters --------------------------------------
 function getUsername() {

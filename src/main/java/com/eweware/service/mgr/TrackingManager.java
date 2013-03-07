@@ -59,6 +59,10 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     private MongoStoreManager storeManager;
 
+    private MongoStoreManager getStoreManager() {
+        return storeManager;
+    }
+
     /**
      * Eventually, this object will be queued to the tracking service.
      */
@@ -153,7 +157,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     public final void setWithUserProfileInfo(String userId, TrackerDAO tracker, LocaleId localeId) throws SystemErrorException {
         try {
-            final UserProfileDAO profile = (UserProfileDAO) storeManager.createUserProfile(userId)._findByPrimaryId();
+            final UserProfileDAO profile = (UserProfileDAO) getStoreManager().createUserProfile(userId)._findByPrimaryId();
             final boolean hasProfile = profile != null;
             final UserProfileSchema schema = hasProfile ? null : UserProfileSchema.getSchema(localeId);
             final Map<String, SchemaSpec> fieldNameToSpecMap = hasProfile ? null : schema.getFieldNameToSpecMap();
@@ -823,11 +827,11 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         } catch (SystemErrorException e) {
             throw new WebServiceException(e);
         }
-        userTrackerCollection = storeManager.getCollection(storeManager.getTrackUserCollectionName());
-        blahTrackerCollection = storeManager.getCollection(storeManager.getTrackBlahCollectionName());
-        commentTrackerCollection = storeManager.getCollection(storeManager.getTrackCommentCollectionName());
-        trackerCollection = storeManager.getCollection(storeManager.getTrackerCollectionName());
-        userCollection = storeManager.getCollection(storeManager.getUserCollectionName());
+        userTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackUserCollectionName());
+        blahTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackBlahCollectionName());
+        commentTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackCommentCollectionName());
+        trackerCollection = getStoreManager().getCollection(getStoreManager().getTrackerCollectionName());
+        userCollection = getStoreManager().getCollection(getStoreManager().getUserCollectionName());
         state = ManagerState.STARTED;
         System.out.println("*** TrackingManager started ***");
     }

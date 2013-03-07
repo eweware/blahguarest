@@ -33,6 +33,9 @@ public class BlahsResource {
     private static final String GET_BLAH_BY_ID_OPERATION = "getBlahById";
     private static final String GET_BLAHS_OPERATION = "getBlahs";
 
+    private static BlahManager blahManager;
+    private static SystemManager systemManager;
+
     /**
      * <p>Creates a blah.</p>
      * <p><i>User must be logged in to use this method.</i></p>
@@ -59,9 +62,9 @@ public class BlahsResource {
         try {
             final long start = System.currentTimeMillis();
             final String authorId = BlahguaSession.ensureAuthenticated(request, true);
-            entity = BlahManager.getInstance().createBlah(LocaleId.en_us, authorId, entity);
+            entity = getBlahManager().createBlah(LocaleId.en_us, authorId, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
-            SystemManager.getInstance().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -109,7 +112,7 @@ public class BlahsResource {
                              @Context HttpServletRequest request) {
         try {
             BlahguaSession.ensureAuthenticated(request, true);
-            BlahManager.getInstance().pollVote(LocaleId.en_us, blahId, userId, index);
+            getBlahManager().pollVote(LocaleId.en_us, blahId, userId, index);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -150,7 +153,7 @@ public class BlahsResource {
                                     @Context HttpServletRequest request) {
         try {
             BlahguaSession.ensureAuthenticated(request, true);
-            final BlahInfoPayload info = BlahManager.getInstance().getPollVoteInfo(LocaleId.en_us, blahId, userId);
+            final BlahInfoPayload info = getBlahManager().getPollVoteInfo(LocaleId.en_us, blahId, userId);
             return RestUtilities.make200OkResponse(info);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
@@ -193,9 +196,9 @@ public class BlahsResource {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             entity.setAuthorId(userId);
             entity.setId(blahId);
-            BlahManager.getInstance().updateBlahVoteViewOrOpens(LocaleId.en_us, entity);
+            getBlahManager().updateBlahVoteViewOrOpens(LocaleId.en_us, entity);
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -229,8 +232,8 @@ public class BlahsResource {
     public Response getBlahTypes() {
         try {
             final long start = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getBlahTypes(LocaleId.en_us));
-            SystemManager.getInstance().setResponseTime(GET_BLAH_TYPES_OPERATION, (System.currentTimeMillis() - start));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahTypes(LocaleId.en_us));
+            getSystemManager().setResponseTime(GET_BLAH_TYPES_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
@@ -272,8 +275,8 @@ public class BlahsResource {
                                 @Context HttpServletRequest req) {
         try {
             final long start = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getBlahById(LocaleId.en_us, blahId, userId, stats, statsStartDate, statsEndDate));
-            SystemManager.getInstance().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahById(LocaleId.en_us, blahId, userId, stats, statsStartDate, statsEndDate));
+            getSystemManager().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
@@ -287,40 +290,34 @@ public class BlahsResource {
     }
 
     /**
-     * Returns information about the blahs.
-     * If a userId is provided, the blah's data will include blah stats
-     * for the specified user instead of stats for the blah itself.
-     * If an authorId is provided, only blah's data for the author
-     * will be returned.
+     * <p>By default, returns blahs for the logged-in  user.</p>
+     * <p>If an author id is provided, it returns the blahs created by the specified author instead
+     * of by the user.</p>
      * <p/>
-     * <p></p>
-     * <div><b>METHOD:</b> </div>
-     * <div><b>URL:</b> </div>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> blahs</div>
      *
      * @param start         (Optional): The starting index to fetch when paging
      * @param count         (Optional): The max number of blahs to fetch
      * @param sortFieldName (Optional): name of the field to sort on
      * @param authorId      (Optional): The blah author's userId
-     * @param userId        (Optional): The id of the user for whom blah stats will be returned
      * @param typeId        (Optional): The blah's type id. If not given, all types will be returned.
-     * @return List<BlahPayload> An array of blahs
-     * @deprecated
+     * @return An array of blahs.
+     * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
      */
-    @Deprecated
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBlahs(@QueryParam("start") Integer start,
                              @QueryParam("count") Integer count,
                              @QueryParam("sort") String sortFieldName,
                              @QueryParam("authorId") String authorId,
-                             @QueryParam("userId") String userId,
                              @QueryParam("typeid") String typeId,
                              @Context HttpServletRequest req) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(req, true);
-            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
-            SystemManager.getInstance().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
+            final String userId = BlahguaSession.ensureAuthenticated(req, true);
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
+            getSystemManager().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
@@ -331,6 +328,19 @@ public class BlahsResource {
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
+    }
+
+    private BlahManager getBlahManager() throws SystemErrorException {
+        if (blahManager == null) {
+            blahManager = BlahManager.getInstance();
+        }
+        return blahManager;
+    }
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 }
 
@@ -348,9 +358,9 @@ public class BlahsResource {
 //        try {
 //            final long start = System.currentTimeMillis();
 //            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
-//            BlahManager.getInstance().deleteBlah(LocaleId.en_us, blahId);
+//            getBlahManager(.deleteBlah(LocaleId.en_us, blahId);
 //            final Response response = RestUtilities.make204OKNoContentResponse();
-//            SystemManager.getInstance().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+//            getSystemManager().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
 //            return response;
 //        } catch (InvalidRequestException e) {
 //            return RestUtilities.make400InvalidRequestResponse(e);

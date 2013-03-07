@@ -24,8 +24,6 @@
 <h2>Actions</h2>
 <div>
     <div>
-        <input style="color: blue" id="help" type="button" onclick="help()" value="Help"/>
-        &nbsp;
         Host Endpoint:
         <input id="endpoint" type="text" value="beta.blahgua.com"/>
     </div>
@@ -73,6 +71,8 @@
         &nbsp;
         <input id="changePassword" type="button" onclick="changePassword()" value="Change Password" />
         &nbsp;
+        <input id="changeUsername" type="button" onclick="changeUsername()" value="Change Username" />
+        &nbsp;
         <input id="recoverUser" style="background-color: #22bf0d" type="button" onclick="recoverUser()"  value="Recover User"/>
         &nbsp;
         <input id="joinChannel" type="button" onclick="joinChannel()" value="Join User To Channel"/>
@@ -80,13 +80,13 @@
     <div style="margin-top: .5em">
         <input id="setDummyAcct" type="button" onclick="createUserAcctData()" value="Set Dummy Email/Challenge"/>
         &nbsp;
-        <input id="getUsers" type="button" onclick="rest('GET', 'users', null);"  value="Get Users"/>
+        <input id="getUser" type="button" onclick="rest('GET', 'users/info');"  value="Get User"/>
         &nbsp;
-        <input id="getUserById" type="button" onclick="getUserById();"  value="Get User By Id"/>
+        <input id="getUserProfile" type="button" onclick="rest('GET', 'users/profile/info');"  value="Get Profile"/>
         &nbsp;
-        <input id="getUserByName" type="button" onclick="getUserByName();"  value="Get User By Name"/>
+        <input id="getProfileSchema" type="button" onclick="rest('GET', 'users/profile/schema');"  value="Get Profile Schema"/>
         &nbsp;
-        <input id="getUserBlahs" type="button" onclick="getUserBlahs();"  value="Get User's Blahs"/>
+        <input id="getUserBlahs" type="button" onclick="rest('GET', 'blahs');"  value="Get User's Blahs"/>
         &nbsp;
         <input id="getUserDescriptor" style="background-color: #22bf0d" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
     </div>

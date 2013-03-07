@@ -72,6 +72,8 @@ public class UserManager implements ManagerInterface {
     private final boolean debug;
     private final boolean doIndex;
     private StoreManager storeManager;
+    private SystemManager systemManager;
+    private MailManager mailManager;
     private ManagerState state = ManagerState.UNINITIALIZED;
     private final File indexDir;
     private final int batchSize;
@@ -126,6 +128,8 @@ public class UserManager implements ManagerInterface {
     public void start() {
         try {
             storeManager = MongoStoreManager.getInstance();
+            systemManager = SystemManager.getInstance();
+            mailManager = MailManager.getInstance();
             InitializeUserSearch(); // TODO should be its own service
             this.state = ManagerState.STARTED;
             System.out.println("*** UserManager started ***");
@@ -172,14 +176,14 @@ public class UserManager implements ManagerInterface {
 
             ensureUserExistsByUsername(username); // this is just a prelim check: final is at DB monitor level
 
-            userDAO = storeManager.createUser();
+            userDAO = getStoreManager().createUser();
             userDAO.initToDefaultValues(localeId);
             userDAO.setUsername(username);
             userDAO._insert();
 
             // Store sensitive data in user account record. Makes sure
             // that sensitive data never goes to the client (no corresponding Payload class).
-            final UserAccountDAO userAccount = storeManager.createUserAccount(userDAO.getId());
+            final UserAccountDAO userAccount = getStoreManager().createUserAccount(userDAO.getId());
             try {
                 final String[] saltedPassword = Login.createSaltedPassword(password);
                 userAccount.setCanonicalUsername(Login.makeCanonicalUsername(username));
@@ -218,22 +222,21 @@ public class UserManager implements ManagerInterface {
     /**
      * <p>Set, update, or delete user account fields.</p>
      *
-     * @param username         The canonical username
-     * @param setEmail            If true, set or update email address; else, ignore it.
-     * @param emailAddress           The email address. If null and setEmail is true, it will be deleted.
-     * @param setChallenge ditto
-     * @param challengeAnswer1       ditto
+     * @param userId           The user id
+     * @param setEmail         If true, set or update email address; else, ignore it.
+     * @param emailAddress     The email address. If null and setEmail is true, it will be deleted.
+     * @param setChallenge     ditto
+     * @param challengeAnswer1 ditto
      */
-    public void setUserAccountData(String username, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException {
+    public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException {
         if (!setEmail && !setChallenge) {
             return; // nothing to do
         }
-        if (username == null) {
-            throw new InvalidAuthorizedStateException("no username in session", ErrorCodes.MISSING_USERNAME);
+        if (userId == null) {
+            throw new InvalidAuthorizedStateException("no session", ErrorCodes.UNAUTHORIZED_USER);
         }
 
-        final UserAccountDAO userAccountDAO = storeManager.createUserAccount();
-        userAccountDAO.setCanonicalUsername(username);
+        final UserAccountDAO userAccountDAO = getStoreManager().createUserAccount(userId);
         final boolean update = userAccountDAO._exists();
 
         if (setEmail) {
@@ -244,7 +247,7 @@ public class UserManager implements ManagerInterface {
             userAccountDAO.setSecurityChallengeAnswer1(challengeAnswer1);
         }
         if (update) {
-            userAccountDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserAccountDAO.CANONICAL_USERNAME);
+            userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
             userAccountDAO._insert();
         }
@@ -262,7 +265,7 @@ public class UserManager implements ManagerInterface {
         if (username == null || username.length() == 0) {
             throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
         }
-        final UserAccountDAO dao = storeManager.createUserAccount();
+        final UserAccountDAO dao = getStoreManager().createUserAccount();
         dao.setCanonicalUsername(Login.makeCanonicalUsername(username));
         if (dao._exists()) {
             throw new StateConflictException("username already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
@@ -284,7 +287,7 @@ public class UserManager implements ManagerInterface {
         username = Login.ensureUsernameString(username);
         password = Login.ensurePasswordString(password);
 
-        UserAccountDAO accountDAO = storeManager.createUserAccount();
+        UserAccountDAO accountDAO = getStoreManager().createUserAccount();
         final String canonicalUsername = Login.makeCanonicalUsername(username);
         accountDAO.setCanonicalUsername(canonicalUsername);
 
@@ -330,7 +333,7 @@ public class UserManager implements ManagerInterface {
             throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
         }
 
-        UserProfileDAO userProfileDAO = storeManager.createUserProfile(userId);
+        UserProfileDAO userProfileDAO = getStoreManager().createUserProfile(userId);
         final boolean profileExists = userProfileDAO._exists();
 
         if (profileExists && createOnly) {
@@ -371,10 +374,10 @@ public class UserManager implements ManagerInterface {
 
         String userId = null;
         String canonicalUsername = null;
-        if (!SystemManager.getInstance().isCryptoOn()) {
+        if (!getSystemManager().isCryptoOn()) {
             try {
-                final String workaroundCode = new String(Base64.decodeBase64(inputRecoveryCode.getBytes("UTF-8")), "UTF8");
-                final String[] parts = workaroundCode.split("\\|");
+                final String decoded = new String(Base64.decodeBase64(inputRecoveryCode), "UTF8");
+                final String[] parts = decoded.split("\\|");
                 if (parts.length != 2) {
                     throw new SystemErrorException("Workaround failed; has " + parts.length + " components");
                 }
@@ -391,7 +394,7 @@ public class UserManager implements ManagerInterface {
 
         // Check recovery components against account
         final UserAccountDAO userAccountDAO =
-                (UserAccountDAO) storeManager.createUserAccount(userId)
+                (UserAccountDAO) getStoreManager().createUserAccount(userId)
                         ._findByPrimaryId(UserAccountDAO.CANONICAL_USERNAME, UserAccountDAO.USER_ACCOUNT_TYPE,
                                 UserAccountDAO.RECOVERY_CODE_STRING, UserAccountDAO.RECOVERY_CODE_EXPIRATION_DATE);
         if (userAccountDAO == null) {
@@ -444,7 +447,7 @@ public class UserManager implements ManagerInterface {
             throw new InvalidAuthorizedStateException("missing challenge answer", ErrorCodes.INVALID_INPUT);
         }
 
-        UserAccountDAO userAccountDAO = storeManager.createUserAccount();
+        UserAccountDAO userAccountDAO = getStoreManager().createUserAccount();
         final String canonicalUsername = Login.makeCanonicalUsername(username);
         userAccountDAO.setCanonicalUsername(canonicalUsername);
         final String[] fieldsToReturnHint = {UserAccountDAO.ID, UserAccountDAO.EMAIL_ADDRESS, UserAccountDAO.CHALLENGE_ANSWER_1};
@@ -468,18 +471,19 @@ public class UserManager implements ManagerInterface {
         }
 
         // Stash recovery code data in user account
-        final UserAccountDAO updateAccountDAO = storeManager.createUserAccount(userId);
+        final UserAccountDAO updateAccountDAO = getStoreManager().createUserAccount(userId);
         RecoveryCode recoveryCode = null;
-        String workaroundCode = null;
-        if (!SystemManager.getInstance().isCryptoOn()) {
+        String nonCryptoUrlEncodedBase64RecoveryCode = null;
+        if (!getSystemManager().isCryptoOn()) {
             try {
                 final String codeString = userId + "|" + canonicalUsername;
-                workaroundCode = URLEncoder.encode(Base64.encodeBase64String(codeString.getBytes("UTF-8")), "UTF-8");
-                updateAccountDAO.setRecoveryCode(workaroundCode);
+                final String base64Encoded = Base64.encodeBase64String(codeString.getBytes("UTF-8"));
+                nonCryptoUrlEncodedBase64RecoveryCode = URLEncoder.encode(base64Encoded, "UTF-8");
+                updateAccountDAO.setRecoveryCode(base64Encoded);
             } catch (UnsupportedEncodingException e) {
                 throw new SystemErrorException("workaround error", e, ErrorCodes.SERVER_SEVERE_ERROR);
             }
-        } else {
+        } else {   // use crypto
             recoveryCode = RecoveryCode.createRecoveryCode(userId, canonicalUsername);
             updateAccountDAO.setRecoveryCode(recoveryCode.makeRecoveryCodeString());
         }
@@ -487,12 +491,13 @@ public class UserManager implements ManagerInterface {
         updateAccountDAO.setRecoverySetMethod(RecoveryMethodType.EMAIL.getCode());
         updateAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-        contactUser(recoveryCode, email, workaroundCode);
+        contactUser(recoveryCode, email, nonCryptoUrlEncodedBase64RecoveryCode);
     }
 
-    private void contactUser(RecoveryCode recoveryCode, String emailAddress, String workaroundCode) throws SystemErrorException {
+
+    private void contactUser(RecoveryCode recoveryCode, String emailAddress, String nonCryptoUrlEncodedBase64RecoveryCode) throws SystemErrorException {
         try {
-            MailManager.getInstance().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, workaroundCode));
+            getMailManager().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, nonCryptoUrlEncodedBase64RecoveryCode));
         } catch (MessagingException e) {
             throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         } catch (UnsupportedEncodingException e) {
@@ -500,18 +505,17 @@ public class UserManager implements ManagerInterface {
         }
     }
 
-    private String makeAccountRecoveryBody(RecoveryCode recoveryCode, String workaroundCode) throws UnsupportedEncodingException, SystemErrorException {
+    private String makeAccountRecoveryBody(RecoveryCode recoveryCode, String nonCryptoUrlEncodedBase64RecoveryCode) throws UnsupportedEncodingException, SystemErrorException {
         final StringBuilder msg = new StringBuilder("Hi there!");
         msg.append("<p>Someone requested an account recovery for your email address on Blahgua.</p>");
         msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
         msg.append("<p>If you do want to reset your password, ");
-        final SystemManager mgr = SystemManager.getInstance();
-        final String endpoint = mgr.isDevMode() ? SystemManager.getInstance().getDevRestEndpoint() : mgr.getClientServiceEndpoint();
+        final String endpoint = getSystemManager().isDevMode() ? getSystemManager().getDevRestEndpoint() : getSystemManager().getClientServiceEndpoint();
         msg.append("<a href='http://");
         msg.append(endpoint);
         msg.append("/recover?n=");
-        if (!SystemManager.getInstance().isCryptoOn()) {
-            msg.append(workaroundCode);
+        if (!getSystemManager().isCryptoOn()) {
+            msg.append(nonCryptoUrlEncodedBase64RecoveryCode);
         } else {
             msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));
         }
@@ -543,10 +547,10 @@ public class UserManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("userId required to join user to a group", ErrorCodes.MISSING_USER_ID);
         }
-        if (!storeManager.createUser(userId)._exists()) {
+        if (!getStoreManager().createUser(userId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " does not exist", ErrorCodes.NOT_FOUND_USER_ID);
         }
-        final GroupDAO groupDAO = (GroupDAO) storeManager.createGroup(groupId)._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.USER_VALIDATION_METHOD, GroupDAO.USER_VALIDATION_PARAMETERS);
+        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.USER_VALIDATION_METHOD, GroupDAO.USER_VALIDATION_PARAMETERS);
         if (groupDAO == null) {
             throw new ResourceNotFoundException("no group exists with groupId=" + groupId, ErrorCodes.NOT_FOUND_GROUP_ID);
         }
@@ -557,7 +561,7 @@ public class UserManager implements ManagerInterface {
         }
         vmeth.validateKey(validationKey, groupDAO.getValidationParameters());
 
-        if (storeManager.createUserGroup(userId, groupId)._exists()) {
+        if (getStoreManager().createUserGroup(userId, groupId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " has already joined groupId=" + groupId, ErrorCodes.USER_ALREADY_JOINED_GROUP);
         }
 
@@ -594,7 +598,7 @@ public class UserManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(validationCode)) {
             throw new InvalidRequestException("missing validation code", ErrorCodes.MISSING_VALIDATION_CODE);
         }
-        final UserGroupDAO searchDAO = storeManager.createUserGroup();
+        final UserGroupDAO searchDAO = getStoreManager().createUserGroup();
         searchDAO.setValidationCode(validationCode);
         final UserGroupDAO userGroupDAO = (UserGroupDAO) searchDAO._findByCompositeId(new String[]{UserGroupDAO.STATE, UserGroupDAO.GROUP_ID, UserGroupDAO.USER_ID}, UserGroupDAO.VALIDATION_CODE);
         if (userGroupDAO == null) {
@@ -611,7 +615,7 @@ public class UserManager implements ManagerInterface {
             userGroupDAO.setValidationCode(null); // used up! TODO this doesn't remove the field, but that's what we want! index dropDups is just a kludge to get arond this
             userGroupDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
 
-            final GroupDAO groupDAO = storeManager.createGroup(userGroupDAO.getGroupId());
+            final GroupDAO groupDAO = getStoreManager().createGroup(userGroupDAO.getGroupId());
             groupDAO.setUserCount(1);
             groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
@@ -648,13 +652,15 @@ public class UserManager implements ManagerInterface {
         ensureUserExistsByUsername(username);
 
         // Must be changed in the accounts and username areas
-        final UserAccountDAO userAccountDAO = storeManager.createUserAccount(userId);
+        final UserAccountDAO userAccountDAO = getStoreManager().createUserAccount(userId);
         userAccountDAO.setCanonicalUsername(Login.makeCanonicalUsername(username));
         userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-        final UserDAO userDAO = storeManager.createUser(userId);
+        final UserDAO userDAO = getStoreManager().createUser(userId);
         userDAO.setUsername(username);
         userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+        BlahguaSession.setUsername(request, username);
 
         maybeUpdateUserInIndex(userDAO);
     }
@@ -662,60 +668,37 @@ public class UserManager implements ManagerInterface {
     /**
      * <p>Updates a user's password. <i>Assumes that the user is authenticated!</i></p>
      *
+     *
      * @param en_us
      * @param request
-     * @param password
-     * @throws InvalidAuthorizedStateException
+     * @param userId
+     *@param password  @throws InvalidAuthorizedStateException
      *
      * @throws InvalidRequestException
      * @throws SystemErrorException
      */
-    public void updatePassword(LocaleId en_us, HttpServletRequest request, String password) throws
+    public void updatePassword(LocaleId en_us, HttpServletRequest request, String userId, String password) throws
             InvalidAuthorizedStateException, InvalidRequestException, SystemErrorException {
-
-        final String userId = BlahguaSession.getUserId(request);
 
         password = Login.ensurePasswordString(password);
         final String[] pwd;
         try {
             pwd = Login.createSaltedPassword(password);
+            final UserAccountDAO userAccountDAO = getStoreManager().createUserAccount(userId);
+            userAccountDAO.setDigest(pwd[0]);
+            userAccountDAO.setSalt(pwd[1]);
+            userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } catch (Exception e) {
             throw new SystemErrorException("Failed to update password due to system error", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
 
-        final UserAccountDAO userAccountDAO = storeManager.createUserAccount(userId);
-        userAccountDAO.setDigest(pwd[0]);
-        userAccountDAO.setSalt(pwd[1]);
-        userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
-
-    /**
-     * @param localeId
-     * @param start         Optional start count or null if there is no paging
-     * @param count         Optional max number of users to return
-     * @param sortFieldName
-     * @return Object  Returns list of users
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     */
-    public List<UserPayload> getUsers(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
-        count = ensureCount(count);
-        final UserDAO dao = storeManager.createUser();
-        final List<? extends BaseDAO> userDAOs = dao._findMany(start, count, sortFieldName);
-        final List<UserPayload> users = new ArrayList<UserPayload>(userDAOs.size());
-        for (BaseDAO item : userDAOs) {
-            users.add(new UserPayload(item));
-        }
-        return users;
-    }
 
     /**
      * Returns a user's data by user Id
      *
      * @param localeId
-     * @param userId         The userId to fetch with
-     * @param byUsername     If true, the userId is actually the username
      * @param stats          If true, return user stats
      * @param statsStartDate if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
      * @param statsEndDate   if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
@@ -725,28 +708,21 @@ public class UserManager implements ManagerInterface {
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
      */
-    public UserPayload getUserById(LocaleId localeId, String userId, boolean byUsername, Boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+    public UserPayload getUserInfo(LocaleId localeId, String userId, Boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
         if (CommonUtilities.isEmptyString(userId)) {
-            throw new InvalidRequestException("invalid user id or username", byUsername ? ErrorCodes.INVALID_USERNAME : ErrorCodes.INVALID_USER_ID);
-        }
-        UserDAO dao = storeManager.createUser();
-
-        if (byUsername) {
-            dao.setUsername(userId);
-        } else {
-            dao.setId(userId);
+            throw new InvalidRequestException("invalid user id", ErrorCodes.INVALID_USER_ID);
         }
 
-        dao = (UserDAO) (byUsername ? dao._findByCompositeId(null, UserDAO.USERNAME) : dao._findByPrimaryId());
-        if (dao == null) {
-            throw new ResourceNotFoundException("user with given id or username not found", ErrorCodes.NOT_FOUND_USER_ID);
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
+        if (userDAO == null) {
+            throw new ResourceNotFoundException("user not found", ErrorCodes.NOT_FOUND_USER_ID);
         }
 
         if (stats) { // TODO it is an understatement to say that this is inefficient
-            fetchAndAddUserTrackers(dao.getId(), statsStartDate, statsEndDate, dao);
+            fetchAndAddUserTrackers(userDAO.getId(), statsStartDate, statsEndDate, userDAO);
         }
 
-        return new UserPayload(dao);
+        return new UserPayload(userDAO);
     }
 
     public UserProfilePayload getUserProfileById(LocaleId localeId, String userId)
@@ -905,7 +881,7 @@ public class UserManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", userId, ErrorCodes.MISSING_USER_ID);
         }
-        final UserProfileDAO profileDAO = (UserProfileDAO) storeManager.createUserProfile(userId)._findByPrimaryId();
+        final UserProfileDAO profileDAO = (UserProfileDAO) getStoreManager().createUserProfile(userId)._findByPrimaryId();
         if (profileDAO == null) {
             throw new ResourceNotFoundException("no user profile id=" + userId, ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
@@ -944,13 +920,13 @@ public class UserManager implements ManagerInterface {
         List<UserTrackerDAO> trackers = null;
         if (org.apache.commons.lang3.time.DateUtils.isSameDay(startDate, endDate)) { // fetch single
             final String trackerId = TrackingManager.makeUserTrackerIdExternal(TrackerType.USER, startDate, userId);
-            final UserTrackerDAO userTrackerDAO = (UserTrackerDAO) storeManager.createUserTracker(trackerId)._findByPrimaryId();
+            final UserTrackerDAO userTrackerDAO = (UserTrackerDAO) getStoreManager().createUserTracker(trackerId)._findByPrimaryId();
             if (userTrackerDAO != null) {
                 trackers = new ArrayList<UserTrackerDAO>(1);
                 trackers.add(userTrackerDAO);
             }
         } else { // range search
-            final UserTrackerDAO userTrackerDAO = (UserTrackerDAO) storeManager.createUserTracker();
+            final UserTrackerDAO userTrackerDAO = (UserTrackerDAO) getStoreManager().createUserTracker();
             final String from = TrackingManager.makeUserTrackerIdExternal(TrackerType.USER, startDate, userId);
             final String to = TrackingManager.makeUserTrackerIdExternal(TrackerType.USER, endDate, userId);
 //            final String from = (statsStartDate == null)?null:statsStartDate.substring(0, 4);
@@ -976,7 +952,7 @@ public class UserManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
-        if (!storeManager.createUser(userId)._exists()) {
+        if (!getStoreManager().createUser(userId)._exists()) {
             throw new ResourceNotFoundException("not found userId=" + userId, entity, ErrorCodes.NOT_FOUND_USER_ID);
         }
     }
@@ -988,7 +964,7 @@ public class UserManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing groupId", ErrorCodes.MISSING_GROUP_ID);
         }
-        final UserGroupDAO userGroupDAO = (UserGroupDAO) storeManager.createUserGroup(userId, groupId)._findByCompositeId(new String[]{UserGroupDAO.STATE}, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
+        final UserGroupDAO userGroupDAO = (UserGroupDAO) getStoreManager().createUserGroup(userId, groupId)._findByCompositeId(new String[]{UserGroupDAO.STATE}, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
         if (userGroupDAO == null) {
             throw new ResourceNotFoundException("userId=" + userId + " has not joined groupId=" + groupId, ErrorCodes.USER_HAS_NOT_JOINED_GROUP);
         }
@@ -1015,7 +991,7 @@ public class UserManager implements ManagerInterface {
         }
 
         // TODO suboptimal double-query required here: consider denormalizing group data into usergroup
-        final UserGroupDAO searchUserGroupDAO = storeManager.createUserGroup();
+        final UserGroupDAO searchUserGroupDAO = getStoreManager().createUserGroup();
         searchUserGroupDAO.setUserId(userId);
         searchUserGroupDAO.setState(state);
 
@@ -1034,7 +1010,7 @@ public class UserManager implements ManagerInterface {
         // TODO inefficient
         final List<GroupPayload> payload = new ArrayList<GroupPayload>(groupCount);
         for (UserGroupDAO ug : userGroupDAOs) {
-            final GroupDAO groupDAO = (GroupDAO) storeManager.createGroup(ug.getGroupId())._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.DESCRIPTION);
+            final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(ug.getGroupId())._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.DESCRIPTION);
             if (groupDAO != null) {
                 final GroupPayload group = new GroupPayload(groupDAO);
                 group.addFromMap(ug);
@@ -1096,10 +1072,10 @@ public class UserManager implements ManagerInterface {
         final boolean activate = newState.equals(AuthorizedState.A.toString());
         final boolean suspend = newState.equals(AuthorizedState.S.toString());
         final boolean delete = newState.equals(AuthorizedState.D.toString());
-        if (!storeManager.createUser(userId)._exists()) {
+        if (!getStoreManager().createUser(userId)._exists()) {
             throw new ResourceNotFoundException("not found user with userId=" + userId, ErrorCodes.NOT_FOUND_USER_ID);
         }
-        final GroupDAO groupDAO = (GroupDAO) storeManager.createGroup(groupId)._findByPrimaryId(GroupDAO.STATE);
+        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.STATE);
         if (groupDAO == null) {
             throw new ResourceNotFoundException("not found group with groupId=" + groupId, ErrorCodes.NOT_FOUND_GROUP_ID);
         }
@@ -1108,7 +1084,7 @@ public class UserManager implements ManagerInterface {
                     ErrorCodes.INVALID_STATE_USER_CANNOT_JOIN_INACTIVE_GROUP);
         }
         // TODO 1. use composite _find instead, and 2. assuming here that DB is fully consistent: if not, also check the groupId:
-        final UserGroupDAO found = (UserGroupDAO) storeManager.createUserGroup(userId, groupId)._findByCompositeId(null, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
+        final UserGroupDAO found = (UserGroupDAO) getStoreManager().createUserGroup(userId, groupId)._findByCompositeId(null, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
         if (found != null) { // user in group
             final String userGroupId = found.getId();
             final Object state = found.getState();
@@ -1118,7 +1094,7 @@ public class UserManager implements ManagerInterface {
                 if (state.equals(AuthorizedState.P.toString()) || state.equals(AuthorizedState.S.toString())) {
 
                     // Mark user as active
-                    final UserGroupDAO userGroup = storeManager.createUserGroup(userGroupId);
+                    final UserGroupDAO userGroup = getStoreManager().createUserGroup(userGroupId);
                     userGroup.setState(AuthorizedState.A.toString());
                     userGroup._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
                 } else {
@@ -1128,7 +1104,7 @@ public class UserManager implements ManagerInterface {
                 if (state.equals(AuthorizedState.A.toString())) {
 
                     // Mark user as suspended
-                    final UserGroupDAO userGroup = storeManager.createUserGroup(userGroupId);
+                    final UserGroupDAO userGroup = getStoreManager().createUserGroup(userGroupId);
                     userGroup.setState(AuthorizedState.S.toString());
                     userGroup._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
@@ -1143,7 +1119,7 @@ public class UserManager implements ManagerInterface {
                 }
             } else if (delete) {  // hard delete!
                 // TODO should we change state to DT (and register and other methods would need to be aware of this)?
-                storeManager.createUserGroup(userGroupId)._deleteByPrimaryId();
+                getStoreManager().createUserGroup(userGroupId)._deleteByPrimaryId();
 
 //                final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
 //                tracker.setUserId(userId);
@@ -1153,7 +1129,7 @@ public class UserManager implements ManagerInterface {
             }
         } else { // no user/group obj
             if (join || activate) {
-                final UserGroupDAO userGroup = storeManager.createUserGroup();
+                final UserGroupDAO userGroup = getStoreManager().createUserGroup();
                 userGroup.initToDefaultValues(localeId);
                 userGroup.setUserId(userId);
                 userGroup.setGroupId(groupId);
@@ -1212,7 +1188,7 @@ public class UserManager implements ManagerInterface {
     public List<UserDAO> searchUserIndex(LocaleId localeId, String fieldName, String query) throws SystemErrorException {
         final List<UserDAO> users = new ArrayList<UserDAO>();
         if (!doIndex()) {
-            users.add(storeManager.createUser());
+            users.add(getStoreManager().createUser());
             return users;
         }
         List<ZoieIndexReader<BlahguaFilterIndexReader>> readerList = null;
@@ -1289,6 +1265,18 @@ public class UserManager implements ManagerInterface {
         config.setRtIndexing(true); // real-time indexing
         return config;
     }
+
+    private StoreManager getStoreManager() {
+        return storeManager;
+    }
+
+    private SystemManager getSystemManager() {
+        return systemManager;
+    }
+
+    private MailManager getMailManager() {
+        return mailManager;
+    }
 }
 
 
@@ -1338,7 +1326,7 @@ public class UserManager implements ManagerInterface {
 //            if (dao == null) {
 //                throw new StateConflictException("no user with specified methodKey=" + methodKey, ErrorCodes.NOT_FOUND_USER_ID);
 //            }
-//            recoveryCode = SystemManager.getInstance().makeShortRandomCode();
+//            recoveryCode = systemManager.makeShortRandomCode();
 //            dao.setRecoveryCode(recoveryCode);
 //            dao._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
 //
@@ -1391,4 +1379,25 @@ public class UserManager implements ManagerInterface {
 //
 //    private String makeRecoverySubject(String emailAddress) {
 //        return "Blahgua Recovery Code";
+//    }
+
+
+//    /**
+//     * @param localeId
+//     * @param start         Optional start count or null if there is no paging
+//     * @param count         Optional max number of users to return
+//     * @param sortFieldName
+//     * @return Object  Returns list of users
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *
+//     */
+//    public List<UserPayload> getUsers(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
+//        count = ensureCount(count);
+//        final UserDAO dao = storeManager.createUser();
+//        final List<? extends BaseDAO> userDAOs = dao._findMany(start, count, sortFieldName);
+//        final List<UserPayload> users = new ArrayList<UserPayload>(userDAOs.size());
+//        for (BaseDAO item : userDAOs) {
+//            users.add(new UserPayload(item));
+//        }
+//        return users;
 //    }

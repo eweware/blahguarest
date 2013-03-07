@@ -88,6 +88,9 @@ public final class BlahManager implements ManagerInterface {
     private ManagerState status;
     public static BlahManager singleton;
     private StoreManager storeManager;
+    private TrackingManager trackingManager;
+    private UserManager userManager;
+    private GroupManager groupManager;
     private final Integer returnedObjectLimit;
 
     public static BlahManager getInstance() throws SystemErrorException {
@@ -151,6 +154,9 @@ public final class BlahManager implements ManagerInterface {
 
         try {
             storeManager = MongoStoreManager.getInstance();
+            trackingManager = TrackingManager.getInstance();
+            userManager = UserManager.getInstance();
+            groupManager = GroupManager.getInstance();
 
             if (doIndex()) {
                 initializeBlahIndex();
@@ -198,14 +204,18 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(authorId)) {
             throw new InvalidRequestException("missing field authorId=" + authorId, request, ErrorCodes.MISSING_USER_ID);
         }
-        final String text = request.getText();
+
+        String text = request.getText();
         if (CommonUtilities.isEmptyString(text)) {
             throw new InvalidRequestException("missing field text=" + text, request, ErrorCodes.MISSING_TEXT);
         }
+        text = CommonUtilities.getPlainText(text);
+
         final String groupId = request.getGroupId();
         if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing field groupId=" + groupId, ErrorCodes.MISSING_GROUP_ID);
         }
+
         final String typeId = request.getTypeId();
         if (!isTypeIdValid(typeId)) {
             throw new InvalidRequestException("invalid field typeId=" + typeId, ErrorCodes.MISSING_BLAH_TYPE_ID);
@@ -215,18 +225,11 @@ public final class BlahManager implements ManagerInterface {
         ensureUserActiveInGroup(authorId, groupId);
 
         // Create fresh blah to prevent injection
-        final BlahDAO blahDAO = storeManager.createBlah();
+        final BlahDAO blahDAO = getStoreManager().createBlah();
         blahDAO.initToDefaultValues(localeId);
         blahDAO.addFromMap(request, true); // removes fields not in schema
-        final List<PollOptionTextDAO> pollOptionsText = blahDAO.getPollOptionsText();
-        if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
-            int count = pollOptionsText.size();
-            blahDAO.setPollOptionCount(count);
-            final List<Integer> vcs = new ArrayList<Integer>(count);
-            while (count-- > 0) {
-                vcs.add(0);
-            }
-            blahDAO.setPollOptionVotes(vcs);
+        if (isPollCategory(typeId)) {
+            addPollData(text, blahDAO);
         }
         blahDAO._insert();
 
@@ -243,13 +246,38 @@ public final class BlahManager implements ManagerInterface {
 //        tracker.setUserId(authorId);
 //        tracker.setBlahAuthorId(authorId);
 //        tracker.setGroupId(groupId);
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//        trackingManager.track(LocaleId.en_us, tracker);
 
         if (doIndex()) {
             indexBlah(blahDAO);
         }
 
         return new BlahPayload(blahDAO);
+    }
+
+    private void addPollData(String text, BlahDAO blahDAO) throws InvalidRequestException, SystemErrorException {
+        final List<PollOptionTextDAO> pollOptionsText = blahDAO.getPollOptionsText();
+        if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
+            for (PollOptionTextDAO potdao : pollOptionsText) {
+                final String tagLine = potdao.getTagLine();
+                if (tagLine == null) {
+                    throw new InvalidRequestException("missing poll option tagline", ErrorCodes.INVALID_INPUT);
+                } else if (tagLine.length() != 0) {
+                    potdao.setTagLine(CommonUtilities.getPlainText(tagLine));
+                }
+                final String pollText = potdao.getText();
+                if (text != null && text.length() != 0) {
+                    potdao.setText(CommonUtilities.getPlainText(pollText));
+                }
+            }
+            int count = pollOptionsText.size();
+            blahDAO.setPollOptionCount(count);
+            final List<Integer> vcs = new ArrayList<Integer>(count);
+            while (count-- > 0) {
+                vcs.add(0);
+            }
+            blahDAO.setPollOptionVotes(vcs);
+        }
     }
 
     /**
@@ -260,7 +288,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws SystemErrorException
      */
     private void updateGroupBlahCount(String groupId, boolean increment) throws SystemErrorException {
-        final GroupDAO groupDAO = storeManager.createGroup(groupId);
+        final GroupDAO groupDAO = getStoreManager().createGroup(groupId);
         groupDAO.setBlahCount(increment ? 1 : -1);
         groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
@@ -283,7 +311,7 @@ public final class BlahManager implements ManagerInterface {
         final boolean voteDown = false;
         final Integer viewCount = null;
         final Integer openCount = null;
-        TrackingManager.getInstance().trackObject(TrackerOperation.CREATE_BLAH, authorId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
+        getTrackingManager().trackObject(TrackerOperation.CREATE_BLAH, authorId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
     }
 
     /**
@@ -295,7 +323,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException Thrown if the user isn't active in the specified group.
      */
     private void ensureUserActiveInGroup(String userId, String groupId) throws SystemErrorException, StateConflictException {
-        UserGroupDAO userGroupDAO = storeManager.createUserGroup();
+        UserGroupDAO userGroupDAO = getStoreManager().createUserGroup();
         userGroupDAO.setUserId(userId);
         userGroupDAO.setGroupId(groupId);
         userGroupDAO = (UserGroupDAO) userGroupDAO._findByCompositeId(new String[]{UserGroupDAO.STATE}, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
@@ -357,7 +385,7 @@ public final class BlahManager implements ManagerInterface {
             userBlahInfoData.dao._insert();
         }
 
-        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
+        getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
     }
 
     /**
@@ -384,12 +412,24 @@ public final class BlahManager implements ManagerInterface {
      * @return The polling information for this blah and user combination
      */
     public BlahInfoPayload getPollVoteInfo(LocaleId localeId, String blahId, String userId) throws SystemErrorException {
-        final UserBlahInfoDAO userBlahInfo = storeManager.createUserBlahInfo(userId, blahId);
+        final UserBlahInfoDAO userBlahInfo = getStoreManager().createUserBlahInfo(userId, blahId);
         final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX, UserBlahInfoDAO.POLL_VOTE_TIMESTAMP}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao != null) {
             return new BlahInfoPayload(dao);
         }
         return new BlahInfoPayload(userId, blahId);
+    }
+
+    private StoreManager getStoreManager() {
+        return storeManager;
+    }
+
+    private TrackingManager getTrackingManager() {
+        return trackingManager;
+    }
+
+    private UserManager getUserManager() {
+        return userManager;
     }
 
     private class UserBlahInfoData {
@@ -412,7 +452,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      */
     private UserBlahInfoData ensureUserDidNotVoteOnPoll(String blahId, String userId) throws SystemErrorException, StateConflictException {
-        final UserBlahInfoDAO userBlahInfo = storeManager.createUserBlahInfo(userId, blahId);
+        final UserBlahInfoDAO userBlahInfo = getStoreManager().createUserBlahInfo(userId, blahId);
         final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao != null && dao.getPollVoteIndex() != null) {
             throw new StateConflictException("userId '" + userId + "' already voted on poll for blahId '" + blahId + "'", ErrorCodes.ALREADY_VOTED_ON_POLL);
@@ -453,7 +493,7 @@ public final class BlahManager implements ManagerInterface {
             return; // don't complain
         }
 
-        if (!storeManager.createUser(userId)._exists()) {
+        if (!getStoreManager().createUser(userId)._exists()) {
             throw new ResourceNotFoundException("user not found; userId=" + userId, ErrorCodes.NOT_FOUND_USER_ID);
         }
 
@@ -467,7 +507,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = null;
         final boolean voteUp = (vote.intValue() > 0);
         final boolean voteDown = (vote.intValue() < 0);
-        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
+        getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
 
         if (doIndex()) {
             indexBlah(updateBlahDAO);
@@ -486,7 +526,7 @@ public final class BlahManager implements ManagerInterface {
 //        if (openCount != 0) {
 //            tracker.setOpens(openCount);
 //        }
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//        trackingManager.track(LocaleId.en_us, tracker);
     }
 
     /**
@@ -507,7 +547,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws InvalidRequestException
      */
     private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Integer vote, Integer viewCount, Integer openCount, boolean creatingComment) throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
-        BlahDAO blahDAO = storeManager.createBlah(blahId);
+        BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         blahDAO = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
         if (blahDAO == null) {
             throw new ResourceNotFoundException("blah not found; blahId=" + blahId, ErrorCodes.NOT_FOUND_BLAH_ID);
@@ -522,10 +562,10 @@ public final class BlahManager implements ManagerInterface {
         }
 
         final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.VOTE};
-        final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         final boolean insert = (userBlahHistory == null);
 
-        final UserBlahInfoDAO userBlahInfoDAO = storeManager.createUserBlahInfo();
+        final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo();
         if (insert) {
             userBlahInfoDAO.initToDefaultValues(localeId);
         } else {
@@ -557,7 +597,7 @@ public final class BlahManager implements ManagerInterface {
             userBlahInfoDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         }
 
-        final BlahDAO blah = storeManager.createBlah(blahId);
+        final BlahDAO blah = getStoreManager().createBlah(blahId);
         if (vote > 0) {
             blah.setUpVotes(1);
         } else if (vote < 0) {
@@ -601,7 +641,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // Fetch comment ids
-        final CommentDAO searchCommentDAO = storeManager.createComment();
+        final CommentDAO searchCommentDAO = getStoreManager().createComment();
         searchCommentDAO.setBlahId(blahId);
 
         // Fetch comments to delete
@@ -609,7 +649,7 @@ public final class BlahManager implements ManagerInterface {
 
         // Delete comments and blahs
         searchCommentDAO._deleteByCompositeId(CommentDAO.BLAH_ID); // multiple deletes
-        final BlahDAO blah = storeManager.createBlah(blahId);
+        final BlahDAO blah = getStoreManager().createBlah(blahId);
         decrementGroupBlahCount(blah);
         blah._deleteByPrimaryId();
 
@@ -625,18 +665,14 @@ public final class BlahManager implements ManagerInterface {
     private void decrementGroupBlahCount(BlahDAO blah) throws SystemErrorException {
         final BlahDAO blahDAO = (BlahDAO) blah._findByPrimaryId(BlahDAO.GROUP_ID);
         final String groupId = blahDAO.getGroupId();
-        final GroupDAO group = storeManager.createGroup(groupId);
+        final GroupDAO group = getStoreManager().createGroup(groupId);
         group.setBlahCount(-1);
         group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
         count = ensureCount(count);
-        final BlahDAO blahDAO = storeManager.createBlah();
+        final BlahDAO blahDAO = getStoreManager().createBlah();
         final boolean hasAuthor = !CommonUtilities.isEmptyString(authorId);
         if (hasAuthor) {
             blahDAO.setAuthorId(authorId);
@@ -695,7 +731,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private void refreshBlahTypesCache() throws SystemErrorException {
-        final List<BlahTypeDAO> blahTypeDAOs = (List<BlahTypeDAO>) storeManager.createBlahType()._findMany(null, null, null);
+        final List<BlahTypeDAO> blahTypeDAOs = (List<BlahTypeDAO>) getStoreManager().createBlahType()._findMany(null, null, null);
         final HashMap<String, BlahTypeEntry> map = new HashMap<String, BlahTypeEntry>(blahTypeDAOs.size());
         for (BlahTypeDAO dao : blahTypeDAOs) {
             if (dao.getCategoryId() == null) {
@@ -757,10 +793,10 @@ public final class BlahManager implements ManagerInterface {
         }
         final boolean includeUserInfo = !CommonUtilities.isEmptyString(userId);
 
-        if (includeUserInfo && !storeManager.createUser(userId)._exists()) {
+        if (includeUserInfo && !getStoreManager().createUser(userId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " not found", ErrorCodes.NOT_FOUND_USER_ID);
         }
-        final BlahDAO blahDAO = storeManager.createBlah();
+        final BlahDAO blahDAO = getStoreManager().createBlah();
         blahDAO.setId(blahId);
         final BaseDAO found = blahDAO._findByPrimaryId();
         if (found == null) {
@@ -778,7 +814,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private BlahDAO getBlahById_unsafe(String blahId, String... fieldsToReturnHint) throws SystemErrorException {
-        final BlahDAO blahDAO = storeManager.createBlah(blahId);
+        final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         if (fieldsToReturnHint != null && fieldsToReturnHint.length > 0) {
             return (BlahDAO) blahDAO._findByPrimaryId();
         }
@@ -797,13 +833,13 @@ public final class BlahManager implements ManagerInterface {
         List<BlahTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
             final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.BLAH, blahId, startDate);
-            final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) storeManager.createBlahTracker(trackerId)._findByPrimaryId();
+            final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker(trackerId)._findByPrimaryId();
             if (blahTrackerDAO != null) {
                 trackers = new ArrayList<BlahTrackerPayload>(1);
                 trackers.add(new BlahTrackerPayload(blahTrackerDAO.toMap()));
             }
         } else { // range search
-            final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) storeManager.createBlahTracker();
+            final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker();
             final String from = extractYearMonthFromTrackerDate(statsStartDate);
             final String to = extractYearMonthFromTrackerDate(statsEndDate);
             final boolean sorted = true;
@@ -823,7 +859,7 @@ public final class BlahManager implements ManagerInterface {
 
     // TODO this is a temporary add-on: data should be pre-aggregated for query
     private void addUserBlahInfoToPayload(String userId, String blahId, BlahPayload blahPayload) throws SystemErrorException {
-        final UserBlahInfoDAO userBlahDAO = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(
+        final UserBlahInfoDAO userBlahDAO = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(
                 new String[]{UserBlahInfoDAO.VOTE, UserBlahInfoDAO.VIEWS, UserBlahInfoDAO.OPENS},
                 UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (userBlahDAO != null) {
@@ -837,7 +873,7 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new SystemErrorException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
-        BlahDAO blahDAO = storeManager.createBlah(blahId);
+        BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         blahDAO = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID);
         if (blahDAO == null) {
             throw new ResourceNotFoundException("did not find blahId=" + blahId, ErrorCodes.NOT_FOUND_BLAH_ID);
@@ -850,7 +886,7 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new SystemErrorException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
-        CommentDAO commentDAO = storeManager.createComment(commentId);
+        CommentDAO commentDAO = getStoreManager().createComment(commentId);
         commentDAO = (CommentDAO) commentDAO._findByPrimaryId(CommentDAO.AUTHOR_ID);
         if (commentDAO == null) {
             throw new ResourceNotFoundException("did not find commentId=" + commentId, ErrorCodes.NOT_FOUND_COMMENT_ID);
@@ -871,7 +907,7 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new SystemErrorException("missing blah id", entity, ErrorCodes.MISSING_BLAH_ID);
         }
-        if (!storeManager.createBlah(blahId)._exists()) {
+        if (!getStoreManager().createBlah(blahId)._exists()) {
             throw new ResourceNotFoundException("not found blahId=" + blahId, entity, ErrorCodes.NOT_FOUND_BLAH_ID);
         }
     }
@@ -903,16 +939,18 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(commentAuthorId)) {
             throw new InvalidRequestException("missing authorId", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
-        final String text = request.getText();
+        String text = request.getText();
         if (CommonUtilities.isEmptyString(text)) {
             throw new InvalidRequestException("missing text", request, ErrorCodes.MISSING_TEXT);
         }
-        UserManager.getInstance().checkUserById(commentAuthorId, request);
+        text = CommonUtilities.getPlainText(text);
+
+        getUserManager().checkUserById(commentAuthorId, request);
         final Integer blahVote = GeneralUtilities.checkDiscreteValue(request.getBlahVote(), request);
         boolean votedForBlah = (blahVote != 0);
 
         // Check that blah exists and if this comment includes a vote that the comment author is not the blah's author
-        final BlahDAO blahDAO = storeManager.createBlah(blahId);
+        final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         final BlahDAO blah = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID);
         if (blah == null) {
             throw new InvalidRequestException("no blahId=" + blahId + " exists", request, ErrorCodes.INVALID_INPUT);
@@ -922,7 +960,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // Create comment
-        CommentDAO commentDAO = storeManager.createComment();
+        CommentDAO commentDAO = getStoreManager().createComment();
         commentDAO.initToDefaultValues(localeId);
         commentDAO.setBlahId(blahId);
         commentDAO.setText(text);
@@ -945,7 +983,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = blahId;
         final boolean voteUp = (blahVote > 0);
         final boolean voteDown = (blahVote < 0);
-        TrackingManager.getInstance().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, request.getViews(), request.getOpens());
+        getTrackingManager().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, request.getViews(), request.getOpens());
 
 //        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_COMMENT);
 //        tracker.setBlahAuthorId(blahAuthorId);
@@ -955,7 +993,7 @@ public final class BlahManager implements ManagerInterface {
 //        if (blahVote != 0) {
 //            tracker.setVote(blahVote);
 //        }
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//        trackingManager.track(LocaleId.en_us, tracker);
 
         if (doIndex()) {
             indexComment(commentDAO); // index new comment
@@ -1007,16 +1045,16 @@ public final class BlahManager implements ManagerInterface {
             return; // nothing to update
         }
 
-        UserManager.getInstance().checkUserById(userId, request);
+        getUserManager().checkUserById(userId, request);
 
-        final CommentDAO commentDAO = (CommentDAO) storeManager.createComment(commentId)._findByPrimaryId(CommentDAO.BLAH_ID, CommentDAO.AUTHOR_ID);
+        final CommentDAO commentDAO = (CommentDAO) getStoreManager().createComment(commentId)._findByPrimaryId(CommentDAO.BLAH_ID, CommentDAO.AUTHOR_ID);
         if (commentDAO == null) {
             throw new ResourceNotFoundException("No commentId=" + commentId, request, ErrorCodes.NOT_FOUND_COMMENT_ID);
         }
         final String blahId = commentDAO.getBlahId();
         final String commentAuthorId = commentDAO.getAuthorId();
 
-        BlahDAO blahDAO = storeManager.createBlah(blahId);
+        BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         blahDAO = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID);
         if (blahDAO == null) {
             throw new ResourceNotFoundException("no blahId=" + blahId + " exists to comment upon; commentId=" + commentId, ErrorCodes.NOT_FOUND_BLAH_ID);
@@ -1025,7 +1063,7 @@ public final class BlahManager implements ManagerInterface {
         if (didVoteForComment && blahAuthorId.equals(userId)) {
             throw new InvalidRequestException("authorId=" + userId + " (author of the blahId=" + blahId + ") cannot vote on comments to author's own blah", request, ErrorCodes.USER_CANNOT_VOTE_ON_COMMENTS_TO_ONES_OWN_BLAH);
         }
-        final UserCommentInfoDAO userCommentInfoDAO = storeManager.createUserCommentInfo(userId, commentId);
+        final UserCommentInfoDAO userCommentInfoDAO = getStoreManager().createUserCommentInfo(userId, commentId);
         final UserCommentInfoDAO foundUserCommentInfo = (UserCommentInfoDAO) userCommentInfoDAO._findByCompositeId(new String[]{UserCommentInfoDAO.VOTE}, UserCommentInfoDAO.USER_ID, UserCommentInfoDAO.COMMENT_ID);
         if (didVoteForComment && foundUserCommentInfo != null && foundUserCommentInfo.getVote() != null && foundUserCommentInfo.getVote() != 0) {
             throw new InvalidRequestException("authorId=" + userId + " already voted for this comment; commentId=" + commentId, ErrorCodes.USER_ALREADY_VOTED_FOR_COMMENT);
@@ -1053,7 +1091,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // Update comment
-        final CommentDAO commentUpdateDAO = storeManager.createComment(commentId);
+        final CommentDAO commentUpdateDAO = getStoreManager().createComment(commentId);
         if (voteForComment != 0) {
             commentUpdateDAO.setCommentVotes(voteForComment);
             if (voteForComment > 0) {
@@ -1076,7 +1114,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = blahId;
         final boolean voteUp = (voteForComment == 1);
         final boolean voteDown = (voteForComment == -1);
-        TrackingManager.getInstance().trackObject(TrackerOperation.UPDATE_COMMENT, userId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, views, opens);
+        getTrackingManager().trackObject(TrackerOperation.UPDATE_COMMENT, userId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, views, opens);
 
         if (doIndex()) {
             indexComment(commentUpdateDAO);
@@ -1095,7 +1133,7 @@ public final class BlahManager implements ManagerInterface {
 //        if (opens != 0) {
 //            tracker.setOpens(opens);
 //        }
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//        trackingManager.track(LocaleId.en_us, tracker);
     }
 
     // TODO draconic: should archive them if needed, though old comments should really just fade away
@@ -1103,7 +1141,7 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
-        final CommentDAO commentDAO = storeManager.createComment(commentId);
+        final CommentDAO commentDAO = getStoreManager().createComment(commentId);
         commentDAO._deleteByPrimaryId();
 
         if (doIndex()) {
@@ -1115,7 +1153,7 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
-        final CommentDAO commentDAO = (CommentDAO) storeManager.createComment(commentId)._findByPrimaryId();
+        final CommentDAO commentDAO = (CommentDAO) getStoreManager().createComment(commentId)._findByPrimaryId();
         if (commentDAO == null) {
             throw new ResourceNotFoundException("blah comment not found", "commentId=" + commentId, ErrorCodes.NOT_FOUND_COMMENT_ID);
         }
@@ -1130,7 +1168,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private void addUserCommentInfoToPayload(CommentPayload comment, String commentId, String userId) throws SystemErrorException {
-        final UserCommentInfoDAO dao = (UserCommentInfoDAO) storeManager.createUserCommentInfo(userId, commentId)._findByCompositeId(
+        final UserCommentInfoDAO dao = (UserCommentInfoDAO) getStoreManager().createUserCommentInfo(userId, commentId)._findByCompositeId(
                 new String[]{UserCommentInfoDAO.VOTE, UserCommentInfoDAO.VIEWS, UserCommentInfoDAO.OPENS},
                 UserCommentInfoDAO.USER_ID, UserCommentInfoDAO.COMMENT_ID);
         if (dao != null) {
@@ -1152,13 +1190,13 @@ public final class BlahManager implements ManagerInterface {
         List<CommentTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
             final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.COMMENT, comment.getId(), startDate);
-            final CommentTrackerDAO commentTrackerDAO = (CommentTrackerDAO) storeManager.createCommentTracker(trackerId)._findByPrimaryId();
+            final CommentTrackerDAO commentTrackerDAO = (CommentTrackerDAO) getStoreManager().createCommentTracker(trackerId)._findByPrimaryId();
             if (commentTrackerDAO != null) {
                 trackers = new ArrayList<CommentTrackerPayload>(1);
                 trackers.add(new CommentTrackerPayload(commentTrackerDAO.toMap()));
             }
         } else { // range search
-            final CommentTrackerDAO commentTrackerDAO = (CommentTrackerDAO) storeManager.createCommentTracker();
+            final CommentTrackerDAO commentTrackerDAO = (CommentTrackerDAO) getStoreManager().createCommentTracker();
             final String from = extractYearMonthFromTrackerDate(statsStartDate);
             final String to = extractYearMonthFromTrackerDate(statsEndDate);
             final boolean sorted = true;
@@ -1179,7 +1217,7 @@ public final class BlahManager implements ManagerInterface {
         if (forBlah) {
             checkBlahById(blahId, blahId);
         }
-        final CommentDAO commentDAO = storeManager.createComment();
+        final CommentDAO commentDAO = getStoreManager().createComment();
         if (forBlah) {
             commentDAO.setBlahId(blahId);
         }
@@ -1241,12 +1279,12 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", ErrorCodes.MISSING_USER_ID);
         }
-        final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.LAST_INBOX);
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId(UserDAO.LAST_INBOX);
         if (userDAO == null) {
             throw new ResourceNotFoundException("userId=" + userId + " not found", ErrorCodes.NOT_FOUND_USER_ID);
         }
 
-        final UserGroupDAO searchUserGroupDAO = storeManager.createUserGroup();
+        final UserGroupDAO searchUserGroupDAO = getStoreManager().createUserGroup();
         searchUserGroupDAO.setUserId(userId);
         if (groupId != null) {
             searchUserGroupDAO.setGroupId(groupId);
@@ -1277,7 +1315,7 @@ public final class BlahManager implements ManagerInterface {
             }
         }
         // Update last read inbox
-        final UserDAO userUpdateDAO = storeManager.createUser(userId);
+        final UserDAO userUpdateDAO = getStoreManager().createUser(userId);
         userUpdateDAO.setLastInbox(lastInbox); // TODO this should be group-dependent! Store probably in UserGroupDAO. ok for alpha?
         userUpdateDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
 
@@ -1349,7 +1387,7 @@ public final class BlahManager implements ManagerInterface {
      */
     private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException {
 
-        final boolean isOpenGroup = GroupManager.getInstance().isOpenGroup(groupId);
+        final boolean isOpenGroup = groupManager.isOpenGroup(groupId);
 
         if (!isOpenGroup) {
             final boolean authenticated = BlahguaSession.isAuthenticated(request);
@@ -1360,7 +1398,7 @@ public final class BlahManager implements ManagerInterface {
             if (userId == null) { // could be a race condition: client should retry
                 throw new SystemErrorException("No userId for session", ErrorCodes.SERVER_RECOVERABLE_ERROR);
             }
-            final UserGroupDAO userGroupDAO = storeManager.createUserGroup();
+            final UserGroupDAO userGroupDAO = getStoreManager().createUserGroup();
             userGroupDAO.setUserId(userId);
             userGroupDAO.setGroupId(groupId);
             userGroupDAO.setState(AuthorizedState.A.toString());
@@ -1454,7 +1492,7 @@ public final class BlahManager implements ManagerInterface {
      */
     private void deleteBlahFromIndex(String blahId) throws SystemErrorException {
         if (doIndex()) {
-            final BlahDAO blah = storeManager.createBlah(blahId);
+            final BlahDAO blah = getStoreManager().createBlah(blahId);
             blah.setDeleted(Boolean.TRUE);
             indexBlah(blah);
         }
@@ -1681,7 +1719,7 @@ public final class BlahManager implements ManagerInterface {
             return dao;
         } else { // it's an update
             // Create a copy to be used just for the index
-            final BaseDAO updateDAO = isBlah ? storeManager.createBlah(dao) : storeManager.createComment(dao);
+            final BaseDAO updateDAO = isBlah ? getStoreManager().createBlah(dao) : getStoreManager().createComment(dao);
             Map<String, Object> update = new HashMap<String, Object>();
             for (Map.Entry<String, Object> entry : updateDAO.toMap().entrySet()) {
                 final String fieldName = entry.getKey();

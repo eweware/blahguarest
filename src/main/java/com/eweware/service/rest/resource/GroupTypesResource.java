@@ -24,6 +24,8 @@ import java.net.URI;
 @Path("/groupTypes")
 public class GroupTypesResource {
 
+    private GroupManager groupManager;
+
     /**
      * <p>Use this method to create a group type.</p>
      * <p><i>User must be logged in to use this method.</i></p>
@@ -48,7 +50,7 @@ public class GroupTypesResource {
                                     @Context HttpServletRequest request) {
         try {
             BlahguaSession.ensureAuthenticated(request, true);
-            entity = GroupManager.getInstance().createGroupType(LocaleId.en_us, entity.getDisplayName());
+            entity = getGroupManager().createGroupType(LocaleId.en_us, entity.getDisplayName());
             return RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + "/" + entity.getId()));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -88,7 +90,7 @@ public class GroupTypesResource {
             @Context HttpServletRequest request) {
         try {
             BlahguaSession.ensureAuthenticated(request, true);
-            GroupManager.getInstance().updateGroupTypeDisplayName(LocaleId.en_us, groupTypeId, entity.getDisplayName());
+            getGroupManager().updateGroupTypeDisplayName(LocaleId.en_us, groupTypeId, entity.getDisplayName());
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -124,7 +126,7 @@ public class GroupTypesResource {
             @QueryParam("count") Integer count,
             @QueryParam("sort") String sortFieldName) {
         try {
-            return RestUtilities.make200OkResponse(GroupManager.getInstance().getGroupTypes(LocaleId.en_us, start, count, sortFieldName));
+            return RestUtilities.make200OkResponse(getGroupManager().getGroupTypes(LocaleId.en_us, start, count, sortFieldName));
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -150,7 +152,7 @@ public class GroupTypesResource {
     public Response getGroupTypeById(
             @PathParam("groupTypeId") String groupTypeId) {
         try {
-            return RestUtilities.make200OkResponse(GroupManager.getInstance().getGroupTypeById(LocaleId.en_us, groupTypeId));
+            return RestUtilities.make200OkResponse(getGroupManager().getGroupTypeById(LocaleId.en_us, groupTypeId));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
@@ -160,5 +162,13 @@ public class GroupTypesResource {
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
+    }
+
+
+    private GroupManager getGroupManager() throws SystemErrorException {
+        if (groupManager == null) {
+            groupManager = GroupManager.getInstance();
+        }
+        return groupManager;
     }
 }

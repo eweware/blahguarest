@@ -31,13 +31,12 @@ import java.util.Map;
 @Path("/users")
 public class UsersResource {
 
-    private static final String GET_USERS_OPERATION = "getUsers";
     private static final String GET_USER_BY_ID_OPERATION = "getUserById";
-    //    private static final String GET_USER_INBOX_OPERATION = "getUserInbox";
     private static final String GET_ANONYMOUS_INBOX_OPERATION = "getUserInbox";
     private static final String GET_USER_PROFILE_BY_ID_OPERATION = "getUserProfileById";
     private static final String GET_USER_PROFILE_SCHEMA_OPERATION = "getUserProfileSchema";
-    private static final String UPDATE_USER_OPERATION = "updateUser";
+    private static final String UPDATE_USERNAME_OPERATION = "updateUser";
+    private static final String UPDATE_PASSWORD_OPERATION = "updatePwd";
     private static final String UPDATE_USER_PROFILE_OPERATION = "updateUserProfile";
     private static final String CREATE_USER_OPERATION = "createUser";
     private static final String CREATE_USER_PROFILE_OPERATION = "createUserProfile";
@@ -45,28 +44,35 @@ public class UsersResource {
     private static final String RECOVER_USER_OPERATION = "recoverUser";
     private static final String LOGIN_USER_OPERATION = "loginUser";
 
+    private UserManager userManager;
+    private SystemManager systemManager;
+    private BlahManager blahManager;
+
     /**
      * <p>Use this method to check whether a username is available to use
      * as the username in a new user account.</p>
      * <p/>
-     * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/check/username/{username}</div>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/check/username</div>
      *
-     * @param username <i>Path Parameter:</i> The username. Must be at least three
-     *                 and less than 64 characters long.
+     * @param entity Expects a JSON entity with the username in a
+     *               parameter named 'u'. The username be at least three
+     *               and less than 64 characters long.
      * @return If successful (username is available), returns an http code of 204 (OK NO CONTENT).
      *         If the request is invalid, it returns 400 (BAD REQUEST).
      *         If the username already exists, it returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
      * @see UserDAOConstants
      */
-    @GET
-    @Path("/check/username/{username}")
+    @POST
+    @Path("/check/username")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkUsername(
-            @PathParam("username") String username) {
+            Map<String, String> entity) {
         try {
-            UserManager.getInstance().ensureUserExistsByUsername(username);
+            final String username = entity.get("u");
+            getUserManager().ensureUserExistsByUsername(username);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -94,6 +100,7 @@ public class UsersResource {
      */
     @GET
     @Path("/login/check")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkLogin(@Context HttpServletRequest request) {
         final Map<String, String> entity = new HashMap<String, String>(1);
@@ -112,11 +119,15 @@ public class UsersResource {
      * <div><b>URL:</b> users/login</div>
      *
      * @param entity A JSON entity (a UserPayload) containing a username and a password.
+     *               The rules for username and password length and structure are in
+     *               the Login methods cited below.
      * @return If it succeededs, returns an http status 202 (ACCEPTED).
      *         Else, the following http status codes are possible: 400 (either
      *         the request was invalid or the user is not authorized to login),
      *         or 404 (user resource does not exist). In either case a JSON
      *         error message will specify more details.
+     * @see main.java.com.eweware.service.user.validation.Login#ensureUsernameString(String)
+     * @see main.java.com.eweware.service.user.validation.Login#ensurePasswordString(String)
      * @see UserDAOConstants
      */
     @POST
@@ -129,9 +140,9 @@ public class UsersResource {
             final long start = System.currentTimeMillis();
             final String username = (String) entity.get(UserDAOConstants.USERNAME);
             final String password = (String) entity.get(UserDAOConstants.PASSWORD);
-            UserManager.getInstance().loginUser(LocaleId.en_us, username, password, request);
+            getUserManager().loginUser(LocaleId.en_us, username, password, request);
             final Response response = RestUtilities.make202AcceptedResponse();
-            SystemManager.getInstance().setResponseTime(LOGIN_USER_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(LOGIN_USER_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -158,6 +169,7 @@ public class UsersResource {
      */
     @POST
     @Path("/logout")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response logoutUser(@Context HttpServletRequest request) {
         try {
@@ -191,9 +203,9 @@ public class UsersResource {
             final long s = System.currentTimeMillis();
             final String username = (String) entity.get(UserDAOConstants.USERNAME);
             final String password = (String) entity.get(UserDAOConstants.PASSWORD);
-            final UserPayload payload = UserManager.getInstance().registerUser(LocaleId.en_us, username, password);
+            final UserPayload payload = getUserManager().registerUser(LocaleId.en_us, username, password);
             final Response response = RestUtilities.make201CreatedResourceResponse(payload, new URI(uri.getAbsolutePath() + payload.getId()));
-            SystemManager.getInstance().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -214,6 +226,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/profiles</div>
      *
      * @param entity A JSON entity (a UserProfilePayload) containing the user profile data to set.
+     *               No user id or username is required.
      * @return If successful, returns an http status code of 201 (CREATED).
      *         If a profile object already exists, it will return 409 (CONFLICT).
      *         If the request is invalid, it will return 400 (BAD REQUEST).
@@ -222,7 +235,7 @@ public class UsersResource {
      * @see UserDAOConstants
      */
     @POST
-    @Path("/profiles")
+    @Path("/profile/info")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUserProfile(
@@ -232,9 +245,9 @@ public class UsersResource {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            entity = UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, true);
+            entity = getUserManager().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, true);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
-            SystemManager.getInstance().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -273,13 +286,14 @@ public class UsersResource {
      */
     @POST
     @Path("/account")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response setAccountInfo(
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
-            final String username = BlahguaSession.ensureAuthenticated(request, false);
-            UserManager.getInstance().setUserAccountData(username, entity.containsKey("e"), entity.get("e"), entity.containsKey("q"), entity.get("q"));
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            getUserManager().setUserAccountData(userId, entity.containsKey("e"), entity.get("e"), entity.containsKey("q"), entity.get("q"));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
@@ -301,6 +315,7 @@ public class UsersResource {
      */
     @PUT
     @Path("/account")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateAccount(
             Map<String, String> entity,
@@ -313,7 +328,7 @@ public class UsersResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> users/profiles</div>
+     * <div><b>URL:</b> users/profile/info</div>
      *
      * @param entity A JSON entity (a UserProfilePayload) containing the profile fields to change.
      * @return If successful, returns http code 204 (OK NO CONTENT).
@@ -324,7 +339,7 @@ public class UsersResource {
      * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @PUT
-    @Path("/profiles")
+    @Path("/profile/info")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUserProfile(
@@ -333,9 +348,9 @@ public class UsersResource {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            UserManager.getInstance().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, false);
+            getUserManager().createOrUpdateUserProfile(LocaleId.en_us, entity, userId, false);
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -355,26 +370,27 @@ public class UsersResource {
     /**
      * <p>Use this method to obtain a string descriptor of the user's profile.</p>
      * <p/>
-     * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/profiles/descriptor/{userId}</div>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/profiles/descriptor</div>
      *
-     * @param userId <i>Path Parameter</i>. The user's id.
+     * @param entity Expects a JSON entity containing the user id in a
+     *               field named 'i'
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
-    @GET
-    @Path("/profiles/descriptor/{userId}")
+    @POST
+    @Path("/descriptor")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserDescriptorString(
-            @PathParam("userId") String userId,
+            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
-            return RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileDescriptor(LocaleId.en_us, request, userId));
+            final String userId = entity.get("i");
+            return RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (InvalidRequestException e) {
@@ -392,7 +408,7 @@ public class UsersResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/profiles</div>
+     * <div><b>URL:</b> users/profile/schema</div>
      *
      * @return Returns a user profile schema JSON entity (a UserProfileSchema)
      *         with an http status of 200.
@@ -400,15 +416,15 @@ public class UsersResource {
      * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
      */
     @GET
-    @Path("/profiles")
+    @Path("/profile/schema")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserProfileSchema(@Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
-            Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileSchema(LocaleId.en_us));
-            SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
+            Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileSchema(LocaleId.en_us));
+            getSystemManager().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
@@ -424,9 +440,8 @@ public class UsersResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/profiles/{userId}</div>
+     * <div><b>URL:</b> users/profile/info</div>
      *
-     * @param userId <i>Path Parameter</i>. The user's id.
      * @return If successful, returns an http code of 200 (OK) with a JSON entity (a UserProfilePayload)
      *         containing the user profile settings.
      *         If there is no profile for this user (or if user doesn't exist), returns 404 (NOT FOUND).
@@ -435,16 +450,16 @@ public class UsersResource {
      * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @GET
-    @Path("/profiles/{userId}")
+    @Path("/profile/info")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserProfileById(
-            @PathParam("userId") String userId,
+    public Response getUserProfile(
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String currUserId = BlahguaSession.ensureAuthenticated(request, true);
-            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserProfileById(LocaleId.en_us, (userId == null) ? currUserId : userId));
-            SystemManager.getInstance().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileById(LocaleId.en_us, (userId == null) ? userId : userId));
+            getSystemManager().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
@@ -466,27 +481,30 @@ public class UsersResource {
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> users/update/username/{username}</div>
      *
-     * @param username <i>Path Parameter</i>. The new username.
+     * @param entity Expects a JSON entity containing the username
+     *               in a field named 'u'. The rules for username
+     *               length and structure are given in the Login citation below.
      * @return Returns http status code 204 (NO CONTENT) on success.
      *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
      *         If the input is invalid, returns 400 (BAD REQUEST).
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
-     * @see #checkUsername(String)
-     * @see UserDAOConstants
+     * @see main.java.com.eweware.service.user.validation.Login#ensureUsernameString(String)
      */
     @PUT
-    @Path("/update/username/{username}")
+    @Path("/update/username")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUsername(
-            @PathParam("username") String username,
+            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request, true);
-            UserManager.getInstance().updateUsername(LocaleId.en_us, request, username);
+            final String username = entity.get("u");
+            getUserManager().updateUsername(LocaleId.en_us, request, username);
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(UPDATE_USER_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(UPDATE_USERNAME_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -510,26 +528,31 @@ public class UsersResource {
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> users/update/password/{password}</div>
      *
-     * @param password <i>Path Parameter</i>. The new password.
+     * @param entity Expects a JSON entity containing the password
+     *               in a field named 'p'. The rules for password
+     *               length and structure are given in the Login method
+     *               cited below.
      * @return Returns http status code 204 (NO CONTENT) on success.
      *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
      *         If the input is invalid, returns 400 (BAD REQUEST).
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
+     * @see main.java.com.eweware.service.user.validation.Login#ensurePasswordString(String)
      */
     @PUT
-    @Path("/update/password/{password}")
+    @Path("/update/password")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updatePassword(
-            @PathParam("password") String password,
+            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
-            UserManager.getInstance().updatePassword(LocaleId.en_us, request, password);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String password = entity.get("p");
+            getUserManager().updatePassword(LocaleId.en_us, request, userId, password);
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(UPDATE_USER_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(UPDATE_PASSWORD_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -565,20 +588,21 @@ public class UsersResource {
      *         in which case it means that an email has been sent with a link that will log in the user.
      *         If the user doesn't have a registered email address, returns http status 404 (NOT FOUND).
      *         Never returns a payload.
-     *         @see UserDAOConstants
-     *         @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
+     * @see UserDAOConstants
+     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     @POST
     @Path("/recover/user")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response recoverUser(
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            UserManager.getInstance().recoverUser(LocaleId.en_us, request, entity.get("u"), entity.get("e"), entity.get("a"));
+            getUserManager().recoverUser(LocaleId.en_us, request, entity.get("u"), entity.get("e"), entity.get("a"));
             final Response response = RestUtilities.make204OKNoContentResponse();
-            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
@@ -591,39 +615,6 @@ public class UsersResource {
         }
     }
 
-//
-//    /**
-//     * <p>Directly or indirectly received from user clicking on a recovery URL.</p>
-//     * <p><b>TODO: </b>deal with UI page.</p>
-//     * <p/>
-//     * <div><b>METHOD:</b> GET</div>
-//     * <div><b>URL:</b> users/recover/user/{recoveryCode}</div>
-//     *
-//     * @param recoveryCode <i>Path Parameter:</i> The recovery code sent to the user in an email or whatever.
-//     * @return Returns an http status 202 (ACCEPTED) if the user is now logged in.
-//     *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
-//     *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
-//     *         If there is an authorization or security problem, returns 401 (UNAUTHORIZED).
-//     *         On error conditions, a JSON object is returned with details.
-//     */
-//    @GET
-//    @Path("/recover/user/{recoveryCode}/{username}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response recoverUser(
-//            @PathParam("recoveryCode") String recoveryCode,
-//            @PathParam("username") String encryptedCanonicalUsername,
-//            @Context HttpServletResponse httpResponse) {
-//        try {
-//            final long start = System.currentTimeMillis();
-//            UserManager.getInstance().recoverUserAndRedirectToMainPage(LocaleId.en_us, httpResponse, recoveryCode, encryptedCanonicalUsername);
-//            SystemManager.getInstance().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
-//            return
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (InvalidAuthorizedStateException e) {
-//            return RestUtilities.make401UnauthorizedRequestResponse(e);
-//        }
-//    }
 
     /**
      * <p><Use this method to get an inbox for the current session./p>
@@ -669,8 +660,8 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getInbox(LocaleId.en_us, groupId, request, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
-            SystemManager.getInstance().setResponseTime(GET_ANONYMOUS_INBOX_OPERATION, (System.currentTimeMillis() - s));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getInbox(LocaleId.en_us, groupId, request, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
+            getSystemManager().setResponseTime(GET_ANONYMOUS_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
@@ -684,14 +675,11 @@ public class UsersResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/{userId}</div>
+     * <div><b>URL:</b> users/info</div>
      *
-     * @param userId         <i>Path Parameter</i>. The user id.
      * @param stats          <i>Query Parameter:</i> Optional. If true, include
      *                       a user statistics record along with the standard user information.
      *                       Default is false.
-     * @param byUsername     <i>Query Parameter:</i> Optional. If true, then the user id
-     *                       is interpreted as the username.
      * @param statsStartDate <i>Query Parameter:</i> Optional. When stats is true, this is used
      *                       to filter the stats records with this as a start date (inclusive).
      *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
@@ -708,21 +696,19 @@ public class UsersResource {
      * @see UserDAOConstants
      */
     @GET
-    @Path("/{userId}")
+    @Path("info")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserById(
-            @PathParam("userId") String userId,
+    public Response getUserInfo(
             @QueryParam("stats") boolean stats,
-            @QueryParam("u") boolean byUsername,
             @QueryParam("s") String statsStartDate,
             @QueryParam("e") String statsEndDate,
             @Context HttpServletRequest request) {
 
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
-            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUserById(LocaleId.en_us, userId, byUsername, stats, statsStartDate, statsEndDate));
-            SystemManager.getInstance().setResponseTime(GET_USER_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserInfo(LocaleId.en_us, userId, stats, statsStartDate, statsEndDate));
+            getSystemManager().setResponseTime(GET_USER_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -737,58 +723,26 @@ public class UsersResource {
         }
     }
 
-    /**
-     * <p><b>DO NOT USE. ONLY FOR DEBUGGING WILL BE REMOVED OR SEQUESTERED IN A FUTURE VERSION.</b></p>
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers(
-            @QueryParam("start") Integer start,
-            @QueryParam("count") Integer count,
-            @QueryParam("sort") String sortFieldName,
-            @Context HttpServletRequest request) {
-        try {
-            final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
-            final Response response = RestUtilities.make200OkResponse(UserManager.getInstance().getUsers(LocaleId.en_us, start, count, sortFieldName));
-            SystemManager.getInstance().setResponseTime(GET_USERS_OPERATION, (System.currentTimeMillis() - s));
-            return response;
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+
+    private UserManager getUserManager() throws SystemErrorException {
+        if (userManager == null) {
+            userManager = UserManager.getInstance();
         }
+        return userManager;
     }
 
-    /**
-     * <p><b>No longer in use</b></p>
-     */
-    @POST
-    @Path("/validate/{validationCode}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response validateUser(
-            @PathParam("validationCode") String validationCode,
-            @Context HttpServletRequest request) {
-        try {
-            final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request, true);
-            UserManager.getInstance().validateUser(LocaleId.en_us, validationCode);
-            final Response response = RestUtilities.make202AcceptedResponse();
-            SystemManager.getInstance().setResponseTime(VALIDATE_USER_OPERATION, (System.currentTimeMillis() - s));
-            return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
         }
+        return systemManager;
+    }
+
+    private BlahManager getBlahManager() throws SystemErrorException {
+        if (blahManager == null) {
+            blahManager = BlahManager.getInstance();
+        }
+        return blahManager;
     }
 }
 
@@ -822,12 +776,101 @@ public class UsersResource {
 //        try {
 //            final long s = System.currentTimeMillis();
 //            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getUserInbox(LocaleId.en_us, userId, groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
-//            SystemManager.getInstance().setResponseTime(GET_USER_INBOX_OPERATION, (System.currentTimeMillis() - s));
+//            getSystemManager().setResponseTime(GET_USER_INBOX_OPERATION, (System.currentTimeMillis() - s));
 //            return response;
 //        } catch (InvalidRequestException e) {
 //            return RestUtilities.make400InvalidRequestResponse(e);
 //        } catch (ResourceNotFoundException e) {
 //            return RestUtilities.make404ResourceNotFoundResponse(e);
+//        } catch (StateConflictException e) {
+//            return RestUtilities.make409StateConflictResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }
+
+
+//    /**
+//     * <p><b>DO NOT USE. ONLY FOR DEBUGGING WILL BE REMOVED OR SEQUESTERED IN A FUTURE VERSION.</b></p>
+//     */
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getUsers(
+//            @QueryParam("start") Integer start,
+//            @QueryParam("count") Integer count,
+//            @QueryParam("sort") String sortFieldName,
+//            @Context HttpServletRequest request) {
+//        try {
+//            final long s = System.currentTimeMillis();
+//            BlahguaSession.ensureAuthenticated(request, true);
+//            final Response response = RestUtilities.make200OkResponse(getUserManager().getUsers(LocaleId.en_us, start, count, sortFieldName));
+//            getSystemManager().setResponseTime(GET_USERS_OPERATION, (System.currentTimeMillis() - s));
+//            return response;
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }
+
+//    /**
+//     * <p>Directly or indirectly received from user clicking on a recovery URL.</p>
+//     * <p><b>TODO: </b>deal with UI page.</p>
+//     * <p/>
+//     * <div><b>METHOD:</b> GET</div>
+//     * <div><b>URL:</b> users/recover/user/{recoveryCode}</div>
+//     *
+//     * @param recoveryCode <i>Path Parameter:</i> The recovery code sent to the user in an email or whatever.
+//     * @return Returns an http status 202 (ACCEPTED) if the user is now logged in.
+//     *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
+//     *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
+//     *         If there is an authorization or security problem, returns 401 (UNAUTHORIZED).
+//     *         On error conditions, a JSON object is returned with details.
+//     */
+//    @GET
+//    @Path("/recover/user/{recoveryCode}/{username}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response recoverUser(
+//            @PathParam("recoveryCode") String recoveryCode,
+//            @PathParam("username") String encryptedCanonicalUsername,
+//            @Context HttpServletResponse httpResponse) {
+//        try {
+//            final long start = System.currentTimeMillis();
+//            getUserManager().recoverUserAndRedirectToMainPage(LocaleId.en_us, httpResponse, recoveryCode, encryptedCanonicalUsername);
+//            getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
+//            return
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        }
+//    }
+
+
+//    /**
+//     * <p><b>No longer in use</b></p>
+//     */
+//    @POST
+//    @Path("/validate/{validationCode}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response validateUser(
+//            @PathParam("validationCode") String validationCode,
+//            @Context HttpServletRequest request) {
+//        try {
+//            final long s = System.currentTimeMillis();
+//            BlahguaSession.ensureAuthenticated(request, true);
+//            getUserManager().validateUser(LocaleId.en_us, validationCode);
+//            final Response response = RestUtilities.make202AcceptedResponse();
+//            getSystemManager().setResponseTime(VALIDATE_USER_OPERATION, (System.currentTimeMillis() - s));
+//            return response;
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.make400InvalidRequestResponse(e);
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
 //        } catch (StateConflictException e) {
 //            return RestUtilities.make409StateConflictResponse(e);
 //        } catch (SystemErrorException e) {

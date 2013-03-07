@@ -95,4 +95,5 @@ public final class ErrorCodes {
     public static final Integer MISSING_DISPLAY_NAME = 76;
     public static final Integer RECOVERY_CODE_EXPIRED = 77;
     public static final Integer RECOVERY_CODE_INVALID = 78;
+    public static final Integer INVALID_TEXT_INPUT = 79;
 }
