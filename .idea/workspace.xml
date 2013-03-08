@@ -11,8 +11,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mongodb_mongo_java_driver_2_10_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blahguarest.iml" afterPath="$PROJECT_DIR$/blahguarest.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -196,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362682212128" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362635978673" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361147678059" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362711110913" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362711173271" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362176255677" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362610431865" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -648,7 +646,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="293" column="27" selection-start="10171" selection-end="10171" vertical-scroll-proportion="0.4218289">
+            <state line="293" column="27" selection-start="10171" selection-end="10171" vertical-scroll-proportion="0.22271386">
               <folding />
             </state>
           </provider>
@@ -2615,7 +2613,11 @@
       <created>1362711113540</created>
       <updated>1362711113540</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="MongoDB driver patch added for memory leak.">
+      <created>1362711175267</created>
+      <updated>1362711175267</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -2682,7 +2684,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added WRS-214" />
+    <option name="LAST_COMMIT_MESSAGE" value="MongoDB driver patch added for memory leak." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2695,7 +2697,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Added missing InboxHandler.java (blown away by some git mishap!)" />
     <MESSAGE value="(1) User login API&#10;(2) Session maintenance&#10;(3) Expanded Test Page with API" />
     <MESSAGE value="Blah, Comment, and Inbox blah objects have an img field associated with them containing an array of image ids." />
     <MESSAGE value="Fixed: jersey initialization bug in 1.14, backed to v 1.8. Only one img id added per upload." />
@@ -2720,6 +2721,7 @@
     <MESSAGE value="Slew of changes." />
     <MESSAGE value="Slew of changes + new docs" />
     <MESSAGE value="Added WRS-214" />
+    <MESSAGE value="MongoDB driver patch added for memory leak." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2862,7 +2864,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="293" column="27" selection-start="10171" selection-end="10171" vertical-scroll-proportion="0.4218289">
+        <state line="293" column="27" selection-start="10171" selection-end="10171" vertical-scroll-proportion="0.22271386">
           <folding />
         </state>
       </provider>
