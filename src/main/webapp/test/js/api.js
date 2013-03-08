@@ -45,9 +45,9 @@ function defaultErrorHandler(theErr, err, thrown) {
 
 function defaultSuccessFunction(results, successOrNot, theStatus) {
 	if (theStatus) {
-		$("#resultstatus").html("<span style='color:green'>Http Status: " + theStatus.status + "</span>");
+		$("#resultstatus").html("<span style='color:black'>Http Status: " + theStatus.status + "</span>");
 	} else {
-		$("#resultstatus").html("<span style='color:green'>Http Status: Unknown</span>");
+		$("#resultstatus").html("<span style='color:black'>Http Status: Unknown</span>");
 	}
 
 	$("#resultsArea").html('<textarea id="results" cols="94" rows="10"/>');
@@ -202,12 +202,6 @@ function getChannel() {
 	rest("GET", "groups/"+channelId, JSON.stringify(null), setChannelData);
 }
 
-function createBlahType() {
-	var name = document.getElementById('blahtypename').value;
-	if (!name) {alert("Missing Blah Type Name"); return;}
-	alert('Create Blah Type not implemented!)');
-}
-
 function createBlah() {
 	var typeId = getTypeId();
 	var channelId = getChannelId();
@@ -248,6 +242,32 @@ function getBlah() {
 		alert("Missing Blah Id parameter");
 	}
 	rest("GET", "blahs/" + blahId, null, setBlahData2);
+}
+
+function getBlahAuthor() {
+	var blahId = getBlahId();
+	if (blahId.length == 0) {
+		alert("Missing Blah Id parameter");
+	}
+    var data = JSON.stringify({'i': blahId});
+    rest('POST', 'blahs/author', data);
+}
+
+function getCommentAuthor() {
+    var commentId = document.getElementById('commentid').value;
+    if (!commentId) {
+	alert('Missing Comment Id'); return;
+    }
+    var data = JSON.stringify({'i': commentId});
+    rest('POST', 'comments/author', data);	
+}
+
+function getCommentById() {
+    var commentId = document.getElementById('commentid').value;
+    if (!commentId) {
+	alert('Missing Comment Id'); return;
+    }
+    rest('GET', 'comments/'+commentId);
 }
 
 function setBlahData1(blahinfo) {
@@ -364,7 +384,6 @@ function getBlahId() {
 
 // Special
 function configFromServer() {
-	help();
 	var endpoint = document.getElementById("endpoint").value;
 	if ( typeof (endpoint) == "undefined") {
 		alert("Config Error: missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");

@@ -3,9 +3,6 @@
 <head>
     <meta  charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style>
-        .param {
-        }
     </style>
     <title>Blahgua API Test Center</title>
 </head>
@@ -15,14 +12,17 @@
 <script src="js/api.js"></script>
 
 <style>
-    .calls {
-    color: red;
-    font-weight: bold;
+    .calls { color: red;}
     }
+    div.controls {font-weight: bold; font-size: 16px; background-color: yellow;}
+    div.parameters {font-weight: bold; font-size: 16px; background-color: #12bf05; margin-top: .5em;}
+    .param {font-weight: normal; margin-left: .5em}
+    div.results {background-color: #04a5e0; margin-top: .5em;}
+    .result {font-weight: normal; margin-left: .5em}
+    .images {font-weight: normal; margin-left: .5em}
 </style>
 
-<h2>Actions</h2>
-<div>
+<div class='controls'> <!-- START CONTROLS -->
     <div>
         Host Endpoint:
         <input id="endpoint" type="text" value="beta.blahgua.com"/>
@@ -91,8 +91,6 @@
         <input id="getUserDescriptor" style="background-color: #22bf0d" type="button" onclick="getUserDescriptor();"  value="Get User's Descriptor"/>
     </div>
     <div style="margin-top: .5em">
-    </div>
-    <div style="margin-top: .5em">
         <input id="getInbox" style="background-color: #22bf0d" type="button" onclick="getInbox();"  value="Get Inbox"/>
         &nbsp;
         <input id="createBlahType" type="button" onclick="createBlahType()" value="Create Blah Type"/>
@@ -104,73 +102,75 @@
         <input id="voteBlah" type="button" onclick="voteBlah()" value="Vote Blah"/>
         &nbsp;
         <input id="getBlah" type="button" onclick="getBlah()" value="Get Blah"/>
+        &nbsp;
+        <input id="getBlahComments" type="button" onclick="getBlahComments();"  value="Get Blah Comments"/>
+        &nbsp;
+        <input id="getBlahAuthor" type="button" onclick="getBlahAuthor()" value="Get Blah's Author"/>
     </div>
     <div style="margin-top: .5em">
         <input id="createComment" type="button" onclick="createAComment();"  value="Create Comment"/>
         &nbsp;
-        <input id="getBlahComments" type="button" onclick="getBlahComments();"  value="Get Blah Comments"/>
+        <input id="getCommentAuthor" type="button" onclick="getCommentAuthor();"  value="Get Comment's Author"/>
+        &nbsp;
+        <input id="getCommentById" type="button" onclick="getCommentById();"  value="Get Comment By Id"/>
         &nbsp;
     </div>
-    <h2>Parameters</h2>
-    <input id="clearparams" type="button" onclick="clearParameters();" value="Clear All Parameters"/>
-    <h3>Channel Parameters</h3>
-    <div  style="margin-top: .5em">
-        <span>Channel Type Id: <input class="param" id="channeltypeid" type="text" size=30 /></span>
-        <span> Channel Type Name: <input class="param" id="channeltypename" type="text" size=30 /></span>
-        <span>Channel Id: <input class="param" id="channelid" type="text" size=30 /></span>
-        <span> Channel Name: <input class="param" id="channelname" type="text" size=30 /></span>
+</div> <!-- END CONTROLS -->
+<div class='parameters'> <!-- START PARAMETERS -->
+    <input id="clearparams" type="button" onclick="clearParameters();" value="Clear"/>
+    <div class='param'>
+        <span>Channel Type Id: <input  id="channeltypeid" type="text" size=30 /></span>
+        <span> Channel Type Name: <input  id="channeltypename" type="text" size=30 /></span>
+        <span>Channel Id: <input  id="channelid" type="text" size=30 /></span>
+        <span> Channel Name: <input  id="channelname" type="text" size=30 /></span>
     </div>
-    <h3>User Parameters</h3>
-    <div>
+    <div class='param'>
         User Name:
-        <input class="param" id="username" type="text" size=20 />
+        <input  id="username" type="text" size=20 />
         &nbsp;Password:
-        <input class="param" id="password" type="text" size="20"/>
+        <input  id="password" type="text" size="20"/>
         &nbsp;User Id:
-        <input class="param" id="userid" type="text" size=35 />
-        &nbsp;Email Address (Dummy Profile):
-        <input class="param" id="email" type="text" value="rk@eweware.com" size="20"/>
+        <input  id="userid" type="text" size=35 />
+        &nbsp;Email Address:
+        <input  id="email" type="text" value="rk@eweware.com" size="20"/>
     </div>
-    <h3>Blah Parameters</h3>
+    <div class='param'>
+        <span>Blah Id: <input  id="blahid" type="text" size=30 /></span>
+        <span>&nbsp;Blah Type: <span id="blahTypes"/></span>
+        <span><label><input  id="blahvote" type="checkbox" checked="checked"/> Vote For Blah</label></span>
+    </div>
+    <div class='param'>
+        <span>Comment Id: <input id="commentid" type="text" size=30/></span>
+        <span><label><input  id="commentvote" type="checkbox" checked="checked"/> Vote For Comment</label></span>
+    </div>
     <div>
-        Blah Type Name: <input class="param" id="blahtypename" type="text" size=30/>
-        &nbsp;<label><input class="param" id="blahvote" type="checkbox" checked="checked"/> Vote For Blah</label>
+        <textarea  id="blahcommenttext" rows="2" cols="90" value="hello">Blah or Comment text goes here</textarea>
     </div>
-    <div>
-        Blah Id:
-        <input class="param" id="blahid" type="text" size=30 />
-        &nbsp;Blah Type: <span id="blahTypes"/>
-    </div>
+</div> <!-- END PARAMETERS -->
 
-    <div>
-        <textarea class="param" id="blahcommenttext" rows="2" cols="90" value="hello">Blah or Comment text goes here</textarea>
+<div class='results'>  <!-- START RESULTS -->
+    <div class='result'>
+        <input id="clear" type="button" onclick="clearResults();" value="Clear"/>
     </div>
-    <br/>
-
-    <h2>Call &amp; Results</h2>
-    <div style="margin-top: -1em;margin-bottom: 1em;">
-        <input id="clear" type="button" onclick="clearResults();" value="Clear All Results"/>
-    </div>
-    <div style="font-weight: bold;;">
+    <div class='result'>
         Method:
         <input class="calls" type="text" size="4" id="callmeth" readonly="readonly"/>
         URL:
         <input class="calls" type="text" id="callurl" size="100" readonly="readonly"/>
     </div>
-    <div style="font-weight: bold;">
+    <div class='result'>
         Outgoing Payload (POST/PUT):
     </div>
     <textarea id="payload" class="calls" cols="94" rows="5"></textarea>
-    <div style="font-weight: bold;">
-        Results: <span id="resultstatus" class="calls"></span>
+    <div style='margin-top: .5em;' class='result'>
+        Response: <span id="resultstatus" class="calls"></span>
     </div>
-    <div id="resultsArea"></div>
-    <div id="imgs" style="top-margin: 2em;visibility: visible;">
-        <b>Images:</b>
-        <br />
+    <div id="resultsArea" class='result'></div>
+    <div id="imgs" class='images' style="visibility: visible;">
+        <div style='margin-top: .5em'>Images: </div>
         <div><img id="img_a"/><img id="img_b"/><img id="img_c"/><img id="img_d"/>
         </div>
     </div>
-
+</div> <!-- END RESULTS -->
 </body>
 </html>
