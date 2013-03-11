@@ -310,32 +310,6 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 
-//    private void addPollData(String text, BlahDAO blahDAO) throws InvalidRequestException, SystemErrorException {
-//        final Object obj = blahDAO.getPollOptionsText();
-//        final List<PollOptionTextDAO> pollOptionsText = (List<PollOptionTextDAO>) obj;
-//        if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
-//            for (PollOptionTextDAO potdao : pollOptionsText) {    // TODO find out why this is not binding to a PollOptionTextDAO
-//                final String tagLine = potdao.getTagLine();
-//                if (tagLine == null) {
-//                    throw new InvalidRequestException("missing poll option tagline", ErrorCodes.INVALID_INPUT);
-//                } else if (tagLine.length() != 0) {
-//                    potdao.setTagLine(CommonUtilities.getPlainText(tagLine));
-//                }
-//                final String pollText = potdao.getText();
-//                if (text != null && text.length() != 0) {
-//                    potdao.setText(CommonUtilities.getPlainText(pollText));
-//                }
-//            }
-//            int count = pollOptionsText.size();
-//            blahDAO.setPollOptionCount(count);
-//            final List<Integer> vcs = new ArrayList<Integer>(count);
-//            while (count-- > 0) {
-//                vcs.add(0);
-//            }
-//            blahDAO.setPollOptionVotes(vcs);
-//        }
-//    }
-
     /**
      * TODO tracker should maintain this count
      *

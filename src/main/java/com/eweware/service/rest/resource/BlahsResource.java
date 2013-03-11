@@ -419,7 +419,7 @@ public class BlahsResource {
     }
 
     /**
-     * <p>By default, returns blahs for the logged-in  user.</p>
+     * <p>By default, returns blahs authored by the logged-in  user.</p>
      * <p>If an author id is provided, it returns the blahs created by the specified author instead
      * of by the user.</p>
      * <p/>
@@ -445,6 +445,9 @@ public class BlahsResource {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(req, true);
+            if (authorId == null) {
+                authorId = userId;
+            }
             final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
             getSystemManager().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
             return response;

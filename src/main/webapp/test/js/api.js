@@ -1,5 +1,10 @@
 // Supports text/index.html API Center
 
+// START GLOBALS
+var predictionBlahTypeId = null;
+var pollBlahTypeId = null;
+// END GLOBALS
+
 $(document).ready(function() {
 	configFromServer()
 });
@@ -202,8 +207,22 @@ function getChannel() {
 	rest("GET", "groups/"+channelId, JSON.stringify(null), setChannelData);
 }
 
-function createSimpleBlah() {
-	var typeId = getTypeId();
+function createBlah() {
+   var typeId = getTypeId();
+   if (typeId.length == 0) {alert('Missing Blah Type Id'); return;}
+   if (typeId == predictionBlahTypeId) {
+      alert('Creating Predicts Blah...');
+      createPredictionBlah(typeId);
+   } else if (typeId == pollBlahTypeId) {
+      alert('Creating Polls Blah...');
+      createPollBlah(typeId);
+   } else {
+      alert('Creating Simple Blah...');
+      createSimpleBlah(typeId);
+   }
+}
+
+function createSimpleBlah(typeId) {
 	var channelId = getChannelId();
 	var text = getBlahOrCommentText();
 	if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
@@ -214,8 +233,18 @@ function createSimpleBlah() {
 	rest("POST", "blahs", data, setBlahData1);
 }
 
-function createPredictionBlah() {
-	var typeId = getTypeId();
+function createPollBlah(typeId) {
+	var channelId = getChannelId();
+	var text = getBlahOrCommentText();
+	if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
+		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
+		return;
+	}
+	var data = JSON.stringify({"groupId": channelId,"text": text, "typeId": typeId,"pt":[{"g":"Choice 1","t":"this choice 1"},{"g":"Choice 2","t":"This choice 2"}]});
+rest('POST', 'blahs', data, setBlahData1);
+}
+
+function createPredictionBlah(typeId) {
 	var channelId = getChannelId();
 	var text = getBlahOrCommentText();
 	if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
@@ -421,6 +450,7 @@ function configFromServer() {
 	});
 }
 
+
 function configHandler(result) {
 	var items = $.parseJSON(result);
 	var ar = Array.prototype.slice.call(items, 0);
@@ -430,12 +460,18 @@ function configHandler(result) {
 		var theId = "";
 		var theName = "";
 		for (var p in obj) {
-			if (p == '_id')
+			if (p == '_id') {
 				theId = obj[p];
-			if (p == 'name')
+			}
+			if (p == 'name') {
 				theName = obj[p];
+			}
 		}
-
+        if (theName == 'predicts') {
+	        predictionBlahTypeId = theId;
+	    } else if (theName == 'polls') {
+	        pollBlahTypeId = theId;
+	    }
 		selectHtml += "<option value='" + theId + "'>" + theName + "</option>";
 	}
 	selectHtml += "</select>";
