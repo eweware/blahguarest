@@ -96,4 +96,5 @@ public final class ErrorCodes {
     public static final Integer RECOVERY_CODE_EXPIRED = 77;
     public static final Integer RECOVERY_CODE_INVALID = 78;
     public static final Integer INVALID_TEXT_INPUT = 79;
+    public static final Integer SERVER_DATA_INCONSISTENT = 80; // TODO refactor: use this where appropriate
 }

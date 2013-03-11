@@ -1,6 +1,10 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.CommentDAOConstants;
+import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
+import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
+import main.java.com.eweware.service.base.store.dao.schema.CommentSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +13,10 @@ import java.util.Map;
  * @author rk@post.harvard.edu
  */
 public final class CommentPayload extends BasePayload implements CommentDAOConstants {
+
+    protected static final BaseSchema getSchema() {
+        return CommentSchema.getSchema(LocaleId.en_us);
+    }
 
     static final String USER_VOTE = "uv";
     static final String USER_VIEWS = "uw";

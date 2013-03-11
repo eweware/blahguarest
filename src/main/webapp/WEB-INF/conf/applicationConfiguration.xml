@@ -30,6 +30,7 @@
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.blahDBName}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.trackerDBName}" />
         <constructor-arg  type="java.lang.Integer" value="${blag.store.mongo.connectionsPerHost}" />
+        <property name="badgeAuthorityCollectionName" value="${blah.store.mongo.userdb.collection.badge}"/>
         <property name="trackUserCollectionName" value="${blag.store.mongo.trackerdb.collection.trackuser}"/>
         <property name="trackBlahCollectionName" value="${blag.store.mongo.trackerdb.collection.trackblah}"/>
         <property name="trackCommentCollectionName" value="${blag.store.mongo.trackerdb.collection.trackcomment}"/>

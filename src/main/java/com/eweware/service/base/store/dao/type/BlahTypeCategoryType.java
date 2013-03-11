@@ -1,14 +1,26 @@
 package main.java.com.eweware.service.base.store.dao.type;
 
 /**
- *
  * @author rk@post.harvard.edu
  *         Date: 2/16/13 Time: 10:59 AM
  */
 public enum BlahTypeCategoryType {
 
+    /**
+     * <p> The default blah. Just text with comments.</p>
+     */
     DEFAULT(0),
-    POLL(1);
+
+    /**
+     * <p> A blah that follows the pattern of a poll.</p>
+     */
+    POLL(1),
+
+    /**
+     * <p>A blah that follows the pattern of a prediction.</p>
+     */
+    PREDICTION(2);
+
     private final Integer categoryId;
 
     BlahTypeCategoryType(Integer categoryId) {

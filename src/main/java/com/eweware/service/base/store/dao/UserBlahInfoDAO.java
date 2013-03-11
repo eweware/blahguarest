@@ -36,6 +36,14 @@ public interface UserBlahInfoDAO extends BaseDAO, UserBlahInfoDAOConstants {
 
     public void setPollVoteTimestamp(Date timestamp);
 
+    public String getPredictionVote();
+
+    public void setPredictionVote(String vote);
+
+    public String getPredictionResultVote();
+
+    public void setPredictionResultVote(String vote);
+
     public Integer getViews();
 
     public void setViews(Integer count);

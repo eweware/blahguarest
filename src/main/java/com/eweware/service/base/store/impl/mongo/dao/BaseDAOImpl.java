@@ -130,6 +130,10 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
      */
     private void validateAndConvertFields(Map<String, Object> map) throws SystemErrorException {
 
+        if (map == null) {
+            return;
+        }
+
         // TODO support embedded schemas (SchemaDataType.E): this would make this method recursive
         // TODO sanity checks on string lengths
         final BaseSchema schema = getDAOSchema(LocaleId.en_us);
@@ -137,7 +141,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             System.out.println("validateAndConvertFields: Ignoring missing schema for " + this.getClass().getSimpleName()); // dbg
         } else {
             final Map<String, SchemaSpec> fieldNameToSpecMap = schema.getFieldNameToSpecMap();
-            final Iterator<Map.Entry<String, Object>> iterator = (map == null) ? entrySet().iterator() : map.entrySet().iterator();
+            final Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
             for (Iterator<Map.Entry<String, Object>> it = iterator; it.hasNext(); ) {
                 final Map.Entry<String, Object> entry = it.next();
                 final String fieldName = entry.getKey();
@@ -150,10 +154,10 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     final SchemaDataType dataType = spec.getDataType();
                     if (dataType == SchemaDataType.S) {
                         if (value != null && ((String) value).length() > 4000) {
-                            throw new SystemErrorException("String field '"+fieldName+"'s length was "+((String) value).length()+" but maximum allowed is 4000", ErrorCodes.INVALID_INPUT);
+                            throw new SystemErrorException("String field '" + fieldName + "'s length was " + ((String) value).length() + " but maximum allowed is 4000", ErrorCodes.INVALID_INPUT);
                         }
                     }
-                    final FieldValidator converter = dataType.getConverter();
+                    final FieldValidator converter = spec.getValidator() == null ? dataType.getConverter() : spec.getValidator();
                     if (!converter.isValid(value, spec)) {
                         System.out.println("Ignored invalid value=" + value + " for fieldName=" + fieldName + " in: " + this.getClass().getSimpleName() + "\nspec=" + spec); // TODO dbg
                         it.remove(); // not a valid value: remove it
@@ -171,9 +175,9 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             final Class<? extends BaseDAOImpl> clas = this.getClass();
             getSchemaMeth = classToGetSchemaMethodMap.get(clas);
             if (getSchemaMeth == null) {
-                getSchemaMeth = clas.getMethod("getSchema", LocaleId.class);
+                getSchemaMeth = clas.getMethod(BaseSchema.GET_SCHEMA_METHOD_NAME, LocaleId.class);
                 if (getSchemaMeth == null) {
-                    throw new SystemErrorException("no way to get schema from " + this.getClass().getSimpleName(), ErrorCodes.SERVER_SEVERE_ERROR);
+                    throw new SystemErrorException("no way to get schema using '" + BaseSchema.GET_SCHEMA_METHOD_NAME + "' from " + this.getClass().getSimpleName(), ErrorCodes.SERVER_SEVERE_ERROR);
                 }
                 classToGetSchemaMethodMap.put(clas, getSchemaMeth);
             }
@@ -186,6 +190,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     }
 
     /**
+     * <p>Returns the object's unique id as a string representation.</p>
      * @return String Returns this object's unique id.
      */
     @Override

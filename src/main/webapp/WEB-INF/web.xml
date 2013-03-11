@@ -13,7 +13,7 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-    <listener>
+    <listener> <!-- Listen to session create/destroy events -->
         <listener-class>main.java.com.eweware.service.rest.session.BlahguaSessionListener</listener-class>
     </listener>
 
@@ -46,7 +46,7 @@
     </servlet-mapping>
 
     <session-config>
-        <session-timeout>30</session-timeout>
+        <session-timeout>15</session-timeout>
         <cookie-config>
             <name>BSID</name>
             <http-only>true</http-only>

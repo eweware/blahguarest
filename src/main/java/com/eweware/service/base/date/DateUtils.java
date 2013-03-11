@@ -9,12 +9,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
  *         Date: 8/10/12 Time: 11:48 AM
  */
 public class DateUtils {
+
+    private static final Logger logger = Logger.getLogger("DateUtils");
 
     // Commonly used regular expressions
     public static final String ISO_DATE_FORMAT_REGEXP = "^(\\d{4}(?:(?:(?:\\-)?(?:00[1-9]|0[1-9][0-9]|[1-2][0-9][0-9]|3[0-5][0-9]|36[0-6]))?|(?:(?:\\-)?(?:1[0-2]|0[1-9]))?|(?:(?:\\-)?(?:1[0-2]|0[1-9])(?:\\-)?(?:0[1-9]|[12][0-9]|3[01]))?|(?:(?:\\-)?W(?:0[1-9]|[1-4][0-9]5[0-3]))?|(?:(?:\\-)?W(?:0[1-9]|[1-4][0-9]5[0-3])(?:\\-)?[1-7])?)?)$";
@@ -81,7 +85,7 @@ public class DateUtils {
             org.apache.commons.lang3.time.DateUtils.parseDate(isoDateTime, DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern());
             return true;
         } catch (ParseException e) {
-            e.printStackTrace();  // TODO deal better with this
+            logger.log(Level.WARNING, "failed ISO datetime check", e);
             return false;
         }
     }
@@ -93,12 +97,13 @@ public class DateUtils {
      * @return Date Returns the Date or null if the string can't be parsed as an ISO datetime
      */
     public static Date fromISODateTimeToUTC(String isoDateTime) throws ParseException {
-        return org.apache.commons.lang3.time.DateUtils.parseDate(isoDateTime, DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern());
-//        try {
-//        } catch (ParseException e) {
-//            e.printStackTrace();  // TODO deal better with this
-//            return null;
-//        }
+        if (isoDateTime.lastIndexOf(".") != -1) {
+            isoDateTime = isoDateTime.substring(0, isoDateTime.lastIndexOf("."));
+        }
+        return org.apache.commons.lang3.time.DateUtils.parseDate(
+                isoDateTime,
+                DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.getPattern(),
+                DateFormatUtils.ISO_DATETIME_FORMAT.getPattern());
     }
 
     /**
@@ -107,12 +112,10 @@ public class DateUtils {
      * @return Date The date parsed out of the ISO date string
      */
     public static Date fromISODateToUTC(String isoDate) throws ParseException {
-            return org.apache.commons.lang3.time.DateUtils.parseDate(isoDate, DateFormatUtils.ISO_DATE_FORMAT.getPattern());
-//        try {
-//        } catch (ParseException e) {
-//            e.printStackTrace(); // TODO deal better with this
-//            return null;
-//        }
+            return org.apache.commons.lang3.time.DateUtils.parseDate(
+                    isoDate,
+                    DateFormatUtils.ISO_DATE_FORMAT.getPattern(),
+                    DateFormatUtils.ISO_DATE_TIME_ZONE_FORMAT.getPattern());
     }
 
     /**

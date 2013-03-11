@@ -1,10 +1,13 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import main.java.com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
+import main.java.com.eweware.service.base.store.dao.schema.type.PollOptionTextValidator;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
  * <p>Field names and value data types for blah entities.</p>
+ *
  * @author rk@post.harvard.edu
  *         Date: 8/28/12 Time: 8:15 PM
  */
@@ -40,16 +43,16 @@ public interface BlahDAOConstants {
     static final String AUTHOR_ID = "authorId";
 
     /**
-     * <p>The number of up votes for this blah.
+     * <p>The count of users who have promoted this blah.
      * An integer.</p>
      */
-    static final String UP_VOTES = "vu";
+    static final String PROMOTED_COUNT = "vu";
 
     /**
-     * <p>The number of down votes for this blah.
+     * <p>The count of users who have demoted this blah.
      * An integer.</p>
      */
-    static final String DOWN_VOTES = "vd";
+    static final String DEMOTED_COUNT = "vd";
 
     /**
      * <p>The number of views of this blah.
@@ -74,6 +77,69 @@ public interface BlahDAOConstants {
      * A float between 0 and 1, inclusive.</p>
      */
     static final String BLAH_STRENGTH = "s";
+
+    /**
+     * <p>Optional field: blah expires on this date. Used in, e.g., predictions.</p>
+     * <p>A datetime.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String EXPIRATION_DATE = "e";
+
+    /**
+     * <p>A count of the number of users who have deemed
+     * this blah's prediction result to be valid. Applicable to blahs whose blah type
+     * category is a prediction pattern.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String PREDICTION_RESULT_CORRECT_COUNT = "p1";
+
+    /**
+     * <p>A count of the number of users who have deemed
+     * this blah's prediction result to be invalid. Applicable to blahs whose blah type
+     * category is a prediction pattern.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String PREDICTION_RESULT_INCORRECT_COUNT = "p2";
+
+    /**
+     * <p>A count of the number of users who have deemed
+     * this blah's prediction result to be unclear or unresolvable.
+     * Applicable to blahs whose blah type
+     * category is a prediction pattern.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String PREDICTION_RESULT_UNCLEAR_COUNT = "p3";
+
+    /**
+     * <p>A count of the number of users who agree with the prediction.
+     * Applicable to blahs whose blah type
+     * category is a prediction pattern.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String PREDICTION_USER_AGREE_COUNT = "p4";
+
+    /**
+     * <p>A count of the number of users who disagree with the prediction.
+     * Applicable to blahs whose blah type
+     * category is a prediction pattern.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String PREDICTION_USER_DISAGREE_COUNT = "p5";
+
+    /**
+     * <p>A count of the number of users who deem this prediction unresolvable.
+     * Applicable to blahs whose blah type
+     * category is a prediction pattern.</p>
+     *
+     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     */
+    static final String PREDICTION_USER_UNCLEAR_COUNT = "p6";
 
     /**
      * <p>If this blah is a poll, this is the number
@@ -112,7 +178,6 @@ public interface BlahDAOConstants {
 
     /**
      * <p> An optional JSON document containing statistics for the blah. <b>TODO: need better doc for this</b></p>
-     *
      */
     static final String STATS = "stats";
 
@@ -123,6 +188,7 @@ public interface BlahDAOConstants {
      * the image, stored in a media record. Image data itself is
      * stored in S3.
      * An array of string.</p>
+     *
      * @see MediaDAOConstants
      * @see MediaDAO
      */
@@ -133,7 +199,11 @@ public interface BlahDAOConstants {
                     TYPE_ID, TEXT, BODY, GROUP_ID, AUTHOR_ID}),
 
             new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
-                    UP_VOTES, DOWN_VOTES, VIEWS, OPENS, COMMENTS, POLL_OPTION_COUNT
+                    PREDICTION_RESULT_CORRECT_COUNT, PREDICTION_RESULT_INCORRECT_COUNT, PREDICTION_RESULT_UNCLEAR_COUNT,
+                    PREDICTION_USER_AGREE_COUNT, PREDICTION_USER_DISAGREE_COUNT, PREDICTION_USER_UNCLEAR_COUNT,
+                    PROMOTED_COUNT, DEMOTED_COUNT,
+                    VIEWS, OPENS, COMMENTS,
+                    POLL_OPTION_COUNT
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{
                     BLAH_STRENGTH, RECENT_BLAH_STRENGTH
@@ -141,10 +211,13 @@ public interface BlahDAOConstants {
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS
             }),
-            new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {
+            new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{
                     IMAGE_IDS
             }),
-            new SchemaDataTypeFieldMap(SchemaDataType.E, new String[] {POLL_OPTIONS_TEXT, POLL_OPTION_VOTES})
+            new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{EXPIRATION_DATE}),
+            new SchemaDataTypeFieldMap(SchemaDataType.E, new FieldDescriptor[]{
+                    new FieldDescriptor(POLL_OPTIONS_TEXT, new PollOptionTextValidator()),
+                    new FieldDescriptor(POLL_OPTION_VOTES)})
     };
 
 }

@@ -105,25 +105,38 @@ public class MailManager implements ManagerInterface {
 
     private void test() throws SystemErrorException {
         try {
+            final boolean devMode = SystemManager.getInstance().isDevMode();
             final String host = InetAddress.getLocalHost().getHostName();
             final StringBuilder subject = new StringBuilder("Instance ");
             subject.append(System.getProperty("user.name"));
             subject.append("@");
             subject.append(host);
             subject.append(" started ");
+            subject.append(devMode ? " (DEVELOPMENT MODE) " : " (PRODUCTION) ");
             subject.append(new Date());
-            final StringBuilder body = new StringBuilder("blahguarest service started on this instance.\n\n");
+            final StringBuilder body = new StringBuilder("<div>The Blahgua web application/rest service started on server domain <span style='color:red'>");
+            body.append(host);
+            body.append("</span></div><br/>");
+            if (devMode) {
+                body.append("<div style='color:red;font-weight:bold;'>Development Mode!</div><br/>");
+            }
+            body.append("<br/>");
+            System.setProperty("blahgua.crypto", SystemManager.getInstance().isCryptoOn() ? "on" : "off");
             Properties props =  System.getProperties();
             final Enumeration<?> elements = props.propertyNames();
             while (elements.hasMoreElements()) {
                 final String pname = (String) elements.nextElement();
+                body.append("<div>");
+                body.append("<span style='color:green'>");
                 body.append(pname);
                 body.append("=");
+                body.append("</span><span>");
                 body.append(props.getProperty(pname));
-                body.append("\n");
+                body.append("</span></div>");
             }
-            body.append("\n");
-            send("rk@eweware.com", subject.toString(), body.toString());
+            body.append("<div/>");
+            final String recipient = devMode ? "rk@eweware.com" : "rk@eweware.com, davevr@eweware.com";
+            send(recipient, subject.toString(), body.toString());
         } catch (SendFailedException e) {
         } catch (Exception e) {
             throw new SystemErrorException(e);

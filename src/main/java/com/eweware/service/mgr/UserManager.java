@@ -425,7 +425,7 @@ public class UserManager implements ManagerInterface {
     }
 
     /**
-     * <p>When a user forgets his password, sends email to the user with a recovery url.</p>
+     * <p>When a user forgets his password, sends email to the user with a recovery url.</p>                                   cre
      * <p>The user must have registered an email address in his profile.</p>
      *
      * @param localeId        The locale id
@@ -460,7 +460,7 @@ public class UserManager implements ManagerInterface {
         // User eligible only if there's an email address and the one he input is the same
         final String email = userAccountDAO.getEmailAddress();
         if (email == null) {
-            throw new ResourceNotFoundException("no way to recover account", ErrorCodes.NOT_FOUND_USER_PROFILE);
+            throw new ResourceNotFoundException("no way to recover account: missing email", ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
         if (!email.equals(emailAddress)) {
             throw new InvalidAuthorizedStateException("invalid email address provided by user", ErrorCodes.INVALID_EMAIL_ADDRESS);
@@ -559,14 +559,15 @@ public class UserManager implements ManagerInterface {
         if (vmeth == null) {
             throw new InvalidRequestException("group validation method is obsolete or invalid; groupId=" + groupId + " method='" + groupDAO.getValidationMethod() + "'");
         }
-        vmeth.validateKey(validationKey, groupDAO.getValidationParameters());
+//        vmeth.validateKey(validationKey, groupDAO.getValidationParameters());
 
         if (getStoreManager().createUserGroup(userId, groupId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " has already joined groupId=" + groupId, ErrorCodes.USER_ALREADY_JOINED_GROUP);
         }
 
         final AuthorizedState defaultState = vmeth.getDefaultAuthorizationState();
-        final String validationCode = vmeth.startValidation(userId, groupId, groupDAO.getDisplayName(), validationKey);
+//        final String validationCode = vmeth.startValidation(userId, groupId, groupDAO.getDisplayName(), validationKey);
+        final String validationCode = AuthorizedState.A.toString();  // TODO now carte blanche authorization as we don't have any way to change it
 
         // Add user to the group with pending state, stashing validation code
         updateUserStatus(LocaleId.en_us, userId, groupId, defaultState.toString(), validationCode);
@@ -1051,7 +1052,8 @@ public class UserManager implements ManagerInterface {
      *
      * @throws StateConflictException
      */
-    public void updateUserStatus(LocaleId localeId, String userId, String groupId, String newState, String validationCode) throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException {
+    public void updateUserStatus(LocaleId localeId, String userId, String groupId, String newState, String validationCode)
+            throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }

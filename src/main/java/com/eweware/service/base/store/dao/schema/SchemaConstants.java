@@ -34,6 +34,11 @@ public interface SchemaConstants {
     static final String SCHEMA_SPEC_DISPLAY_NAME = "E";
 
     /**
+     * The validator function.
+     */
+    static final String SCHEMA_SPEC_VALIDATOR = "V";
+
+    /**
      * Validation data. An optional linked hashed map used by the
      * validator to validate this field.
      * Depending on the field, this is an i18n value.

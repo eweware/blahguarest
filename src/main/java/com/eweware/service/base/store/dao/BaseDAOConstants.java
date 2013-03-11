@@ -31,4 +31,6 @@ public interface BaseDAOConstants {
      * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_updateByCompoundId(main.java.com.eweware.service.base.store.dao.type.DAOUpdateType, String...)
      */
     static final String UPDATED = "updated";  // responsibility of _insert and _update to create this
+
+    // TODO Add its own schema
 }

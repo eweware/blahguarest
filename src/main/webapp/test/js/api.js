@@ -202,7 +202,7 @@ function getChannel() {
 	rest("GET", "groups/"+channelId, JSON.stringify(null), setChannelData);
 }
 
-function createBlah() {
+function createSimpleBlah() {
 	var typeId = getTypeId();
 	var channelId = getChannelId();
 	var text = getBlahOrCommentText();
@@ -211,6 +211,26 @@ function createBlah() {
 		return;
 	}
 	var data = '{"groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
+	rest("POST", "blahs", data, setBlahData1);
+}
+
+function createPredictionBlah() {
+	var typeId = getTypeId();
+	var channelId = getChannelId();
+	var text = getBlahOrCommentText();
+	if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
+		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
+		return;
+	}
+	var datestring = document.getElementById('datefield').value;
+      if (!datestring) {
+	  alert('Missing Date'); return;
+      }
+      var dateobj = new Date(datestring).toISOString();
+     if (!dateobj) {
+	 alert('Invalid Date: '+date); return;
+     }
+	var data = JSON.stringify({"e": dateobj, "groupId": channelId, "typeId":  typeId, "text":  text});
 	rest("POST", "blahs", data, setBlahData1);
 }
 
@@ -259,7 +279,7 @@ function getCommentAuthor() {
 	alert('Missing Comment Id'); return;
     }
     var data = JSON.stringify({'i': commentId});
-    rest('POST', 'comments/author', data);	
+    rest('POST', 'comments/author', data);
 }
 
 function getCommentById() {

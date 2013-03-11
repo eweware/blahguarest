@@ -1,7 +1,11 @@
 package main.java.com.eweware.service.base.payload;
 
 
+import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants;
+import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
+import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
+import main.java.com.eweware.service.base.store.dao.schema.UserGroupSchema;
 
 import java.util.Map;
 
@@ -9,6 +13,10 @@ import java.util.Map;
  * @author rk@post.harvard.edu
  */
 public final class UserGroupPayload extends BasePayload implements UserGroupDAOConstants {
+
+    protected static final BaseSchema getSchema() {
+        return UserGroupSchema.getSchema(LocaleId.en_us);
+    }
 
     // Email address is not stored in DB (used for validation)
     final String VALIDATION_EMAIL_ADDRESS = "emailAddress";

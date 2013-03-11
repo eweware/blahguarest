@@ -2,19 +2,17 @@ package main.java.com.eweware.service.base.store.dao.schema;
 
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
+import main.java.com.eweware.service.base.store.dao.schema.type.DefaultEmbeddedDataTypeValidator;
+import main.java.com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author rk@post.harvard.edu
- *         Date: 9/13/12 Time: 1:21 PM
- *         <p/>
- *         TODO Loading of subclass schema should be data-driven from DB.
- *         <p/>
  *         <p/>
  *         1. Fetch the DB schema using a version number from the xDAOConstants interface. The DB schema is i18n-independent.
  *         2. Validate that expected field ids are in DB schema representation (this should really be pre-validated, but this is a sanity check during dev't)
@@ -46,10 +44,21 @@ import java.util.Map;
  *         When we expand to other countries, we'll simply replace the English data in the schema DB
  *         with the .1. nature code and look up the i18n
  *         database (TBD) for the required localized values.
+ *
+ * @author rk@post.harvard.edu
+ *         Date: 9/13/12 Time: 1:21 PM
+ *         <p/>
+ *         TODO Loading of subclass schema should be data-driven from DB.
+ *         <p/>
  */
 public abstract class BaseSchema implements SchemaConstants {
 
     // TODO  specs could indicate desired Index and Store values
+
+    /**
+     * Name of static method used to obtain the schema.
+     */
+    public static final String GET_SCHEMA_METHOD_NAME = "getSchema";
 
     // TODO this is a cheap one-level inheritance: generalize when necessary
     // Maps a base field name to its spec
@@ -83,7 +92,7 @@ public abstract class BaseSchema implements SchemaConstants {
     }
 
     // Maps each field name for an instance to its spec
-    private final Map<String, SchemaSpec> fieldNameToSpecMap = new HashMap<String, SchemaSpec>();
+    private final Map<String, SchemaSpec> fieldNameToSpecMap = new Hashtable<String, SchemaSpec>(); // TODO this needs to be a readable but sync'd table
 
     // Maps a schema class to the schemas for each supported locale id. TODO this is a lame cache.
     private static final Map<Class<? extends BaseSchema>, Map<LocaleId, BaseSchema>> schemaClassToSchemasMap = new HashMap<Class<? extends BaseSchema>, Map<LocaleId, BaseSchema>>();
@@ -150,23 +159,28 @@ public abstract class BaseSchema implements SchemaConstants {
 
     /**
      * Used to create a simple schema spec.
+     *
+     *
      * @param dataType The type of data
-     * @param fieldName The name of the field for which this is a spec
+     * @param fieldDescriptor The field's descriptor
      * @param displayName   The display name for this field
+     * @param validator   An optional validator/converter for this field
      * @param regexp    An optional regexp for validating this field
      * @param validationMap An optional linked hash map for validating this field
      * @param hasDefaultValue If true, then the defaultValue is to be used to initialize the DAO
      * @param defaultValue  An optional default value. If hasDefaultValue is true and defaultValue is null,
-     *                      the field <i>will</i> be initialized to new
-     * @return  A simple schema spec for a field
+*                      the field <i>will</i> be initialized to new     @return  A simple schema spec for a field
      * @see SchemaConstants for further explanation of fields
-     * TODO Generalize to use a validation class instead of a map and regexp.
+     * TODO Generalize to use a validation class instead of a map and regexp. https://eweware.atlassian.net/browse/WRS-241
      */
-    public SchemaSpec createSpec(SchemaDataType dataType, String fieldName, String displayName, String regexp, LinkedHashMap<String, Object> validationMap, boolean hasDefaultValue, Object defaultValue) {
+    public SchemaSpec createSpec(SchemaDataType dataType, FieldDescriptor fieldDescriptor, String displayName, DefaultEmbeddedDataTypeValidator validator, String regexp, LinkedHashMap<String, Object> validationMap, boolean hasDefaultValue, Object defaultValue) {
         final SchemaSpec spec = new SchemaSpec();
-        spec.setFieldId(fieldName);
+        spec.setFieldId(fieldDescriptor.getFieldName());
         if (displayName != null) {
             spec.setDisplayName(displayName);
+        }
+        if (fieldDescriptor.getValidator() != null) {
+            spec.setValidator(fieldDescriptor.getValidator());
         }
         if (regexp != null) {
             spec.setValidationRegexp(regexp);
@@ -178,49 +192,51 @@ public abstract class BaseSchema implements SchemaConstants {
         if (validationMap != null) {
             spec.setValidationMap(validationMap);
         }
-        getFieldNameToSpecMap().put(fieldName, spec);
+        getFieldNameToSpecMap().put(fieldDescriptor.getFieldName(), spec);
         return spec;
     }
 
     /**
-     * Creates simple specs for specified field types. This is a convenience method.
-     *
-     * String fields: no default value (the field is left in its natural state; e.g., in MongoDB, nonexistent)
-     * Integer: defaults to 0
-     * Real: defaults to 0.0
-     * Boolean: defaults to
-     *
+     * <p>Creates simple specs for specified field types. This is a convenience method.
+     * We default all fields to null.</p>
      * @param schema     The schema
      * @param fieldTypes An array of maps from field names to their schema data types.
      */
     protected static void createSimpleFieldSpecs(BaseSchema schema, SchemaDataTypeFieldMap[] fieldTypes) {
         for (SchemaDataTypeFieldMap map : fieldTypes) {
             final SchemaDataType dataType = map.getDataType();
-            if (dataType == SchemaDataType.S) {
-                for (String fieldName : map.getFieldNames()) { // no default
-                    schema.createSpec(SchemaDataType.S, fieldName, null, null, null, false, null);
-                }
-            } else if (dataType == SchemaDataType.I) {
-                for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(SchemaDataType.I, fieldName, null, null, null, false, null);    // xxx was true
-                }
-            } else if (dataType == SchemaDataType.R) {
-                for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(SchemaDataType.R, fieldName, null, null, null, false, null); // xxx was true
-                }
-            } else if (dataType == SchemaDataType.B) {
-                for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(dataType, fieldName, null, null, null, false, null); //xxx was true
-                }
-            } else if (dataType == SchemaDataType.GPS) {
-                for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(dataType, fieldName, null, null, null, false, null); // default to empty
-                }
-            } else if (dataType == SchemaDataType.E) {
-                for (String fieldName : map.getFieldNames()) {
-                    schema.createSpec(SchemaDataType.E, fieldName, null, null, null, false, null); // default to empty
-                }
+            for (FieldDescriptor descriptor: map.getFieldDescriptors()) {
+                schema.createSpec(dataType, descriptor, null, null, null, null, false, null); // all fields default to null
             }
+//            if (dataType == SchemaDataType.S) {
+//                for (String fieldName : map.getFieldDescriptors()) { // no default
+//                    schema.createSpec(SchemaDataType.S, fieldName, null, null, null, false, null);
+//                }
+//            } else if (dataType == SchemaDataType.I) {
+//                for (String fieldName : map.getFieldDescriptors()) {
+//                    schema.createSpec(SchemaDataType.I, fieldName, null, null, null, false, null);    // default to empty
+//                }
+//            } else if (dataType == SchemaDataType.R) {
+//                for (String fieldName : map.getFieldDescriptors()) {
+//                    schema.createSpec(SchemaDataType.R, fieldName, null, null, null, false, null); // default to empty
+//                }
+//            } else if (dataType == SchemaDataType.B) {
+//                for (String fieldName : map.getFieldDescriptors()) {
+//                    schema.createSpec(dataType, fieldName, null, null, null, false, null); // default to empty
+//                }
+//            } else if (dataType == SchemaDataType.GPS) {
+//                for (String fieldName : map.getFieldDescriptors()) {
+//                    schema.createSpec(dataType, fieldName, null, null, null, false, null); // default to empty
+//                }
+//            } else if (dataType == SchemaDataType.E) {
+//                for (String fieldName : map.getFieldDescriptors()) {
+//                    schema.createSpec(SchemaDataType.E, fieldName, null, null, null, false, null); // default to empty
+//                }
+//            } else if (dataType == SchemaDataType.Dt) {
+//                for (String fieldName : map.getFieldDescriptors()) {
+//                    schema.createSpec(SchemaDataType.DT, fieldName,  null, null, null, false, null); // default to empty
+//                }
+//            }
         }
     }
 }

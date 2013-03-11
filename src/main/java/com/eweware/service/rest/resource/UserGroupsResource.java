@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Map;
 
 /**
  * <p>API methods related to user/group relationships.</p>
@@ -42,7 +43,7 @@ public class UserGroupsResource {
      * <div><b>URL:</b> userGroups</div>
      *
      * @param entity A JSON entity (a UserGroupPayload) containing the
-     *               user id of the user and the group id of the group to join.
+     *               the group id of the group to join in a field named 'g'.
      * @return If successful, returns an http status 201 (CREATED).
      *         If there is an error with the request, returns status 400.
      *         If a resource is not found, returns status 404.
@@ -55,14 +56,15 @@ public class UserGroupsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUserInGroup(
-            UserGroupPayload entity,
+            Map<String, String> entity,
             @Context UriInfo uri,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            final UserGroupPayload userGroup = getUserManager().registerUserInGroup(LocaleId.en_us, entity.getUserId(), entity.getValidationEmailAddress(), entity.getGroupId());
-            final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath() + userGroup.getUserId() + "/" + userGroup.getGroupId()));
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String groupId = entity.get("g");
+            final UserGroupPayload userGroup = getUserManager().registerUserInGroup(LocaleId.en_us, userId, null, groupId);
+            final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath().toString()));
             getSystemManager().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
@@ -87,10 +89,10 @@ public class UserGroupsResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> DELETE</div>
-     * <div><b>URL:</b> userGroups/{userId}/{groupId}</div>
+     * <div><b>URL:</b> userGroups</div>
      *
-     * @param userId  <i>Path Parameter:</i> The user's id
-     * @param groupId <i>Path Parameter:</i> The groups's id
+     * @param entity    A JSON entity containing the group id in a
+     *                  field named 'g'.
      * @return If successful, returns an http status 204 (NO CONTENT).
      *         If there's an error in the request, returns status 400.
      *         If there's a state conflict in the update, returns status 409.
@@ -99,15 +101,14 @@ public class UserGroupsResource {
      * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @DELETE
-    @Path("/{userId}/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeUserFromGroup(
-            @PathParam("userId") String userId,
-            @PathParam("groupId") String groupId,
+            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String groupId = entity.get("g");
             getUserManager().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString(), null);
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
@@ -132,9 +133,8 @@ public class UserGroupsResource {
      * <p/>
      * <p><i>User must be logged in to use this method.</i></p>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> userGroups/{userId}/{groupId}</div>
+     * <div><b>URL:</b> userGroups/{groupId}</div>
      *
-     * @param userId  <i>Path Parameter:</i> The user's id
      * @param groupId <i>Path Parameter:</i> The group's id
      * @return An http status of 200 with a user group payload if the method succeeds.
      *         If the request is invalid, returns status 400.
@@ -143,15 +143,14 @@ public class UserGroupsResource {
      * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @GET
-    @Path("/{userId}/{groupId}")
+    @Path("/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserGroup(
-            @PathParam("userId") String userId,
             @PathParam("groupId") String groupId,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(getUserManager().getUserGroup(LocaleId.en_us, userId, groupId));
             getSystemManager().setResponseTime(GET_USER_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -175,7 +174,6 @@ public class UserGroupsResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> userGroups/{userId}</div>
      *
-     * @param userId        <i>Path Parameter:</i> The user id
      * @param state         <i>Query Parameter:</i> The user-to-group state (see AuthorizedState)
      * @param start         <i>Query Parameter:</i> The start index for the returned items
      * @param count         <i>Query Parameter:</i> The number of items to return in a page.
@@ -190,10 +188,8 @@ public class UserGroupsResource {
      * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @GET
-    @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserGroups(
-            @PathParam("userId") String userId,
             @QueryParam("state") String state,
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count,
@@ -201,7 +197,7 @@ public class UserGroupsResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(getUserManager().getUserGroups(LocaleId.en_us, userId, state, start, count, sortFieldName));
             getSystemManager().setResponseTime(GET_USER_GROUPS_OPERATION, (System.currentTimeMillis() - s));
             return response;

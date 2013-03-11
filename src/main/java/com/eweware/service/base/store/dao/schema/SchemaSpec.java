@@ -1,11 +1,14 @@
 package main.java.com.eweware.service.base.store.dao.schema;
 
+import main.java.com.eweware.service.base.store.dao.schema.type.FieldValidator;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
+ * <p>Specifies the schema for a DAO field.</p>
+ *
  * @author rk@post.harvard.edu
  *         Date: 9/7/12 Time: 10:25 AM
  */
@@ -13,6 +16,10 @@ public final class SchemaSpec extends HashMap<String, Object> implements SchemaC
 
     // TODO  spec could indicate desired Index (e.g., Index.ANALYZE) and Store (e.g., Store.YES) values
 
+    /**
+     * <p>Returns the field's id</p>
+     * @return
+     */
     public String getFieldId() {
         return (String) get(SCHEMA_SPEC_FIELD_ID);
     }
@@ -43,6 +50,14 @@ public final class SchemaSpec extends HashMap<String, Object> implements SchemaC
 
     public void setDisplayName(String displayName) {
         put(SCHEMA_SPEC_DISPLAY_NAME, displayName);
+    }
+
+    public FieldValidator getValidator() {
+        return (FieldValidator) get(SCHEMA_SPEC_VALIDATOR);
+    }
+
+    public void setValidator(FieldValidator validator) {
+        put(SCHEMA_SPEC_VALIDATOR, validator);
     }
 
     public Number getMinimumValue() {

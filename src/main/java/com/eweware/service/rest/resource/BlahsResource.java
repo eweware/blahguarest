@@ -2,10 +2,12 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.BlahInfoPayload;
+import main.java.com.eweware.service.base.payload.UserBlahInfoPayload;
 import main.java.com.eweware.service.base.payload.BlahPayload;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.mgr.type.PredictionExpirationType;
+import main.java.com.eweware.service.mgr.type.PredictionVote;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 
@@ -34,6 +36,8 @@ public class BlahsResource {
     private static final String GET_BLAH_BY_ID_OPERATION = "getBlahById";
     private static final String GET_BLAHS_OPERATION = "getBlahs";
     private static final String GET_BLAH_AUTHOR_OPERATION = "getBlahAuthor";
+    private static final String PREDICTION_VOTE_OPERATION = "predictVote";
+    private static final String POLL_VOTE_OPERATION = "pollVote";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;
@@ -129,13 +133,10 @@ public class BlahsResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> blahs/{blahId}/pollVote/{userId}/{pollOptionIndex}</div>
+     * <div><b>URL:</b> blahs/{blahId}/pollVote/{pollOptionIndex}</div>
      * <p/>
-     * METHOD: PUT
-     * URL: blahs/{blahId}/pollVote/{userId}/{pollOptionIndex}
      *
      * @param blahId <i>Path Parameter</i>. The poll blah id
-     * @param userId <i>Path Parameter</i>. The user id
      * @param index  <i>Path Parameter</i>. The poll option index.
      * @return If successful, returns status 204 (OK NO CONTENTS) without
      *         a content entity.
@@ -146,16 +147,17 @@ public class BlahsResource {
      * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @PUT
-    @Path("/{blahId}/pollVote/{userId}/{pollOptionIndex}")
+    @Path("/{blahId}/pollVote/{pollOptionIndex}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response pollVote(@PathParam("blahId") String blahId,
-                             @PathParam("userId") String userId,
                              @PathParam("pollOptionIndex") Integer index,
                              @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
             getBlahManager().pollVote(LocaleId.en_us, blahId, userId, index);
+            getSystemManager().setResponseTime(POLL_VOTE_OPERATION, (System.currentTimeMillis() - start));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -172,37 +174,122 @@ public class BlahsResource {
         }
     }
 
+
     /**
      * <p>Returns the poll option for which the user has voted and the time
      * of the vote.</p>
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> blahs/{blahId}/pollVote/{userId}</div>
+     * <div><b>URL:</b> blahs/{blahId}/pollVote</div>
      *
      * @param blahId <i>Path Parameter</i>. The poll blah id
-     * @param userId <i>Path Parameter</i>. The user id
      * @return An http status 200 response with the poll option index on which the
      *         user has voted and the time of the vote. Returns empty object
      *         if the user has not voted on this poll.
      *         If the user is not authorized to vote, returns status 401.
-     * @see main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants
+     * @see main.java.com.eweware.service.base.payload.UserBlahInfoPayload
      */
     @GET
-    @Path("/{blahId}/pollVote/{userId}")
+    @Path("/{blahId}/pollVote")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPollVoteInfo(@PathParam("blahId") String blahId,
-                                    @PathParam("userId") String userId,
                                     @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
-            final BlahInfoPayload info = getBlahManager().getPollVoteInfo(LocaleId.en_us, blahId, userId);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final UserBlahInfoPayload info = getBlahManager().getPollVoteInfo(LocaleId.en_us, blahId, userId);
             return RestUtilities.make200OkResponse(info);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Use this method to set a user's vote into a prediction blah.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p>This supports the pre-expiration vote and the post-expiration vote.</p>
+     * <p/>
+     * <div><b>METHOD:</b> PUT</div>
+     * <div><b>URL:</b> blahs/{blahId}/predicts</div>
+     * <p/>
+     *
+     * @param entity An entity containing the voting parameters. Two fields
+     *               named 't' and 'v' are expected:
+     *               't' := this field specifies whether the vote is a pre-expiration
+     *               vote (i.e., the user is agreeing, disagreeing, or saying that
+     *               the prediction is unclear) or post-expiration (i.e., the user
+     *               is asserting that the prediction is correct, incorrect, or unclear.
+     *               The value of the 't' field may be 'pre' (for pre-expiration) or
+     *               'post' (for post expiration).
+     *               'v' := specifies the user's vote: possible values are
+     *               'y' (depending on the value of 't', user either agrees with or asserts that the prediction is correct), or
+     *               'n' (depending on the value of 't', user either disagrees with or asserts that the prediction is incorrect), or
+     *               'u' (depending on the value of 't', user asserts that either the prediction is unclear or that the resolution is unclear).
+     * @param blahId The blah's id
+     * @return If successful, returns status 204 (OK NO CONTENTS) without a content entity.
+     *         If the user is not authorized to vote, returns status 401.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict (e.g., the prediction expired and the client is trying to
+     *         make a pre-expiration vote) would arise from satisfying the request, returns status 409
+     * @see PredictionExpirationType
+     * @see PredictionVote
+     */
+    @PUT
+    @Path("/{blahId}/predicts")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userPredictionVote(
+            Map<String, Object> entity,
+            @PathParam("blahId") String blahId,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String preOrPostExpiration = (String) entity.get(PredictionExpirationType.PREDICTION_VOTE_TYPE_FIELD_NAME);
+            final String vote = (String) entity.get(PredictionVote.PREDICTION_VOTE_FIELD_NAME);
+            getBlahManager().predictionVote(userId, blahId, preOrPostExpiration, vote);
+            getSystemManager().setResponseTime(PREDICTION_VOTE_OPERATION, (System.currentTimeMillis() - start));
+            return RestUtilities.make204OKNoContentResponse();
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Returns the prediction votes from the user.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> blahs/{blahId}/predicts</div>
+     *
+     * @param blahId <i>Path Parameter</i>. The prediction blah id
+     * @return An http status 200 response with a JSON entity containing
+     *         the user's votes, if any, for the prediction. The appropriate fields of
+     *         this entity are specified in UserBlahInfoPayload.
+     *         If the user is not authorized to vote, returns status 401.
+     * @see main.java.com.eweware.service.base.payload.UserBlahInfoPayload
+     */
+    @GET
+    @Path("/{blahId}/predicts")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPredictionVote(
+            @PathParam("blahId") String blahId,
+            @Context HttpServletRequest request) {
+        try {
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            return RestUtilities.make200OkResponse(getBlahManager().getPredictionVoteInfo(userId, blahId));
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
@@ -289,14 +376,13 @@ public class BlahsResource {
 
     /**
      * <p>Returns information about a blah.</p>
-     * <p>If a userId is provided, the blah's data will include blah stats
-     * for the specified user instead of stats for the blah itself.</p>
+     * <p>If there's a user session in progress, the blah's data will include blah stats
+     * for the user.</p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs/{blahId}</div>
      *
      * @param blahId         <i>Path Parameter</i>. The blah's id
-     * @param userId         <i>Query Parameter:</i> Optional. a userId
      * @param stats          <i>Query Parameter:</i> Optional. if true, return statistics with blah
      * @param statsStartDate <i>Query Parameter:</i> Optional. If stats=true, return statistics starting with this date
      * @param statsEndDate   <i>Query Parameter:</i> Optional. If stats=true, return statistics ending with this date
@@ -310,7 +396,6 @@ public class BlahsResource {
     @Path("/{blahId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBlahById(@PathParam("blahId") String blahId,
-                                @QueryParam("userId") final String userId,
                                 @QueryParam("stats") final boolean stats,
                                 @QueryParam("s") final String statsStartDate, // format is yymmdd (e.g., August 27, 2012 is 120827)
                                 @QueryParam("e") final String statsEndDate,   // format is yymmdd (e.g., August 27, 2012 is 120827)
@@ -318,6 +403,7 @@ public class BlahsResource {
                                 @Context HttpServletRequest req) {
         try {
             final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.getUserId(req);
             final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahById(LocaleId.en_us, blahId, userId, stats, statsStartDate, statsEndDate));
             getSystemManager().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;

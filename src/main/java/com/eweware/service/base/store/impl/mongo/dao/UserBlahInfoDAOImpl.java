@@ -28,9 +28,11 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(ORIGINAL_GROUP_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_TYPE_ID, MongoFieldTypes.STRING);
-        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VOTE, MongoFieldTypes.NUMBER);
+        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(PROMOTION, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_VOTE_INDEX, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_VOTE_TIMESTAMP, MongoFieldTypes.DATE);
+        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_VOTE, MongoFieldTypes.STRING);
+        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_RESULT_VOTE, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENTS_ON_THIS_BLAH, MongoFieldTypes.NUMBER);
@@ -116,12 +118,12 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
 
     @Override
     public Integer getVote() {
-        return (Integer) get(VOTE);
+        return (Integer) get(PROMOTION);
     }
 
     @Override
     public void setVote(Integer vote) {
-        put(VOTE, vote);
+        put(PROMOTION, vote);
     }
 
     @Override
@@ -142,6 +144,26 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     @Override
     public void setPollVoteTimestamp(Date timestamp) {
         put(POLL_VOTE_TIMESTAMP, timestamp);
+    }
+
+    @Override
+    public String getPredictionVote() {
+        return (String) get(PREDICTION_VOTE);
+    }
+
+    @Override
+    public void setPredictionVote(String vote) {
+        put(PREDICTION_VOTE, vote);
+    }
+
+    @Override
+    public String getPredictionResultVote() {
+        return (String) get(PREDICTION_RESULT_VOTE);
+    }
+
+    @Override
+    public void setPredictionResultVote(String vote) {
+        put(PREDICTION_RESULT_VOTE, vote);
     }
 
     @Override

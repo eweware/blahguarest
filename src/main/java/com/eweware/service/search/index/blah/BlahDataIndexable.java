@@ -77,13 +77,13 @@ public class BlahDataIndexable implements ZoieIndexable {
         if (blah.getBody() != null) {
             doc.add(new Field(BlahDAO.BODY, blah.getBody(), Store.YES, Index.ANALYZED));
         }
-        Object tmp = blah.get(BlahDAO.UP_VOTES);
+        Object tmp = blah.get(BlahDAO.PROMOTED_COUNT);
         if (tmp != null) {
-            doc.add(new Field(BlahDAO.UP_VOTES, tmp.toString(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+            doc.add(new Field(BlahDAO.PROMOTED_COUNT, tmp.toString(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
         }
-        tmp = blah.get(BlahDAO.DOWN_VOTES);
+        tmp = blah.get(BlahDAO.DEMOTED_COUNT);
         if (tmp != null) {
-            doc.add(new Field(BlahDAO.DOWN_VOTES, tmp.toString(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+            doc.add(new Field(BlahDAO.DEMOTED_COUNT, tmp.toString(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
         }
         tmp = blah.get(BlahDAO.VIEWS);
         if (tmp != null) {
@@ -142,13 +142,13 @@ public class BlahDataIndexable implements ZoieIndexable {
         if (field != null) {
             blah.setBody(field.stringValue());
         }
-        field = doc.getFieldable(BlahDAO.UP_VOTES);
+        field = doc.getFieldable(BlahDAO.PROMOTED_COUNT);
         if (field != null) {
-            blah.setUpVotes(new Integer(field.stringValue()));
+            blah.setPromotedCount(new Integer(field.stringValue()));
         }
-        field = doc.getFieldable(BlahDAO.DOWN_VOTES);
+        field = doc.getFieldable(BlahDAO.DEMOTED_COUNT);
         if (field != null) {
-            blah.setDownVotes(new Integer(field.stringValue()));
+            blah.setDemotedCount(new Integer(field.stringValue()));
         }
         field = doc.getFieldable(BlahDAO.VIEWS);
         if (field != null) {

@@ -19,6 +19,8 @@ import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.base.type.TrackerType;
 import main.java.com.eweware.service.mgr.aux.InboxHandler;
+import main.java.com.eweware.service.mgr.type.PredictionExpirationType;
+import main.java.com.eweware.service.mgr.type.PredictionVote;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.search.index.blah.BlahCommentDataIndexable;
 import main.java.com.eweware.service.search.index.blah.BlahCommentDataIndexableInterpreter;
@@ -64,7 +66,8 @@ public final class BlahManager implements ManagerInterface {
 
     private static final Logger logger = Logger.getLogger("BlahManager");
 
-    private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH = 1000 * 60 * 10;
+    private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
+    private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
 
     private boolean debug;
     private final boolean doIndex;
@@ -80,7 +83,7 @@ public final class BlahManager implements ManagerInterface {
      */
     private Map<String, BlahTypeEntry> blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>();
     private Object blahTypeIdToBlahTypeEntryMapLock = new Object(); // locks blahTypeIdToBlahTypeEntryMap
-    private long lastTimeBlahTypesCached = System.currentTimeMillis() - TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH - 1;
+    private long lastTimeBlahTypesCached = System.currentTimeMillis() - TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS - 1;
 
     private ZoieSystem<BlahguaFilterIndexReader, BlahDAO> blahIndexingSystem;
     private ZoieSystem<BlahguaFilterIndexReader, CommentDAO> commentIndexingSystem;
@@ -188,47 +191,51 @@ public final class BlahManager implements ManagerInterface {
     /**
      * Creates a new blah authored by user.
      *
-     *
      * @param localeId
      * @param authorId
-     *@param request  The request object  @return BlahPayload A blah payload including the new blah id
+     * @param entity   The request object  @return BlahPayload A blah payload including the new blah id
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
      */
-    public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload request) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+    public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload entity) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
         // Check required fields
         if (CommonUtilities.isEmptyString(authorId)) {
-            throw new InvalidRequestException("missing field authorId=" + authorId, request, ErrorCodes.MISSING_USER_ID);
+            throw new InvalidRequestException("missing field authorId=" + authorId, entity, ErrorCodes.MISSING_USER_ID);
         }
 
-        String text = request.getText();
+        String text = entity.getText();
         if (CommonUtilities.isEmptyString(text)) {
-            throw new InvalidRequestException("missing field text=" + text, request, ErrorCodes.MISSING_TEXT);
+            throw new InvalidRequestException("missing field text=" + text, entity, ErrorCodes.MISSING_TEXT);
         }
         text = CommonUtilities.getPlainText(text);
 
-        final String groupId = request.getGroupId();
+        final String groupId = entity.getGroupId();
         if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing field groupId=" + groupId, ErrorCodes.MISSING_GROUP_ID);
         }
 
-        final String typeId = request.getTypeId();
+        final String typeId = entity.getTypeId();
         if (!isTypeIdValid(typeId)) {
             throw new InvalidRequestException("invalid field typeId=" + typeId, ErrorCodes.MISSING_BLAH_TYPE_ID);
         }
 
-        // Ensure user is active in group
+        // Ensure user is active in group  // TODO authorized groups can be cached in session
         ensureUserActiveInGroup(authorId, groupId);
 
         // Create fresh blah to prevent injection
         final BlahDAO blahDAO = getStoreManager().createBlah();
         blahDAO.initToDefaultValues(localeId);
-        blahDAO.addFromMap(request, true); // removes fields not in schema
-        if (isPollCategory(typeId)) {
+        blahDAO.addFromMap(entity, true); // removes fields not in schema
+        // TODO set fields explicitly instead of relying on request payload
+        blahDAO.setAuthorId(authorId);
+
+        if (isCategory(typeId, BlahTypeCategoryType.POLL)) {
             addPollData(text, blahDAO);
+        } else if (isCategory(typeId, BlahTypeCategoryType.PREDICTION)) {
+            addPredictionData(blahDAO, entity.getExpirationDate());
         }
         blahDAO._insert();
 
@@ -254,19 +261,43 @@ public final class BlahManager implements ManagerInterface {
         return new BlahPayload(blahDAO);
     }
 
+    /**
+     * Checks and adds prediction-related data to a blah.
+     *
+     * @param blahDAO        The dao
+     * @param expirationDate The expiration date
+     */
+    private void addPredictionData(BlahDAO blahDAO, String expirationDate) throws InvalidRequestException {
+        if (expirationDate == null) {
+            throw new InvalidRequestException("missing expiration date", ErrorCodes.INVALID_INPUT);
+        }
+        try {
+            final Date date = main.java.com.eweware.service.base.date.DateUtils.fromISODateTimeToUTC(expirationDate);
+            final long limit = System.currentTimeMillis() + THIRTY_MINUTES_IN_MILLIS;
+            if (date.getTime() < limit) {
+                throw new InvalidRequestException("expiration date must be at least 30 minutes into the future", ErrorCodes.INVALID_INPUT);
+            }
+            blahDAO.setExpirationDate(date);
+        } catch (java.text.ParseException e) {
+            throw new InvalidRequestException("invalid expiration date", expirationDate, ErrorCodes.INVALID_INPUT);
+        }
+
+    }
+
+
     private void addPollData(String text, BlahDAO blahDAO) throws InvalidRequestException, SystemErrorException {
         final List<PollOptionTextDAO> pollOptionsText = blahDAO.getPollOptionsText();
         if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
-            for (PollOptionTextDAO potdao : pollOptionsText) {
-                final String tagLine = potdao.getTagLine();
+            for (PollOptionTextDAO potdao : pollOptionsText) {     // TODO fix binding issue in commented-out method below
+                final String tagLine = (String) potdao.get(PollOptionTextDAO.TAGLINE);
                 if (tagLine == null) {
                     throw new InvalidRequestException("missing poll option tagline", ErrorCodes.INVALID_INPUT);
                 } else if (tagLine.length() != 0) {
-                    potdao.setTagLine(CommonUtilities.getPlainText(tagLine));
+                    potdao.put(PollOptionTextDAO.TAGLINE, CommonUtilities.getPlainText(tagLine));
                 }
-                final String pollText = potdao.getText();
+                final String pollText = (String) potdao.get(PollOptionTextDAO.TEXT);
                 if (text != null && text.length() != 0) {
-                    potdao.setText(CommonUtilities.getPlainText(pollText));
+                    potdao.put(PollOptionTextDAO.TEXT, CommonUtilities.getPlainText(pollText));
                 }
             }
             int count = pollOptionsText.size();
@@ -278,6 +309,32 @@ public final class BlahManager implements ManagerInterface {
             blahDAO.setPollOptionVotes(vcs);
         }
     }
+
+//    private void addPollData(String text, BlahDAO blahDAO) throws InvalidRequestException, SystemErrorException {
+//        final Object obj = blahDAO.getPollOptionsText();
+//        final List<PollOptionTextDAO> pollOptionsText = (List<PollOptionTextDAO>) obj;
+//        if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
+//            for (PollOptionTextDAO potdao : pollOptionsText) {    // TODO find out why this is not binding to a PollOptionTextDAO
+//                final String tagLine = potdao.getTagLine();
+//                if (tagLine == null) {
+//                    throw new InvalidRequestException("missing poll option tagline", ErrorCodes.INVALID_INPUT);
+//                } else if (tagLine.length() != 0) {
+//                    potdao.setTagLine(CommonUtilities.getPlainText(tagLine));
+//                }
+//                final String pollText = potdao.getText();
+//                if (text != null && text.length() != 0) {
+//                    potdao.setText(CommonUtilities.getPlainText(pollText));
+//                }
+//            }
+//            int count = pollOptionsText.size();
+//            blahDAO.setPollOptionCount(count);
+//            final List<Integer> vcs = new ArrayList<Integer>(count);
+//            while (count-- > 0) {
+//                vcs.add(0);
+//            }
+//            blahDAO.setPollOptionVotes(vcs);
+//        }
+//    }
 
     /**
      * TODO tracker should maintain this count
@@ -350,6 +407,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public void pollVote(LocaleId localeId, String blahId, String userId, Integer pollOptionIndex) throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
+
         if (blahId == null) {
             throw new InvalidRequestException("request missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
@@ -360,7 +418,7 @@ public final class BlahManager implements ManagerInterface {
         if (blahDAO == null) {
             throw new InvalidRequestException("blahId '" + blahId + "' doesn't exist", ErrorCodes.NOT_FOUND_BLAH_ID);
         }
-        if (!isPollCategory(blahDAO.getTypeId())) {
+        if (!isCategory(blahDAO.getTypeId(), BlahTypeCategoryType.POLL)) {
             throw new InvalidRequestException("Blah id '" + blahId + "' is not a poll category blah", ErrorCodes.INVALID_UPDATE);
         }
 
@@ -385,6 +443,102 @@ public final class BlahManager implements ManagerInterface {
         }
 
         getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
+    }
+
+    public void predictionVote(String userId, String blahId, String preOrPostExpiration, String vote)
+            throws SystemErrorException, InvalidRequestException {
+
+        if (userId == null) {
+            throw new SystemErrorException("context issue", ErrorCodes.SESSION_ERROR);
+        }
+        final PredictionExpirationType expirationType = PredictionExpirationType.find(preOrPostExpiration);
+        if (expirationType == null) {
+            throw new InvalidRequestException("missing or invalid prediction expiration type", ErrorCodes.INVALID_INPUT);
+        }
+        final boolean preExpirationVote = (expirationType == PredictionExpirationType.PRE_EXPIRATION);
+        final PredictionVote predictionVote = PredictionVote.find(vote);
+        if (predictionVote == null) {
+            throw new InvalidRequestException("missing or invalid vote", ErrorCodes.INVALID_INPUT);
+        }
+        final BlahDAO blahDAO = (BlahDAO) storeManager.createBlah(blahId)._findByPrimaryId(BlahDAO.EXPIRATION_DATE, BlahDAO.TYPE_ID);
+        if (blahDAO == null) {
+            throw new InvalidRequestException("invalid blah id", ErrorCodes.INVALID_INPUT);
+        }
+
+        if (!isCategory(blahDAO.getTypeId(), BlahTypeCategoryType.PREDICTION)) {
+            throw new InvalidRequestException("not a prediction blah", ErrorCodes.INVALID_INPUT);
+        }
+
+        final Date expirationDate = blahDAO.getExpirationDate();
+
+        final UserBlahInfoData userBlahInfoData = ensurePredictionConsistent(userId, blahId, preExpirationVote, expirationDate);
+
+        final BlahDAO updateBlahDAO = storeManager.createBlah(blahId);
+
+        switch (predictionVote) {
+            case YES:
+                if (preExpirationVote) {
+                    updateBlahDAO.setPredictionAgreeCount(1);
+                } else {
+                    updateBlahDAO.setPredictionResultCorrectCount(1);
+                }
+                break;
+            case NO:
+                if (preExpirationVote) {
+                    updateBlahDAO.setPredictionDisagreeCount(1);
+                } else {
+                    updateBlahDAO.setPredictionResultIncorrectCount(1);
+                }
+                break;
+            case UNCLEAR:
+                if (preExpirationVote) {
+                    updateBlahDAO.setPredictionUnclearCount(1);
+                } else {
+                    updateBlahDAO.setPredictionResultUnclearCount(1);
+                }
+                break;
+            default:
+                throw new SystemErrorException("prediction vote option not supported", predictionVote, ErrorCodes.SERVER_SEVERE_ERROR);
+        }
+
+        // Update Blah dao
+        if (preExpirationVote) {
+            userBlahInfoData.dao.setPredictionVote(vote);
+        } else {
+            userBlahInfoData.dao.setPredictionResultVote(vote);
+        }
+        updateBlahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+        // Update blah user info dao
+        if (userBlahInfoData.exists) {
+            userBlahInfoData.dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        } else {
+            userBlahInfoData.dao._insert();
+        }
+    }
+
+    private UserBlahInfoData ensurePredictionConsistent(String userId, String blahId, boolean preExpirationVote, Date expirationDate) throws SystemErrorException, InvalidRequestException {
+        if (expirationDate == null) {
+            throw new SystemErrorException("prediction has no exp date", ErrorCodes.SERVER_DATA_INCONSISTENT);
+        }
+        if (preExpirationVote && expirationDate.before(new Date())) {
+            throw new InvalidRequestException("prediction expired", ErrorCodes.INVALID_INPUT);
+        } else if (expirationDate.after(new Date())) {
+            throw new InvalidRequestException("prediction has not expired", ErrorCodes.INVALID_INPUT);
+        }
+
+        // Check whether user already voted
+        final UserBlahInfoDAO userBlahInfoDAO = storeManager.createUserBlahInfo(userId, blahId);
+        final String[] fieldsToReturnHint = {preExpirationVote ? UserBlahInfoDAO.PREDICTION_VOTE : UserBlahInfoDAO.PREDICTION_RESULT_VOTE};
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfoDAO._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        if (dao != null) {
+            if ((preExpirationVote && dao.getPredictionVote() != null)
+                    || (!preExpirationVote && dao.getPredictionResultVote() != null)) {
+                throw new InvalidRequestException("user already voted", ErrorCodes.INVALID_INPUT);
+            }
+            userBlahInfoDAO.setId(dao.getId());
+        }
+        return new UserBlahInfoData(userBlahInfoDAO, dao != null);
     }
 
     public UserPayload getAuthorFromComment(LocaleId en_us, String commentId)
@@ -421,36 +575,55 @@ public final class BlahManager implements ManagerInterface {
 
 
     /**
-     * Returns true if this blah type id is a poll category type of blah
+     * <p> Returns true if this blah type id is of the specified category type.</p>
      *
-     * @param typeId The blah type id
-     * @return True if this is a poll category type of blah
+     * @param blahTypeId   The blah type id
+     * @param categoryType The category type
+     * @return True if this blah is of the specified category type
      */
-    private boolean isPollCategory(String typeId) {
+    private boolean isCategory(String blahTypeId, BlahTypeCategoryType categoryType) {
         BlahTypeEntry entry = null;
         synchronized (blahTypeIdToBlahTypeEntryMapLock) {
-            entry = blahTypeIdToBlahTypeEntryMap.get(typeId);
+            entry = blahTypeIdToBlahTypeEntryMap.get(blahTypeId);
         }
-        return (entry != null && entry.categoryType == BlahTypeCategoryType.POLL);
+        return (entry != null && entry.categoryType == categoryType);
     }
 
-
     /**
-     * Returns polling information
+     * <p>Returns polling information for user for specified blah.</p>
      *
      * @param localeId The locale
      * @param blahId   The blah id
      * @param userId   The user id
      * @return The polling information for this blah and user combination
      */
-    public BlahInfoPayload getPollVoteInfo(LocaleId localeId, String blahId, String userId) throws SystemErrorException {
-        final UserBlahInfoDAO userBlahInfo = getStoreManager().createUserBlahInfo(userId, blahId);
-        final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX, UserBlahInfoDAO.POLL_VOTE_TIMESTAMP}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+    public UserBlahInfoPayload getPollVoteInfo(LocaleId localeId, String blahId, String userId) throws SystemErrorException {
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(
+                new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX, UserBlahInfoDAO.POLL_VOTE_TIMESTAMP}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao != null) {
-            return new BlahInfoPayload(dao);
+            return new UserBlahInfoPayload(dao);
         }
-        return new BlahInfoPayload(userId, blahId);
+        return new UserBlahInfoPayload(userId, blahId);
     }
+
+    /**
+     * <p>Returns prediction vote information for user for specified blah.</p>
+     * @param userId
+     * @param blahId
+     * @return
+     * @throws SystemErrorException
+     */
+    public UserBlahInfoPayload getPredictionVoteInfo(String userId, String blahId) throws SystemErrorException {
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(
+                new String[]{UserBlahInfoDAO.PREDICTION_RESULT_VOTE, UserBlahInfoDAO.PREDICTION_VOTE}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        if (dao != null) {
+            return new UserBlahInfoPayload(dao);
+        }
+        return new UserBlahInfoPayload(userId, blahId);
+
+    }
+
+
 
     private StoreManager getStoreManager() {
         return storeManager;
@@ -463,6 +636,7 @@ public final class BlahManager implements ManagerInterface {
     private UserManager getUserManager() {
         return userManager;
     }
+
 
     private class UserBlahInfoData {
         private final UserBlahInfoDAO dao;
@@ -485,9 +659,12 @@ public final class BlahManager implements ManagerInterface {
      */
     private UserBlahInfoData ensureUserDidNotVoteOnPoll(String blahId, String userId) throws SystemErrorException, StateConflictException {
         final UserBlahInfoDAO userBlahInfo = getStoreManager().createUserBlahInfo(userId, blahId);
-        final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
-        if (dao != null && dao.getPollVoteIndex() != null) {
-            throw new StateConflictException("userId '" + userId + "' already voted on poll for blahId '" + blahId + "'", ErrorCodes.ALREADY_VOTED_ON_POLL);
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfo._findByCompositeId(new String[]{UserBlahInfoDAO.ID, UserBlahInfoDAO.POLL_VOTE_INDEX}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        if (dao != null) {
+            if (dao.getPollVoteIndex() != null) {
+                throw new StateConflictException("userId '" + userId + "' already voted on poll for blahId '" + blahId + "'", ErrorCodes.ALREADY_VOTED_ON_POLL);
+            }
+            userBlahInfo.setId(dao.getId());
         }
         return new UserBlahInfoData(userBlahInfo, dao != null);
     }
@@ -516,7 +693,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer vote = GeneralUtilities.checkDiscreteValue(request.getVotes(), request);
+        final Integer vote = GeneralUtilities.checkDiscreteValue(request.getUserPromotesOrDemotes(), request);
 
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
         final Integer viewCount = GeneralUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);
@@ -593,7 +770,7 @@ public final class BlahManager implements ManagerInterface {
             throw new StateConflictException("userId=" + userId + " may not vote on own blahId=" + blahId, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
         }
 
-        final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.VOTE};
+        final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.PROMOTION};
         final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         final boolean insert = (userBlahHistory == null);
 
@@ -631,9 +808,9 @@ public final class BlahManager implements ManagerInterface {
 
         final BlahDAO blah = getStoreManager().createBlah(blahId);
         if (vote > 0) {
-            blah.setUpVotes(1);
+            blah.setPromotedCount(1);
         } else if (vote < 0) {
-            blah.setDownVotes(1);
+            blah.setDemotedCount(1);
         }
         if (viewCount != 0) {
             blah.setViews(viewCount);
@@ -747,7 +924,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private void ensureBlahTypesCached() throws SystemErrorException {
-        if (((lastTimeBlahTypesCached - System.currentTimeMillis()) > TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH)) {
+        if (((lastTimeBlahTypesCached - System.currentTimeMillis()) > TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS)) {
             refreshBlahTypesCache();
         }
     }
@@ -819,27 +996,28 @@ public final class BlahManager implements ManagerInterface {
      *
      * @throws ResourceNotFoundException
      */
-    public BlahPayload getBlahById(LocaleId localeId, String blahId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    public BlahPayload getBlahById(LocaleId localeId, String blahId, String userId, boolean stats, String statsStartDate, String statsEndDate)
+            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
-        final boolean includeUserInfo = !CommonUtilities.isEmptyString(userId);
 
-        if (includeUserInfo && !getStoreManager().createUser(userId)._exists()) {
-            throw new InvalidRequestException("userId=" + userId + " not found", ErrorCodes.NOT_FOUND_USER_ID);
-        }
         final BlahDAO blahDAO = getStoreManager().createBlah();
         blahDAO.setId(blahId);
         final BaseDAO found = blahDAO._findByPrimaryId();
         if (found == null) {
             throw new ResourceNotFoundException("blah not found", "blahId=" + blahId, ErrorCodes.NOT_FOUND_BLAH_ID);
         }
+
         // TODO both fetches below are unacceptably inefficient
         final BlahPayload blahPayload = new BlahPayload(found);
-        if (includeUserInfo) {
+
+        // If user is in session, we include the user's stats for this blah
+        if (!CommonUtilities.isEmptyString(userId)) {
             addUserBlahInfoToPayload(userId, blahId, blahPayload);
         }
-        if (stats) {
+        if (stats) { // if stats are requested, we include the blah's stats
             fetchAndAddBlahTrackers(blahId, statsStartDate, statsEndDate, blahPayload);
         }
         return blahPayload;
@@ -892,10 +1070,10 @@ public final class BlahManager implements ManagerInterface {
     // TODO this is a temporary add-on: data should be pre-aggregated for query
     private void addUserBlahInfoToPayload(String userId, String blahId, BlahPayload blahPayload) throws SystemErrorException {
         final UserBlahInfoDAO userBlahDAO = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(
-                new String[]{UserBlahInfoDAO.VOTE, UserBlahInfoDAO.VIEWS, UserBlahInfoDAO.OPENS},
+                new String[]{UserBlahInfoDAO.PROMOTION, UserBlahInfoDAO.VIEWS, UserBlahInfoDAO.OPENS},
                 UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (userBlahDAO != null) {
-            blahPayload.setUserVote(userBlahDAO.getVote());
+            blahPayload.setUserPromotion(userBlahDAO.getVote());
             blahPayload.setUserViews(userBlahDAO.getViews());
             blahPayload.setUserOpens(userBlahDAO.getOpens());
         }
@@ -948,10 +1126,9 @@ public final class BlahManager implements ManagerInterface {
      * When a comment is created, it may optionally include a vote for the blah upon which
      * it comments. The author of the blah is permitted to comment on it, but his vote is ignored.
      *
-     *
      * @param localeId
      * @param commentAuthorId
-     *@param request  @return
+     * @param request         @return
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
@@ -1040,9 +1217,8 @@ public final class BlahManager implements ManagerInterface {
      * <p/>
      * TODO check injection problems: e.g., blahId or authorId changed, etc...
      *
-     *
      * @param localeId
-     * @param request  The client request
+     * @param request   The client request
      * @param commentId
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException

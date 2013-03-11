@@ -13,6 +13,7 @@ import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,15 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(BODY, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_ID, MongoFieldTypes.STRING);
-        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(UP_VOTES, MongoFieldTypes.NUMBER);
-        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(DOWN_VOTES, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PROMOTED_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(DEMOTED_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(EXPIRATION_DATE, MongoFieldTypes.DATE);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_USER_AGREE_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_USER_DISAGREE_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_USER_UNCLEAR_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_RESULT_CORRECT_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_RESULT_INCORRECT_COUNT, MongoFieldTypes.NUMBER);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PREDICTION_RESULT_UNCLEAR_COUNT, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENTS, MongoFieldTypes.NUMBER);
@@ -260,23 +268,93 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public Integer getUpVotes() {
-        return (Integer) get(UP_VOTES);
+    public Integer getPromotedCount() {
+        return (Integer) get(PROMOTED_COUNT);
     }
 
     @Override
-    public void setUpVotes(Integer votes) {
-        put(UP_VOTES, votes);
+    public void setPromotedCount(Integer promotions) {
+        put(PROMOTED_COUNT, promotions);
     }
 
     @Override
-    public Integer getDownVotes() {
-        return (Integer) get(DOWN_VOTES);
+    public Integer getDemotedCount() {
+        return (Integer) get(DEMOTED_COUNT);
     }
 
     @Override
-    public void setDownVotes(Integer votes) {
-        put(DOWN_VOTES, votes);
+    public void setDemotedCount(Integer demotions) {
+        put(DEMOTED_COUNT, demotions);
+    }
+
+    @Override
+    public Date getExpirationDate() {
+        return (Date) get(EXPIRATION_DATE);
+    }
+
+    @Override
+    public void setExpirationDate(Date date) {
+        put(EXPIRATION_DATE, date);
+    }
+
+    @Override
+    public Integer getPredictionAgreeCount() {
+        return (Integer) get(PREDICTION_USER_AGREE_COUNT);
+    }
+
+    @Override
+    public void setPredictionAgreeCount(Integer count) {
+        put(PREDICTION_USER_AGREE_COUNT, count);
+    }
+
+    @Override
+    public Integer getPredictionDisagreeCount() {
+        return (Integer) get(PREDICTION_USER_DISAGREE_COUNT);
+    }
+
+    @Override
+    public void setPredictionDisagreeCount(Integer count) {
+        put(PREDICTION_USER_DISAGREE_COUNT, count);
+    }
+
+    @Override
+    public Integer getPredictionUnclearCount() {
+        return (Integer) get(PREDICTION_USER_UNCLEAR_COUNT);
+    }
+
+    @Override
+    public void setPredictionUnclearCount(Integer count) {
+        put(PREDICTION_USER_UNCLEAR_COUNT, count);
+    }
+
+    @Override
+    public Integer getPredictionResultCorrectCount() {
+        return (Integer) get(PREDICTION_RESULT_CORRECT_COUNT);
+    }
+
+    @Override
+    public void setPredictionResultCorrectCount(Integer count) {
+        put(PREDICTION_RESULT_CORRECT_COUNT, count);
+    }
+
+    @Override
+    public Integer getPredictionResultIncorrectCount() {
+        return (Integer) get(PREDICTION_RESULT_INCORRECT_COUNT);
+    }
+
+    @Override
+    public void setPredictionResultIncorrectCount(Integer count) {
+        put(PREDICTION_RESULT_INCORRECT_COUNT, count);
+    }
+
+    @Override
+    public Integer getPredictionResultUnclearCount() {
+        return (Integer) get(PREDICTION_RESULT_UNCLEAR_COUNT);
+    }
+
+    @Override
+    public void setPredictionResultUnclearCount(Integer count) {
+        put(PREDICTION_RESULT_UNCLEAR_COUNT, count);
     }
 
     @Override

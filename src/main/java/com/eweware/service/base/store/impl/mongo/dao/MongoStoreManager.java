@@ -44,6 +44,7 @@ public final class MongoStoreManager implements StoreManager {
 //    private String mediaDbName;
     private String trackerDbName;
 
+    private String badgeAuthorityCollectionName;
     private String inboxStateCollectionName;
     private String mediaCollectionName;
     private String blahCollectionName;
@@ -97,6 +98,14 @@ public final class MongoStoreManager implements StoreManager {
 
     public String getInboxStateCollectionName() {
         return inboxStateCollectionName;
+    }
+
+    public String getBadgeAuthorityCollectionName() {
+        return badgeAuthorityCollectionName;
+    }
+
+    public void setBadgeAuthorityCollectionName(String name) {
+        badgeAuthorityCollectionName = name;
     }
 
     public void setInboxStateCollectionName(String name) {
@@ -319,6 +328,8 @@ public final class MongoStoreManager implements StoreManager {
             collectionNameToCollectionMap.put(userProfileCollectionName, getUserDb().getCollection(userProfileCollectionName));
 
             collectionNameToCollectionMap.put(userGroupCollectionName, getUserDb().getCollection(userGroupCollectionName));
+
+            collectionNameToCollectionMap.put(badgeAuthorityCollectionName, getUserDb().getCollection(badgeAuthorityCollectionName));
 
             collectionNameToCollectionMap.put(blahCollectionName, getBlahDb().getCollection(blahCollectionName));
 

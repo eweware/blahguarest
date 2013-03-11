@@ -1,5 +1,8 @@
 package main.java.com.eweware.service.base.store.dao.schema.type;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author rk@post.harvard.edu
  *         Date: 9/18/12 Time: 1:43 PM
@@ -9,18 +12,27 @@ package main.java.com.eweware.service.base.store.dao.schema.type;
 public class SchemaDataTypeFieldMap {
 
     private final SchemaDataType dataType;
-    private final String[] fieldNames;
+    private final FieldDescriptor[] fieldDescriptors;
 
     public SchemaDataTypeFieldMap(SchemaDataType dataType, String[] fieldNames) {
+        final FieldDescriptor[] descriptors = new FieldDescriptor[fieldNames.length];
+        for (int i = 0; i < fieldNames.length; i++) {
+            descriptors[i] = new FieldDescriptor(fieldNames[i], null);
+        }
         this.dataType = dataType;
-        this.fieldNames = fieldNames;
+        this.fieldDescriptors = descriptors;
+    }
+
+    public SchemaDataTypeFieldMap(SchemaDataType dataType, FieldDescriptor[] fieldDescriptors) {
+        this.dataType = dataType;
+        this.fieldDescriptors = fieldDescriptors;
     }
 
     public SchemaDataType getDataType() {
         return dataType;
     }
 
-    public String[] getFieldNames() {
-        return fieldNames;
+    public FieldDescriptor[] getFieldDescriptors() {
+        return fieldDescriptors;
     }
 }

@@ -16,7 +16,7 @@ public enum SchemaDataType {
     DT("datetime", new DateTimeDataTypeValidator()),
     D("date", new DateDataTypeValidator()), // yyyy-mm-dd
     GPS("GPS", new GPSDataTypeValidator()),
-    E("spec for an embedded schema", new SchemaTypeValidator());
+    E("spec for an embedded schema", new DefaultEmbeddedDataTypeValidator());
 
     private String description;
     private FieldValidator converter;
