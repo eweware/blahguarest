@@ -295,14 +295,14 @@ public class BlahsResource {
     }
 
     /**
-     * <p>Updates a blah's view, open, and or vote counts.
+     * <p>Updates a blah's view, open, and or promotion counts.
      * Any other update requests in the payload are ignored.</p>
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> PUT</div>
      * <div><b>URL:</b> blahs/{blahId}</div>
      *
-     * @param entity A JSON entity (a BlahPayload) with one or more of the following
+     * @param entity A JSON entity with one or more of the following
      *               fields to update: vote, views, opens. (Other fields are ignored
      *               and might result in a status 400 response.)
      * @param blahId <i>Path Parameter</i>. The blah's id
@@ -317,7 +317,7 @@ public class BlahsResource {
     @Path("/{blahId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateBlahVoteViewOrOpens(
+    public Response updateBlahPromotionViewOrOpens(
             BlahPayload entity,
             @PathParam("blahId") String blahId,
             @Context HttpServletRequest request) {
@@ -326,7 +326,7 @@ public class BlahsResource {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             entity.setAuthorId(userId);
             entity.setId(blahId);
-            getBlahManager().updateBlahVoteViewOrOpens(LocaleId.en_us, entity);
+            getBlahManager().updateBlahPromotionViewOrOpens(LocaleId.en_us, entity);
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -419,7 +419,7 @@ public class BlahsResource {
     }
 
     /**
-     * <p>By default, returns blahs authored by the logged-in  user.</p>
+     * <p>By default, returns blahs authored by the logged-in user.</p>
      * <p>If an author id is provided, it returns the blahs created by the specified author instead
      * of by the user.</p>
      * <p/>
@@ -428,9 +428,6 @@ public class BlahsResource {
      *
      * @param start         (Optional): The starting index to fetch when paging
      * @param count         (Optional): The max number of blahs to fetch
-     * @param sortFieldName (Optional): name of the field to sort on
-     * @param authorId      (Optional): The blah author's userId
-     * @param typeId        (Optional): The blah's type id. If not given, all types will be returned.
      * @return An array of blahs.
      * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
      */
@@ -438,17 +435,11 @@ public class BlahsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBlahs(@QueryParam("start") Integer start,
                              @QueryParam("count") Integer count,
-                             @QueryParam("sort") String sortFieldName,
-                             @QueryParam("authorId") String authorId,
-                             @QueryParam("typeid") String typeId,
                              @Context HttpServletRequest req) {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(req, true);
-            if (authorId == null) {
-                authorId = userId;
-            }
-            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahs(LocaleId.en_us, userId, authorId, typeId, start, count, sortFieldName));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahs(LocaleId.en_us, null, userId, null, start, count, null));
             getSystemManager().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {

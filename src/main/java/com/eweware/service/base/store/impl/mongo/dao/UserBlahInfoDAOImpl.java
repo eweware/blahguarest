@@ -117,13 +117,13 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     }
 
     @Override
-    public Integer getVote() {
+    public Integer getPromotedOrDemoted() {
         return (Integer) get(PROMOTION);
     }
 
     @Override
-    public void setVote(Integer vote) {
-        put(PROMOTION, vote);
+    public void setPromotedOrDemoted(Integer promotedOrDemoted) {
+        put(PROMOTION, promotedOrDemoted);
     }
 
     @Override

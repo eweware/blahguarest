@@ -164,6 +164,13 @@ function createUserAcctData() {
 	rest('POST', 'users/account', JSON.stringify({"e": email, "q": "hi"}));
 }
 
+function getUserVotesForBlah() {
+   var blahId = getBlahId();
+   if (!blahId) {
+       alert('Missing Blah Id'); return;
+   }
+   rest('GET', 'users/info/'+blahId);
+}
 
 function recoverUser() {
 	var username = getUsername();
@@ -278,11 +285,35 @@ function getBlahComments() {
 }
 
 function voteBlah() {
-	var blahId = getBlahId();
-	if (!blahId) {alert('Missing Blah Id'); return;}
+   var typeId = getTypeId();
+    var blahId = getBlahId();
+   if (typeId.length == 0) {alert('Missing Blah Type Id'); return;}
+   if (!blahId) {alert('Missing Blah Id'); return;}
+   if (typeId == predictionBlahTypeId) {
+      alert('Voting on Predicts Blah...');
+      votePrediction(blahId);
+   } else if (typeId == pollBlahTypeId) {
+      alert('Voting on Polls Blah...');
+      votePoll(blahId);
+   } else {
+      alert('Voting on Simple Blah...');
+      voteSimple(blahId);
+   }
+}
+
+function voteSimple(blahId) {
 	var vote = document.getElementById('blahvote').checked;
 	var voteval = vote? 1 : -1;
-	rest('PUT', 'blahs/'+blahId, JSON.stringify({"v": voteval}))
+	rest('PUT', 'blahs/'+blahId, JSON.stringify({"v": voteval}));
+}
+
+function votePrediction(blahId) {
+    var data = JSON.stringify({'t': 'post', 'v': 'y'});
+    rest('PUT', 'blahs/'+blahId+'/predicts', data);
+}
+
+function votePoll(blahId) {
+    alert('Sorry: not implemented yet');
 }
 
 function getBlah() {

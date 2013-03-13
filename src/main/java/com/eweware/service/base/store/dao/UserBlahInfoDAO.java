@@ -24,9 +24,9 @@ public interface UserBlahInfoDAO extends BaseDAO, UserBlahInfoDAOConstants {
 
     public void setBlahTypeId(String blahTypeId);
 
-    public Integer getVote();
+    public Integer getPromotedOrDemoted();
 
-    public void setVote(Integer vote);
+    public void setPromotedOrDemoted(Integer promotedOrDemoted);
 
     public Integer getPollVoteIndex();
 

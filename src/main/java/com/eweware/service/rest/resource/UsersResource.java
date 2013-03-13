@@ -31,7 +31,8 @@ import java.util.Map;
 @Path("/users")
 public class UsersResource {
 
-    private static final String GET_USER_BY_ID_OPERATION = "getUserById";
+    private static final String GET_USER_INFO_OPERATION = "getUserInfo";
+    private static final String GET_USER_INFO_FOR_BLAH_OPERATION = "getUserInfo4Blah";
     private static final String GET_ANONYMOUS_INBOX_OPERATION = "getUserInbox";
     private static final String GET_USER_PROFILE_BY_ID_OPERATION = "getUserProfileById";
     private static final String GET_USER_PROFILE_SCHEMA_OPERATION = "getUserProfileSchema";
@@ -40,7 +41,6 @@ public class UsersResource {
     private static final String UPDATE_USER_PROFILE_OPERATION = "updateUserProfile";
     private static final String CREATE_USER_OPERATION = "createUser";
     private static final String CREATE_USER_PROFILE_OPERATION = "createUserProfile";
-    private static final String VALIDATE_USER_OPERATION = "validateUser";
     private static final String RECOVER_USER_OPERATION = "recoverUser";
     private static final String LOGIN_USER_OPERATION = "loginUser";
 
@@ -708,7 +708,7 @@ public class UsersResource {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final Response response = RestUtilities.make200OkResponse(getUserManager().getUserInfo(LocaleId.en_us, userId, stats, statsStartDate, statsEndDate));
-            getSystemManager().setResponseTime(GET_USER_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            getSystemManager().setResponseTime(GET_USER_INFO_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
@@ -716,6 +716,43 @@ public class UsersResource {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>Returns information about the logged-in user in relation to the specified blah.</p>
+     *
+     * @param blahId The blah id
+     * @return Returns http status 200 (OK) with the user entity (a UserBlahInfoPayload) including voting information
+     *         for the user.
+     *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
+     *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
+     *         If the user is not authorized to access this method, returns 401.
+     *         On error conditions, a JSON object is returned with details.
+     * @see main.java.com.eweware.service.base.payload.UserBlahInfoPayload
+     * @see main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants
+     */
+    @GET
+    @Path("info/{blahId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserInfoForBlah(
+            @PathParam("blahId") final String blahId,
+            @Context final HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final Response response = RestUtilities.make200OkResponse(
+                    getUserManager().getUserInfoForBlah(userId, blahId));
+            getSystemManager().setResponseTime(GET_USER_INFO_FOR_BLAH_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
@@ -745,137 +782,3 @@ public class UsersResource {
         return blahManager;
     }
 }
-
-
-//    /**
-//     * <p><This should now be obsoleted./p>
-//     * <div><b>METHOD:</b> </div>
-//     * <div><b>URL:</b> </div>
-//     * @param userId
-//     * @param groupId
-//     * @param inboxNumber
-//     * @param start
-//     * @param count
-//     * @param sortFieldName
-//     * @param sortDirection
-//     * @param blahTypeId
-//     * @return
-//     */
-//    @GET
-//    @Path("/{userId}/inbox")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getUserInbox(
-//            @PathParam("userId") String userId,
-//            @QueryParam("groupId") String groupId,
-//            @QueryParam("in") Integer inboxNumber,
-//            @QueryParam("start") Integer start,
-//            @QueryParam("count") Integer count,
-//            @QueryParam("sort") String sortFieldName,
-//            @QueryParam("sortDir") Integer sortDirection,
-//            @QueryParam("type") String blahTypeId) { // TODO would be nice to get rid of type option (to reduce db index size)
-//        try {
-//            final long s = System.currentTimeMillis();
-//            final Response response = RestUtilities.make200OkResponse(BlahManager.getInstance().getUserInbox(LocaleId.en_us, userId, groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
-//            getSystemManager().setResponseTime(GET_USER_INBOX_OPERATION, (System.currentTimeMillis() - s));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make400InvalidRequestResponse(e);
-//        } catch (ResourceNotFoundException e) {
-//            return RestUtilities.make404ResourceNotFoundResponse(e);
-//        } catch (StateConflictException e) {
-//            return RestUtilities.make409StateConflictResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }
-
-
-//    /**
-//     * <p><b>DO NOT USE. ONLY FOR DEBUGGING WILL BE REMOVED OR SEQUESTERED IN A FUTURE VERSION.</b></p>
-//     */
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getUsers(
-//            @QueryParam("start") Integer start,
-//            @QueryParam("count") Integer count,
-//            @QueryParam("sort") String sortFieldName,
-//            @Context HttpServletRequest request) {
-//        try {
-//            final long s = System.currentTimeMillis();
-//            BlahguaSession.ensureAuthenticated(request, true);
-//            final Response response = RestUtilities.make200OkResponse(getUserManager().getUsers(LocaleId.en_us, start, count, sortFieldName));
-//            getSystemManager().setResponseTime(GET_USERS_OPERATION, (System.currentTimeMillis() - s));
-//            return response;
-//        } catch (InvalidAuthorizedStateException e) {
-//            return RestUtilities.make401UnauthorizedRequestResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }
-
-//    /**
-//     * <p>Directly or indirectly received from user clicking on a recovery URL.</p>
-//     * <p><b>TODO: </b>deal with UI page.</p>
-//     * <p/>
-//     * <div><b>METHOD:</b> GET</div>
-//     * <div><b>URL:</b> users/recover/user/{recoveryCode}</div>
-//     *
-//     * @param recoveryCode <i>Path Parameter:</i> The recovery code sent to the user in an email or whatever.
-//     * @return Returns an http status 202 (ACCEPTED) if the user is now logged in.
-//     *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
-//     *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
-//     *         If there is an authorization or security problem, returns 401 (UNAUTHORIZED).
-//     *         On error conditions, a JSON object is returned with details.
-//     */
-//    @GET
-//    @Path("/recover/user/{recoveryCode}/{username}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response recoverUser(
-//            @PathParam("recoveryCode") String recoveryCode,
-//            @PathParam("username") String encryptedCanonicalUsername,
-//            @Context HttpServletResponse httpResponse) {
-//        try {
-//            final long start = System.currentTimeMillis();
-//            getUserManager().recoverUserAndRedirectToMainPage(LocaleId.en_us, httpResponse, recoveryCode, encryptedCanonicalUsername);
-//            getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - start));
-//            return
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (InvalidAuthorizedStateException e) {
-//            return RestUtilities.make401UnauthorizedRequestResponse(e);
-//        }
-//    }
-
-
-//    /**
-//     * <p><b>No longer in use</b></p>
-//     */
-//    @POST
-//    @Path("/validate/{validationCode}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response validateUser(
-//            @PathParam("validationCode") String validationCode,
-//            @Context HttpServletRequest request) {
-//        try {
-//            final long s = System.currentTimeMillis();
-//            BlahguaSession.ensureAuthenticated(request, true);
-//            getUserManager().validateUser(LocaleId.en_us, validationCode);
-//            final Response response = RestUtilities.make202AcceptedResponse();
-//            getSystemManager().setResponseTime(VALIDATE_USER_OPERATION, (System.currentTimeMillis() - s));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make400InvalidRequestResponse(e);
-//        } catch (InvalidAuthorizedStateException e) {
-//            return RestUtilities.make401UnauthorizedRequestResponse(e);
-//        } catch (StateConflictException e) {
-//            return RestUtilities.make409StateConflictResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }

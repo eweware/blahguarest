@@ -29,7 +29,7 @@ public enum PredictionVote {
     /**
      * <p>Used in entities as the name of a field containing one of the enum codes.</p>
      */
-    public static final String PREDICTION_VOTE_FIELD_NAME = "t";
+    public static final String PREDICTION_VOTE_FIELD_NAME = "v";
 
     private final String code;
 

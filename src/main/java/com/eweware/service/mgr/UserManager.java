@@ -296,6 +296,8 @@ public class UserManager implements ManagerInterface {
             throw new ResourceNotFoundException("No such user '" + username + "'", ErrorCodes.UNAUTHORIZED_USER);
         }
 
+        BlahguaSession.destroySession(request);
+
         if (Login.authenticate(accountDAO.getDigest(), accountDAO.getSalt(), password)) {
             BlahguaSession.markAuthenticated(request, accountDAO.getId(), accountDAO.getAccountType(), canonicalUsername);
         } else {
@@ -305,7 +307,7 @@ public class UserManager implements ManagerInterface {
     }
 
     public void logoutUser(LocaleId locale, HttpServletRequest request) {
-        request.getSession().invalidate();
+        BlahguaSession.destroySession(request);
     }
 
     /**
@@ -724,6 +726,18 @@ public class UserManager implements ManagerInterface {
         }
 
         return new UserPayload(userDAO);
+    }
+
+    public UserBlahInfoPayload getUserInfoForBlah(String userId, String blahId) throws SystemErrorException, InvalidRequestException {
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(null, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        if (dao == null) {
+            throw new InvalidRequestException("no user info for blah", ErrorCodes.INVALID_STATE_CODE);
+        }
+        final UserBlahInfoPayload entity = new UserBlahInfoPayload(dao);
+        entity.remove(UserBlahInfoDAO.USER_ID);
+        entity.remove(UserBlahInfoDAO.BLAH_ID);
+        entity.remove(UserBlahInfoDAO.ID);
+        return entity;
     }
 
     public UserProfilePayload getUserProfileById(LocaleId localeId, String userId)

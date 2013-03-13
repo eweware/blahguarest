@@ -133,6 +133,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         if (map == null) {
             return;
         }
+        map = new HashMap<String, Object>(map);
 
         // TODO support embedded schemas (SchemaDataType.E): this would make this method recursive
         // TODO sanity checks on string lengths

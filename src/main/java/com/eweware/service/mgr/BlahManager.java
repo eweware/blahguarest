@@ -434,9 +434,12 @@ public final class BlahManager implements ManagerInterface {
         if (predictionVote == null) {
             throw new InvalidRequestException("missing or invalid vote", ErrorCodes.INVALID_INPUT);
         }
-        final BlahDAO blahDAO = (BlahDAO) storeManager.createBlah(blahId)._findByPrimaryId(BlahDAO.EXPIRATION_DATE, BlahDAO.TYPE_ID);
+        final BlahDAO blahDAO = (BlahDAO) storeManager.createBlah(blahId)._findByPrimaryId(BlahDAO.EXPIRATION_DATE, BlahDAO.TYPE_ID, BlahDAO.AUTHOR_ID);
         if (blahDAO == null) {
             throw new InvalidRequestException("invalid blah id", ErrorCodes.INVALID_INPUT);
+        }
+        if (blahDAO.getAuthorId().equals(userId)) {
+            throw new InvalidRequestException("cannot vote on own prediction", ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
         }
 
         if (!isCategory(blahDAO.getTypeId(), BlahTypeCategoryType.PREDICTION)) {
@@ -493,11 +496,11 @@ public final class BlahManager implements ManagerInterface {
 
     private UserBlahInfoData ensurePredictionConsistent(String userId, String blahId, boolean preExpirationVote, Date expirationDate) throws SystemErrorException, InvalidRequestException {
         if (expirationDate == null) {
-            throw new SystemErrorException("prediction has no exp date", ErrorCodes.SERVER_DATA_INCONSISTENT);
+            throw new SystemErrorException("prediction missing expiration date", ErrorCodes.SERVER_DATA_INCONSISTENT);
         }
         if (preExpirationVote && expirationDate.before(new Date())) {
             throw new InvalidRequestException("prediction expired", ErrorCodes.INVALID_INPUT);
-        } else if (expirationDate.after(new Date())) {
+        } else if (!preExpirationVote && expirationDate.after(new Date())) {
             throw new InvalidRequestException("prediction has not expired", ErrorCodes.INVALID_INPUT);
         }
 
@@ -508,7 +511,7 @@ public final class BlahManager implements ManagerInterface {
         if (dao != null) {
             if ((preExpirationVote && dao.getPredictionVote() != null)
                     || (!preExpirationVote && dao.getPredictionResultVote() != null)) {
-                throw new InvalidRequestException("user already voted", ErrorCodes.INVALID_INPUT);
+                throw new InvalidRequestException("user already voted on prediction", ErrorCodes.INVALID_INPUT);
             }
             userBlahInfoDAO.setId(dao.getId());
         }
@@ -645,7 +648,7 @@ public final class BlahManager implements ManagerInterface {
 
     /**
      * Allows a user to update a blah's vote, views, and/or opens, in any combination.
-     * Ignored if there is no vote, views or opens in request.
+     * Ignored if there is no promotion/demotion, views or opens in request.
      *
      * @param localeId
      * @param request
@@ -654,7 +657,7 @@ public final class BlahManager implements ManagerInterface {
      *
      * @throws ResourceNotFoundException
      */
-    public void updateBlahVoteViewOrOpens(LocaleId localeId, BlahPayload request) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
+    public void updateBlahPromotionViewOrOpens(LocaleId localeId, BlahPayload request) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
         if (!CommonUtilities.isEmptyString(request.getText()) || !CommonUtilities.isEmptyString(request.getBody())) {
             throw new InvalidRequestException("user may not edit blah text or body", request, ErrorCodes.CANNOT_EDIT_TEXT);
         }
@@ -667,12 +670,12 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer vote = GeneralUtilities.checkDiscreteValue(request.getUserPromotesOrDemotes(), request);
+        final Integer promotionOrDemotion = GeneralUtilities.checkDiscreteValue(request.getUserPromotesOrDemotes(), request);
 
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
         final Integer viewCount = GeneralUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);
         final Integer openCount = GeneralUtilities.checkValueRange(request.getOpens(), 0, maxViewIncrements, request);
-        if (vote == 0 && viewCount == 0 && openCount == 0) {
+        if (promotionOrDemotion == 0 && viewCount == 0 && openCount == 0) {
             return; // don't complain
         }
 
@@ -681,16 +684,16 @@ public final class BlahManager implements ManagerInterface {
         }
 
         final boolean createdComment = false;
-        final BlahDAO updateBlahDAO = updateBlahInternal(LocaleId.en_us, blahId, userId, vote, viewCount, openCount, createdComment);
+        final BlahDAO updateBlahDAO = updateBlahInternal(LocaleId.en_us, blahId, userId, promotionOrDemotion, viewCount, openCount, createdComment);
 
         // Track it
         final boolean isBlah = true;
         final boolean isNewObject = false;
         final String objectId = blahId;
         final String subObjectId = null;
-        final boolean voteUp = (vote.intValue() > 0);
-        final boolean voteDown = (vote.intValue() < 0);
-        getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
+        final boolean promoted = (promotionOrDemotion.intValue() > 0);
+        final boolean demoted = (promotionOrDemotion.intValue() < 0);
+        getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, promoted, demoted, null, viewCount, openCount);
 
         if (doIndex()) {
             indexBlah(updateBlahDAO);
@@ -719,9 +722,9 @@ public final class BlahManager implements ManagerInterface {
      * @param localeId
      * @param blahId          The blah's id
      * @param userId          The user's id
-     * @param vote            The vote (always 0|1|-2)
-     * @param viewCount       The view count (always 0|1|-2)
-     * @param openCount       The open count (always 0|1|-2)
+     * @param promotionOrDemotion            The promotion or demotion (always one of 0, 1, -1)
+     * @param viewCount       The view count (always one of 0, 1, -1)
+     * @param openCount       The open count (always one of 0, 1, -1)
      * @param creatingComment True if this is called when a comment is created
      * @return BlahDAO  The blah DAO including the updates plus the author id
      * @throws SystemErrorException
@@ -729,7 +732,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      * @throws InvalidRequestException
      */
-    private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Integer vote, Integer viewCount, Integer openCount, boolean creatingComment) throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
+    private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Integer promotionOrDemotion, Integer viewCount, Integer openCount, boolean creatingComment) throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
         BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         blahDAO = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
         if (blahDAO == null) {
@@ -740,8 +743,8 @@ public final class BlahManager implements ManagerInterface {
         }
         final String authorId = blahDAO.getAuthorId();
         final boolean userIsBlahAuthor = userId.equals(authorId);
-        if (userIsBlahAuthor && (vote != 0)) {
-            throw new StateConflictException("userId=" + userId + " may not vote on own blahId=" + blahId, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
+        if (userIsBlahAuthor && (promotionOrDemotion != 0)) {
+            throw new StateConflictException("userId=" + userId + " may not promote/demote own blahId=" + blahId, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
         }
 
         final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.PROMOTION};
@@ -754,11 +757,11 @@ public final class BlahManager implements ManagerInterface {
         } else {
             userBlahInfoDAO.setId(userBlahHistory.getId());
         }
-        if (vote != 0) {
-            if (!insert && userBlahHistory.getVote() != null && userBlahHistory.getVote() != 0) {
+        if (promotionOrDemotion != 0) {
+            if (!insert && userBlahHistory.getPromotedOrDemoted() != null && userBlahHistory.getPromotedOrDemoted() != 0) {
                 throw new InvalidRequestException("userId=" + userId + " has already voted on blahId=" + blahId, ErrorCodes.USER_ALREADY_VOTED_ON_BLAH_ID);
             }
-            userBlahInfoDAO.setVote(vote > 0 ? 1 : -1);
+            userBlahInfoDAO.setPromotedOrDemoted(promotionOrDemotion > 0 ? 1 : -1);
         }
         if (viewCount != 0) {
             userBlahInfoDAO.setViews(viewCount);
@@ -781,9 +784,9 @@ public final class BlahManager implements ManagerInterface {
         }
 
         final BlahDAO blah = getStoreManager().createBlah(blahId);
-        if (vote > 0) {
+        if (promotionOrDemotion > 0) {
             blah.setPromotedCount(1);
-        } else if (vote < 0) {
+        } else if (promotionOrDemotion < 0) {
             blah.setDemotedCount(1);
         }
         if (viewCount != 0) {
@@ -854,6 +857,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
+        // userId, typeId and sortFieldName ignore (set to null by client) for now
         count = ensureCount(count);
         final BlahDAO blahDAO = getStoreManager().createBlah();
         final boolean hasAuthor = !CommonUtilities.isEmptyString(authorId);
@@ -1047,7 +1051,7 @@ public final class BlahManager implements ManagerInterface {
                 new String[]{UserBlahInfoDAO.PROMOTION, UserBlahInfoDAO.VIEWS, UserBlahInfoDAO.OPENS},
                 UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (userBlahDAO != null) {
-            blahPayload.setUserPromotion(userBlahDAO.getVote());
+            blahPayload.setUserPromotion(userBlahDAO.getPromotedOrDemoted());
             blahPayload.setUserViews(userBlahDAO.getViews());
             blahPayload.setUserOpens(userBlahDAO.getOpens());
         }

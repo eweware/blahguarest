@@ -76,7 +76,6 @@ public final class BlahguaSession {
      */
     private static final String INBOX_INFO_ATTRIBUTE = "i";
 
-
     /**
      * Marks the user session as authenticated.
      * Input parameters are not checked!

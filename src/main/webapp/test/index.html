@@ -25,7 +25,7 @@
 <div class='controls'> <!-- START CONTROLS -->
     <div>
         Host Endpoint:
-        <input id="endpoint" type="text" value="beta.blahgua.com"/>
+        <input id="endpoint" type="text" value="localhost:8080"/>
     </div>
     <!-- Actions -->
     <div style="margin-top: .5em">
@@ -80,7 +80,9 @@
     <div style="margin-top: .5em">
         <input id="setDummyAcct" type="button" onclick="createUserAcctData()" value="Set Dummy Email/Challenge"/>
         &nbsp;
-        <input id="getUser" type="button" onclick="rest('GET', 'users/info');"  value="Get User"/>
+        <input id="getUser" type="button" onclick="rest('GET', 'users/info');"  value="Get User Info"/>
+        &nbsp;
+        <input id="getUserVotesForBlah" type="button" onclick="getUserVotesForBlah()"  value="Get User Votes For Blah"/>
         &nbsp;
         <input id="getUserProfile" type="button" onclick="rest('GET', 'users/profile/info');"  value="Get Profile"/>
         &nbsp;
@@ -97,7 +99,7 @@
         &nbsp;
         <input id="getBlahTypes" type="button" onclick="rest('GET', 'blahs/types')" value="Get Blah Types"/>
         &nbsp;
-        <input id="createBlah" type="button" onclick="createSimpleBlah()" value="Create Blah"/>
+        <input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>
         &nbsp;
         <input id="voteBlah" type="button" onclick="voteBlah()" value="Vote Blah"/>
         &nbsp;

@@ -8,8 +8,8 @@ package main.java.com.eweware.service.base.payload;
 public final class ErrorResponsePayload {
 
 	private Integer errorCode;
-    private Object entity;
     private String message;
+    private Object entity;
 
 	public ErrorResponsePayload() {
 		super();
