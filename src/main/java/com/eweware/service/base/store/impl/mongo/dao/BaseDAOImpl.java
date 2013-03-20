@@ -133,7 +133,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         if (map == null) {
             return;
         }
-        map = new HashMap<String, Object>(map);
+//        map = new HashMap<String, Object>(map);
 
         // TODO support embedded schemas (SchemaDataType.E): this would make this method recursive
         // TODO sanity checks on string lengths
@@ -483,8 +483,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     public void _insert() throws SystemErrorException, DuplicateKeyException {
         final DBCollection col = _getCollection();
         try {
-            final Date date = new Date();
-            this.setCreated(date);
+            this.setCreated(new Date());
 //            this.setUpdated(date);
             final WriteResult result = col.insert(this, WriteConcern.SAFE);
             if (result.getError() != null) {

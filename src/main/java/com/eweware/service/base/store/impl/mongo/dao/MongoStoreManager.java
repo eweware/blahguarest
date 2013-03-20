@@ -13,11 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <p/>
+ * Store manager controls MongoDB access.
+ * Initialized as a Spring bean.
+ * <p/>
+ *
  * @author rk@post.harvard.edu
- *         <p/>
- *         Store manager controls MongoDB access.
- *         Initialized as a Spring bean.
- *         <p/>
  */
 public final class MongoStoreManager implements StoreManager {
 
@@ -41,7 +42,7 @@ public final class MongoStoreManager implements StoreManager {
     private String sysDbName;
     private String userDbName;
     private String blahDbName;
-//    private String mediaDbName;
+    //    private String mediaDbName;
     private String trackerDbName;
 
     private String badgeAuthorityCollectionName;
@@ -264,6 +265,7 @@ public final class MongoStoreManager implements StoreManager {
     /**
      * Initializes the store manager. This method is public to allow
      * test units to initialize it outside the context of the web server.
+     *
      * @param hostname
      * @param port
      * @param userDbName
@@ -305,14 +307,29 @@ public final class MongoStoreManager implements StoreManager {
 
     public void start() {
         try {
-            if (SystemManager.getInstance().isDevMode()) {
-                this.mongoDbHostname = devMongoDbHostname;  // same default 21191 port
+            try {
+                if (SystemManager.getInstance().isDevMode()) {
+                    this.mongoDbHostname = devMongoDbHostname;  // same default 21191 port
+                }
+            } catch (SystemErrorException e) {
+                // if sysmgr not initialized, no need for this.
             }
             final MongoOptions mongoOptions = new MongoOptions();
             mongoOptions.connectionsPerHost = connectionsPerHost; // Use >db.serverStatus() to check number of connections in mongo server
             final ServerAddress serverAddress = new ServerAddress(mongoDbHostname, mongoDbPort);
 
             this.mongo = new Mongo(serverAddress, mongoOptions);
+
+
+            // Add a hook to keep it independent of Spring
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mongo != null) {
+                        mongo.close();
+                    }
+                }
+            }));
 
             for (String dbname : dbNameToDbMap.keySet()) {
                 dbNameToDbMap.put(dbname, mongo.getDB(dbname));
@@ -371,7 +388,9 @@ public final class MongoStoreManager implements StoreManager {
     }
 
     public void shutdown() {
-        mongo.close();
+        if (mongo != null) {
+            mongo.close();
+        }
         this.status = ManagerState.SHUTDOWN;
         System.out.println("*** MongoStoreManager shut down ***");
     }
@@ -497,6 +516,16 @@ public final class MongoStoreManager implements StoreManager {
     @Override
     public UserGroupDAO createUserGroup(Map<String, Object> map) throws SystemErrorException {
         return new UserGroupDAOImpl(map, true);
+    }
+
+    @Override
+    public BadgeAuthorityDAO createBadgeAuthority() throws SystemErrorException {
+        return new BadgeAuthorityDAOImpl();
+    }
+
+    @Override
+    public BadgeAuthorityDAO createBadgeAuthority(String authorityId) throws SystemErrorException {
+        return new BadgeAuthorityDAOImpl(authorityId);
     }
 
     @Override

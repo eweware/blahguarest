@@ -208,35 +208,6 @@ public abstract class BaseSchema implements SchemaConstants {
             for (FieldDescriptor descriptor: map.getFieldDescriptors()) {
                 schema.createSpec(dataType, descriptor, null, null, null, null, false, null); // all fields default to null
             }
-//            if (dataType == SchemaDataType.S) {
-//                for (String fieldName : map.getFieldDescriptors()) { // no default
-//                    schema.createSpec(SchemaDataType.S, fieldName, null, null, null, false, null);
-//                }
-//            } else if (dataType == SchemaDataType.I) {
-//                for (String fieldName : map.getFieldDescriptors()) {
-//                    schema.createSpec(SchemaDataType.I, fieldName, null, null, null, false, null);    // default to empty
-//                }
-//            } else if (dataType == SchemaDataType.R) {
-//                for (String fieldName : map.getFieldDescriptors()) {
-//                    schema.createSpec(SchemaDataType.R, fieldName, null, null, null, false, null); // default to empty
-//                }
-//            } else if (dataType == SchemaDataType.B) {
-//                for (String fieldName : map.getFieldDescriptors()) {
-//                    schema.createSpec(dataType, fieldName, null, null, null, false, null); // default to empty
-//                }
-//            } else if (dataType == SchemaDataType.GPS) {
-//                for (String fieldName : map.getFieldDescriptors()) {
-//                    schema.createSpec(dataType, fieldName, null, null, null, false, null); // default to empty
-//                }
-//            } else if (dataType == SchemaDataType.E) {
-//                for (String fieldName : map.getFieldDescriptors()) {
-//                    schema.createSpec(SchemaDataType.E, fieldName, null, null, null, false, null); // default to empty
-//                }
-//            } else if (dataType == SchemaDataType.Dt) {
-//                for (String fieldName : map.getFieldDescriptors()) {
-//                    schema.createSpec(SchemaDataType.DT, fieldName,  null, null, null, false, null); // default to empty
-//                }
-//            }
         }
     }
 }

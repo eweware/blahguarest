@@ -48,13 +48,15 @@ public interface StoreManager extends ManagerInterface {
 
     public abstract UserProfileDAO createUserProfile();
     public abstract UserProfileDAO createUserProfile(String profileId) throws SystemErrorException;
-
     public abstract UserProfileDAO createUserProfile(Map<String, Object> map) throws SystemErrorException;
+
     public abstract UserGroupDAO createUserGroup();
     public abstract UserGroupDAO createUserGroup(String groupId) throws SystemErrorException;
     public abstract UserGroupDAO createUserGroup(String userId, String groupId) throws SystemErrorException;
-
     public abstract UserGroupDAO createUserGroup(Map<String, Object> map) throws SystemErrorException;
+
+    public abstract BadgeAuthorityDAO createBadgeAuthority() throws SystemErrorException;
+    public abstract BadgeAuthorityDAO createBadgeAuthority(String authorityId) throws SystemErrorException;
 
     public abstract MediaDAO createMedia();
     public abstract BlahDAO createBlah();

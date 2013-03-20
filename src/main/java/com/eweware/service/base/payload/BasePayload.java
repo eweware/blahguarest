@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public abstract class BasePayload extends LinkedHashMap<String, Object> implements BaseDAOConstants, Serializable {
 
-    private static BaseSchema cachedSchema;
+    private BaseSchema cachedSchema;
 
     public BasePayload() {
         super();

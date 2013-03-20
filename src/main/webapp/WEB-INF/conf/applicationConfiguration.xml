@@ -52,6 +52,9 @@
         <property name="demographicsCollectionName" value="${blag.store.mongo.userdb.collection.demographics}"/>
     </bean>
 
+    <bean id="badgesManager" class="main.java.com.eweware.service.mgr.BadgesManager"
+          init-method="start" destroy-method="shutdown" />
+
     <!-- MAINTAIN BEAN ORDER -->
     <bean id="mailManager" class="main.java.com.eweware.service.mgr.MailManager"
           init-method="start" destroy-method="shutdown">

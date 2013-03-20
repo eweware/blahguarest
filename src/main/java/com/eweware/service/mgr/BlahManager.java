@@ -229,7 +229,7 @@ public final class BlahManager implements ManagerInterface {
         final BlahDAO blahDAO = getStoreManager().createBlah();
         blahDAO.initToDefaultValues(localeId);
         blahDAO.addFromMap(entity, true); // removes fields not in schema
-        // TODO set fields explicitly instead of relying on request payload
+        // TODO maybe set fields explicitly instead of trusting request payload's data
         blahDAO.setAuthorId(authorId);
 
         if (isCategory(typeId, BlahTypeCategoryType.POLL)) {
@@ -267,19 +267,21 @@ public final class BlahManager implements ManagerInterface {
      * @param blahDAO        The dao
      * @param expirationDate The expiration date
      */
-    private void addPredictionData(BlahDAO blahDAO, String expirationDate) throws InvalidRequestException {
+    private void addPredictionData(BlahDAO blahDAO, Date expirationDate) throws InvalidRequestException {
         if (expirationDate == null) {
             throw new InvalidRequestException("missing expiration date", ErrorCodes.INVALID_INPUT);
         }
         try {
-            final Date date = main.java.com.eweware.service.base.date.DateUtils.fromISODateTimeToUTC(expirationDate);
+            final Date date = expirationDate; // main.java.com.eweware.service.base.date.DateUtils.fromISODateTimeToUTC(expirationDate);
             final long limit = System.currentTimeMillis() + THIRTY_MINUTES_IN_MILLIS;
             if (date.getTime() < limit) {
                 throw new InvalidRequestException("expiration date must be at least 30 minutes into the future", ErrorCodes.INVALID_INPUT);
             }
             blahDAO.setExpirationDate(date);
-        } catch (java.text.ParseException e) {
-            throw new InvalidRequestException("invalid expiration date", expirationDate, ErrorCodes.INVALID_INPUT);
+//        } catch (java.text.ParseException e) {
+//            throw new InvalidRequestException("invalid expiration date", expirationDate, ErrorCodes.INVALID_INPUT);
+        } finally {
+
         }
 
     }

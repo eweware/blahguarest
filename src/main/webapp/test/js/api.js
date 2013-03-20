@@ -6,7 +6,7 @@ var pollBlahTypeId = null;
 // END GLOBALS
 
 $(document).ready(function() {
-	configFromServer()
+	configure()
 });
 
 function rest(method, path, dataHandler, successFunction) {
@@ -180,6 +180,20 @@ function recoverUser() {
 	rest('POST', "users/recover/user", JSON.stringify({"u": username, "e": email, "a": "hi"}));
 }
 
+function createBadge() {
+    var authorityId = document.getElementById("authorityid").value;
+    if (!authorityId) {
+	alert('Missing Authority Id'); return;
+    }
+    var data = JSON.stringify({'i': authorityId});
+    rest('POST', 'badges', data, setBadgeDialog);
+}
+
+function setBadgeDialog(data) {
+	defaultSuccessFunction(data);
+   $("#badgedialog").html(data);
+}
+
 function setChannelTypeData(channelType) {
 	defaultSuccessFunction(channelType);
 	var obj = jQuery.parseJSON(channelType);
@@ -201,7 +215,7 @@ function joinChannel() {
 		alert("Missing Channel Id and/or User Id");
 		return;
 	}
-	var data = '{"userId": "' + userId + '", "groupId": "' + channelId + '"}';
+	var data = '{"g": "' + channelId + '"}';
 	rest("POST", "userGroups", data);
 }
 
@@ -258,15 +272,15 @@ function createPredictionBlah(typeId) {
 		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
 		return;
 	}
-	var datestring = document.getElementById('datefield').value;
+     var datestring = document.getElementById('datefield').value;
       if (!datestring) {
 	  alert('Missing Date'); return;
       }
-      var dateobj = new Date(datestring).toISOString();
-     if (!dateobj) {
-	 alert('Invalid Date: '+date); return;
+     var isodate = new Date(datestring).toISOString();
+     if (!isodate) {
+	 alert('Invalid Date: '+datestring); return;
      }
-	var data = JSON.stringify({"e": dateobj, "groupId": channelId, "typeId":  typeId, "text":  text});
+	var data = JSON.stringify({"e": isodate, "groupId": channelId, "typeId":  typeId, "text":  text});
 	rest("POST", "blahs", data, setBlahData1);
 }
 
@@ -462,8 +476,7 @@ function getBlahId() {
 	return document.getElementById("blahid").value;
 }
 
-// Special
-function configFromServer() {
+function configure() {
 	var endpoint = document.getElementById("endpoint").value;
 	if ( typeof (endpoint) == "undefined") {
 		alert("Config Error: missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");

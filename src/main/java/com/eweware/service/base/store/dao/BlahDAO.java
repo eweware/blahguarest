@@ -6,19 +6,21 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * <p>This is the basic blah data object. The fields in a blah dependend on
+ * the type of blah it is. They all require the 'text' field, which
+ * is a short line.</p>
+ * <p><b>Says Blahs:</b> Optionally uses a 'body' field.</p>
+ * <p><b>Poll Blahs:</b> Optionally uses a 'body' field, which might amplify on what the
+ * poll is about or give instructions.</p>
+ * <p/>
+ *
  * @author rk@post.harvard.edu
  *         Date: 7/2/12 Time: 1:54 PM
- *         <p/>
- *         <p>This is the basic blah data object. The fields in a blah dependend on
- *         the type of blah it is. They all require the 'text' field, which
- *         is a short line.</p>
- *         <p><b>Says Blahs:</b> Optionally uses a 'body' field.</p>
- *         <p><b>Poll Blahs:</b> Optionally uses a 'body' field, which might amplify on what the
- *         poll is about or give instructions.</p>
  */
 public interface BlahDAO extends BaseDAO, BlahDAOConstants {
 
     /**
+     * <p>Returns the blah's type id.</p>
      * @return String  Returns the blah's type id
      */
     public String getTypeId();
@@ -31,6 +33,7 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setTypeId(String type);
 
     /**
+     * <p>Returns the blah's author's id.</p>
      * @return String   Returns the blah author's id
      */
     public String getAuthorId();
@@ -43,6 +46,7 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setAuthorId(String authorId);
 
     /**
+     * <p>Returns the blah's text (tagline).</p>
      * @return String   Returns the blah's text
      */
     public String getText();
@@ -55,6 +59,7 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setText(String text);
 
     /**
+     * <p>Returns the optional blah body text.</p>
      * @return String  The optional blah body text
      */
     public String getBody();
@@ -67,7 +72,8 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setBody(String body);
 
     /**
-     * @return List<String> A list of image ids associated with this blah.
+     * <p> A list of image ids associated with this blah.</p>
+     * @return A list of image ids associated with this blah.
      */
     public List<String> getImageIds();
 
@@ -173,84 +179,98 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     /**
      * <p>Returns the expiration date, if any, of this blah. Used, e.g.,
      * for predictions.</p>
+     *
      * @return The expiration date or null if none.
      */
     public Date getExpirationDate();
 
     /**
      * <p>Sets this blah's expiration date. Used, e.g., in predictions.</p>
+     *
      * @param date The expiration date
      */
     public void setExpirationDate(Date date);
 
     /**
      * <p>Returns number of times users have agreed with this prediction blah</p>
-     * @return  Number of times users have agreed with this prediction blah
+     *
+     * @return Number of times users have agreed with this prediction blah
      */
     public Integer getPredictionAgreeCount();
 
     /**
      * <p>Sets number of times users have agreed with this prediction blah</p>
+     *
      * @param count The count
      */
     public void setPredictionAgreeCount(Integer count);
 
     /**
      * <p>Returns number of times users have disagreed with this prediction blah</p>
-     * @return  Number of times users have agreed with this prediction blah
+     *
+     * @return Number of times users have agreed with this prediction blah
      */
     public Integer getPredictionDisagreeCount();
 
     /**
      * <p>Sets number of times users have disgreed with this prediction blah</p>
+     *
      * @param count The count
      */
     public void setPredictionDisagreeCount(Integer count);
 
     /**
      * <p>Returns number of times users have thought this prediction blah was unclear</p>
-     * @return  the count
+     *
+     * @return the count
      */
     public Integer getPredictionUnclearCount();
 
     /**
      * <p>Sets number of times users have thought that this prediction blah was unclear.</p>
+     *
      * @param count The count
      */
     public void setPredictionUnclearCount(Integer count);
 
     /**
      * <p>Returns number of times users have indicated that this prediction was correct</p>
-     * @return  the count
+     *
+     * @return the count
      */
     public Integer getPredictionResultCorrectCount();
 
     /**
      * <p>Sets number of times users have indicated that this prediction was correct.</p>
+     *
      * @param count The count
      */
     public void setPredictionResultCorrectCount(Integer count);
 
     /**
      * <p>Returns number of times users have indicated that this prediction blah was incorrect</p>
-     * @return  the count
+     *
+     * @return the count
      */
     public Integer getPredictionResultIncorrectCount();
 
     /**
      * <p>Sets number of times users have indicated that this prediction was incorrect.</p>
+     *
      * @param count The count
      */
     public void setPredictionResultIncorrectCount(Integer count);
 
     /**
      * <p>Returns number of times users have indicated that this prediction's result was unclear</p>
-     * @return  the count
+     *
+     * @return the count
      */
     public Integer getPredictionResultUnclearCount();
 
     /**
      * <p>Sets number of times users have indicated that this prediction's result was unclear.</p>
+     *
      * @param count The count
      */
     public void setPredictionResultUnclearCount(Integer count);

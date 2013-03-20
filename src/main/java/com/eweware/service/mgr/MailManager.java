@@ -107,7 +107,7 @@ public class MailManager implements ManagerInterface {
         try {
             final boolean devMode = SystemManager.getInstance().isDevMode();
             final String host = InetAddress.getLocalHost().getHostName();
-            final StringBuilder subject = new StringBuilder("Instance ");
+            final StringBuilder subject = new StringBuilder("Blahgua Service ");
             subject.append(System.getProperty("user.name"));
             subject.append("@");
             subject.append(host);

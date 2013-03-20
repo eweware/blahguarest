@@ -17,6 +17,16 @@
         <listener-class>main.java.com.eweware.service.rest.session.BlahguaSessionListener</listener-class>
     </listener>
 
+    <filter> <!-- CORS support: configured to be totally public -->
+      <filter-name>CORS</filter-name>
+      <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+      <filter-name>CORS</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>

@@ -6,8 +6,19 @@ import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 
+import javax.ws.rs.core.MediaType;
 import javax.xml.ws.WebServiceException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -37,6 +48,8 @@ public final class SystemManager implements ManagerInterface {
     private String restEndpoint;
     private final String clientServiceEndpoint;
     private final boolean cryptoOn;
+    private DefaultHttpClient client;
+    private ClientConnectionManager connectionManager;
 
     /** for dev mode */
 
@@ -125,6 +138,7 @@ public final class SystemManager implements ManagerInterface {
     public void start() {
         try {
             this.blahCache = new BlahCache(blahCacheConfiguration);
+            startHttpClient();
             this.state = ManagerState.STARTED;
             System.out.println("*** SystemManager started ***");
         } catch (Exception e) {
@@ -185,6 +199,38 @@ public final class SystemManager implements ManagerInterface {
             this.min = min;
         }
     }
+
+    public HttpClient getHttpClient() {
+        return client;
+    }
+
+    private void startHttpClient() {
+        client = new DefaultHttpClient();
+        connectionManager = client.getConnectionManager();
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (connectionManager != null) {
+                    connectionManager.shutdown();
+                }
+            }
+        }));
+    }
+
+//    public static DefaultHttpClient createHttpClient(String endpoint, Integer port) {
+//        SchemeRegistry schemeRegistry = new SchemeRegistry();
+//        schemeRegistry.register(
+//                new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
+////        schemeRegistry.register(
+////                new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
+//
+//        PoolingClientConnectionManager cm = new PoolingClientConnectionManager(schemeRegistry);
+//        cm.setMaxTotal(400);
+//        cm.setDefaultMaxPerRoute(100);
+////        HttpHost host = new HttpHost(endpoint, port);
+////        cm.setMaxPerRoute(new HttpRoute(host), 400);
+//        return new DefaultHttpClient(cm);
+//    }
 
     java.util.Map<String, OperationInfo> operationToOpInfoMap = new HashMap<String, OperationInfo>();
     final Object infomapLock = new Object();

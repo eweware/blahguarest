@@ -358,19 +358,19 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     }
 
     /**
-     * <p>Returns the expiration date's ISO string representation,
+     * <p>Returns the expiration date,
      * if any, of this blah. Used, e.g., for predictions.</p>
      * @return The expiration date or null if none.
      */
-    public String getExpirationDate() {
-        return (String) get(EXPIRATION_DATE);
+    public Date getExpirationDate() {
+        return (Date) get(EXPIRATION_DATE);
     }
 
     /**
      * <p>Sets this blah's expiration date. Used, e.g., in predictions.</p>
-     * @param date The expiration date ISO string representation
+     * @param date The expiration date
      */
-    public void setExpirationDate(String date) {
+    public void setExpirationDate(Date date) {
         put(EXPIRATION_DATE, date);
     }
 

@@ -121,7 +121,7 @@ public class UsersResource {
      * @param entity A JSON entity (a UserPayload) containing a username and a password.
      *               The rules for username and password length and structure are in
      *               the Login methods cited below.
-     * @return If it succeededs, returns an http status 202 (ACCEPTED).
+     * @return If it succeeds, returns an http status 202 (ACCEPTED).
      *         Else, the following http status codes are possible: 400 (either
      *         the request was invalid or the user is not authorized to login),
      *         or 404 (user resource does not exist). In either case a JSON
