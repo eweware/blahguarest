@@ -55,6 +55,7 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(POLL_OPTION_VOTES, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(STATS, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
     }
@@ -134,6 +135,16 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     @Override
     public void setImageIds(List<String> imageIds) {
         put(IMAGE_IDS, imageIds);
+    }
+
+    @Override
+    public List<String> getBadgeIds() {
+        return (List<String>) get(BADGE_IDS);
+    }
+
+    @Override
+    public void setBadgeIds(List<String> badgeIds) {
+        put(BADGE_IDS, badgeIds);
     }
 
     @Override

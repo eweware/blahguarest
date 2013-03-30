@@ -46,6 +46,8 @@ public final class MongoStoreManager implements StoreManager {
     private String trackerDbName;
 
     private String badgeAuthorityCollectionName;
+    private String badgeTransactionCollectionName;
+    private String badgeCollectionName;
     private String inboxStateCollectionName;
     private String mediaCollectionName;
     private String blahCollectionName;
@@ -107,6 +109,22 @@ public final class MongoStoreManager implements StoreManager {
 
     public void setBadgeAuthorityCollectionName(String name) {
         badgeAuthorityCollectionName = name;
+    }
+
+    public String getBadgeCollectionName() {
+        return badgeCollectionName;
+    }
+
+    public void setBadgeCollectionName(String name) {
+        badgeCollectionName = name;
+    }
+
+    public String getBadgeTransactionCollectionName() {
+        return badgeTransactionCollectionName;
+    }
+
+    public void setBadgeTransactionCollectionName(String name) {
+        badgeTransactionCollectionName = name;
     }
 
     public void setInboxStateCollectionName(String name) {
@@ -348,6 +366,10 @@ public final class MongoStoreManager implements StoreManager {
 
             collectionNameToCollectionMap.put(badgeAuthorityCollectionName, getUserDb().getCollection(badgeAuthorityCollectionName));
 
+            collectionNameToCollectionMap.put(badgeTransactionCollectionName, getUserDb().getCollection(badgeTransactionCollectionName));
+
+            collectionNameToCollectionMap.put(badgeCollectionName, getUserDb().getCollection(badgeCollectionName));
+
             collectionNameToCollectionMap.put(blahCollectionName, getBlahDb().getCollection(blahCollectionName));
 
             collectionNameToCollectionMap.put(mediaCollectionName, getBlahDb().getCollection(mediaCollectionName));
@@ -526,6 +548,16 @@ public final class MongoStoreManager implements StoreManager {
     @Override
     public BadgeAuthorityDAO createBadgeAuthority(String authorityId) throws SystemErrorException {
         return new BadgeAuthorityDAOImpl(authorityId);
+    }
+
+    @Override
+    public BadgeDAO createBadge() throws SystemErrorException {
+        return new BadgeDAOImpl();
+    }
+
+    @Override
+    public BadgeDAO createBadge(String badgeId) throws SystemErrorException {
+        return new BadgeDAOImpl(badgeId);
     }
 
     @Override

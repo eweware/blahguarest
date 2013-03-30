@@ -6,19 +6,11 @@ import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 
-import javax.ws.rs.core.MediaType;
 import javax.xml.ws.WebServiceException;
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -69,6 +61,7 @@ public final class SystemManager implements ManagerInterface {
             String devMemcachedHostname,
             String devRestPort
             ) {
+        final String randomProvider = "SHA1PRNG";
         try {
             this.cryptoOn = cryptoOn;
             maybeSetDevelopmentMode();
@@ -80,14 +73,25 @@ public final class SystemManager implements ManagerInterface {
             this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(cacheHostname, cachePort).setInboxBlahExpirationTime(expirationTime);
-            this.randomizer = SecureRandom.getInstance("SHA1PRNG");
+            this.randomizer = SecureRandom.getInstance(randomProvider);
+            randomizer.generateSeed(20);
             this.sha1Digest = MessageDigest.getInstance("SHA-1"); // TODO try SHA-2
         } catch (NoSuchAlgorithmException e) {
-            throw new WebServiceException("failed to initialized SystemManager", e);
+            throw new WebServiceException("Failed to initialized SystemManager due to unavailable secure random provider '"+randomProvider+"'", e);
         }
         SystemManager.singleton = this;
         this.state = ManagerState.INITIALIZED;
         System.out.println("*** SystemManager initialized ***");
+    }
+
+    public String getSecureRandomString() throws SystemErrorException {
+        // TODO reseed this once in a while?
+        final byte[] rand = new byte[20];
+        try {
+            return new String(rand, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new SystemErrorException("Unable to create secure random string", e);
+        }
     }
 
     public boolean isCryptoOn() {

@@ -194,6 +194,11 @@ public interface BlahDAOConstants {
      */
     static final String IMAGE_IDS = "img";
 
+    /**
+     * <p>A set of badges associated with this blah.</p>
+     */
+    static final String BADGE_IDS = "B";
+
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                     TYPE_ID, TEXT, BODY, GROUP_ID, AUTHOR_ID}),
@@ -212,7 +217,7 @@ public interface BlahDAOConstants {
                     STATS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{
-                    IMAGE_IDS
+                    IMAGE_IDS, BADGE_IDS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{EXPIRATION_DATE}),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new FieldDescriptor[]{

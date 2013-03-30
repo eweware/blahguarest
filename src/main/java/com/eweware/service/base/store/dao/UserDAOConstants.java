@@ -48,10 +48,16 @@ public interface UserDAOConstants {
      */
     static final String USER_CONTROVERSY_STRENGTH = "cs";
 
+    /**
+     * <p>List of badge ids for this user.</p>
+     */
+    static final String BADGE_IDS = "B";
+
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-      new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USERNAME}),
-      new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{LAST_INBOX}),
-      new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{USER_STRENGTH, USER_CONTROVERSY_STRENGTH}),
-      new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{STATS}),
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USERNAME}),
+            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{LAST_INBOX}),
+            new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{USER_STRENGTH, USER_CONTROVERSY_STRENGTH}),
+            new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{STATS}),
+            new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{BADGE_IDS}),
     };
 }

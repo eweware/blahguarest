@@ -28,6 +28,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_CONTROVERSY_STRENGTH, MongoFieldTypes.NUMBER);
+        UserDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -117,6 +118,16 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     @Override
     public void setControversyStrength(Double strength) {
         put(USER_CONTROVERSY_STRENGTH, strength);
+    }
+
+    @Override
+    public List<String> getBadgeIds() {
+        return (List<String>) get(BADGE_IDS);
+    }
+
+    @Override
+    public void setBadgeIds(List<String> badgeIds) {
+        put(BADGE_IDS, badgeIds);
     }
 
     @Override

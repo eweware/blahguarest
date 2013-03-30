@@ -58,6 +58,9 @@ public interface StoreManager extends ManagerInterface {
     public abstract BadgeAuthorityDAO createBadgeAuthority() throws SystemErrorException;
     public abstract BadgeAuthorityDAO createBadgeAuthority(String authorityId) throws SystemErrorException;
 
+    public abstract BadgeDAO createBadge() throws SystemErrorException;
+    public abstract BadgeDAO createBadge(String badgeId) throws SystemErrorException;
+
     public abstract MediaDAO createMedia();
     public abstract BlahDAO createBlah();
     public abstract BlahDAO createBlah(String blahId) throws SystemErrorException;

@@ -6,6 +6,7 @@ import main.java.com.eweware.service.base.store.dao.BadgeDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BadgeSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -31,17 +32,14 @@ public class BadgePayload extends BasePayload implements BadgeDAOConstants {
         super(map);
     }
 
-   
-    public String getBadgeId() {
-        return (String) get(BADGE_ID);
+    public String getAuthorityBadgeId() {
+        return (String) get(AUTHORITY_BADGE_ID);
     }
 
-   
-    public void setBadgeId(String badgeId) {
-        put(BADGE_ID, badgeId);
+    public void setAuthorityBadgeId(String badgeId) {
+        put(AUTHORITY_BADGE_ID, badgeId);
     }
 
-   
     public String getAuthorityId() {
         return (String) get(AUTHORITY_ID);
     }
@@ -62,36 +60,6 @@ public class BadgePayload extends BasePayload implements BadgeDAOConstants {
     }
 
    
-    public String getDescription() {
-        return (String) get(DESCRIPTION);
-    }
-
-   
-    public void setDescription(String description) {
-        put(DESCRIPTION, description);
-    }
-
-   
-    public String getState() {
-        return (String) get(STATE);
-    }
-
-   
-    public void setState(String state) {
-        put(STATE, state);
-    }
-
-   
-    public String getReason() {
-        return (String) get(REASON);
-    }
-
-   
-    public void setReason(String reason) {
-        put(REASON, reason);
-    }
-
-   
     public String getIconUrl() {
         return (String) get(ICON_URL);
     }
@@ -101,13 +69,19 @@ public class BadgePayload extends BasePayload implements BadgeDAOConstants {
         put(ICON_URL, iconUrl);
     }
 
-   
-    public String getUserToken() {
-        return null;
+    public String getUserId() {
+        return (String) get(USER_ID);
     }
 
-   
-    public void setUserToken(String userToken) {
+    public void setUserId(String userId) {
+        put(USER_ID, userId);
+    }
 
+    public Date getExpirationDate() {
+        return (Date) get(EXPIRATION_DATE);
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        put(EXPIRATION_DATE, expirationDate);
     }
 }

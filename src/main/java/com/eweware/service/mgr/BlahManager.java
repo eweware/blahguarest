@@ -222,8 +222,10 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("invalid field typeId=" + typeId, ErrorCodes.MISSING_BLAH_TYPE_ID);
         }
 
-        // Ensure user is active in group  // TODO authorized groups can be cached in session
+        // Ensure user is active in group  // TODO authorized groups could be cached in session obj
         ensureUserActiveInGroup(authorId, groupId);
+
+        verifyBadges(entity);
 
         // Create fresh blah to prevent injection
         final BlahDAO blahDAO = getStoreManager().createBlah();
@@ -259,6 +261,19 @@ public final class BlahManager implements ManagerInterface {
         }
 
         return new BlahPayload(blahDAO);
+    }
+
+    private void verifyBadges(BlahPayload entity) throws SystemErrorException, InvalidRequestException {
+        final List<String> badgeIds = entity.getBadgeIds();
+        if (badgeIds != null && badgeIds.size() > 0) {
+            final BadgeDAO badge = storeManager.createBadge();
+            for (String badgeId : badgeIds) {
+                badge.setId(badgeId);
+                if (badge._count() == 0) {
+                    throw new InvalidRequestException("badge id '" + badgeId + "' is invalid", ErrorCodes.INVALID_INPUT);
+                }
+            }
+        }
     }
 
     /**
@@ -994,10 +1009,10 @@ public final class BlahManager implements ManagerInterface {
         final BlahPayload blahPayload = new BlahPayload(found);
 
         // If user is in session, we include the user's stats for this blah
-        if (!CommonUtilities.isEmptyString(userId)) {
+        if (!CommonUtilities.isEmptyString(userId)) { // TODO separate this into its own API call
             addUserBlahInfoToPayload(userId, blahId, blahPayload);
         }
-        if (stats) { // if stats are requested, we include the blah's stats
+        if (stats) { // if stats are requested, we include the blah's stats   TODO separate this into its own API call
             fetchAndAddBlahTrackers(blahId, statsStartDate, statsEndDate, blahPayload);
         }
         return blahPayload;

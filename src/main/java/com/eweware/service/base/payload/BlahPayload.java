@@ -299,6 +299,22 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     }
 
     /**
+     * <p>Returns the list of badge ids associated with this blah.</p>
+     * @return  List of badge ids or null if there are none.
+     */
+    public List<String> getBadgeIds() {
+        return (List<String>) get(BADGE_IDS);
+    }
+
+    /**
+     * <p>Sets the list of badge ids associated with this blah.</p>
+     * @param badgeIds
+     */
+    public void setBadgeIds(List<String> badgeIds) {
+        put(BADGE_IDS, badgeIds);
+    }
+
+    /**
      * <p>Returns the number of poll options (number of
      * entries in poll options array.</p>
      * @return  The number of poll options

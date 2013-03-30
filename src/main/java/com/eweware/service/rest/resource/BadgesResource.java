@@ -3,20 +3,23 @@ package main.java.com.eweware.service.rest.resource;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.payload.BadgePayload;
+import main.java.com.eweware.service.base.payload.BadgingNotificationEntity;
 import main.java.com.eweware.service.base.store.dao.BadgeAuthorityDAO;
 import main.java.com.eweware.service.mgr.BadgesManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
+import org.apache.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Badges resource.</p>
@@ -26,6 +29,8 @@ import java.util.Map;
  */
 @Path("badges")
 public class BadgesResource {
+
+    private static final Logger logger = Logger.getLogger("BadgesResource");
 
     private BadgesManager badgesMgr;
 
@@ -83,18 +88,61 @@ public class BadgesResource {
     @Produces(MediaType.TEXT_HTML)
     public Response createBadgeForUser(
             Map<String, Object> entity,
-            @Context HttpServletRequest request) {
+            @Context HttpServletRequest request,
+            @Context HttpServletResponse response) {
         try {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final String authorityId = (String) entity.get("i");
             final String badgeTypeId = (String) entity.get("t");
-            final String html = getBadgesMgr().createBadgeForUser(userId, authorityId, badgeTypeId);
-            return RestUtilities.make200OkResponse(html);
+            return getBadgesMgr().createBadgeForUser(response, userId, authorityId, badgeTypeId);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        }
+    }
+
+    /**
+     * <p>A badging authority calls this to add a badge for a user.</p>
+     * @param entity    A JSON entity representing the badge notification metadata
+     *                  containing fields in BadgingNotificationEntity.
+     * @return
+     * @see main.java.com.eweware.service.base.payload.BadgingNotificationEntity
+     */
+    @POST
+    @Path("/add")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addBadgeToUser(
+            Map<String, Object> entity
+    ) {
+        try {
+            return getBadgesMgr().addBadge(entity);
+        } catch (SystemErrorException e) {
+            logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(BadgesManager.makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_SERVER_ERROR, e.getMessage())).build();
+        }
+    }
+
+    @GET
+    @Path("/{badgeId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getBadgeById(@PathParam("badgeId") String badgeId,
+                                 @Context HttpServletRequest request) {
+        try {
+            BlahguaSession.ensureAuthenticated(request);
+            final BadgePayload entity = getBadgesMgr().getBadgeById(badgeId);
+            return RestUtilities.make200OkResponse(entity);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }

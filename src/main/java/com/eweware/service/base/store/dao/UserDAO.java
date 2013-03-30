@@ -32,4 +32,8 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
     public Date getCreated();
 
     public void setCreated(Date created);
+
+    public List<String> getBadgeIds();
+
+    public void setBadgeIds(List<String> badgeIds);
 }

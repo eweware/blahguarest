@@ -5,6 +5,7 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.store.dao.BadgeDAO;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,13 +28,13 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
 
 
     @Override
-    public String getBadgeId() {
-        return (String) get(BADGE_ID);
+    public String getAuthorityBadgeId() {
+        return (String) get(AUTHORITY_BADGE_ID);
     }
 
     @Override
-    public void setBadgeId(String badgeId) {
-        put(BADGE_ID, badgeId);
+    public void setAuthorityBadgeId(String badgeId) {
+        put(AUTHORITY_BADGE_ID, badgeId);
     }
 
     @Override
@@ -57,36 +58,6 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
     }
 
     @Override
-    public String getDescription() {
-        return (String) get(DESCRIPTION);
-    }
-
-    @Override
-    public void setDescription(String description) {
-        put(DESCRIPTION, description);
-    }
-
-    @Override
-    public String getState() {
-        return (String) get(STATE);
-    }
-
-    @Override
-    public void setState(String state) {
-        put(STATE, state);
-    }
-
-    @Override
-    public String getReason() {
-        return (String) getReason();
-    }
-
-    @Override
-    public void setReason(String reason) {
-        put(REASON, reason);
-    }
-
-    @Override
     public String getIconUrl() {
         return (String) get(ICON_URL);
     }
@@ -97,13 +68,28 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
     }
 
     @Override
-    public String getUserToken() {
-        return (String) get(USER_TOKEN);
+    public String getUserId() {
+        return (String) get(USER_ID);
     }
 
     @Override
-    public void setUserToken(String userToken) {
-        put(USER_TOKEN, userToken);
+    public void setUserId(String userId) {
+        put(USER_ID, userId);
+    }
+
+    @Override
+    public Date getExpirationDate() {
+        return (Date) get(EXPIRATION_DATE);
+    }
+
+    @Override
+    public void setExpirationDate(Date expirationDate) {
+        put(EXPIRATION_DATE, expirationDate);
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return super.toMap();
     }
 
     @Override
@@ -114,7 +100,7 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
     @Override
     protected String _getCollectionName() throws SystemErrorException {
         if (collectionName == null) {
-            collectionName = MongoStoreManager.getInstance().getUserCollectionName();
+            collectionName = MongoStoreManager.getInstance().getBadgeCollectionName();
         }
         return collectionName;
     }
@@ -129,16 +115,14 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
 
     private static String collectionName;
     private static DBCollection collection;
-
     private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(4);
+
     static {
-        FIELD_TO_TYPE_MAP.put(BADGE_ID, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(AUTHORITY_BADGE_ID, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(AUTHORITY_ID, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(DESCRIPTION, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(REASON, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(ICON_URL, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(USER_TOKEN, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(EXPIRATION_DATE, MongoFieldTypes.DATE);
     }
 }

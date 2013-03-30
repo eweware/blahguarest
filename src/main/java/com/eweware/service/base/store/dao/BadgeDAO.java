@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import java.util.Date;
+
 /**
  * <p>Represents a badge.</p>
  *
@@ -8,9 +10,9 @@ package main.java.com.eweware.service.base.store.dao;
  */
 public interface BadgeDAO extends BaseDAO, BadgeDAOConstants {
 
-    public String getBadgeId();
+    public String getAuthorityBadgeId();
 
-    public void setBadgeId(String badgeId);
+    public void setAuthorityBadgeId(String badgeId);
 
     public String getAuthorityId();
 
@@ -20,23 +22,15 @@ public interface BadgeDAO extends BaseDAO, BadgeDAOConstants {
 
     public void setDisplayName(String displayName);
 
-    public String getDescription();
-
-    public void setDescription(String description);
-
-    public String getState();
-
-    public void setState(String state);
-
-    public String getReason();
-
-    public void setReason(String reason);
-
     public String getIconUrl();
 
     public void setIconUrl(String iconUrl);
 
-    public String getUserToken();
+    public String getUserId();
 
-    public void setUserToken(String userToken);
+    public void setUserId(String userId);
+
+    public Date getExpirationDate();
+
+    public void setExpirationDate(Date expirationDate);
 }

@@ -28,6 +28,11 @@ public class BadgeAuthorityDAOImpl extends BaseDAOImpl implements BadgeAuthority
     }
 
     @Override
+    public void setId(String id) throws SystemErrorException {
+        put(ID, id);
+    }
+
+    @Override
     public String getDisplayName() {
         return (String) get(DISPLAY_NAME);
     }
@@ -55,6 +60,16 @@ public class BadgeAuthorityDAOImpl extends BaseDAOImpl implements BadgeAuthority
     @Override
     public void setEndpointUrl(String endpointUrl) {
         put(ENDPOINT_URL, endpointUrl);
+    }
+
+    @Override
+    public String getRestEndpointUrl() {
+        return (String) get(REST_ENDPOINT_URL);
+    }
+
+    @Override
+    public void setRestEndpointUrl(String restEndpointUrl) {
+        put(REST_ENDPOINT_URL, restEndpointUrl);
     }
 
     @Override

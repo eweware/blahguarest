@@ -19,4 +19,8 @@ public interface BadgeAuthorityDAO extends BaseDAO, BadgeAuthorityDAOConstants {
     public String getEndpointUrl();
 
     public void setEndpointUrl(String endpointUrl);
+
+    public String getRestEndpointUrl();
+
+    public void setRestEndpointUrl(String restEndpointUrl);
 }

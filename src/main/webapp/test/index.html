@@ -28,7 +28,7 @@
 <div style="background-color: yellow;padding-bottom: .7em"> <!-- START CONTROLS -->
     <div>
         Host Endpoint:
-        <input id="endpoint" type="text" value="localhost:8080"/>
+        <input id="endpoint" type="text" value="beta.blahgua.com"/>
     </div>
     <!-- Actions -->
     <div style="margin-top: .5em">
@@ -106,8 +106,6 @@
     <div class="blah" style="margin-top: .5em">
         <input id="getInbox" style="background-color: #22bf0d" type="button" onclick="getInbox();"  value="Get Inbox"/>
         &nbsp;
-        <input id="createBlahType" type="button" onclick="createBlahType()" value="Create Blah Type"/>
-        &nbsp;
         <input id="getBlahTypes" type="button" onclick="rest('GET', 'blahs/types')" value="Get Blah Types"/>
         &nbsp;
         <input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>
@@ -158,7 +156,7 @@
     </div>
     <div class='param'>
         <span>Date: <input id='datefield' type='text' size='30' value='March 11, 2013 11:13:00'/></span>
-        <span>Authority Id: <input id='authorityid' type='text' size='30'/></span>
+        <span>Authority Id: <input id='authorityid' type='text' value='www.badge-authority.net' size='30'/></span>
     </div>
     <div>
         <textarea  id="blahcommenttext" rows="2" cols="90" value="hello">Blah or Comment text goes here</textarea>

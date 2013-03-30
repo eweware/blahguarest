@@ -1,6 +1,8 @@
 package main.java.com.eweware.service.base.payload;
 
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.BadgeDAO;
+import main.java.com.eweware.service.base.store.dao.UserDAO;
 import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
@@ -52,6 +54,14 @@ public final class UserPayload extends BasePayload implements UserDAOConstants {
 
     public void setControversyStrength(Double strength) {
         put(USER_CONTROVERSY_STRENGTH, strength);
+    }
+
+    public List<String> getBadgeIds() {
+        return (List<String>) get(BADGE_IDS);
+    }
+
+    public void setBadgeIds(List<String> badgeIds) {
+        put(BADGE_IDS, badgeIds);
     }
 
     public List<UserTrackerPayload> getStats() {

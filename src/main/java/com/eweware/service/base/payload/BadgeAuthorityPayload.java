@@ -58,4 +58,12 @@ public class BadgeAuthorityPayload extends BasePayload implements BadgeAuthority
     public void setEndpointUrl(String endpointUrl) {
         put(ENDPOINT_URL, endpointUrl);
     }
+
+    public String getRestEndpointUrl() {
+        return (String) get(REST_ENDPOINT_URL);
+    }
+
+    public void setRestEndpointUrl(String restEndpointUrl) {
+        put(REST_ENDPOINT_URL, restEndpointUrl);
+    }
 }

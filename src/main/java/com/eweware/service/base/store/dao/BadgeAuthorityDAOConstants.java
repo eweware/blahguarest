@@ -21,13 +21,18 @@ public interface BadgeAuthorityDAOConstants {
     static final String DESCRIPTION = "D";
 
     /**
-     * <p>The endpoint url for the authority. The format of the string is hostname:port.</p>
+     * <p>The endpoint url for the authority. The format of the string is hostname[:port].</p>
      */
     static final String ENDPOINT_URL = "E";
+
+    /**
+     * <p>The authority's REST endpoint. The format of the string is hostname[:port]/[path]</p>
+     */
+    static final String REST_ENDPOINT_URL = "R";
 
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    DISPLAY_NAME, DESCRIPTION, ENDPOINT_URL}),
+                    DISPLAY_NAME, DESCRIPTION, ENDPOINT_URL, REST_ENDPOINT_URL}),
     };
 }

@@ -85,6 +85,18 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setImageIds(List<String> imageIds);
 
     /**
+     * <p>Returns the badge ids associated with this blah or null if there are none.</p>
+     * @return List of badge ids or null.
+     */
+    public List<String> getBadgeIds();
+
+    /**
+     * <p>Sets this blah's badge ids.</p>
+     * @param badgeIds
+     */
+    public void setBadgeIds(List<String> badgeIds);
+
+    /**
      * Returns the number of poll options (number of
      * entries in poll options array.
      *
