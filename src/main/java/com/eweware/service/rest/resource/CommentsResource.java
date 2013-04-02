@@ -152,9 +152,8 @@ public class CommentsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
-            entity.setId(commentId); // ensure this
-            getBlahManager().updateComment(LocaleId.en_us, entity, commentId);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            getBlahManager().updateComment(LocaleId.en_us, entity, userId, commentId);
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -184,9 +183,9 @@ public class CommentsResource {
      *                       be included with the returned entity. <b>NOTE: this will be moved
      *                       to a separate method in the future.</b>
      * @param userId         <i>Query Parameter:</i> REQUIRED. The id of the user
-     * @param statsStartDate <i>Query Parameter:</i> OPTIONAL: If stats is true, this is a start date with which to filter
+     * @param s <i>Query Parameter:</i> OPTIONAL: If stats is true, this is a start date with which to filter
      *                       the returned stats. Format is yymmdd (e.g., August 27, 2012 is 120827).
-     * @param statsEndDate   <i>Query Parameter:</i> OPTIONAL: If stats is true and there is a start date,
+     * @param e   <i>Query Parameter:</i> OPTIONAL: If stats is true and there is a start date,
      *                       this is an end date with which to filter
      *                       the returned stats. An end date without a start date will be rejected.
      *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
@@ -203,21 +202,22 @@ public class CommentsResource {
             @PathParam("commentId") String commentId,
             @QueryParam("stats") boolean stats,
             @QueryParam("userId") String userId,
-            @QueryParam("s") String statsStartDate,
-            @QueryParam("e") String statsEndDate) {
+            @QueryParam("s") String s,
+            @QueryParam("e") String e,
+            @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(getBlahManager().getCommentById(LocaleId.en_us, commentId, userId, stats, statsStartDate, statsEndDate));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getCommentById(LocaleId.en_us, BlahguaSession.isAuthenticated(request), commentId, userId, stats, s, e));
             getSystemManager().setResponseTime(GET_COMMENT_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (RuntimeException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (InvalidRequestException e1) {
+            return RestUtilities.make400InvalidRequestResponse(e1);
+        } catch (ResourceNotFoundException e1) {
+            return RestUtilities.make404ResourceNotFoundResponse(e1);
+        } catch (SystemErrorException e1) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+        } catch (RuntimeException e1) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e1);
         }
     }
 
@@ -243,17 +243,18 @@ public class CommentsResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCommentForBlah(
+    public Response getCommentsForBlah(
             @QueryParam("blahId") String blahId,
             @QueryParam("userId") String userId,
             @QueryParam("authorId") String authorId,
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count,
-            @QueryParam("sort") String sortFieldName
+            @QueryParam("sort") String sortFieldName,
+            @Context HttpServletRequest request
     ) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(getBlahManager().getComments(LocaleId.en_us, blahId, userId, authorId, start, count, sortFieldName));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getComments(LocaleId.en_us, BlahguaSession.isAuthenticated(request), blahId, userId, authorId, start, count, sortFieldName));
             getSystemManager().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {

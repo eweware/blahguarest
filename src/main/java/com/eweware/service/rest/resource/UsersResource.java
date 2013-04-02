@@ -129,6 +129,7 @@ public class UsersResource {
      * @see main.java.com.eweware.service.user.validation.Login#ensureUsernameString(String)
      * @see main.java.com.eweware.service.user.validation.Login#ensurePasswordString(String)
      * @see UserDAOConstants
+     * @see UserPayload
      */
     @POST
     @Path("/login")
@@ -192,6 +193,7 @@ public class UsersResource {
      *         If the request is invalid, it will return 400 (BAD REQUEST).
      *         On error conditions, a JSON object is returned with details.
      * @see UserDAOConstants
+     * @see UserPayload
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -232,7 +234,9 @@ public class UsersResource {
      *         If the request is invalid, it will return 400 (BAD REQUEST).
      *         If the user is not authorized to access this method, returns 401.
      *         On error conditions, a JSON object is returned with details.
-     * @see UserDAOConstants
+     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see UserProfilePayload
+     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @POST
     @Path("/profile/info")
@@ -337,6 +341,7 @@ public class UsersResource {
      *         If the user may not access this method, returns 401 (UNAUTHORIZED).
      *         On error conditions, a JSON object is returned with details.
      * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see UserProfilePayload
      */
     @PUT
     @Path("/profile/info")
@@ -680,10 +685,10 @@ public class UsersResource {
      * @param stats          <i>Query Parameter:</i> Optional. If true, include
      *                       a user statistics record along with the standard user information.
      *                       Default is false.
-     * @param statsStartDate <i>Query Parameter:</i> Optional. When stats is true, this is used
+     * @param s <i>Query Parameter:</i> Optional. When stats is true, this is used
      *                       to filter the stats records with this as a start date (inclusive).
      *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
-     * @param statsEndDate   <i>Query Parameter:</i> Optional. When stats is true, this is used
+     * @param e   <i>Query Parameter:</i> Optional. When stats is true, this is used
      *                       to filter the stats records with this as a end date (inclusive).
      *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
      *                       A start date is required whenever an end date is provided (we don't
@@ -699,27 +704,27 @@ public class UsersResource {
     @Path("info")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserInfo(
-            @QueryParam("stats") boolean stats,
-            @QueryParam("s") String statsStartDate,
-            @QueryParam("e") String statsEndDate,
+            @QueryParam("stats") final boolean stats,
+            @QueryParam("s") final String s,
+            @QueryParam("e") final String e,
             @Context HttpServletRequest request) {
 
         try {
-            final long s = System.currentTimeMillis();
+            final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserInfo(LocaleId.en_us, userId, stats, statsStartDate, statsEndDate));
-            getSystemManager().setResponseTime(GET_USER_INFO_OPERATION, (System.currentTimeMillis() - s));
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserInfo(LocaleId.en_us, userId, stats, s, e));
+            getSystemManager().setResponseTime(GET_USER_INFO_OPERATION, (System.currentTimeMillis() - start));
             return response;
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (InvalidRequestException e1) {
+            return RestUtilities.make400InvalidRequestResponse(e1);
+        } catch (InvalidAuthorizedStateException e1) {
+            return RestUtilities.make401UnauthorizedRequestResponse(e1);
+        } catch (ResourceNotFoundException e1) {
+            return RestUtilities.make404ResourceNotFoundResponse(e1);
+        } catch (SystemErrorException e1) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+        } catch (Exception e1) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e1);
         }
     }
 

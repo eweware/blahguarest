@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * <p/>
@@ -21,6 +22,8 @@ import java.util.Map;
  * @author rk@post.harvard.edu
  */
 public final class MongoStoreManager implements StoreManager {
+
+    private static final Logger logger = Logger.getLogger("MongoStoreManager");
 
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
@@ -284,16 +287,16 @@ public final class MongoStoreManager implements StoreManager {
      * Initializes the store manager. This method is public to allow
      * test units to initialize it outside the context of the web server.
      *
-     * @param hostname
+     * @param mongoDbHostname
      * @param port
      * @param userDbName
      * @param blahDbName
      * @param trackerDbName
      * @param connectionsPerHost
      */
-    public void doInitialize(String hostname, String port, String userDbName, String blahDbName, String trackerDbName,
+    public void doInitialize(String mongoDbHostname, String port, String userDbName, String blahDbName, String trackerDbName,
                              Integer connectionsPerHost) {
-        this.mongoDbHostname = hostname;
+        this.mongoDbHostname = mongoDbHostname;
         this.mongoDbPort = Integer.parseInt(port);
         this.connectionsPerHost = connectionsPerHost;
 
@@ -326,9 +329,10 @@ public final class MongoStoreManager implements StoreManager {
     public void start() {
         try {
             try {
-                if (SystemManager.getInstance().isDevMode()) {
+                if (SystemManager.getInstance().isDevMode() && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
                     this.mongoDbHostname = devMongoDbHostname;  // same default 21191 port
                 }
+                logger.info("MongoDB hostname '" + this.mongoDbHostname + "' port '" + this.mongoDbPort + "'");
             } catch (SystemErrorException e) {
                 // if sysmgr not initialized, no need for this.
             }

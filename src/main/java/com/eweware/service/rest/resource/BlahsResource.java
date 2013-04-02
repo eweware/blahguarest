@@ -384,8 +384,8 @@ public class BlahsResource {
      *
      * @param blahId         <i>Path Parameter</i>. The blah's id
      * @param stats          <i>Query Parameter:</i> Optional. if true, return statistics with blah
-     * @param statsStartDate <i>Query Parameter:</i> Optional. If stats=true, return statistics starting with this date
-     * @param statsEndDate   <i>Query Parameter:</i> Optional. If stats=true, return statistics ending with this date
+     * @param s <i>Query Parameter:</i> Optional. If stats=true, return statistics starting with this date. Format is yymmdd (e.g., August 27, 2012 is 120827).
+     * @param e   <i>Query Parameter:</i> Optional. If stats=true, return statistics ending with this date. Format is yymmdd (e.g., August 27, 2012 is 120827).
      * @return Returns an http status of 200 and a JSON entity containing the blah information.
      *         If the blah doesn't exist, returns status 404.
      *         If there is an error in the request, returns status 400.
@@ -397,24 +397,24 @@ public class BlahsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBlahById(@PathParam("blahId") String blahId,
                                 @QueryParam("stats") final boolean stats,
-                                @QueryParam("s") final String statsStartDate, // format is yymmdd (e.g., August 27, 2012 is 120827)
-                                @QueryParam("e") final String statsEndDate,   // format is yymmdd (e.g., August 27, 2012 is 120827)
+                                @QueryParam("s") final String s,
+                                @QueryParam("e") final String e,
                                 @QueryParam("sc") final boolean saveContext,
                                 @Context HttpServletRequest req) {
         try {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.getUserId(req);
-            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahById(LocaleId.en_us, blahId, userId, stats, statsStartDate, statsEndDate));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahById(LocaleId.en_us, blahId, userId, stats, s, e));
             getSystemManager().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (ResourceNotFoundException e1) {
+            return RestUtilities.make404ResourceNotFoundResponse(e1);
+        } catch (InvalidRequestException e1) {
+            return RestUtilities.make400InvalidRequestResponse(e1);
+        } catch (SystemErrorException e1) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+        } catch (Exception e1) {
+            return RestUtilities.make500AndLogSystemErrorResponse(e1);
         }
     }
 

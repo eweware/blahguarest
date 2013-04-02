@@ -13,6 +13,7 @@ import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.dao.schema.CommentSchema;
 import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
+import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
@@ -1045,10 +1046,9 @@ public final class BlahManager implements ManagerInterface {
             }
         } else { // range search
             final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker();
-            final String from = extractYearMonthFromTrackerDate(statsStartDate);
-            final String to = extractYearMonthFromTrackerDate(statsEndDate);
+            final String from = blahId + extractYearMonthFromTrackerDate(statsStartDate);
+            final String to = blahId + extractYearMonthFromTrackerDate(statsEndDate);
             final boolean sorted = true;
-            // TODO is this correct? WRS-55 ... double-check date format of ID
             final List<? extends BaseDAO> trackerDAOs = blahTrackerDAO._findRangeSingleField(sorted, BlahTrackerDAO.ID, from, true, to, true);
             trackers = new ArrayList<BlahTrackerPayload>(trackerDAOs.size());
             for (BaseDAO dao : trackerDAOs) {
@@ -1212,47 +1212,47 @@ public final class BlahManager implements ManagerInterface {
      * <p/>
      * TODO check injection problems: e.g., blahId or authorId changed, etc...
      *
+     *
      * @param localeId
-     * @param request   The client request
-     * @param commentId
-     * @throws InvalidRequestException
+     * @param entity   The client request
+     * @param userId
+     *@param commentId  @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
-    public void updateComment(LocaleId localeId, CommentPayload request, String commentId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    public void updateComment(LocaleId localeId, CommentPayload entity, String userId, String commentId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
 
         if (CommonUtilities.isEmptyString(commentId)) {
-            throw new InvalidRequestException("missing comment id", request, ErrorCodes.MISSING_COMMENT_ID);
+            throw new InvalidRequestException("missing comment id", entity, ErrorCodes.MISSING_COMMENT_ID);
         }
-        if (!CommonUtilities.isEmptyString(request.getText())) {
-            throw new InvalidRequestException("user may not edit comment text", request, ErrorCodes.CANNOT_EDIT_TEXT);
+        if (!CommonUtilities.isEmptyString(entity.getText())) {
+            throw new InvalidRequestException("user may not edit comment text", entity, ErrorCodes.CANNOT_EDIT_TEXT);
         }
-        final String userId = request.getAuthorId();
         if (CommonUtilities.isEmptyString(userId)) {
-            throw new InvalidRequestException("missing user id", request, ErrorCodes.MISSING_AUTHOR_ID);
+            throw new InvalidRequestException("missing user id", entity, ErrorCodes.MISSING_AUTHOR_ID);
         }
-        if (request.getBlahVote() != null) {
+        if (entity.getBlahVote() != null) {
             throw new InvalidRequestException("user cannot vote on blah when updating a comment; userId=" +
-                    request.getAuthorId() + " commentId=" + request.getId() + "blahId=" + request.getBlahId(), ErrorCodes.CANNOT_VOTE_ON_BLAH_WHEN_UPDATING_COMMENT);
+                    userId + " commentId=" + entity.getId() + "blahId=" + entity.getBlahId(), ErrorCodes.CANNOT_VOTE_ON_BLAH_WHEN_UPDATING_COMMENT);
         }
 
-        final Integer voteForComment = GeneralUtilities.checkDiscreteValue(request.getCommentVotes(), request);
+        final Integer voteForComment = GeneralUtilities.checkDiscreteValue(entity.getCommentVotes(), entity);
         final boolean didVoteForComment = (voteForComment != 0);
-        final Integer views = GeneralUtilities.checkValueRange(request.getViews(), 0, maxOpensOrViewsPerUpdate, request);
-        final Integer opens = GeneralUtilities.checkValueRange(request.getOpens(), 0, maxOpensOrViewsPerUpdate, request);
+        final Integer views = GeneralUtilities.checkValueRange(entity.getViews(), 0, maxOpensOrViewsPerUpdate, entity);
+        final Integer opens = GeneralUtilities.checkValueRange(entity.getOpens(), 0, maxOpensOrViewsPerUpdate, entity);
         if (!didVoteForComment &&
                 (views == 0) &&
                 (opens == 0)) {
             return; // nothing to update
         }
 
-        getUserManager().checkUserById(userId, request);
+        getUserManager().checkUserById(userId, entity);
 
         final CommentDAO commentDAO = (CommentDAO) getStoreManager().createComment(commentId)._findByPrimaryId(CommentDAO.BLAH_ID, CommentDAO.AUTHOR_ID);
         if (commentDAO == null) {
-            throw new ResourceNotFoundException("No commentId=" + commentId, request, ErrorCodes.NOT_FOUND_COMMENT_ID);
+            throw new ResourceNotFoundException("No commentId=" + commentId, entity, ErrorCodes.NOT_FOUND_COMMENT_ID);
         }
         final String blahId = commentDAO.getBlahId();
         final String commentAuthorId = commentDAO.getAuthorId();
@@ -1264,7 +1264,7 @@ public final class BlahManager implements ManagerInterface {
         }
         final String blahAuthorId = blahDAO.getAuthorId();
         if (didVoteForComment && blahAuthorId.equals(userId)) {
-            throw new InvalidRequestException("authorId=" + userId + " (author of the blahId=" + blahId + ") cannot vote on comments to author's own blah", request, ErrorCodes.USER_CANNOT_VOTE_ON_COMMENTS_TO_ONES_OWN_BLAH);
+            throw new InvalidRequestException("authorId=" + userId + " (author of the blahId=" + blahId + ") cannot vote on comments to author's own blah", entity, ErrorCodes.USER_CANNOT_VOTE_ON_COMMENTS_TO_ONES_OWN_BLAH);
         }
         final UserCommentInfoDAO userCommentInfoDAO = getStoreManager().createUserCommentInfo(userId, commentId);
         final UserCommentInfoDAO foundUserCommentInfo = (UserCommentInfoDAO) userCommentInfoDAO._findByCompositeId(new String[]{UserCommentInfoDAO.VOTE}, UserCommentInfoDAO.USER_ID, UserCommentInfoDAO.COMMENT_ID);
@@ -1352,7 +1352,7 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 
-    public CommentPayload getCommentById(LocaleId localeId, String commentId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    public CommentPayload getCommentById(LocaleId localeId, boolean authenticated, String commentId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
@@ -1360,14 +1360,18 @@ public final class BlahManager implements ManagerInterface {
         if (commentDAO == null) {
             throw new ResourceNotFoundException("blah comment not found", "commentId=" + commentId, ErrorCodes.NOT_FOUND_COMMENT_ID);
         }
-        final CommentPayload comment = new CommentPayload(commentDAO);
+        final CommentPayload entity = new CommentPayload(commentDAO);
         if (!CommonUtilities.isEmptyString(userId)) {
-            addUserCommentInfoToPayload(comment, commentId, userId);
+            addUserCommentInfoToPayload(entity, commentId, userId);
         }
         if (stats) {
-            fetchAndAddCommentTrackers(statsStartDate, statsEndDate, comment);
+            fetchAndAddCommentTrackers(statsStartDate, statsEndDate, entity);
         }
-        return comment;
+
+        // TODO expensive! see WRS-252
+        mayAddUserNickname(authenticated, commentDAO, entity);
+
+        return entity;
     }
 
     private void addUserCommentInfoToPayload(CommentPayload comment, String commentId, String userId) throws SystemErrorException {
@@ -1414,7 +1418,7 @@ public final class BlahManager implements ManagerInterface {
 
     }
 
-    public List<CommentPayload> getComments(LocaleId localeId, String blahId, String userId, String authorId, Integer start, Integer count, String sortFieldName) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    public List<CommentPayload> getComments(LocaleId localeId, boolean authenticated, String blahId, String userId, String authorId, Integer start, Integer count, String sortFieldName) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         count = ensureCount(count);
         final boolean forBlah = !CommonUtilities.isEmptyString(blahId);
         if (forBlah) {
@@ -1441,7 +1445,10 @@ public final class BlahManager implements ManagerInterface {
 
         final List<CommentPayload> comments = new ArrayList<CommentPayload>(commentDAOs.size());
         for (CommentDAO dao : commentDAOs) {
-            comments.add(new CommentPayload(dao));
+            final CommentPayload commentPayload = new CommentPayload(dao);
+            // TODO expensive! see WRS-252
+            mayAddUserNickname(authenticated, dao, commentPayload);
+            comments.add(commentPayload);
         }
         if (!CommonUtilities.isEmptyString(userId)) {
             for (CommentPayload comment : comments) {
@@ -1449,6 +1456,20 @@ public final class BlahManager implements ManagerInterface {
             }
         }
         return comments;
+    }
+
+    private void mayAddUserNickname(boolean authenticated, CommentDAO dao, CommentPayload commentPayload) throws SystemErrorException {
+        final String commentAuthorId = dao.getAuthorId();
+        final UserProfileDAO userProfile = (UserProfileDAO) storeManager.createUserProfile(commentAuthorId)._findByPrimaryId(UserProfileDAO.USER_PROFILE_NICKNAME, UserProfileDAO.USER_PROFILE_NICKNAME_PERMISSIONS);
+        if (userProfile != null) {
+            final Integer nicknamePermissions = userProfile.getNicknamePermissions();
+            if ((nicknamePermissions != null) &&
+                    ((nicknamePermissions == UserProfilePermissions.PUBLIC.getCode()) ||
+                            ((nicknamePermissions == UserProfilePermissions.MEMBERS.getCode()) && authenticated))) {
+                final String nickname = userProfile.getNickname();
+                commentPayload.setUserNickname(nickname);
+            }
+        }
     }
 
     /**

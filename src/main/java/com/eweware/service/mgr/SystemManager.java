@@ -66,7 +66,10 @@ public final class SystemManager implements ManagerInterface {
             this.cryptoOn = cryptoOn;
             maybeSetDevelopmentMode();
             if (isDevMode()) {
-                cacheHostname = devMemcachedHostname; // same port 21191
+                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
+                    cacheHostname = devMemcachedHostname; // same port 21191
+                }
+                logger.info("Memcached hostname '" + cacheHostname + "' port '" + cachePort + "'");
                 restEndpoint = "localhost:" + devRestPort;
                 cryptoOn = true;
             }

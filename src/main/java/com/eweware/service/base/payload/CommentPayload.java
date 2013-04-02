@@ -18,9 +18,11 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
         return CommentSchema.getSchema(LocaleId.en_us);
     }
 
+    /** Fields not in corresponding DAO **/
     static final String USER_VOTE = "uv";
     static final String USER_VIEWS = "uw";
     static final String USER_OPENS = "uo";
+    static final String USER_NICKNAME = "K";
 
     public CommentPayload() {
         super();
@@ -144,5 +146,13 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
 
     public void setUserOpens(Integer opens) {
         put(USER_OPENS, opens);
+    }
+
+    public String getUserNickname() {
+        return (String) get(USER_NICKNAME);
+    }
+
+    public void setUserNickname(String nickname) {
+        put(USER_NICKNAME, nickname);
     }
 }
