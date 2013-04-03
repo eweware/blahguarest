@@ -63,4 +63,12 @@ public interface InboxBlahDAO extends BaseDAO, InboxBlahDAOConstants {
     public Integer getViews();
 
     public void setViews(Integer views);
+
+    public String getBadgeIndicator();
+
+    public void setBadgeIndicator(String indicator);
+
+    public String getAuthorNickname();
+
+    public void setAuthorNickname(String nickname);
 }

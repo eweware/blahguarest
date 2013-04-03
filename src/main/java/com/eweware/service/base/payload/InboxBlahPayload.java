@@ -117,4 +117,20 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
     public void setViews(Integer views) {
         put(VIEWS, views);
     }
+
+    public String getBadgeIndicator() {
+        return (String) get(BADGE_INDICATOR);
+    }
+
+    public void setBadgeIndicator(String indicator) {
+        put(BADGE_INDICATOR, indicator);
+    }
+
+    public String getAuthorNickname() {
+        return (String) get(AUTHOR_NICKNAME);
+    }
+
+    public void setAuthorNickname(String nickname) {
+        put(AUTHOR_NICKNAME, nickname);
+    }
 }

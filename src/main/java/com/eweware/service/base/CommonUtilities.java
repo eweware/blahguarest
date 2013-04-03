@@ -2,6 +2,11 @@ package main.java.com.eweware.service.base;
 
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.payload.CommentPayload;
+import main.java.com.eweware.service.base.store.StoreManager;
+import main.java.com.eweware.service.base.store.dao.CommentDAO;
+import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
+import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -125,6 +130,27 @@ public final class CommonUtilities {
         } catch (Exception e) {
             throw new SystemErrorException("Problem evaluation marked up text", e, ErrorCodes.INVALID_TEXT_INPUT);
         }
+    }
+
+    public static void maybeAddUserNickname(StoreManager storeMgr, boolean authenticated, String commentAuthorId, CommentPayload commentPayload) throws SystemErrorException {
+        final String nickname = maybeGetUserNickname(storeMgr, authenticated, commentAuthorId);
+        if (nickname != null) {
+            commentPayload.setUserNickname(nickname);
+        }
+    }
+
+    public static String maybeGetUserNickname(StoreManager storeMgr, boolean authenticated, String userId) throws SystemErrorException {
+        final UserProfileDAO userProfile = (UserProfileDAO) storeMgr.createUserProfile(userId)._findByPrimaryId(UserProfileDAO.USER_PROFILE_NICKNAME, UserProfileDAO.USER_PROFILE_NICKNAME_PERMISSIONS);
+        if (userProfile != null) {
+            final Integer nicknamePermissions = userProfile.getNicknamePermissions();
+            if ((nicknamePermissions != null) &&
+                    ((nicknamePermissions == UserProfilePermissions.PUBLIC.getCode()) ||
+                            ((nicknamePermissions == UserProfilePermissions.MEMBERS.getCode()) && authenticated))) {
+                final String nickname = userProfile.getNickname();
+                return nickname;
+            }
+        }
+        return null;
     }
 
 //    public static void main(String[] s) {

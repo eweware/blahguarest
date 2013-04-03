@@ -96,9 +96,14 @@ public interface InboxBlahDAOConstants {
      */
     static final String BADGE_INDICATOR = "B";
 
+    /**
+     * <p>Possible nickname of author</p>
+     */
+    static final String AUTHOR_NICKNAME = "K";
+
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{BLAH_ID, AUTHOR_ID, TYPE, BLAH_TEXT, GROUP_ID, BADGE_INDICATOR}),
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{BLAH_ID, AUTHOR_ID, TYPE, BLAH_TEXT, GROUP_ID, BADGE_INDICATOR, AUTHOR_NICKNAME}),
             new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{INBOX_NUMBER, UP_VOTES, DOWN_VOTES, VIEWS, OPENS, COMMENTS}),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{BLAH_STRENGTH, RECENT_BLAH_STRENGTH}),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {IMAGE_IDS}),

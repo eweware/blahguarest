@@ -13,7 +13,6 @@ import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.dao.schema.CommentSchema;
 import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
@@ -1369,7 +1368,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // TODO expensive! see WRS-252
-        mayAddUserNickname(authenticated, commentDAO, entity);
+        CommonUtilities.maybeAddUserNickname(storeManager, authenticated, commentDAO.getAuthorId(), entity);
 
         return entity;
     }
@@ -1447,7 +1446,7 @@ public final class BlahManager implements ManagerInterface {
         for (CommentDAO dao : commentDAOs) {
             final CommentPayload commentPayload = new CommentPayload(dao);
             // TODO expensive! see WRS-252
-            mayAddUserNickname(authenticated, dao, commentPayload);
+            CommonUtilities.maybeAddUserNickname(storeManager, authenticated, dao.getAuthorId(), commentPayload);
             comments.add(commentPayload);
         }
         if (!CommonUtilities.isEmptyString(userId)) {
@@ -1456,20 +1455,6 @@ public final class BlahManager implements ManagerInterface {
             }
         }
         return comments;
-    }
-
-    private void mayAddUserNickname(boolean authenticated, CommentDAO dao, CommentPayload commentPayload) throws SystemErrorException {
-        final String commentAuthorId = dao.getAuthorId();
-        final UserProfileDAO userProfile = (UserProfileDAO) storeManager.createUserProfile(commentAuthorId)._findByPrimaryId(UserProfileDAO.USER_PROFILE_NICKNAME, UserProfileDAO.USER_PROFILE_NICKNAME_PERMISSIONS);
-        if (userProfile != null) {
-            final Integer nicknamePermissions = userProfile.getNicknamePermissions();
-            if ((nicknamePermissions != null) &&
-                    ((nicknamePermissions == UserProfilePermissions.PUBLIC.getCode()) ||
-                            ((nicknamePermissions == UserProfilePermissions.MEMBERS.getCode()) && authenticated))) {
-                final String nickname = userProfile.getNickname();
-                commentPayload.setUserNickname(nickname);
-            }
-        }
     }
 
     /**

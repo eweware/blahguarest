@@ -3,6 +3,7 @@ package main.java.com.eweware.service.mgr.aux;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.cache.BlahCache;
 import main.java.com.eweware.service.base.cache.Inbox;
 import main.java.com.eweware.service.base.error.SystemErrorException;
@@ -128,8 +129,12 @@ public class InboxHandler extends Thread {
         if (tmp != null) {dao.setOpens(tmp);}
         tmp = blahDAO.getViews();
         if (tmp != null) {dao.setViews(tmp);}
-        final List<String> imageIds = blahDAO.getImageIds();
-        if (imageIds != null) {dao.setImageIds(imageIds);}
+        List<String> tmpList = blahDAO.getImageIds();
+        if (tmpList != null) {dao.setImageIds(tmpList);}
+        tmpList = blahDAO.getBadgeIds();
+        if (tmpList != null && tmpList.size() != 0) {dao.setBadgeIndicator("b");}
+        final String nickname = CommonUtilities.maybeGetUserNickname(storeManager, false, blahDAO.getAuthorId());
+        if (nickname != null) {dao.setAuthorNickname(nickname);}
 
         // TODO Speculative for now: put new ones in the 85 percentile
         dao.setStrength(0.85);

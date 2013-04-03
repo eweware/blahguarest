@@ -38,6 +38,8 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
+        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_INDICATOR, MongoFieldTypes.STRING);
+        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_NICKNAME, MongoFieldTypes.STRING);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -212,6 +214,26 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     @Override
     public void setViews(Integer views) {
         put(VIEWS, views);
+    }
+
+    @Override
+    public String getBadgeIndicator() {
+        return (String) get(BADGE_INDICATOR);
+    }
+
+    @Override
+    public void setBadgeIndicator(String indicator) {
+        put(BADGE_INDICATOR, indicator);
+    }
+
+    @Override
+    public String getAuthorNickname() {
+        return (String) get(AUTHOR_NICKNAME);
+    }
+
+    @Override
+    public void setAuthorNickname(String nickname) {
+        put(AUTHOR_NICKNAME, nickname);
     }
 
     @Override
