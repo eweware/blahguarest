@@ -43,7 +43,7 @@ public class UserGroupsResource {
      * <div><b>URL:</b> userGroups</div>
      *
      * @param entity A JSON entity (a UserGroupPayload) containing the
-     *               the group id of the group to join in a field named 'g'.
+     *               the group id of the group to join in a field named 'G'.
      * @return If successful, returns an http status 201 (CREATED).
      *         If there is an error with the request, returns status 400.
      *         If a resource is not found, returns status 404.

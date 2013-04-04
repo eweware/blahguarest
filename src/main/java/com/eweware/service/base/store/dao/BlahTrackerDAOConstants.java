@@ -8,15 +8,15 @@ package main.java.com.eweware.service.base.store.dao;
  */
 public interface BlahTrackerDAOConstants {
 
-    public static final String BT_OBJECT_ID = "id"; // blah id TODO used by unit tests to delete related trackers
-    public static final String BT_AUTHOR_ID = "ud";   // blah author id
+    public static final String BT_OBJECT_ID = "I"; // blah id TODO used by unit tests to delete related trackers
+    public static final String BT_AUTHOR_ID = "A";   // blah author id
 
-    public static final String BT_COMMENTS = "c";
-    public static final String BT_UP_VOTES = "u";
-    public static final String BT_DOWN_VOTES = "d";
-    public static final String BT_POLL_OPTION_INDEX = "p";
-    public static final String BT_VIEWS = "v";
-    public static final String BT_OPENS = "o";
+    public static final String BT_COMMENTS = "C";
+    public static final String BT_UP_VOTES = "U";
+    public static final String BT_DOWN_VOTES = "D";
+    public static final String BT_POLL_OPTION_INDEX = "P";
+    public static final String BT_VIEWS = "V";
+    public static final String BT_OPENS = "O";
 
     public static final String[] BT_FIELD_NAMES = new String[]{
             BT_COMMENTS,

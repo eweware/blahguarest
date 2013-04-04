@@ -17,26 +17,26 @@ public interface UserBlahInfoDAOConstants {
      * Id of user acting on this blah.
      * A string.
      */
-    static final String USER_ID = "userId";
+    static final String USER_ID = "U";
 
     /**
      * <p>Id of the blah being acted upon.
      * A string.</p>
      */
-    static final String BLAH_ID = "blahId";
+    static final String BLAH_ID = "B";
 
     /**
      * <p>Id of group into which blah was introduced.
      * This is used by stats.
      * A string.</p>
      */
-    static final String ORIGINAL_GROUP_ID = "ogid";
+    static final String ORIGINAL_GROUP_ID = "G";
 
     /**
      * <p>Id of blah type.
      * A string.</p>.
      */
-    static final String BLAH_TYPE_ID = "btid";
+    static final String BLAH_TYPE_ID = "Y";
 
     /**
      * <p>The promotion action on this blah by the user.
@@ -44,7 +44,7 @@ public interface UserBlahInfoDAOConstants {
      * else this field is null or 0.
      * An integer.</p>
      */
-    static final String PROMOTION = "v";
+    static final String PROMOTION = "P";
 
     /**
      * <p>If this is a poll blah type, indicates whether the user
@@ -52,14 +52,14 @@ public interface UserBlahInfoDAOConstants {
      * (an integer) or null if the user has not voted on this poll.
      * An integer.</p>
      */
-    static final String POLL_VOTE_INDEX = "p";
+    static final String POLL_VOTE_INDEX = "W";
 
     /**
      * <p>If POLL_VOTE_INDEX is not null, this is
      * the datetime when the vote was made.
      * A datetime.</p>
      */
-    static final String POLL_VOTE_TIMESTAMP = "t";
+    static final String POLL_VOTE_TIMESTAMP = "X";
 
     /**
      * <p>For a prediction blah, specifies the user's vote
@@ -69,7 +69,7 @@ public interface UserBlahInfoDAOConstants {
      *
      * @see main.java.com.eweware.service.mgr.type.PredictionVote
      */
-    static final String PREDICTION_VOTE = "x";
+    static final String PREDICTION_VOTE = "D";
 
     /**
      * <p>For a prediction blah, specifies the user's
@@ -80,14 +80,14 @@ public interface UserBlahInfoDAOConstants {
      *
      * @see main.java.com.eweware.service.mgr.type.PredictionVote
      */
-    static final String PREDICTION_RESULT_VOTE = "y";
+    static final String PREDICTION_RESULT_VOTE = "Z";
     /**
      * <p>The number of views of this blah by the user.
      * If the user hasn't viewed the blah, this
      * field is either null or 0.
      * An integer.</p>
      */
-    static final String VIEWS = "w";
+    static final String VIEWS = "V";
 
     /**
      * <p>The number of opens of this blah by the user.
@@ -95,13 +95,13 @@ public interface UserBlahInfoDAOConstants {
      * field is either null or 0.
      * An integer.</p>
      */
-    static final String OPENS = "o";
+    static final String OPENS = "O";
 
     /**
      * <p>Number of times this user has commented on this blah.
      * An integer.</p>
      */
-    static final String COMMENTS_ON_THIS_BLAH = "c";
+    static final String COMMENTS_ON_THIS_BLAH = "C";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, BLAH_ID, ORIGINAL_GROUP_ID, PREDICTION_VOTE, PREDICTION_RESULT_VOTE}),

@@ -12,41 +12,27 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFi
 public interface UserDAOConstants {
 
     /**
-     * <p>A password. This is a transient property which is never stored as-is.
-     * Actual password and all other sensitive user information is stored in
-     * a separate user account record.
-     * It's sole use is to transmit the password from the client to the server. A string.</p>
-     * @see UserAccountDAOConstants
-     */
-    static final String PASSWORD = "pwd";
-
-    /**
      * <p>The user's username. This is a unique name and it is part of the login authentication
      * requirements (along with a password). The username can be changed by the user. A string.</p>
      */
-    static final String USERNAME = "displayName";
-
-    /**
-     * <p>Last inbox accessed by the user. <b>TODO: get rid of this or enhance it with last group id.</b></p>
-     */
-    static final String LAST_INBOX = "li";
+    static final String USERNAME = "N";
 
     /**
      * <p>An optional array of statistics that may be requested by the client.</p>
      * <p><b>TODO: separate this into a separate API as it is too much. Also, make it more column-oriented for forward
      * compatibility with HBase, etc.</b></p>
      */
-    static final String STATS = "stats";
+    static final String STATS = "L";
 
     /**
      * <p>The user's overall strength. A float between 0 and 1, inclusive.</p>
      */
-    static final String USER_STRENGTH = "s";
+    static final String USER_STRENGTH = "S";
 
     /**
      * <p>The user's controvery strength. Measures how controversial the user is. A float between 0 and 1, inclusive.</p>
      */
-    static final String USER_CONTROVERSY_STRENGTH = "cs";
+    static final String USER_CONTROVERSY_STRENGTH = "K";
 
     /**
      * <p>List of badge ids for this user.</p>
@@ -55,7 +41,6 @@ public interface UserDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USERNAME}),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{LAST_INBOX}),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{USER_STRENGTH, USER_CONTROVERSY_STRENGTH}),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{STATS}),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{BADGE_IDS}),

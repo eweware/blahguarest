@@ -1,13 +1,12 @@
 package main.java.com.eweware.service.base.store.dao.schema;
 
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.TrackerDAOConstants;
 
 /**
  * @author rk@post.harvard.edu
  *         Date: 9/25/12 Time: 1:48 PM
  */
-public class TrackerSchema extends BaseSchema implements TrackerDAOConstants {
+public class TrackerSchema extends BaseSchema implements main.java.com.eweware.service.base.store.dao.TrackerDAOConstants {
 
     protected TrackerSchema(LocaleId localeId) {
         super(localeId);

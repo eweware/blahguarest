@@ -14,12 +14,12 @@ public interface UserCommentInfoDAOConstants {
     /**
      * <p>The user's id. A string.</p>
      */
-    static final String USER_ID = "userId";
+    static final String USER_ID = "U";
 
     /**
      * <p>The comment's id. A string.</p>
      */
-    static final String COMMENT_ID = "commentId";
+    static final String COMMENT_ID = "C";
 
     /**
      * <p>Whether the user has voted on this comment. An integer.</p>
@@ -29,17 +29,17 @@ public interface UserCommentInfoDAOConstants {
      * <div>null := did not vote</div>
      * <div>+1 := voted up</div>
      */
-    static final String VOTE = "v"; // -1, 0 (or null), +1
+    static final String VOTE = "V"; // -1, 0 (or null), +1
 
     /**
      * <p>Number of times user has viewed this comment. An integer.</p>
      */
-    static final String VIEWS = "w";
+    static final String VIEWS = "W";
 
     /**
      * <p>Number of times user has opened this comment. An integer.</p>
      */
-    static final String OPENS = "o";
+    static final String OPENS = "O";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, COMMENT_ID}),

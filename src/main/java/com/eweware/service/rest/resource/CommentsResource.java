@@ -46,7 +46,7 @@ public class CommentsResource {
      * <div><b>URL:</b> comments/author</div>
      *
      * @param entity The request entity. Requires a JSON entity with an
-     *               field named 'i' whose value is the comment id.
+     *               field named 'I' whose value is the comment id.
      * @return Returns an http status 200 with the author's data
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
@@ -63,7 +63,7 @@ public class CommentsResource {
         try {
             final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request);
-            final Response response = RestUtilities.make200OkResponse(getBlahManager().getAuthorFromComment(LocaleId.en_us, entity.get("i")));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getAuthorFromComment(LocaleId.en_us, entity.get("I")));
             getSystemManager().setResponseTime(GET_COMMENT_AUTHOR_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {

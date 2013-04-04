@@ -16,6 +16,15 @@ import java.util.Map;
  */
 public final class UserPayload extends BasePayload implements UserDAOConstants {
 
+    /**
+     * <p>A password. This is a transient property which is never stored as-is.
+     * Actual password and all other sensitive user information is stored in
+     * a separate user account record.
+     * It's sole use is to transmit the password from the client to the server. A string.</p>
+     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
+     */
+    public static final String PASSWORD = "pwd";
+
     protected static final BaseSchema getSchema() {
         return UserSchema.getSchema(LocaleId.en_us);
     }

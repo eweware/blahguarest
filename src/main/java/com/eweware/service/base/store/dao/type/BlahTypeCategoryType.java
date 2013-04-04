@@ -19,7 +19,12 @@ public enum BlahTypeCategoryType {
     /**
      * <p>A blah that follows the pattern of a prediction.</p>
      */
-    PREDICTION(2);
+    PREDICTION(2),
+
+    /**
+     * <p>An advert blah.</p>
+     */
+    ADVERT(3);
 
     private final Integer categoryId;
 

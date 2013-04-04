@@ -71,10 +71,10 @@ public class BadgesResource {
      * <div><b>URL:</b> badges</div>
      *
      * @param entity A JSON entity containing the id of the badging authority
-     *               in a field named 'i'. If the authority manages more than
+     *               in a field named 'I'. If the authority manages more than
      *               one type of badge, the authority-specific badge id is a string
      *               and it must also be specified in the JSON entity in a field
-     *               named 't': if the authority manages only one kind of badge,
+     *               named 'T': if the authority manages only one kind of badge,
      *               this is unnecessary.
      * @return If it succeeds, returns an http status 200 (OK) with a JSON
      *         entity containing the badge id (a field in BadgeDAOConstants) and the
@@ -92,8 +92,8 @@ public class BadgesResource {
             @Context HttpServletResponse response) {
         try {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            final String authorityId = (String) entity.get("i");
-            final String badgeTypeId = (String) entity.get("t");
+            final String authorityId = (String) entity.get("I");
+            final String badgeTypeId = (String) entity.get("T");
             return getBadgesMgr().createBadgeForUser(response, userId, authorityId, badgeTypeId);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);

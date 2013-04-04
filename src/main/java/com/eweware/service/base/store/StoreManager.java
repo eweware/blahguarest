@@ -96,9 +96,4 @@ public interface StoreManager extends ManagerInterface {
     public abstract CommentTrackerDAO createCommentTracker(String trackerId) throws SystemErrorException;
 
     public abstract InboxStateDAO createInboxState();
-    // TODO not in use (obsolete?)
-    public abstract TrackerDAO createTracker(TrackerOperation operation) throws SystemErrorException;
-
-    // TODO not in use (obsolete?)
-    public abstract TrackerDAO createTracker(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException;
 }

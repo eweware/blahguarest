@@ -14,40 +14,40 @@ public interface UserAccountDAOConstants {
      * <p>User account type.</p>
      * @see main.java.com.eweware.service.base.store.dao.type.UserAccountType
      */
-    static String USER_ACCOUNT_TYPE = "t";
+    static String USER_ACCOUNT_TYPE = "T";
 
     /**
      * <p> The canonical version of the username. A string.</p>
      * @see main.java.com.eweware.service.user.validation.Login#makeCanonicalUsername(String)
      */
-    static String CANONICAL_USERNAME = "u";
+    static String CANONICAL_USERNAME = "U";
 
     /**
      * <p>The password's digest code. A Base64 string.</p>
      */
-    static String PASSWORD_DIGEST = "d";
+    static String PASSWORD_DIGEST = "D";
 
     /**
      *  <p>The password's salt. A Base64 string.</p>
      */
-    static String PASSWORD_SALT = "p";
+    static String PASSWORD_SALT = "S";
 
     /**
      * <p>Optional user email address</p>
      */
-    static String EMAIL_ADDRESS = "e";
+    static String EMAIL_ADDRESS = "E";
 
     /**
      * <p>Permissions associated with the email address field.</p>
      * @see main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions
      */
-    static final String EMAIL_ADDRESS_PERMISSIONS = "ep";
+    static final String EMAIL_ADDRESS_PERMISSIONS = "P";
 
     /**
      * <p>Account recovery method.</p>
      * @see main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType
      */
-    static final String ACCOUNT_RECOVERY_METHOD = "m";
+    static final String ACCOUNT_RECOVERY_METHOD = "M";
 
     /**
      * <p>String representation of recovery code structured as follows:</p>
@@ -55,33 +55,16 @@ public interface UserAccountDAOConstants {
      * @see main.java.com.eweware.service.user.validation.RecoveryCode
      * @see main.java.com.eweware.service.user.validation.RecoveryCodeComponents
      */
-    static String RECOVERY_CODE_STRING = "r";
+    static String RECOVERY_CODE_STRING = "R";
 
 
     /**
      * <p>The date after which the currently set recovery code expires. A Date.</p>
      */
-    static final String RECOVERY_CODE_EXPIRATION_DATE = "x";
+    static final String RECOVERY_CODE_EXPIRATION_DATE = "X";
 
     /**
      * <p>A challenge security answer from the user. We just have one for now. A string.</p>
      */
-    static final String CHALLENGE_ANSWER_1 = "a";
+    static final String CHALLENGE_ANSWER_1 = "A";
 }
-
-
-//    /**
-//     * <p>Recovery cipher encrypting user id and other data.</p>
-//     * <p>Used in account recovery. A Base64 string.</p>
-//     */
-//    static String RECOVERY_CIPHER_BASE64 = "c";
-//
-//    /**
-//     * <p>Recovery cipher IV algorithm parameter. A Base64 string.</p>
-//     */
-//    static String RECOVERY_IV_PARAM_BASE64 = "i";
-//
-//    /**
-//     * <p>Recovery cipher secret key. A Base64 string.</p>
-//     */
-//    static String RECOVERY_SECRET_KEY_BASE64 = "s";

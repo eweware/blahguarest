@@ -14,68 +14,68 @@ public interface InboxBlahDAOConstants {
     /**
      * <p>The blah's id. A string.</p>
      */
-    static final String BLAH_ID = "blahId";
+    static final String BLAH_ID = "I";
 
     /**
      * <p>The blah's author id. A string.</p>
      */
-    static final String AUTHOR_ID = "authorId";
+    static final String AUTHOR_ID = "A";
 
     /**
      * <p>The blah type id of the blah. A string.</p>
      */
-    static final String TYPE = "type";
+    static final String TYPE = "Y";
 
     /**
      * <p>The blah's text line (tagline). A string.</p>
      */
-    static final String BLAH_TEXT = "text";
+    static final String BLAH_TEXT = "T";
 
     /**
      * <p>The blah's originating group id. A string.</p>
      */
-    static final String GROUP_ID = "groupId";
+    static final String GROUP_ID = "G";
 
     /**
      * <p>The inbox number. Inboxes for a group, if any, are sequentially
      * numbered, 0-origin. An integer.</p>
      */
-    static final String INBOX_NUMBER = "sn";
+    static final String INBOX_NUMBER = "N";
 
     /**
      * <p>The number of up votes for this blah. An integer</p>
      */
-    static final String UP_VOTES = "u";
+    static final String UP_VOTES = "P";
 
     /**
      * <p>The number of down votes for this blah. An integer</p>
      */
-    static final String DOWN_VOTES = "d";
+    static final String DOWN_VOTES = "D";
 
     /**
      * <p>The number of times this blah has been viewed. An Integer.</p>
      */
-    static final String VIEWS = "v";
+    static final String VIEWS = "V";
 
     /**
      * <p>The number of times this blah has been opened. An integer.</p>
      */
-    static final String OPENS = "o";
+    static final String OPENS = "O";
 
     /**
      * <p>The number of comments on this blah. An integer.</p>
      */
-    static final String COMMENTS = "c";
+    static final String COMMENTS = "C";
 
     /**
      * <p> The blah's all-time strength. A float between 0 and 1, inclusive.</p>
      */
-    static final String BLAH_STRENGTH = "s";
+    static final String BLAH_STRENGTH = "S";
 
     /**
      * <p>The blah's recent strength. A float between 0 and 1, inclusive.</p>
      */
-    static final String RECENT_BLAH_STRENGTH = "r";
+    static final String RECENT_BLAH_STRENGTH = "R";
 
 
     /**
@@ -88,7 +88,7 @@ public interface InboxBlahDAOConstants {
      * @see MediaDAOConstants
      * @see MediaDAO
      */
-    static final String IMAGE_IDS = "img";
+    static final String IMAGE_IDS = "M";
 
     /**
      * <p>Indicates badges associated with this blah.</p>

@@ -4,15 +4,21 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
- * <p>A tracker object for internal use.</p>
- * <p>This object will eventually be queued for offline, but real-time, processing.</p>
+ * <p>Currently not in use. Should replace the large by-month tracker when time allows.</p>
+ * <p>Reason to replace it is that: (1) it ties us to MongoDB bigtime, and (2) even
+ * for Mongo, we don't want to detal with large objects that can potentially
+ * consume RAM workspace: ideally, we would have smaller consecutively
+ * placed chunks in disc... since we might not be able to control or predict how Mongo lays it out,
+ * the benefits of having smaller chunks in mongo are unclear without testing.</p>
+ * @deprecated
+ *
  * @author rk@post.harvard.edu
  *         Date: 9/22/12 Time: 2:55 PM
  */
 public interface TrackerDAOConstants {
 
     /** Operation values: one of the TrackerOperation enum as a String */
-    static final String OPERATION = "o";
+    static final String OPERATION = "P";
 
     /** Was object voted on? -1 or 1 or null for down vote, up vote, or no vote, respectively.
      * If the operation is a comment creation, this is a vote for the blah.

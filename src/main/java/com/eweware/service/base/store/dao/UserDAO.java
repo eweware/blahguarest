@@ -13,10 +13,6 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
 
     public void setUsername(String username);
 
-    public Integer getLastInbox();
-
-    public void setLastInbox(Integer nextInbox);
-
     public List<UserTrackerDAO> getStats();
 
     public void setStats(List<UserTrackerDAO> stats);

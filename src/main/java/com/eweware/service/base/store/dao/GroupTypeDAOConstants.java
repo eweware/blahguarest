@@ -13,12 +13,12 @@ public interface GroupTypeDAOConstants {
     /**
      * <p>The display name for the group type. A string. <b>TODO: i18n</b></p>
      */
-    static final String DISPLAY_NAME = "displayName";
+    static final String DISPLAY_NAME = "N";
 
     /**
      * <p>The number of groups of this type. An integer</p>
      */
-    static final String GROUP_COUNT = "gcount";
+    static final String GROUP_COUNT = "C";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
           new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{DISPLAY_NAME}),

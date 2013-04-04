@@ -13,58 +13,58 @@ public interface CommentDAOConstants {
     /**
      * <p>The comment's blah id. A string.</p>
      */
-    static final String BLAH_ID = "blahId";
+    static final String BLAH_ID = "B";
 
     /**
      * <p>The comments text. A string.</p>
      */
-    static final String TEXT = "text";
+    static final String TEXT = "T";
 
     /**
      * <p>The comment's author's user id. A string.</p>
      */
-    static final String AUTHOR_ID = "authorId";
+    static final String AUTHOR_ID = "A";
 
     /**
      * <p>The vote, if any, of the comment on the blah.
      * An integer.</p>
      */
-    static final String BLAH_VOTE = "blahVote";
+    static final String BLAH_VOTE = "V";
 
     /**
      * <p>The total number of votes on this comment. An integer. <b>TODO: get rid of this: can be inferred from sum of up/down votes</b></p>
      */
-    static final String COMMENT_VOTES = "commentVotes";
+    static final String COMMENT_VOTES = "C";
 
     /**
      * <p>The number of up votes for this comment. An integer.</p>
      */
-    static final String COMMENT_UP_VOTES = "cuv";
+    static final String COMMENT_UP_VOTES = "U";
 
     /**
      * <p>The number of down votes for this comment. An integer.</p>
      */
-    static final String COMMENT_DOWN_VOTES = "cdv";
+    static final String COMMENT_DOWN_VOTES = "D";
 
     /**
      * <p>This comment's current strength. A float between 0 and 1, inclusive.</p>
      */
-    static final String COMMENT_STRENGTH = "s";
+    static final String COMMENT_STRENGTH = "S";
 
     /**
      * <p>The number of times this comment has been viewed. An integer.</p>
      */
-    static final String VIEWS = "views";
+    static final String VIEWS = "W";
 
     /**
      * <p>The number of times this comment has been opened. An integer.</p>
      */
-    static final String OPENS = "opens";
+    static final String OPENS = "O";
 
     /**
      * <p>Optional stats entity for this comment. <b>TODO: need better doc for this.</b></p>
      */
-    static final String STATS = "stats";
+    static final String STATS = "L";
 
     /**
      * <p>An optional array of image ids for the comment. The semantics
@@ -76,7 +76,7 @@ public interface CommentDAOConstants {
      * @see MediaDAOConstants
      * @see MediaDAO
      */
-    static final String IMAGE_IDS = "img";
+    static final String IMAGE_IDS = "M";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{

@@ -15,14 +15,14 @@ public interface BlahTypeDAOConstants {
      * <p>The displayable name of the blah</p>
      * <p><b>TODO i18n</b></p>
      */
-    static final String NAME = "name";
+    static final String NAME = "N";
 
     /**
      * <p>The blah type's category. It's value is a category id, an integer.</p>
      *
      * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType
      */
-    static final String CATEGORY_ID = "c";
+    static final String CATEGORY_ID = "C";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{NAME}),

@@ -17,10 +17,10 @@ public interface PollOptionDAOConstants {
     /**
      * <p> The tagline for this option. A string.</p>
      */
-    static final String TAGLINE = "g";
+    static final String TAGLINE = "G";
 
     /**
      * <p> The extended text for this option, if any. A string.</p>
      */
-    static final String TEXT = "t";
+    static final String TEXT = "T";
 }

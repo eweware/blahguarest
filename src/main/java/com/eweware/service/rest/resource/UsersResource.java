@@ -56,7 +56,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/check/username</div>
      *
      * @param entity Expects a JSON entity with the username in a
-     *               parameter named 'u'. The username be at least three
+     *               parameter named 'U'. The username be at least three
      *               and less than 64 characters long.
      * @return If successful (username is available), returns an http code of 204 (OK NO CONTENT).
      *         If the request is invalid, it returns 400 (BAD REQUEST).
@@ -71,7 +71,7 @@ public class UsersResource {
     public Response checkUsername(
             Map<String, String> entity) {
         try {
-            final String username = entity.get("u");
+            final String username = entity.get("U");
             getUserManager().ensureUserExistsByUsername(username);
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
@@ -139,8 +139,8 @@ public class UsersResource {
                               @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            final String username = (String) entity.get(UserDAOConstants.USERNAME);
-            final String password = (String) entity.get(UserDAOConstants.PASSWORD);
+            final String username = (String) entity.get(UserPayload.USERNAME);
+            final String password = (String) entity.get(UserPayload.PASSWORD);
             getUserManager().loginUser(LocaleId.en_us, username, password, request);
             final Response response = RestUtilities.make202AcceptedResponse();
             getSystemManager().setResponseTime(LOGIN_USER_OPERATION, (System.currentTimeMillis() - start));
@@ -203,8 +203,8 @@ public class UsersResource {
                                  @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String username = (String) entity.get(UserDAOConstants.USERNAME);
-            final String password = (String) entity.get(UserDAOConstants.PASSWORD);
+            final String username = (String) entity.get(UserPayload.USERNAME);
+            final String password = (String) entity.get(UserPayload.PASSWORD);
             final UserPayload payload = getUserManager().registerUser(LocaleId.en_us, username, password);
             final Response response = RestUtilities.make201CreatedResourceResponse(payload, new URI(uri.getAbsolutePath() + payload.getId()));
             getSystemManager().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
@@ -275,11 +275,11 @@ public class UsersResource {
      * <p><i>User must be logged in to use this method.</i></p>
      *
      * @param entity A JSON entity containing the following fields:
-     *               <div>'e' := the value is an email address string. If set to null,
+     *               <div>'E' := the value is an email address string. If set to null,
      *               the email address will be removed from the user account. If this
      *               field is not provided in the entity, it is ignored (it is neither
      *               set, updated, nor deleted).</div>
-     *               <div>'q' := an answer to a challenge question (a string). If set to null,
+     *               <div>'A' := an answer to a challenge question (a string). If set to null,
      *               the challenge question will be removed from the user account. If this
      *               field is not provided in the entity, it is ignored (it is neither
      *               set, updated, nor deleted).</div>
@@ -297,7 +297,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            getUserManager().setUserAccountData(userId, entity.containsKey("e"), entity.get("e"), entity.containsKey("q"), entity.get("q"));
+            getUserManager().setUserAccountData(userId, entity.containsKey("E"), entity.get("E"), entity.containsKey("A"), entity.get("A"));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(e);
@@ -379,7 +379,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/profiles/descriptor</div>
      *
      * @param entity Expects a JSON entity containing the user id in a
-     *               field named 'i'
+     *               field named 'I'
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
      *         If the request is invalid, returns 400 (BAD REQUEST).
@@ -394,7 +394,7 @@ public class UsersResource {
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
-            final String userId = entity.get("i");
+            final String userId = entity.get("I");
             return RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
@@ -487,7 +487,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/update/username/{username}</div>
      *
      * @param entity Expects a JSON entity containing the username
-     *               in a field named 'u'. The rules for username
+     *               in a field named 'U'. The rules for username
      *               length and structure are given in the Login citation below.
      * @return Returns http status code 204 (NO CONTENT) on success.
      *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
@@ -506,7 +506,7 @@ public class UsersResource {
         try {
             final long s = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request);
-            final String username = entity.get("u");
+            final String username = entity.get("U");
             getUserManager().updateUsername(LocaleId.en_us, request, username);
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_USERNAME_OPERATION, (System.currentTimeMillis() - s));
@@ -534,7 +534,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/update/password/{password}</div>
      *
      * @param entity Expects a JSON entity containing the password
-     *               in a field named 'p'. The rules for password
+     *               in a field named 'P'. The rules for password
      *               length and structure are given in the Login method
      *               cited below.
      * @return Returns http status code 204 (NO CONTENT) on success.
@@ -554,7 +554,7 @@ public class UsersResource {
         try {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            final String password = entity.get("p");
+            final String password = entity.get("P");
             getUserManager().updatePassword(LocaleId.en_us, request, userId, password);
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_PASSWORD_OPERATION, (System.currentTimeMillis() - s));
@@ -583,9 +583,9 @@ public class UsersResource {
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users/recover/user</div>
      *
-     * @param entity An entity containing the following fields: 'u' whose value is a string, the username.
-     *               'a' whose value is a string, the answer to the one and only security question.
-     *               'e' whose value is a string, the user-supplied email address. Note that the latter
+     * @param entity An entity containing the following fields: 'U' whose value is a string, the username.
+     *               'A' whose value is a string, the answer to the one and only security question.
+     *               'E' whose value is a string, the user-supplied email address. Note that the latter
      *               is only used as one more way to try to confirm that the user knows his email address
      *               (which is not enough by itself to give us much confidence, but with the challenge
      *               answer it might be more of a deterrent).
@@ -605,7 +605,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            getUserManager().recoverUser(LocaleId.en_us, request, entity.get("u"), entity.get("e"), entity.get("a"));
+            getUserManager().recoverUser(LocaleId.en_us, request, entity.get("U"), entity.get("E"), entity.get("A"));
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;

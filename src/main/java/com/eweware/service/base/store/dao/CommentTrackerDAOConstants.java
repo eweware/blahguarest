@@ -7,14 +7,14 @@ package main.java.com.eweware.service.base.store.dao;
 public interface CommentTrackerDAOConstants {
 
     public static final String CT_OBJECT_ID = "id"; // comment id TODO used by unit tests to delete related trackers
-    public static final String CT_AUTHOR_ID = "cid";  // comment author id
+    public static final String CT_AUTHOR_ID = "A";  // comment author id
 
-    public static final String CT_UP_VOTES_FOR_COMMENT = "u";
-    public static final String CT_DOWN_VOTES_FOR_COMMENT = "d";
-    public static final String CT_UP_VOTE_FOR_BLAH = "bu";
-    public static final String CT_DOWN_VOTE_FOR_BLAH = "bd";
-    public static final String CT_VIEWS = "v";
-    public static final String CT_OPENS = "o";
+    public static final String CT_UP_VOTES_FOR_COMMENT = "U";
+    public static final String CT_DOWN_VOTES_FOR_COMMENT = "D";
+    public static final String CT_UP_VOTE_FOR_BLAH = "Y";
+    public static final String CT_DOWN_VOTE_FOR_BLAH = "Z";
+    public static final String CT_VIEWS = "V";
+    public static final String CT_OPENS = "O";
 
     public static final String[] CT_FIELD_NAMES = new String[]{
             CT_UP_VOTES_FOR_COMMENT,

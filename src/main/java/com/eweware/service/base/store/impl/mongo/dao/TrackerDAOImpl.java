@@ -4,7 +4,6 @@ import com.mongodb.DBCollection;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.TrackerDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.TrackerSchema;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
@@ -15,10 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <p>Currently not in use. Should replace the large by-month tracker when time allows.</p>
+ * <p>Reason to replace it is that: (1) it ties us to MongoDB bigtime, and (2) even
+ * for Mongo, we don't want to detal with large objects that can potentially
+ * consume RAM workspace: ideally, we would have smaller consecutively
+ * placed chunks in disc... since we might not be able to control or predict how Mongo lays it out,
+ * the benefits of having smaller chunks in mongo are unclear without testing.</p>
+ * @deprecated
+ *
  * @author rk@post.harvard.edu
  *         Date: 9/25/12 Time: 1:07 PM
  */
-public class TrackerDAOImpl extends BaseDAOImpl implements TrackerDAO {
+@SuppressWarnings("deprecation")
+public class TrackerDAOImpl extends BaseDAOImpl implements main.java.com.eweware.service.base.store.dao.TrackerDAO {
 
     TrackerDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
         super(map, validateAndConvert);

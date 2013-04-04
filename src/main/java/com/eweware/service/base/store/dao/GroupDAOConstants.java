@@ -13,12 +13,12 @@ public interface GroupDAOConstants {
     /**
      * <p> The groups visible display name (English). A String <b>>TODO: i18n</b</p>
      */
-    static final String DISPLAY_NAME = "displayName";
+    static final String DISPLAY_NAME = "N";
 
     /**
      * <p> An english description. A string. <b>TODO: i18n</b></p>
      */
-    static final String DESCRIPTION = "d";
+    static final String DESCRIPTION = "D";
 
     /**
      * <p>The group's descriptor. Encodes permissions and
@@ -36,46 +36,46 @@ public interface GroupDAOConstants {
      * in GroupDescriptor enum</p>
      * @see GroupDescriptor
      */
-    static final String DESCRIPTOR = "s";
+    static final String DESCRIPTOR = "X";
 
     /**
      * <p> The group type id. A string. This is used to group groups.</p>
      */
-    static final String GROUP_TYPE_ID = "groupTypeId";
+    static final String GROUP_TYPE_ID = "Y";
 
     /**
      * <p> The current number of users in this group. An integer</p>
      */
-    static final String USER_COUNT = "ucount";
+    static final String USER_COUNT = "U";
 
     /**
      * <p> The current number of blahs in this group. An integer.</p>
      */
-    static final String BLAH_COUNT = "bcount";
+    static final String BLAH_COUNT = "B";
 
     /**
      * <p> The current number of users watching this group. An integer.</p>
      */
-    static final String CURRENT_VIEWER_COUNT = "v";
+    static final String CURRENT_VIEWER_COUNT = "V";
 
     /**
      * <p> This group's validation method. A string</p>
      * <p><b>TODO this will be changed when badging is implemented. Was in use in alpha but is no longer supported.</b></p>
      */
-    static final String USER_VALIDATION_METHOD = "vmeth";
+    static final String USER_VALIDATION_METHOD = "M";
 
     /**
      * <p> This group's validation method parameters. </p>
      * <p><b>TODO this will be changed when badging is implemented. Was in use in alpha but is no longer supported.</b></p>
      */
-    static final String USER_VALIDATION_PARAMETERS = "vp";
+    static final String USER_VALIDATION_PARAMETERS = "P";
 
     /**
      * <p>Group state information.
      * Its value corresponds to an authorization state (e.g., active)</p>
      * @see main.java.com.eweware.service.base.payload.AuthorizedState
      */
-    static final String STATE = "state";
+    static final String STATE = "S";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{

@@ -25,7 +25,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
     static {  // TODO should be derived from schema
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USERNAME, MongoFieldTypes.STRING);
-        UserDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_CONTROVERSY_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
@@ -78,16 +77,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     @Override
     public void setUsername(String username) {
         put(USERNAME, username);
-    }
-
-    @Override
-    public Integer getLastInbox() {
-        return (Integer) get(LAST_INBOX);
-    }
-
-    @Override
-    public void setLastInbox(Integer nextInbox) {
-        put(LAST_INBOX, nextInbox);
     }
 
     @Override

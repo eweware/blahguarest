@@ -18,7 +18,7 @@ public interface InboxStateDAOConstants {
      * application maintains this and the inboxHandler prepends to it as
      * new blahs are created
      */
-    static final String INBOX_ITEM_IDS = "ids";
+    static final String INBOX_ITEM_IDS = "I";
 
     /**
      * This is the high watermark of inbox numbers for this group.

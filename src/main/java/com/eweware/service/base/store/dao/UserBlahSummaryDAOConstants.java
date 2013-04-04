@@ -1,7 +1,7 @@
 package main.java.com.eweware.service.base.store.dao;
 
 /**
- * <p>Fields and corresponding data types for entity holding information about a user's activity with respoect to blahs.</p>
+ * <p>Fields and corresponding data types for entity holding information about a user's activity with respect to blahs.</p>
  * <p><b>TODO: needs docs</b></p>
  * @author rk@post.harvard.edu
  *         Date: 9/12/12 Time: 1:42 PM
@@ -30,8 +30,8 @@ public interface UserBlahSummaryDAOConstants {
     static final String COMMENTS_VOTED_DOWN_BY_OTHERS = "cvdo";
 
     // Calculated by stats:
-    static final String PEOPLE_VIEWED = "pv";
-    static final String PEOPLE_OPENED = "po";
-    static final String PEOPLE_COMMENTED = "pc";
+    static final String PEOPLE_VIEWED = "V";
+    static final String PEOPLE_OPENED = "O";
+    static final String PEOPLE_COMMENTED = "C";
 
 }

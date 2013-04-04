@@ -64,14 +64,14 @@ function defaultSuccessFunction(results, successOrNot, theStatus) {
 function createChannelType() {
 	var name = document.getElementById('channeltypename').value;
 	if (!name) {alert('Missing Channel Type Name'); return;}
-	rest('POST', 'groupTypes', JSON.stringify({'displayName': name}), setChannelTypeData);
+	rest('POST', 'groupTypes', JSON.stringify({'N': name}), setChannelTypeData);
 }
 
 function updateChannelTypeName() {
 	var name = document.getElementById('channeltypename').value;
 	var ctId = document.getElementById('channeltypeid').value;
 	if (!name || !ctId) {alert('Missing Channel Type Id and/or Name'); return;}
-	rest('PUT', 'groupTypes/'+ctId, JSON.stringify({'displayName': name}));
+	rest('PUT', 'groupTypes/'+ctId, JSON.stringify({'N': name}));
 }
 
 function getChannelTypeById() {
@@ -85,7 +85,7 @@ function createChannel(descriptor) {
 	var name = document.getElementById('channelname').value;
 	var validationMethod = 'n'; // normal validation
 	if (!ctId || !name) {alert('Missing Channel Type Id and/or Name'); return;}
-	rest('POST', 'groups', JSON.stringify({'displayName': name, 'groupTypeId': ctId, 's': descriptor, 'vmeth': validationMethod}), setChannelData);
+	rest('POST', 'groups', JSON.stringify({'N': name, 'Y': ctId, 'X': descriptor, 'M': validationMethod}), setChannelData);
 }
 
 function createUser() {
@@ -100,7 +100,7 @@ function createUser() {
 		alert("Missing Password");
 		return;
 	}
-	rest("POST", "users", '{"displayName": "' + username + '", "pwd": "' + password + '"}', setUserData);
+	rest("POST", "users", '{"N": "' + username + '", "pwd": "' + password + '"}', setUserData);
 }
 
 function checkUsername() {
@@ -109,7 +109,7 @@ function checkUsername() {
 		alert("Missing User Name");
 		return;
 	}
-	var data = JSON.stringify({"u": username});
+	var data = JSON.stringify({"U": username});
 	rest("POST", "users/check/username", data);
 }
 
@@ -120,7 +120,7 @@ function changePassword() {
 	    alert('Missing Password (must be at least 1 char long');
 	    return;
 	}
-	var data = JSON.stringify({'p': password});
+	var data = JSON.stringify({'P': password});
 	rest("PUT", "users/update/password", data);
 }
 
@@ -128,7 +128,7 @@ function changePassword() {
 function changeUsername() {
     var username = getUsername();
     if (username.length == 0) { alert("Missing username"); return;}
-    var data = JSON.stingify({"u": username});
+    var data = JSON.stingify({"U": username});
     rest('PUT', 'users/update/username/', data);
 }
 
@@ -139,7 +139,7 @@ function loginUser() {
 		alert("Missing User Name and/or Password");
 		return;
 	}
-	rest("POST", "users/login", '{"displayName": "' + username + '", "pwd": "' + password + '"}');
+	rest("POST", "users/login", '{"N": "' + username + '", "pwd": "' + password + '"}');
 }
 
 function setHttpCode(a, successOrNot, theStatus) {
@@ -161,7 +161,7 @@ function setUserData(user) {
 function createUserAcctData() {
 	var email = document.getElementById("email").value;
 	if (!email) {alert("Missing Email Address"); return;}
-	rest('POST', 'users/account', JSON.stringify({"e": email, "q": "hi"}));
+	rest('POST', 'users/account', JSON.stringify({"E": email, "A": "hi"}));
 }
 
 function getUserVotesForBlah() {
@@ -177,7 +177,7 @@ function recoverUser() {
 	var email = document.getElementById("email").value;
 	if (!username || !email) {alert("Missing User Name and/or Email Address"); return;}
 	var challengeAnswer = "hi";
-	rest('POST', "users/recover/user", JSON.stringify({"u": username, "e": email, "a": "hi"}));
+	rest('POST', "users/recover/user", JSON.stringify({"U": username, "E": email, "A": "hi"}));
 }
 
 function createBadge() {
@@ -185,7 +185,7 @@ function createBadge() {
     if (!authorityId) {
 	alert('Missing Authority Id'); return;
     }
-    var data = JSON.stringify({'i': authorityId});
+    var data = JSON.stringify({'I': authorityId});
     rest('POST', 'badges', data, setBadgeDialog);
 }
 
@@ -215,7 +215,7 @@ function joinChannel() {
 		alert("Missing Channel Id and/or User Id");
 		return;
 	}
-	var data = '{"g": "' + channelId + '"}';
+	var data = '{"G": "' + channelId + '"}';
 	rest("POST", "userGroups", data);
 }
 
@@ -225,7 +225,7 @@ function getChannel() {
 		alert("Missing Channel Id");
 		return;
 	}
-	rest("GET", "groups/"+channelId, JSON.stringify(null), setChannelData);
+	rest("GET", "groups/"+channelId, null, setChannelData);
 }
 
 function createBlah() {
@@ -250,7 +250,7 @@ function createSimpleBlah(typeId) {
 		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
 		return;
 	}
-	var data = '{"groupId": "' + channelId + '", "typeId": "' + typeId + '", "text": "' + text + '"}';
+	var data = '{"G": "' + channelId + '", "Y": "' + typeId + '", "T": "' + text + '"}';
 	rest("POST", "blahs", data, setBlahData1);
 }
 
@@ -261,7 +261,7 @@ function createPollBlah(typeId) {
 		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
 		return;
 	}
-	var data = JSON.stringify({"groupId": channelId,"text": text, "typeId": typeId,"pt":[{"g":"Choice 1","t":"this choice 1"},{"g":"Choice 2","t":"This choice 2"}]});
+	var data = JSON.stringify({"G": channelId, "T": text, "Y": typeId,"I":[{"G":"Choice 1","T":"this choice 1"},{"G":"Choice 2","T":"This choice 2"}]});
 rest('POST', 'blahs', data, setBlahData1);
 }
 
@@ -280,7 +280,7 @@ function createPredictionBlah(typeId) {
      if (!isodate) {
 	 alert('Invalid Date: '+datestring); return;
      }
-	var data = JSON.stringify({"e": isodate, "groupId": channelId, "typeId":  typeId, "text":  text});
+	var data = JSON.stringify({"E": isodate, "G": channelId, "Y":  typeId, "T":  text});
 	rest("POST", "blahs", data, setBlahData1);
 }
 
@@ -288,7 +288,7 @@ function createAComment() {
 	var blahId = getBlahId();
 	var text = getBlahOrCommentText();
 	if (!blahId || !text || text.length == 0) {alert('Missing Blah Id and/or Comment Text'); return;}
-	var data = JSON.stringify({"blahId": blahId, "text": text});
+	var data = JSON.stringify({"B": blahId, "T": text});
 	rest('POST', 'comments', data);
 }
 
@@ -317,8 +317,8 @@ function voteBlah() {
 
 function voteSimple(blahId) {
 	var vote = document.getElementById('blahvote').checked;
-	var voteval = vote? 1 : -1;
-	rest('PUT', 'blahs/'+blahId, JSON.stringify({"v": voteval}));
+	var voteval = vote? {"P": 1} : {"D": -1};
+	rest('PUT', 'blahs/'+blahId, JSON.stringify(voteval));
 }
 
 function votePrediction(blahId) {
@@ -343,7 +343,7 @@ function getBlahAuthor() {
 	if (blahId.length == 0) {
 		alert("Missing Blah Id parameter");
 	}
-    var data = JSON.stringify({'i': blahId});
+    var data = JSON.stringify({'I': blahId});
     rest('POST', 'blahs/author', data);
 }
 
@@ -352,7 +352,7 @@ function getCommentAuthor() {
     if (!commentId) {
 	alert('Missing Comment Id'); return;
     }
-    var data = JSON.stringify({'i': commentId});
+    var data = JSON.stringify({'I': commentId});
     rest('POST', 'comments/author', data);
 }
 
@@ -402,7 +402,7 @@ function getUserDescriptor() {
 		alert("Missing User Id");
 		return;
 	}
-	var data = JSON.stringify({'i': userId});
+	var data = JSON.stringify({'I': userId});
 	rest('POST', 'users/descriptor', data);
 }
 

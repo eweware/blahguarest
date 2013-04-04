@@ -689,14 +689,4 @@ public final class MongoStoreManager implements StoreManager {
     public InboxStateDAO createInboxState() {
         return new InboxStateDAOImpl();
     }
-
-    @Override
-    public TrackerDAO createTracker(TrackerOperation operation) throws SystemErrorException {
-        return new TrackerDAOImpl(operation);
-    }
-
-    @Override
-    public TrackerDAO createTracker(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
-        return new TrackerDAOImpl(map, validateAndConvert);
-    }
 }

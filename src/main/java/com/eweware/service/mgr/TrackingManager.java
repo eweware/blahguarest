@@ -147,35 +147,6 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         return TrackingManager.singleton;
     }
 
-    public void track(LocaleId localeId, TrackerDAO tracker) throws SystemErrorException {
-        final String userId = tracker.getUserId();
-        if (userId != null) {
-            setWithUserProfileInfo(userId, tracker, localeId);
-        }
-        tracker._insert();
-    }
-
-    public final void setWithUserProfileInfo(String userId, TrackerDAO tracker, LocaleId localeId) throws SystemErrorException {
-        try {
-            final UserProfileDAO profile = (UserProfileDAO) getStoreManager().createUserProfile(userId)._findByPrimaryId();
-            final boolean hasProfile = profile != null;
-            final UserProfileSchema schema = hasProfile ? null : UserProfileSchema.getSchema(localeId);
-            final Map<String, SchemaSpec> fieldNameToSpecMap = hasProfile ? null : schema.getFieldNameToSpecMap();
-            final String gender = hasProfile ? profile.getGender() : (String) fieldNameToSpecMap.get(UserProfileDAO.USER_PROFILE_GENDER).getDefaultValue();
-            final String income = hasProfile ? profile.getIncomeRange() : (String) schema.getFieldNameToSpecMap().get(UserProfileDAO.USER_PROFILE_INCOME_RANGE).getDefaultValue();
-            final String race = hasProfile ? profile.getRace() : (String) schema.getFieldNameToSpecMap().get(UserProfileDAO.USER_PROFILE_RACE).getDefaultValue();
-            final Date dob = hasProfile ? profile.getDateOfBirth() : null;
-            if (gender != null) tracker.setUserGender(gender);
-            if (income != null) tracker.setUserIncomeRange(income);
-            if (race != null) tracker.setUserRace(race);
-            if (dob != null) tracker.setUserDateOfBirth(dob);
-        } catch (SystemErrorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new SystemErrorException("failed to set user profile for userId=" + userId + "; tracker=" + tracker);
-        }
-    }
-
     /**
      * Updates the daily stats for the blah and the user.
      * This method is the interface between the REST API service
@@ -842,3 +813,33 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     }
 }
 
+
+
+//    public void track(LocaleId localeId, TrackerDAO tracker) throws SystemErrorException {
+//        final String userId = tracker.getUserId();
+//        if (userId != null) {
+//            setWithUserProfileInfo(userId, tracker, localeId);
+//        }
+//        tracker._insert();
+//    }
+
+//    public final void setWithUserProfileInfo(String userId, TrackerDAO tracker, LocaleId localeId) throws SystemErrorException {
+//        try {
+//            final UserProfileDAO profile = (UserProfileDAO) getStoreManager().createUserProfile(userId)._findByPrimaryId();
+//            final boolean hasProfile = profile != null;
+//            final UserProfileSchema schema = hasProfile ? null : UserProfileSchema.getSchema(localeId);
+//            final Map<String, SchemaSpec> fieldNameToSpecMap = hasProfile ? null : schema.getFieldNameToSpecMap();
+//            final String gender = hasProfile ? profile.getGender() : (String) fieldNameToSpecMap.get(UserProfileDAO.USER_PROFILE_GENDER).getDefaultValue();
+//            final String income = hasProfile ? profile.getIncomeRange() : (String) schema.getFieldNameToSpecMap().get(UserProfileDAO.USER_PROFILE_INCOME_RANGE).getDefaultValue();
+//            final String race = hasProfile ? profile.getRace() : (String) schema.getFieldNameToSpecMap().get(UserProfileDAO.USER_PROFILE_RACE).getDefaultValue();
+//            final Date dob = hasProfile ? profile.getDateOfBirth() : null;
+//            if (gender != null) tracker.setUserGender(gender);
+//            if (income != null) tracker.setUserIncomeRange(income);
+//            if (race != null) tracker.setUserRace(race);
+//            if (dob != null) tracker.setUserDateOfBirth(dob);
+//        } catch (SystemErrorException e) {
+//            throw e;
+//        } catch (Exception e) {
+//            throw new SystemErrorException("failed to set user profile for userId=" + userId + "; tracker=" + tracker);
+//        }
+//    }
