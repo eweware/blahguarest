@@ -62,7 +62,7 @@ public class UserGroupsResource {
         try {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            final String groupId = entity.get("g");
+            final String groupId = entity.get("G");
             final UserGroupPayload userGroup = getUserManager().registerUserInGroup(LocaleId.en_us, userId, null, groupId);
             final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath().toString()));
             getSystemManager().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));

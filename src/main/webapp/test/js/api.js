@@ -507,7 +507,7 @@ function configHandler(result) {
 			if (p == '_id') {
 				theId = obj[p];
 			}
-			if (p == 'name') {
+			if (p == 'N') {
 				theName = obj[p];
 			}
 		}

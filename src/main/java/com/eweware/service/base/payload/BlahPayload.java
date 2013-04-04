@@ -22,7 +22,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>This is the id of the group into which this blah
      * was originally injected.</p>
      */
-    static final String ORIGINAL_GROUP_ID = "groupId";
+    static final String ORIGINAL_GROUP_ID = "G";
 
     /**
      * <p>Indicates the user promotion/demotion for this blag.</p>
