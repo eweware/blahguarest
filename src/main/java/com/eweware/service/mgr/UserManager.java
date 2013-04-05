@@ -569,10 +569,10 @@ public class UserManager implements ManagerInterface {
 
         final AuthorizedState defaultState = vmeth.getDefaultAuthorizationState();
 //        final String validationCode = vmeth.startValidation(userId, groupId, groupDAO.getDisplayName(), validationKey);
-        final String validationCode = AuthorizedState.A.toString();  // TODO now carte blanche authorization as we don't have any way to change it
+//        final String validationCode = AuthorizedState.A.toString();  // TODO now carte blanche authorization as we don't have any way to change it
 
-        // Add user to the group with pending state, stashing validation code
-        updateUserStatus(LocaleId.en_us, userId, groupId, defaultState.toString(), validationCode);
+        // Add user to the group with authorized state
+        updateUserStatus(LocaleId.en_us, userId, groupId, defaultState.toString());
 
 //        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
 //        tracker.setUserId(userId);
@@ -585,54 +585,54 @@ public class UserManager implements ManagerInterface {
         return payload;
     }
 
-    /**
-     * <p><b>Not in use.</b></p>
-     * A user entered a validation code in a client. Looks for the
-     * code in a usergroup association and, if it is there, advances
-     * the user to the active (A) state. The code is deleted from
-     * the association to prevent it from being re-user by user or others.
-     *
-     * @param localeId
-     * @param validationCode
-     * @return UserPayload  Returns payload with the userId and the validated groupId.
-     *         If there is no error, the usergroup state becomes A (active).
-     */
-    public void validateUser(LocaleId localeId, String validationCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
-        if (CommonUtilities.isEmptyString(validationCode)) {
-            throw new InvalidRequestException("missing validation code", ErrorCodes.MISSING_VALIDATION_CODE);
-        }
-        final UserGroupDAO searchDAO = getStoreManager().createUserGroup();
-        searchDAO.setValidationCode(validationCode);
-        final UserGroupDAO userGroupDAO = (UserGroupDAO) searchDAO._findByCompositeId(new String[]{UserGroupDAO.STATE, UserGroupDAO.GROUP_ID, UserGroupDAO.USER_ID}, UserGroupDAO.VALIDATION_CODE);
-        if (userGroupDAO == null) {
-            throw new InvalidRequestException("No pending user found for validation code '" + validationCode + "'. The code is incorrect; else it expired.", ErrorCodes.VALIDATION_CODE_INVALID_OR_EXPIRED);
-        }
-        final String state = userGroupDAO.getState();
-        try {
-            final AuthorizedState s = AuthorizedState.valueOf(state);
-            if (s != AuthorizedState.P && s != AuthorizedState.S) {
-                throw new StateConflictException("state=" + state + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId() +
-                        " is neither " + AuthorizedState.P + " nor " + AuthorizedState.S, ErrorCodes.INVALID_STATE_CODE_IS_NEITHER_P_NOR_S);
-            }
-            userGroupDAO.setState(AuthorizedState.A.toString());
-            userGroupDAO.setValidationCode(null); // used up! TODO this doesn't remove the field, but that's what we want! index dropDups is just a kludge to get arond this
-            userGroupDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
-
-            final GroupDAO groupDAO = getStoreManager().createGroup(userGroupDAO.getGroupId());
-            groupDAO.setUserCount(1);
-            groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-
-//            final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
-//            tracker.setUserId(userGroupDAO.getUserId());
-//            tracker.setGroupId(userGroupDAO.getGroupId());
-//            tracker.setState(userGroupDAO.getState());
-//            TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-
-        } catch (IllegalArgumentException e) {
-            throw new StateConflictException("invalid state=" + state + " in usergroup id=" + userGroupDAO.getId() + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId(), e,
-                    ErrorCodes.INVALID_STATE_CODE);
-        }
-    }
+//    /**
+//     * <p><b>Not in use.</b></p>
+//     * A user entered a validation code in a client. Looks for the
+//     * code in a usergroup association and, if it is there, advances
+//     * the user to the active (A) state. The code is deleted from
+//     * the association to prevent it from being re-user by user or others.
+//     *
+//     * @param localeId
+//     * @param validationCode
+//     * @return UserPayload  Returns payload with the userId and the validated groupId.
+//     *         If there is no error, the usergroup state becomes A (active).
+//     */
+//    public void validateUser(LocaleId localeId, String validationCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
+//        if (CommonUtilities.isEmptyString(validationCode)) {
+//            throw new InvalidRequestException("missing validation code", ErrorCodes.MISSING_VALIDATION_CODE);
+//        }
+//        final UserGroupDAO searchDAO = getStoreManager().createUserGroup();
+//        searchDAO.setValidationCode(validationCode);
+//        final UserGroupDAO userGroupDAO = (UserGroupDAO) searchDAO._findByCompositeId(new String[]{UserGroupDAO.STATE, UserGroupDAO.GROUP_ID, UserGroupDAO.USER_ID}, UserGroupDAO.VALIDATION_CODE);
+//        if (userGroupDAO == null) {
+//            throw new InvalidRequestException("No pending user found for validation code '" + validationCode + "'. The code is incorrect; else it expired.", ErrorCodes.VALIDATION_CODE_INVALID_OR_EXPIRED);
+//        }
+//        final String state = userGroupDAO.getState();
+//        try {
+//            final AuthorizedState s = AuthorizedState.valueOf(state);
+//            if (s != AuthorizedState.P && s != AuthorizedState.S) {
+//                throw new StateConflictException("state=" + state + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId() +
+//                        " is neither " + AuthorizedState.P + " nor " + AuthorizedState.S, ErrorCodes.INVALID_STATE_CODE_IS_NEITHER_P_NOR_S);
+//            }
+//            userGroupDAO.setState(AuthorizedState.A.toString());
+//            userGroupDAO.setValidationCode(null); // used up! TODO this doesn't remove the field, but that's what we want! index dropDups is just a kludge to get arond this
+//            userGroupDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+//
+//            final GroupDAO groupDAO = getStoreManager().createGroup(userGroupDAO.getGroupId());
+//            groupDAO.setUserCount(1);
+//            groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//
+////            final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
+////            tracker.setUserId(userGroupDAO.getUserId());
+////            tracker.setGroupId(userGroupDAO.getGroupId());
+////            tracker.setState(userGroupDAO.getState());
+////            TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//
+//        } catch (IllegalArgumentException e) {
+//            throw new StateConflictException("invalid state=" + state + " in usergroup id=" + userGroupDAO.getId() + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId(), e,
+//                    ErrorCodes.INVALID_STATE_CODE);
+//        }
+//    }
 
     /**
      * Updates username.
@@ -1059,14 +1059,14 @@ public class UserManager implements ManagerInterface {
      *                       If AuthorizedState.A.getDescription, the user will be activated in the group.
      *                       If AuthorizedState.S.getDescription, the user will be suspended in the group.
      *                       If AuthorizedState.DT.getDescription, the user/group association will be deleted from the database.
-     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) state.
-     *                       If not null, this is simply inserted into the DB for future reference.
+//     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) state.
+//     *                       If not null, this is simply inserted into the DB for future reference.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws StateConflictException
      */
-    public void updateUserStatus(LocaleId localeId, String userId, String groupId, String newState, String validationCode)
+    public void updateUserStatus(LocaleId localeId, String userId, String groupId, String newState)
             throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
@@ -1149,9 +1149,9 @@ public class UserManager implements ManagerInterface {
                 userGroup.initToDefaultValues(localeId);
                 userGroup.setUserId(userId);
                 userGroup.setGroupId(groupId);
-                if (validationCode != null) {
-                    userGroup.setValidationCode(validationCode);
-                }
+//                if (validationCode != null) {
+//                    userGroup.setValidationCode(validationCode);
+//                }
                 userGroup.setState(newState);
                 userGroup._insert();
 

@@ -24,9 +24,9 @@ public interface UserGroupDAO extends BaseDAO, UserGroupDAOConstants {
 
     public void setUserId(String userId);
 
-    public String getValidationCode();
-
-    public void setValidationCode(String validationCode);
+//    public String getValidationCode();
+//
+//    public void setValidationCode(String validationCode);
 
     public Date getCreated();
 

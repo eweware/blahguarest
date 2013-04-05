@@ -34,13 +34,13 @@ public interface UserGroupDAOConstants {
      */
     static final String STATE = "S";
 
-    /**
-     * <p><b>Do not use.</b></p>
-     * <p>This was used during alpha but will be mostly replaced with badges. But it may make a comeback for some cases.</p>
-     */
-    static final String VALIDATION_CODE = "C";
+//    /**
+//     * <p><b>Do not use.</b></p>
+//     * <p>This was used during alpha but will be mostly replaced with badges. But it may make a comeback for some cases.</p>
+//     */
+//    static final String VALIDATION_CODE = "C";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{GROUP_ID, GROUP_DISPLAY_NAME, USER_ID, STATE, VALIDATION_CODE})
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{GROUP_ID, GROUP_DISPLAY_NAME, USER_ID, STATE})
     };
 }

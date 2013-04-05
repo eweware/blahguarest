@@ -92,7 +92,7 @@ public class UserGroupsResource {
      * <div><b>URL:</b> userGroups</div>
      *
      * @param entity    A JSON entity containing the group id in a
-     *                  field named 'g'.
+     *                  field named 'G'.
      * @return If successful, returns an http status 204 (NO CONTENT).
      *         If there's an error in the request, returns status 400.
      *         If there's a state conflict in the update, returns status 409.
@@ -108,8 +108,8 @@ public class UserGroupsResource {
         try {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            final String groupId = entity.get("g");
-            getUserManager().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString(), null);
+            final String groupId = entity.get("G");
+            getUserManager().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString());
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;

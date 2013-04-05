@@ -30,7 +30,7 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
     static {   // TODO should be derived from schema
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
-        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(VALIDATION_CODE, MongoFieldTypes.STRING);
+//        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(VALIDATION_CODE, MongoFieldTypes.STRING);
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
@@ -86,15 +86,15 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
         put(USER_ID, userId);
     }
 
-    @Override
-    public String getValidationCode() {
-        return (String) get(VALIDATION_CODE);
-    }
-
-    @Override
-    public void setValidationCode(String validationCode) {
-        put(VALIDATION_CODE, validationCode);
-    }
+//    @Override
+//    public String getValidationCode() {
+//        return (String) get(VALIDATION_CODE);
+//    }
+//
+//    @Override
+//    public void setValidationCode(String validationCode) {
+//        put(VALIDATION_CODE, validationCode);
+//    }
 
     @Override
     public String getGroupId() {
