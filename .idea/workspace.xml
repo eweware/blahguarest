@@ -10,11 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -195,10 +191,10 @@
     <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365043191720" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363977754573" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
-    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362682212128" ignored="false" />
+    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365225972483" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365048042012" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365104846525" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365224139859" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363909635568" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -583,41 +579,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-    </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" line="231" class="main.java.com.eweware.service.mgr.UserManager" package="main.java.com.eweware.service.mgr">
         <option name="ENABLED" value="true" />
@@ -717,7 +678,56 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" line="159" class="main.java.com.eweware.service.rest.resource.ImageUploadResource" package="main.java.com.eweware.service.rest.resource">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
     </line_breakpoints>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+    </breakpoint_any>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -727,10 +737,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="UserGroupsResource.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="UserGroupsResource.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="111" column="163" selection-start="5380" selection-end="5380" vertical-scroll-proportion="0.7983871">
+            <state line="111" column="163" selection-start="5380" selection-end="5380" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SystemManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/SystemManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="86" column="37" selection-start="3500" selection-end="3500" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="192" column="0" selection-start="8410" selection-end="8410" vertical-scroll-proportion="0.33333334">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RestUtilities.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="80" column="27" selection-start="3613" selection-end="3613" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -749,11 +786,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="96" column="7" selection-start="3140" selection-end="3378" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#1063#1088#0" expanded="false" />
-                <element signature="e#4682#4690#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -771,9 +804,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="43" column="114" selection-start="1562" selection-end="1562" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -801,7 +832,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/TrackingManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/TrackerSchema.java" />
@@ -817,6 +847,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       </list>
     </option>
   </component>
@@ -1143,16 +1174,16 @@
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="187" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="204" />
-    <property name="OverrideImplement.combined" value="false" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="OverrideImplement.combined" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="204" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="198" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="198" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../stats" />
@@ -1167,26 +1198,26 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao" />
+    <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.lastSelected" value="reference.projectsettings.compiler.annotationProcessors" />
-    <property name="project.structure.side.proportion" value="0.26923078" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="project.structure.side.proportion" value="0.26923078" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -1329,19 +1360,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1367,6 +1385,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1671,7 +1702,11 @@
       <created>1365049362575</created>
       <updated>1365049362575</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="removed validation code field from usergroups">
+      <created>1365121597667</created>
+      <updated>1365121597667</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1696,28 +1731,28 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="22" width="1676" height="1028" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32378855" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3072687" sideWeight="0.96101046" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30659342" sideWeight="0.96101046" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2863436" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2523719" sideWeight="0.32819384" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.71365637" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24417178" sideWeight="0.71365637" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32378855" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2863436" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24417178" sideWeight="0.71365637" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39981097" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1759,7 +1794,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Corrected typos in blah resource and api.js." />
+    <option name="LAST_COMMIT_MESSAGE" value="removed validation code field from usergroups" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1772,7 +1807,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Even more!" />
     <MESSAGE value="Fixed get open channels glitch." />
     <MESSAGE value="Account recovery code." />
     <MESSAGE value="Using AES algorithm with PKS padding for recovery encryption." />
@@ -1797,6 +1831,7 @@
     <MESSAGE value="pre field change checkin" />
     <MESSAGE value="field change checkin" />
     <MESSAGE value="Corrected typos in blah resource and api.js." />
+    <MESSAGE value="removed validation code field from usergroups" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1810,43 +1845,14 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="65" column="137" selection-start="2864" selection-end="2864" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="508" column="49" selection-start="24199" selection-end="24199" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/test/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="73" selection-start="5888" selection-end="5888" vertical-scroll-proportion="0.025728988">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="24" selection-start="528" selection-end="528" vertical-scroll-proportion="0.33500838">
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
+        <state line="15" column="24" selection-start="528" selection-end="528" vertical-scroll-proportion="0.33500838" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="17" selection-start="554" selection-end="554" vertical-scroll-proportion="0.14516129">
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
+        <state line="13" column="17" selection-start="554" selection-end="554" vertical-scroll-proportion="0.14516129" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java">
@@ -1886,42 +1892,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/test/js/api.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="526" column="1" selection-start="15635" selection-end="15635" vertical-scroll-proportion="1.2910959">
-          <folding />
-        </state>
+        <state line="526" column="1" selection-start="15635" selection-end="15635" vertical-scroll-proportion="1.2910959" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="289" column="13" selection-start="9996" selection-end="9996" vertical-scroll-proportion="0.0">
+        <state line="289" column="13" selection-start="9996" selection-end="9996" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="111" column="163" selection-start="5380" selection-end="5380" vertical-scroll-proportion="0.0">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="114" selection-start="1562" selection-end="1562" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="24" selection-start="180" selection-end="180" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="7" selection-start="3140" selection-end="3378" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1063#1088#0" expanded="false" />
-            <element signature="e#4682#4690#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1932,9 +1914,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="163" selection-start="5380" selection-end="5380" vertical-scroll-proportion="0.7983871">
+        <state line="96" column="7" selection-start="3140" selection-end="3378" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="24" selection-start="180" selection-end="180" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="114" selection-start="1562" selection-end="1562" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/SystemManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="37" selection-start="3500" selection-end="3500" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="27" selection-start="3613" selection-end="3613" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="192" column="0" selection-start="8410" selection-end="8410" vertical-scroll-proportion="0.33333334">
           <folding />
         </state>
       </provider>

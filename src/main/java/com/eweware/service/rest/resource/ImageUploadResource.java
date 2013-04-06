@@ -30,6 +30,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Image upload API methods.</p>
@@ -40,6 +42,8 @@ import java.util.List;
  */
 @Path("/images")
 public class ImageUploadResource {
+
+    private static final Logger logger = Logger.getLogger("ImageUploadResource");
 
     /**
      * These paths should be part of the config
@@ -155,37 +159,36 @@ public class ImageUploadResource {
         try {
             BlahguaSession.ensureAuthenticated(request);
             if (objectId == null) {
-                return RestUtilities.make400InvalidRequestResponse(
-                        new InvalidRequestException("missing objectId", ErrorCodes.INVALID_INPUT));
+                return Response.status(400).entity("error=missing object id").build();
             }
             objectType = ObjectType.valueOf(objType);
         } catch (IllegalArgumentException e) {
-            return RestUtilities.make400InvalidRequestResponse(
-                    new InvalidRequestException("missing or invalid objectType", ErrorCodes.INVALID_INPUT));
+            return Response.status(400).entity("error=missing or invalid objectType").build();
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return Response.status(401).entity("error=unauthorized").build();
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            logger.log(Level.SEVERE, "Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'", e);
+            return Response.status(500).entity("error=" + e.getMessage()).build();
         }
 
         AmazonS3 s3 = null;
         try {
             final InputStream resourceAsStream = ImageUploadResource.class.getResourceAsStream("AwsCredentials.properties");
             if (resourceAsStream == null) {
-                return Response.status(400).entity("Missing AWS credentials file AwsCredentials.properties").build();
+                logger.log(Level.SEVERE, "No AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'");
+                return Response.status(400).entity("error=no credentials").build();
             }
             s3 = new AmazonS3Client(new PropertiesCredentials(resourceAsStream)); // TODO is it reasonable to cache this object?
         } catch (Exception e) {
-            System.err.println("Failed to get AWS credentials");
-            e.printStackTrace();
-            return Response.status(400).entity("Failed to get AWS credentials for S3. " + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
+            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'");
+            return Response.status(400).entity("error=credentials error" + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
         }
 
         final String msg;
         try {
             msg = processFile(in, metadata, s3, objectType, objectId);
-        } catch (Exception x) {
-            return Response.status(400).entity(x.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(400).entity("error=Failed to process file: " + e.getMessage()).build();
         }
         return (msg == null) ? Response.status(400).build() :
                 Response.status(200)
@@ -298,15 +301,13 @@ public class ImageUploadResource {
                 try {
                     file.delete();
                 } catch (Exception e) {
-                    System.err.println("Failed to delete " + file.getAbsolutePath());
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "Failed to delete processed file: " + file.getAbsolutePath(), e);
                 }
             }
             try {
                 original.delete();
             } catch (Exception e) {
-                System.err.println("Failed to delete " + original.getAbsolutePath());
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Failed to delete original file: " + original.getAbsolutePath(), e);
             }
         }
     }
@@ -316,20 +317,20 @@ public class ImageUploadResource {
         imageIds.add(mediaId);
         if (objectType == ObjectType.B) {
             if (!getStoreManager().createBlah(objectId)._exists()) {
-                throw new ResourceNotFoundException("No blahId=" + objectId + " exists");
+                throw new ResourceNotFoundException("No blahId '" + objectId + "' exists");
             }
             final BlahDAO blah = (BlahDAO) getStoreManager().createBlah(objectId);
             blah.setImageIds(imageIds);
             blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else if (objectType == ObjectType.C) {
             if (!getStoreManager().createComment(objectId)._exists()) {
-                throw new ResourceNotFoundException("No commentId=" + objectId + " exists");
+                throw new ResourceNotFoundException("No commentId '" + objectId + "' exists");
             }
             final CommentDAO comment = (CommentDAO) getStoreManager().createComment(objectId);
             comment.setImageIds(imageIds);
             comment._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
-            throw new SystemErrorException("Object type " + objectType + " not supported");
+            throw new SystemErrorException("Object type '" + objectType + "' not supported");
         }
     }
 
