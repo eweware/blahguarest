@@ -18,19 +18,9 @@ public interface MediaDAOConstants {
      */
     static final String TYPE = "T"; // {i|v} image, video
 
-    /**
-     * <p>The S3 bucket where the media object is stored. A string.</p>
-     */
-    static final String BUCKET = "B"; // the bucket name
-
-    /**
-     * <p>A pathname, within the S3 bucket, where the media is stored. A string.</p>
-     */
-    static final String PATHNAME = "P";
-
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    TYPE, BUCKET, PATHNAME
+                    TYPE,
             })
     };
 }

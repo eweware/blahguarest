@@ -23,8 +23,6 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
 
     static {  // TODO should be derived from schema
         MediaDAOImpl.FIELD_TO_TYPE_MAP.put(TYPE, MongoFieldTypes.STRING);
-        MediaDAOImpl.FIELD_TO_TYPE_MAP.put(BUCKET, MongoFieldTypes.STRING);
-        MediaDAOImpl.FIELD_TO_TYPE_MAP.put(PATHNAME, MongoFieldTypes.STRING);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -73,26 +71,6 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
     @Override
     public void setType(String type) {
         put(TYPE, type);
-    }
-
-    @Override
-    public String getBucketName() {
-        return (String) get(BUCKET);
-    }
-
-    @Override
-    public void setBucketName(String bucket) {
-        put(BUCKET, bucket);
-    }
-
-    @Override
-    public String getPathname() {
-        return (String) get(PATHNAME);
-    }
-
-    @Override
-    public void setPathname(String pathname) {
-        put(PATHNAME, pathname);
     }
 
     @Override

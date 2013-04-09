@@ -27,85 +27,6 @@ public class GroupTypesResource {
     private GroupManager groupManager;
 
     /**
-     * <p>Use this method to create a group type.</p>
-     * <p><i>User must be logged in to use this method.</i></p>
-     * <p><b>This should be restricted to internal use only.</b></p>
-     * <p/>
-     * <div><b>METHOD:</b> POST</div>
-     * <div><b>URL:</b> groupTypes</div>
-     *
-     * @param entity A JSON payload (a GroupTypePayload) with the display name for the group type.
-     * @return If successful, returns http code 201 (CREATED) without any entity.
-     *         If there is an error in the request, returns code 400.
-     *         If there is a state conflict (typically, the group type with the
-     *         specified name already exists), returns code 409.
-     *         If the user is not authorized to create a group type, returns code 401.
-     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
-     */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createGroupType(GroupTypePayload entity,
-                                    @Context UriInfo uri,
-                                    @Context HttpServletRequest request) {
-        try {
-            BlahguaSession.ensureAuthenticated(request);
-            entity = getGroupManager().createGroupType(LocaleId.en_us, entity.getDisplayName());
-            return RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + "/" + entity.getId()));
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
-
-    /**
-     * <p>Use this method to update the group type's display name.</p>
-     * <p><i>User must be logged in to use this method.</i></p>
-     * <p/>
-     * <div><b>METHOD:</b> PUT</div>
-     * <div><b>URL:</b> groupTypes/{groupTypeId}</div>
-     *
-     * @param entity      A JSON entity (a GroupTypePayload) containing the new display name.
-     * @param groupTypeId <i>Path Parameter:</i> The type id
-     * @return If successful, returns http status 204 (NO CONTENT).
-     *         If there is an error in the request, returns status 400.
-     *         If the group type doesn't exist, returns status 404.
-     *         If the user isn't authorized to access this method, returns status 401.
-     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
-     */
-    @PUT
-    @Path("/{groupTypeId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateGroupType(
-            GroupTypePayload entity,
-            @PathParam("groupTypeId") String groupTypeId,
-            @Context HttpServletRequest request) {
-        try {
-            BlahguaSession.ensureAuthenticated(request);
-            getGroupManager().updateGroupTypeDisplayName(LocaleId.en_us, groupTypeId, entity.getDisplayName());
-            return RestUtilities.make204OKNoContentResponse();
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
-        }
-    }
-
-    /**
      * <p>Use this method to obtain existing group types.</p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
@@ -172,3 +93,85 @@ public class GroupTypesResource {
         return groupManager;
     }
 }
+
+
+
+//    /**
+//     * <p>Use this method to create a group type.</p>
+//     * <p><i>User must be logged in to use this method.</i></p>
+//     * <p><b>This should be restricted to internal use only.</b></p>
+//     * <p/>
+//     * <div><b>METHOD:</b> POST</div>
+//     * <div><b>URL:</b> groupTypes</div>
+//     *
+//     * @param entity A JSON payload (a GroupTypePayload) with the display name for the group type.
+//     * @return If successful, returns http code 201 (CREATED) without any entity.
+//     *         If there is an error in the request, returns code 400.
+//     *         If there is a state conflict (typically, the group type with the
+//     *         specified name already exists), returns code 409.
+//     *         If the user is not authorized to create a group type, returns code 401.
+//     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
+//     */
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response createGroupType(GroupTypePayload entity,
+//                                    @Context UriInfo uri,
+//                                    @Context HttpServletRequest request) {
+//        try {
+//            BlahguaSession.ensureAuthenticated(request);
+//            entity = getGroupManager().createGroupType(LocaleId.en_us, entity.getDisplayName());
+//            return RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + "/" + entity.getId()));
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.make400InvalidRequestResponse(e);
+//        } catch (StateConflictException e) {
+//            return RestUtilities.make409StateConflictResponse(e);
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }
+
+
+//    /**
+//     * <p>Use this method to update the group type's display name.</p>
+//     * <p><i>User must be logged in to use this method.</i></p>
+//     * <p/>
+//     * <div><b>METHOD:</b> PUT</div>
+//     * <div><b>URL:</b> groupTypes/{groupTypeId}</div>
+//     *
+//     * @param entity      A JSON entity (a GroupTypePayload) containing the new display name.
+//     * @param groupTypeId <i>Path Parameter:</i> The type id
+//     * @return If successful, returns http status 204 (NO CONTENT).
+//     *         If there is an error in the request, returns status 400.
+//     *         If the group type doesn't exist, returns status 404.
+//     *         If the user isn't authorized to access this method, returns status 401.
+//     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
+//     */
+//    @PUT
+//    @Path("/{groupTypeId}")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response updateGroupType(
+//            GroupTypePayload entity,
+//            @PathParam("groupTypeId") String groupTypeId,
+//            @Context HttpServletRequest request) {
+//        try {
+//            BlahguaSession.ensureAuthenticated(request);
+//            getGroupManager().updateGroupTypeDisplayName(LocaleId.en_us, groupTypeId, entity.getDisplayName());
+//            return RestUtilities.make204OKNoContentResponse();
+//        } catch (InvalidRequestException e) {
+//            return RestUtilities.make400InvalidRequestResponse(e);
+//        } catch (ResourceNotFoundException e) {
+//            return RestUtilities.make404ResourceNotFoundResponse(e);
+//        } catch (InvalidAuthorizedStateException e) {
+//            return RestUtilities.make401UnauthorizedRequestResponse(e);
+//        } catch (SystemErrorException e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(e);
+//        }
+//    }

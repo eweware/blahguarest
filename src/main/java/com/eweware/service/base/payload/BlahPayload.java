@@ -118,7 +118,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @param text The blah's text
      */
     public void setText(String text) {
-        put(TEXT, text);
+        if (text == null) {
+            remove(TEXT);
+        } else {
+            put(TEXT, text);
+        }
     }
 
     /**
@@ -135,7 +139,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @param body  The blah's body text
      */
     public void setBody(String body) {
-        put(BODY, body);
+        if (body == null) {
+            remove(BODY);
+        } else {
+            put(BODY, body);
+        }
     }
 
     /**

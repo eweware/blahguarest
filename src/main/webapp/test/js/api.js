@@ -61,18 +61,18 @@ function defaultSuccessFunction(results, successOrNot, theStatus) {
 	}).html(results)
 }
 
-function createChannelType() {
-	var name = document.getElementById('channeltypename').value;
-	if (!name) {alert('Missing Channel Type Name'); return;}
-	rest('POST', 'groupTypes', JSON.stringify({'N': name}), setChannelTypeData);
-}
+//function createChannelType() {
+//	var name = document.getElementById('channeltypename').value;
+//	if (!name) {alert('Missing Channel Type Name'); return;}
+//	rest('POST', 'groupTypes', JSON.stringify({'N': name}), setChannelTypeData);
+//}
 
-function updateChannelTypeName() {
-	var name = document.getElementById('channeltypename').value;
-	var ctId = document.getElementById('channeltypeid').value;
-	if (!name || !ctId) {alert('Missing Channel Type Id and/or Name'); return;}
-	rest('PUT', 'groupTypes/'+ctId, JSON.stringify({'N': name}));
-}
+//function updateChannelTypeName() {
+//	var name = document.getElementById('channeltypename').value;
+//	var ctId = document.getElementById('channeltypeid').value;
+//	if (!name || !ctId) {alert('Missing Channel Type Id and/or Name'); return;}
+//	rest('PUT', 'groupTypes/'+ctId, JSON.stringify({'N': name}));
+//}
 
 function getChannelTypeById() {
 	var ctId = document.getElementById('channeltypeid').value;
@@ -80,13 +80,13 @@ function getChannelTypeById() {
 	rest('GET', 'groupTypes/'+ctId);
 }
 
-function createChannel(descriptor) {
-	var ctId = document.getElementById('channeltypeid').value;
-	var name = document.getElementById('channelname').value;
-	var validationMethod = 'n'; // normal validation
-	if (!ctId || !name) {alert('Missing Channel Type Id and/or Name'); return;}
-	rest('POST', 'groups', JSON.stringify({'N': name, 'Y': ctId, 'X': descriptor, 'M': validationMethod}), setChannelData);
-}
+//function createChannel(descriptor) {
+//	var ctId = document.getElementById('channeltypeid').value;
+//	var name = document.getElementById('channelname').value;
+//	var validationMethod = 'n'; // normal validation
+//	if (!ctId || !name) {alert('Missing Channel Type Id and/or Name'); return;}
+//	rest('POST', 'groups', JSON.stringify({'N': name, 'Y': ctId, 'X': descriptor, 'M': validationMethod}), setChannelData);
+//}
 
 function createUser() {
 

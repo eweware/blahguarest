@@ -1,6 +1,5 @@
 package main.java.com.eweware.service.mgr;
 
-import main.java.com.eweware.service.GeneralUtilities;
 import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.cache.Inbox;
 import main.java.com.eweware.service.base.error.*;
@@ -210,7 +209,14 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(text)) {
             throw new InvalidRequestException("missing field text=" + text, entity, ErrorCodes.MISSING_TEXT);
         }
-        text = CommonUtilities.getPlainText(text);
+        text = CommonUtilities.scrapeMarkup(text);
+        entity.setText(text);
+
+        String body = entity.getBody();
+        if (!CommonUtilities.isEmptyString(body)) {
+            body = CommonUtilities.scrapeMarkup(body);
+            entity.setBody(body);
+        }
 
         final String groupId = entity.getGroupId();
         if (CommonUtilities.isEmptyString(groupId)) {
@@ -310,11 +316,11 @@ public final class BlahManager implements ManagerInterface {
                 if (tagLine == null) {
                     throw new InvalidRequestException("missing poll option tagline", ErrorCodes.INVALID_INPUT);
                 } else if (tagLine.length() != 0) {
-                    potdao.put(PollOptionTextDAO.TAGLINE, CommonUtilities.getPlainText(tagLine));
+                    potdao.put(PollOptionTextDAO.TAGLINE, CommonUtilities.scrapeMarkup(tagLine));
                 }
                 final String pollText = (String) potdao.get(PollOptionTextDAO.TEXT);
                 if (text != null && text.length() != 0) {
-                    potdao.put(PollOptionTextDAO.TEXT, CommonUtilities.getPlainText(pollText));
+                    potdao.put(PollOptionTextDAO.TEXT, CommonUtilities.scrapeMarkup(pollText));
                 }
             }
             int count = pollOptionsText.size();
@@ -416,7 +422,7 @@ public final class BlahManager implements ManagerInterface {
         final UserBlahInfoData userBlahInfoData = ensureUserDidNotVoteOnPoll(blahId, userId);
 
         final Integer noPollCount = -1;
-        final Integer pollCount = GeneralUtilities.safeGetInteger(blahDAO.getPollOptionCount(), noPollCount);
+        final Integer pollCount = CommonUtilities.safeGetInteger(blahDAO.getPollOptionCount(), noPollCount);
         if (pollCount == noPollCount) {
             throw new InvalidRequestException("There are no poll options in this blah", ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
@@ -687,11 +693,11 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer promotionOrDemotion = GeneralUtilities.checkDiscreteValue(request.getUserPromotesOrDemotes(), request);
+        final Integer promotionOrDemotion = CommonUtilities.checkDiscreteValue(request.getUserPromotesOrDemotes(), request);
 
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
-        final Integer viewCount = GeneralUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);
-        final Integer openCount = GeneralUtilities.checkValueRange(request.getOpens(), 0, maxViewIncrements, request);
+        final Integer viewCount = CommonUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);
+        final Integer openCount = CommonUtilities.checkValueRange(request.getOpens(), 0, maxViewIncrements, request);
         if (promotionOrDemotion == 0 && viewCount == 0 && openCount == 0) {
             return; // don't complain
         }
@@ -1146,10 +1152,10 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(text)) {
             throw new InvalidRequestException("missing text", request, ErrorCodes.MISSING_TEXT);
         }
-        text = CommonUtilities.getPlainText(text);
+        text = CommonUtilities.scrapeMarkup(text);
 
         getUserManager().checkUserById(commentAuthorId, request);
-        final Integer blahVote = GeneralUtilities.checkDiscreteValue(request.getBlahVote(), request);
+        final Integer blahVote = CommonUtilities.checkDiscreteValue(request.getBlahVote(), request);
         boolean votedForBlah = (blahVote != 0);
 
         // Check that blah exists and if this comment includes a vote that the comment author is not the blah's author
@@ -1237,10 +1243,10 @@ public final class BlahManager implements ManagerInterface {
                     userId + " commentId=" + entity.getId() + "blahId=" + entity.getBlahId(), ErrorCodes.CANNOT_VOTE_ON_BLAH_WHEN_UPDATING_COMMENT);
         }
 
-        final Integer voteForComment = GeneralUtilities.checkDiscreteValue(entity.getCommentVotes(), entity);
+        final Integer voteForComment = CommonUtilities.checkDiscreteValue(entity.getCommentVotes(), entity);
         final boolean didVoteForComment = (voteForComment != 0);
-        final Integer views = GeneralUtilities.checkValueRange(entity.getViews(), 0, maxOpensOrViewsPerUpdate, entity);
-        final Integer opens = GeneralUtilities.checkValueRange(entity.getOpens(), 0, maxOpensOrViewsPerUpdate, entity);
+        final Integer views = CommonUtilities.checkValueRange(entity.getViews(), 0, maxOpensOrViewsPerUpdate, entity);
+        final Integer opens = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxOpensOrViewsPerUpdate, entity);
         if (!didVoteForComment &&
                 (views == 0) &&
                 (opens == 0)) {

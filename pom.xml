@@ -20,10 +20,15 @@
     <build>
         <resources>
             <resource>
-                <targetPath>main/java/com/eweware/service/rest/resource</targetPath>
+                <targetPath>main/java/com/eweware/service/base</targetPath>
                 <directory> ${basedir}/src/main/resources</directory>
                 <includes><include>**/AwsCredentials.properties</include></includes>
             </resource>
+            <!--<resource>-->
+                <!--<targetPath>main/java/com/eweware/service/mgr</targetPath>-->
+                <!--<directory> ${basedir}/src/main/resources</directory>-->
+                <!--<includes><include>**/AwsCredentials.properties</include></includes>-->
+            <!--</resource>-->
             <resource>
                 <targetPath>.</targetPath>
                 <directory>${basedir}/src/main/resources</directory>

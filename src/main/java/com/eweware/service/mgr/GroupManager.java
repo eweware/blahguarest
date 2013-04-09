@@ -94,70 +94,6 @@ public final class GroupManager implements ManagerInterface {
     }
 
     /**
-     * Creates a group type.
-     * TODO: This should be a protected API: only PMs should be able to require a new group type. Can have drastic performance implications.
-     *
-     * @param displayName The display name for this group. Note that this is not localized.
-     * @return GroupTypeDAOImpl    The created group type dao
-     * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     * @throws StateConflictException
-     */
-    public GroupTypePayload createGroupType(LocaleId localeId, String displayName) throws InvalidRequestException, SystemErrorException, StateConflictException {
-        if (isEmptyString(displayName)) {
-            throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_DISPLAY_NAME);
-        }
-        displayName = CommonUtilities.getPlainText(displayName);
-
-        final GroupTypeDAO dao = getStoreManager().createGroupType();
-        dao.setDisplayName(displayName);
-        if (dao._exists()) {
-            throw new StateConflictException("group type with displayName already exists", displayName, ErrorCodes.ALREADY_EXISTS_GROUP_TYPE_WITH_DISPLAY_NAME);
-        }
-//        dao.initToDefaultValues(localeId);
-        dao.setDisplayName(displayName);
-        dao._insert();
-
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_GROUP_TYPE);
-//        tracker.setGroupId(dao.getId());
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-
-        return new GroupTypePayload(dao);
-    }
-
-    /**
-     * Updates the group type.
-     * TODO: This should be a protected API: only PMs should be able to require a new group type. Can have drastic performance implications.
-     * <p/>
-     * Transaction cost:
-     * 1. check that group type exists
-     * 2. update group type
-     *
-     * @param localeId
-     * @param groupTypeId The group type id
-     * @param displayName The new display name
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     * @throws InvalidRequestException
-     */
-    public void updateGroupTypeDisplayName(LocaleId localeId, String groupTypeId, String displayName) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
-        if (CommonUtilities.isEmptyString(displayName)) {
-            throw new InvalidRequestException("group type display name must have more than one character", ErrorCodes.MISSING_DISPLAY_NAME);
-        }
-        if (groupTypeId == null) {
-            throw new InvalidRequestException("groupTypeId is required", ErrorCodes.MISSING_GROUP_TYPE_ID);
-        }
-        final GroupTypeDAO dao = getStoreManager().createGroupType(groupTypeId);
-        if (!dao._exists()) {
-            throw new ResourceNotFoundException("no group type exists with groupTypeId ", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
-        }
-
-        dao.setDisplayName(CommonUtilities.getPlainText(displayName));
-        dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-    }
-
-    /**
      * @return List<GroupTypeDAOImpl>	Returns all group types or an empty list if there are none.
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
@@ -197,81 +133,7 @@ public final class GroupManager implements ManagerInterface {
         return new GroupTypePayload(dao);
     }
 
-    /**
-     * TODO: should this be a protected API or can any user do it without further ado? Might have performance implications.
-     *
-     * @return GroupDAOImpl    Creates a group and returns the dao.
-     * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     */
-    public GroupPayload createGroup(LocaleId localeId, String groupTypeId, String displayName, String description, String descriptor, String validationMethod) throws InvalidRequestException, SystemErrorException {
 
-        if (isEmptyString(displayName)) { // TODO maybe force to a global group, but preferably not: client should provide reasonable options
-            throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_USERNAME);
-        }
-
-        if (isEmptyString(groupTypeId)) {
-            throw new InvalidRequestException("missing group type id", ErrorCodes.MISSING_GROUP_TYPE_ID);
-        }
-
-        if (GroupDAOConstants.GroupDescriptor.findDescriptor(descriptor) == null) {
-            throw new InvalidRequestException("missing/invalid group descriptor", ErrorCodes.MISSING_GROUP_DESCRIPTOR);
-        }
-
-        final GroupTypeDAO groupTypeDAO = getStoreManager().createGroupType(groupTypeId);
-        if (!groupTypeDAO._exists()) {
-            throw new InvalidRequestException("no group type exists with groupTypeId=", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
-        }
-
-        // TODO get rid of validation method checks! when badging is implemented.
-        if (isEmptyString(validationMethod)) {
-            throw new InvalidRequestException("Missing user validation method field " + GroupDAO.USER_VALIDATION_METHOD);
-        }
-        final UserValidationMethod vmeth = UserValidationMethod.getValidationMethod(validationMethod);
-        if (vmeth == null) {
-            throw new InvalidRequestException("invalid validation method " + GroupDAO.USER_VALIDATION_METHOD + "=" + validationMethod + ". Must be one of " + UserValidationMethod.validationMethodValues.keySet());
-        }
-
-//        try {
-//            vmeth.checkParameters(group.getValidationParameters());
-//        } catch (InvalidUserValidationMethodParameters e) {
-//            throw new InvalidRequestException("invalid validation parameters for group", group, ErrorCodes.INVALID_USER_VALIDATION_PARAMS);
-//        }
-
-        final GroupDAO dao = getStoreManager().createGroup();
-        dao.setDisplayName(CommonUtilities.getPlainText(displayName));
-        dao.setGroupTypeId(groupTypeId);
-        if (dao._exists()) { // TODO indexing: by display name and group type id!
-            throw new InvalidRequestException("a group with this name already exists in the given display name and group type", dao, ErrorCodes.ALREADY_EXISTS_GROUP_WITH_DISPLAY_NAME);
-        }
-        dao.setGroupTypeId(groupTypeId);
-        dao.setDisplayName(CommonUtilities.getPlainText(displayName));
-        if (description != null && description.length() != 0) {
-            dao.setDescription(CommonUtilities.getPlainText(description));
-        }
-        dao.setDescriptor(descriptor);
-        dao.setValidationMethod(validationMethod);
-        dao.setState((vmeth instanceof DefaultUserValidationMethod) ? AuthorizedState.A.toString() : AuthorizedState.getDefaultState());
-        dao._insert();
-
-        // Bump group type count
-        final GroupTypeDAO groupType = getStoreManager().createGroupType(groupTypeId);
-        groupType.setGroupCount(1);
-        groupType._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_GROUP);
-//        tracker.setGroupId(dao.getId());
-//        tracker.setGroupTypeId(groupTypeId);
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-
-        final GroupPayload groupPayload = new GroupPayload(dao);
-
-        // Updates local cache
-        registerGroup(groupPayload.getId(), groupPayload);
-
-        return groupPayload;
-    }
 
     /**
      * <p>Returns true if the group is open (e.g., open for
@@ -307,54 +169,7 @@ public final class GroupManager implements ManagerInterface {
         groupMap.remove(groupId);
     }
 
-    /**
-     * Used to update a group's display name, description, or state.
-     *
-     * @param localeId
-     * @param groupId     The group id
-     * @param displayName The display name
-     * @param description The group description
-     * @param state       The new group state
-     * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     * @throws ResourceNotFoundException
-     * @throws StateConflictException
-     */
-    public void updateGroup(LocaleId localeId, String groupId, String displayName, String description, String state) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
-        if (groupId == null) {
-            throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
-        }
-        if (state != null && AuthorizedState.find(state) == null) { // TODO should check for valid state transition
-            throw new InvalidRequestException("requested an invalid group state", ErrorCodes.INVALID_STATE_CODE);
-        }
 
-        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId);
-        if (!groupDAO._exists()) {
-            throw new ResourceNotFoundException("no group exists with requested id", ErrorCodes.NOT_FOUND_GROUP_ID);
-        }
-
-        final GroupDAO updateDAO = getStoreManager().createGroup(groupId);
-        if (displayName != null && displayName.length() != 0) {
-            updateDAO.setDisplayName(CommonUtilities.getPlainText(displayName));
-        }
-        if (description != null && description.length() != 0) {
-            updateDAO.setDescription(CommonUtilities.getPlainText(description));
-        }
-        if (state != null) {
-            updateDAO.setState(state);
-        }
-
-        updateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-
-        if (state != null) {
-            if (state.equals(AuthorizedState.A.toString())) {
-                registerGroup(groupId, new GroupPayload(groupDAO));
-            } else {
-                unregisterGroup(groupId);
-            }
-        }
-    }
 
     /**
      * @param localeId
@@ -496,3 +311,192 @@ public final class GroupManager implements ManagerInterface {
         return storeManager;
     }
 }
+
+//    /**
+//     *
+//     * @return GroupDAOImpl    Creates a group and returns the dao.
+//     * @throws InvalidRequestException
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *
+//     */
+//    public GroupPayload createGroup(LocaleId localeId, String groupTypeId, String displayName, String description, String descriptor, String validationMethod) throws InvalidRequestException, SystemErrorException {
+//
+//        if (isEmptyString(displayName)) {
+//            throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_USERNAME);
+//        }
+//
+//        if (isEmptyString(groupTypeId)) {
+//            throw new InvalidRequestException("missing group type id", ErrorCodes.MISSING_GROUP_TYPE_ID);
+//        }
+//
+//        if (GroupDAOConstants.GroupDescriptor.findDescriptor(descriptor) == null) {
+//            throw new InvalidRequestException("missing/invalid group descriptor", ErrorCodes.MISSING_GROUP_DESCRIPTOR);
+//        }
+//
+//        final GroupTypeDAO groupTypeDAO = getStoreManager().createGroupType(groupTypeId);
+//        if (!groupTypeDAO._exists()) {
+//            throw new InvalidRequestException("no group type exists with groupTypeId=", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
+//        }
+//
+//        if (isEmptyString(validationMethod)) {
+//            throw new InvalidRequestException("Missing user validation method field " + GroupDAO.USER_VALIDATION_METHOD);
+//        }
+//        final UserValidationMethod vmeth = UserValidationMethod.getValidationMethod(validationMethod);
+//        if (vmeth == null) {
+//            throw new InvalidRequestException("invalid validation method " + GroupDAO.USER_VALIDATION_METHOD + "=" + validationMethod + ". Must be one of " + UserValidationMethod.validationMethodValues.keySet());
+//        }
+//
+//        try {
+//            vmeth.checkParameters(group.getValidationParameters());
+//        } catch (InvalidUserValidationMethodParameters e) {
+//            throw new InvalidRequestException("invalid validation parameters for group", group, ErrorCodes.INVALID_USER_VALIDATION_PARAMS);
+//        }
+//
+//        final GroupDAO dao = getStoreManager().createGroup();
+//        dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+//        dao.setGroupTypeId(groupTypeId);
+//        if (dao._exists()) {
+//            throw new InvalidRequestException("a group with this name already exists in the given display name and group type", dao, ErrorCodes.ALREADY_EXISTS_GROUP_WITH_DISPLAY_NAME);
+//        }
+//        dao.setGroupTypeId(groupTypeId);
+//        dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+//        if (description != null && description.length() != 0) {
+//            dao.setDescription(CommonUtilities.scrapeMarkup(description));
+//        }
+//        dao.setDescriptor(descriptor);
+//        dao.setValidationMethod(validationMethod);
+//        dao.setState((vmeth instanceof DefaultUserValidationMethod) ? AuthorizedState.A.toString() : AuthorizedState.getDefaultState());
+//        dao._insert();
+//
+//        // Bump group type count
+//        final GroupTypeDAO groupType = getStoreManager().createGroupType(groupTypeId);
+//        groupType.setGroupCount(1);
+//        groupType._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//
+////        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_GROUP);
+////        tracker.setGroupId(dao.getId());
+////        tracker.setGroupTypeId(groupTypeId);
+////        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//
+//        final GroupPayload groupPayload = new GroupPayload(dao);
+//
+//        // Updates local cache
+//        registerGroup(groupPayload.getId(), groupPayload);
+//
+//        return groupPayload;
+//    }
+
+//    /**
+//     * Used to update a group's display name, description, or state.
+//     *
+//     * @param localeId
+//     * @param groupId     The group id
+//     * @param displayName The display name
+//     * @param description The group description
+//     * @param state       The new group state
+//     * @throws InvalidRequestException
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *
+//     * @throws ResourceNotFoundException
+//     * @throws StateConflictException
+//     */
+//    public void updateGroup(LocaleId localeId, String groupId, String displayName, String description, String state) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+//        if (groupId == null) {
+//            throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
+//        }
+//        if (state != null && AuthorizedState.find(state) == null) { // TODO should check for valid state transition
+//            throw new InvalidRequestException("requested an invalid group state", ErrorCodes.INVALID_STATE_CODE);
+//        }
+//
+//        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId);
+//        if (!groupDAO._exists()) {
+//            throw new ResourceNotFoundException("no group exists with requested id", ErrorCodes.NOT_FOUND_GROUP_ID);
+//        }
+//
+//        final GroupDAO updateDAO = getStoreManager().createGroup(groupId);
+//        if (displayName != null && displayName.length() != 0) {
+//            updateDAO.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+//        }
+//        if (description != null && description.length() != 0) {
+//            updateDAO.setDescription(CommonUtilities.scrapeMarkup(description));
+//        }
+//        if (state != null) {
+//            updateDAO.setState(state);
+//        }
+//
+//        updateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//
+//        if (state != null) {
+//            if (state.equals(AuthorizedState.A.toString())) {
+//                registerGroup(groupId, new GroupPayload(groupDAO));
+//            } else {
+//                unregisterGroup(groupId);
+//            }
+//        }
+//    }
+
+//    /**
+//     * Creates a group type.
+//     *
+//     * @param displayName The display name for this group. Note that this is not localized.
+//     * @return GroupTypeDAOImpl    The created group type dao
+//     * @throws InvalidRequestException
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *
+//     * @throws StateConflictException
+//     */
+//    public GroupTypePayload createGroupType(LocaleId localeId, String displayName) throws InvalidRequestException, SystemErrorException, StateConflictException {
+//        if (isEmptyString(displayName)) {
+//            throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_DISPLAY_NAME);
+//        }
+//        displayName = CommonUtilities.scrapeMarkup(displayName);
+//
+//        final GroupTypeDAO dao = getStoreManager().createGroupType();
+//        dao.setDisplayName(displayName);
+//        if (dao._exists()) {
+//            throw new StateConflictException("group type with displayName already exists", displayName, ErrorCodes.ALREADY_EXISTS_GROUP_TYPE_WITH_DISPLAY_NAME);
+//        }
+////        dao.initToDefaultValues(localeId);
+//        dao.setDisplayName(displayName);
+//        dao._insert();
+//
+////        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_GROUP_TYPE);
+////        tracker.setGroupId(dao.getId());
+////        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//
+//        return new GroupTypePayload(dao);
+//    }
+
+//    /**
+//     * Updates the group type.
+//     * TODO: This should be a protected API: only PMs should be able to require a new group type. Can have drastic performance implications.
+//     * <p/>
+//     * Transaction cost:
+//     * 1. check that group type exists
+//     * 2. update group type
+//     *
+//     * @param localeId
+//     * @param groupTypeId The group type id
+//     * @param displayName The new display name
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *
+//     * @throws InvalidRequestException
+//     */
+//    public void updateGroupTypeDisplayName(LocaleId localeId, String groupTypeId, String displayName) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
+//        if (CommonUtilities.isEmptyString(displayName)) {
+//            throw new InvalidRequestException("group type display name must have more than one character", ErrorCodes.MISSING_DISPLAY_NAME);
+//        }
+//        if (groupTypeId == null) {
+//            throw new InvalidRequestException("groupTypeId is required", ErrorCodes.MISSING_GROUP_TYPE_ID);
+//        }
+//        final GroupTypeDAO dao = getStoreManager().createGroupType(groupTypeId);
+//        if (!dao._exists()) {
+//            throw new ResourceNotFoundException("no group type exists with groupTypeId ", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
+//        }
+//
+//        dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+//        dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//    }
+
+
+

@@ -228,13 +228,15 @@ public class UserManager implements ManagerInterface {
      * @param setChallenge     ditto
      * @param challengeAnswer1 ditto
      */
-    public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException {
+    public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException, InvalidRequestException {
         if (!setEmail && !setChallenge) {
             return; // nothing to do
         }
         if (userId == null) {
             throw new InvalidAuthorizedStateException("no session", ErrorCodes.UNAUTHORIZED_USER);
         }
+
+        checkUserAccountFieldLengths(emailAddress, challengeAnswer1);
 
         final UserAccountDAO userAccountDAO = getStoreManager().createUserAccount(userId);
         final boolean update = userAccountDAO._exists();
@@ -251,6 +253,14 @@ public class UserManager implements ManagerInterface {
         } else {
             userAccountDAO._insert();
         }
+    }
+
+    private void checkUserAccountFieldLengths(String emailAddress, String challengeAnswer1) throws InvalidRequestException {
+        if ((emailAddress != null && emailAddress.length() > 64) ||
+                (challengeAnswer1 != null && challengeAnswer1.length() > 64)) {
+            throw new InvalidRequestException("Some field length exceeded max", ErrorCodes.INVALID_INPUT);
+        }
+
     }
 
     /**
@@ -331,9 +341,7 @@ public class UserManager implements ManagerInterface {
         if (userId == null) {
             throw new InvalidAuthorizedStateException("user id not available", ErrorCodes.INVALID_STATE_CODE);
         }
-        if (profile.getUserType() != null) {
-            throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
-        }
+        checkUserProfileFieldLengths(profile);
 
         UserProfileDAO userProfileDAO = getStoreManager().createUserProfile(userId);
         final boolean profileExists = userProfileDAO._exists();
@@ -358,6 +366,15 @@ public class UserManager implements ManagerInterface {
             throw new StateConflictException("duplicate key: " + e.getMessage(), ErrorCodes.DUPLICATE_KEY);
         }
         return createOnly ? new UserProfilePayload(userProfileDAO.toMap()) : null; // nothing returned on an update
+    }
+
+    private void checkUserProfileFieldLengths(UserProfilePayload profile) throws InvalidRequestException {
+        if (profile.getUserType() != null) {
+            throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
+        }
+        if ((profile.getCity() != null && profile.getCity().length() > 32) || (profile.getCountry() != null && profile.getCountry().length() > 32) || (profile.getDateOfBirth() != null && profile.getDateOfBirth().length() > 32) || (profile.getGender() != null && profile.getGender().length() > 10) || (profile.getGPSLocation() != null && profile.getGPSLocation().length() > 64) || (profile.getIncomeRange() != null && profile.getIncomeRange().length() > 32) || (profile.getNickname() != null && profile.getNickname().length() > 32) || (profile.getRace() != null && profile.getRace().length() > 16) || (profile.getState() != null && profile.getState().length() > 32) || (profile.getZipCode() != null && profile.getZipCode().length() > 16)) {
+            throw new InvalidRequestException("max field length exceeded on some field", ErrorCodes.INVALID_INPUT);
+        }
     }
 
 
@@ -431,23 +448,17 @@ public class UserManager implements ManagerInterface {
      * <p>The user must have registered an email address in his profile.</p>
      *
      * @param localeId        The locale id
-     * @param request         The request
      * @param username        The username
      * @param emailAddress    The email address submitted by the user (for verification only)
      * @param challengeAnswer The challenge answer submitted by the user (for verification)
      */
-    public void recoverUser(LocaleId localeId, HttpServletRequest request, String username, String emailAddress, String challengeAnswer)
+    public void recoverUser(LocaleId localeId, String username, String emailAddress, String challengeAnswer)
             throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException {
 
-        if (username == null) {
-            throw new InvalidRequestException("missing username", ErrorCodes.MISSING_USERNAME);
+        if (username == null || username.length() > 64) {
+            throw new InvalidRequestException("invalid username", ErrorCodes.INVALID_USERNAME);
         }
-        if (emailAddress == null) {
-            throw new InvalidRequestException("missing email address", ErrorCodes.MISSING_EMAIL_ADDRESS);
-        }
-        if (challengeAnswer == null) {
-            throw new InvalidAuthorizedStateException("missing challenge answer", ErrorCodes.INVALID_INPUT);
-        }
+        checkUserAccountFieldLengths(emailAddress, challengeAnswer);
 
         UserAccountDAO userAccountDAO = getStoreManager().createUserAccount();
         final String canonicalUsername = Login.makeCanonicalUsername(username);
@@ -584,55 +595,6 @@ public class UserManager implements ManagerInterface {
         payload.setState(defaultState.toString());
         return payload;
     }
-
-//    /**
-//     * <p><b>Not in use.</b></p>
-//     * A user entered a validation code in a client. Looks for the
-//     * code in a usergroup association and, if it is there, advances
-//     * the user to the active (A) state. The code is deleted from
-//     * the association to prevent it from being re-user by user or others.
-//     *
-//     * @param localeId
-//     * @param validationCode
-//     * @return UserPayload  Returns payload with the userId and the validated groupId.
-//     *         If there is no error, the usergroup state becomes A (active).
-//     */
-//    public void validateUser(LocaleId localeId, String validationCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
-//        if (CommonUtilities.isEmptyString(validationCode)) {
-//            throw new InvalidRequestException("missing validation code", ErrorCodes.MISSING_VALIDATION_CODE);
-//        }
-//        final UserGroupDAO searchDAO = getStoreManager().createUserGroup();
-//        searchDAO.setValidationCode(validationCode);
-//        final UserGroupDAO userGroupDAO = (UserGroupDAO) searchDAO._findByCompositeId(new String[]{UserGroupDAO.STATE, UserGroupDAO.GROUP_ID, UserGroupDAO.USER_ID}, UserGroupDAO.VALIDATION_CODE);
-//        if (userGroupDAO == null) {
-//            throw new InvalidRequestException("No pending user found for validation code '" + validationCode + "'. The code is incorrect; else it expired.", ErrorCodes.VALIDATION_CODE_INVALID_OR_EXPIRED);
-//        }
-//        final String state = userGroupDAO.getState();
-//        try {
-//            final AuthorizedState s = AuthorizedState.valueOf(state);
-//            if (s != AuthorizedState.P && s != AuthorizedState.S) {
-//                throw new StateConflictException("state=" + state + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId() +
-//                        " is neither " + AuthorizedState.P + " nor " + AuthorizedState.S, ErrorCodes.INVALID_STATE_CODE_IS_NEITHER_P_NOR_S);
-//            }
-//            userGroupDAO.setState(AuthorizedState.A.toString());
-//            userGroupDAO.setValidationCode(null); // used up! TODO this doesn't remove the field, but that's what we want! index dropDups is just a kludge to get arond this
-//            userGroupDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
-//
-//            final GroupDAO groupDAO = getStoreManager().createGroup(userGroupDAO.getGroupId());
-//            groupDAO.setUserCount(1);
-//            groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-//
-////            final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
-////            tracker.setUserId(userGroupDAO.getUserId());
-////            tracker.setGroupId(userGroupDAO.getGroupId());
-////            tracker.setState(userGroupDAO.getState());
-////            TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-//
-//        } catch (IllegalArgumentException e) {
-//            throw new StateConflictException("invalid state=" + state + " in usergroup id=" + userGroupDAO.getId() + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId(), e,
-//                    ErrorCodes.INVALID_STATE_CODE);
-//        }
-//    }
 
     /**
      * Updates username.
@@ -1416,4 +1378,54 @@ public class UserManager implements ManagerInterface {
 //            users.add(new UserPayload(item));
 //        }
 //        return users;
+//    }
+
+
+//    /**
+//     * <p><b>Not in use.</b></p>
+//     * A user entered a validation code in a client. Looks for the
+//     * code in a usergroup association and, if it is there, advances
+//     * the user to the active (A) state. The code is deleted from
+//     * the association to prevent it from being re-user by user or others.
+//     *
+//     * @param localeId
+//     * @param validationCode
+//     * @return UserPayload  Returns payload with the userId and the validated groupId.
+//     *         If there is no error, the usergroup state becomes A (active).
+//     */
+//    public void validateUser(LocaleId localeId, String validationCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
+//        if (CommonUtilities.isEmptyString(validationCode)) {
+//            throw new InvalidRequestException("missing validation code", ErrorCodes.MISSING_VALIDATION_CODE);
+//        }
+//        final UserGroupDAO searchDAO = getStoreManager().createUserGroup();
+//        searchDAO.setValidationCode(validationCode);
+//        final UserGroupDAO userGroupDAO = (UserGroupDAO) searchDAO._findByCompositeId(new String[]{UserGroupDAO.STATE, UserGroupDAO.GROUP_ID, UserGroupDAO.USER_ID}, UserGroupDAO.VALIDATION_CODE);
+//        if (userGroupDAO == null) {
+//            throw new InvalidRequestException("No pending user found for validation code '" + validationCode + "'. The code is incorrect; else it expired.", ErrorCodes.VALIDATION_CODE_INVALID_OR_EXPIRED);
+//        }
+//        final String state = userGroupDAO.getState();
+//        try {
+//            final AuthorizedState s = AuthorizedState.valueOf(state);
+//            if (s != AuthorizedState.P && s != AuthorizedState.S) {
+//                throw new StateConflictException("state=" + state + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId() +
+//                        " is neither " + AuthorizedState.P + " nor " + AuthorizedState.S, ErrorCodes.INVALID_STATE_CODE_IS_NEITHER_P_NOR_S);
+//            }
+//            userGroupDAO.setState(AuthorizedState.A.toString());
+//            userGroupDAO.setValidationCode(null); // used up! TODO this doesn't remove the field, but that's what we want! index dropDups is just a kludge to get arond this
+//            userGroupDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+//
+//            final GroupDAO groupDAO = getStoreManager().createGroup(userGroupDAO.getGroupId());
+//            groupDAO.setUserCount(1);
+//            groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//
+////            final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
+////            tracker.setUserId(userGroupDAO.getUserId());
+////            tracker.setGroupId(userGroupDAO.getGroupId());
+////            tracker.setState(userGroupDAO.getState());
+////            TrackingManager.getInstance().track(LocaleId.en_us, tracker);
+//
+//        } catch (IllegalArgumentException e) {
+//            throw new StateConflictException("invalid state=" + state + " in usergroup id=" + userGroupDAO.getId() + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId(), e,
+//                    ErrorCodes.INVALID_STATE_CODE);
+//        }
 //    }

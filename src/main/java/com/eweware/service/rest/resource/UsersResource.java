@@ -305,6 +305,8 @@ public class UsersResource {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
@@ -605,7 +607,7 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            getUserManager().recoverUser(LocaleId.en_us, request, entity.get("U"), entity.get("E"), entity.get("A"));
+            getUserManager().recoverUser(LocaleId.en_us, entity.get("U"), entity.get("E"), entity.get("A"));
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;

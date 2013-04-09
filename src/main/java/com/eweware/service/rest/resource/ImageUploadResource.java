@@ -1,12 +1,11 @@
 package main.java.com.eweware.service.rest.resource;
 
 
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import main.java.com.eweware.service.base.AWSUtilities;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
@@ -15,7 +14,6 @@ import main.java.com.eweware.service.base.store.dao.MediaDAO;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.MediaManager;
-import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
@@ -56,7 +54,7 @@ public class ImageUploadResource {
 
     private static StoreManager storeManager;
 
-    private static final String canonicalFileFormat = ".jpg";
+    public static final String canonicalImageFileFormat = ".jpg";
 
     private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
 
@@ -69,6 +67,10 @@ public class ImageUploadResource {
         supportedUploadFormats.put(".PNG", 1);
         supportedUploadFormats.put(".gif", 1);
         supportedUploadFormats.put(".GIF", 1);
+        supportedUploadFormats.put(".TIF", 1);
+        supportedUploadFormats.put(".TIFF", 1);
+        supportedUploadFormats.put(".tif", 1);
+        supportedUploadFormats.put(".tiff", 1);
     }
 
     /**
@@ -173,14 +175,9 @@ public class ImageUploadResource {
 
         AmazonS3 s3 = null;
         try {
-            final InputStream resourceAsStream = ImageUploadResource.class.getResourceAsStream("AwsCredentials.properties");
-            if (resourceAsStream == null) {
-                logger.log(Level.SEVERE, "No AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'");
-                return Response.status(400).entity("error=no credentials").build();
-            }
-            s3 = new AmazonS3Client(new PropertiesCredentials(resourceAsStream)); // TODO is it reasonable to cache this object?
+            s3 = AWSUtilities.getAmazonS3();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'");
+            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'", e);
             return Response.status(400).entity("error=credentials error" + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
         }
 
@@ -188,6 +185,7 @@ public class ImageUploadResource {
         try {
             msg = processFile(in, metadata, s3, objectType, objectId);
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to process file", e);
             return Response.status(400).entity("error=Failed to process file: " + e.getMessage()).build();
         }
         return (msg == null) ? Response.status(400).build() :
@@ -344,7 +342,7 @@ public class ImageUploadResource {
         b.append(imageName);
         b.append("-");
         b.append(spec);
-        b.append(canonicalFileFormat);
+        b.append(canonicalImageFileFormat);
         return b.toString();
     }
 

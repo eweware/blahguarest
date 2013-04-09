@@ -1,6 +1,7 @@
 package main.java.com.eweware.service.base;
 
 import main.java.com.eweware.service.base.error.ErrorCodes;
+import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.payload.CommentPayload;
 import main.java.com.eweware.service.base.store.StoreManager;
@@ -8,6 +9,7 @@ import main.java.com.eweware.service.base.store.dao.CommentDAO;
 import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
 import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.html.HtmlParser;
@@ -17,6 +19,9 @@ import org.xml.sax.ContentHandler;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * @author rk@post.harvard.edu
@@ -24,6 +29,8 @@ import java.util.Date;
  */
 public final class CommonUtilities {
 
+
+    private static final Logger logger = Logger.getLogger("CommonUtilities");
 
     public static final Double getValueAsDouble(Object val) throws SystemErrorException {
         if (val == null) return 0.0d;
@@ -114,22 +121,36 @@ public final class CommonUtilities {
     }
 
     /**
-     * <p>Returns plain text from potentially marked up HTML text.</p>
+     * <p>Returns plain text from potentially marked up HTML text or escaped HTML.</p>
      *
      * @param maybeMarkedUpText  The text to clean  up.
      * @return  The plain text (HTML tag data and compromising characters stripped out).
      */
-    public static String getPlainText(String maybeMarkedUpText) throws SystemErrorException {
-        try {
-            final InputStream input = IOUtils.toInputStream(maybeMarkedUpText);
-            ContentHandler handler = new BodyContentHandler();
-            Metadata metadata = new Metadata();
-            new HtmlParser().parse(input, handler, metadata, new ParseContext());
-            String plainText = handler.toString();
-            return plainText;
-        } catch (Exception e) {
-            throw new SystemErrorException("Problem evaluation marked up text", e, ErrorCodes.INVALID_TEXT_INPUT);
+    public static String scrapeMarkup(String maybeMarkedUpText) throws SystemErrorException {
+        if (maybeMarkedUpText == null || maybeMarkedUpText.length() == 0) {
+            return maybeMarkedUpText;
         }
+        maybeMarkedUpText = maybeMarkedUpText.replaceAll("<", "&#60;");
+        return maybeMarkedUpText.replaceAll(">", "&#62;");
+//
+//        try {
+//
+//            // First, unescape any escaped HTML
+//            final String text = StringEscapeUtils.unescapeHtml4(maybeMarkedUpText);
+//
+//            if (!text.equals(maybeMarkedUpText)) {
+//                logger.warning("Client sent escaped HTML text: " + maybeMarkedUpText);
+//            }
+//
+//            // Now filter out any HTML markup
+//            final InputStream input = IOUtils.toInputStream(text);
+//            ContentHandler handler = new BodyContentHandler();
+//            Metadata metadata = new Metadata();
+//            new HtmlParser().parse(input, handler, metadata, new ParseContext());
+//            return handler.toString();
+//        } catch (Exception e) {
+//            throw new SystemErrorException("Problem evaluating marked up text", e, ErrorCodes.INVALID_TEXT_INPUT);
+//        }
     }
 
     public static void maybeAddUserNickname(StoreManager storeMgr, boolean authenticated, String commentAuthorId, CommentPayload commentPayload) throws SystemErrorException {
@@ -153,11 +174,68 @@ public final class CommonUtilities {
         return null;
     }
 
-//    public static void main(String[] s) {
-//        System.out.println(getPlainText("<html><p>hello</p><p>there</p>\n\n\n\n\n\nHello there.\n" +
+    /**
+	 * Ensures that if a value is non-null, it is in {-1, 0, 1}.
+     * Returns the value or 0 if the value is null.
+	 *
+     * @param value The value to test
+     * @param entity The entity to use in case of value is not within limits
+     * @return	Integer	Returns the value. If the value is null, it returns 0.
+     * @throws main.java.com.eweware.service.base.error.InvalidRequestException  Thrown if the value is not null and is not in {-1, 0, 1}
+	 **/
+	public static Integer checkDiscreteValue(Integer value, Object entity) throws InvalidRequestException {
+		if (value != null) {
+			final int val = value.intValue();
+			if (val != 1 && val != -1 && val != 0) {
+				throw new InvalidRequestException("value="+value+" must be either -1, 0 or 1", entity, ErrorCodes.INVALID_INPUT);
+			}
+            return value;
+        } else {
+            return 0;
+        }
+	}
+
+    /**
+	 * Ensures that integer value is within a range.
+     * Returns the vaule or 0 if the value is null.
+     *
+	 * @param value
+	 * @param min The exclusive minimum
+	 * @param max The exclusive maximum
+	 * @param entity
+	 * @return Integer Returns the supplied value.
+	 * @throws main.java.com.eweware.service.base.error.InvalidRequestException Thrown if the value is not null and is not within range.
+	 */
+	public static Integer checkValueRange(Integer value, int min, int max, Object entity) throws InvalidRequestException {
+        if (value != null) {
+            final int val = value.intValue();
+            if ((val < min) || (val > max)) {
+                throw new InvalidRequestException("value " + value + " out of range: must be between " + min + " and " + max, entity, ErrorCodes.INVALID_INPUT);
+            }
+            return value;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the integer value if it is not null or else the default value
+     * @param integer   The integer value
+     * @param defaultValue  The default value
+     * @return  An integer value (either the integer or the defaultValue)
+     */
+    public static Integer safeGetInteger(Integer integer, Integer defaultValue) {
+        return (integer != null) ? integer : defaultValue;
+    }
+
+//    public static void main(String[] s) throws SystemErrorException {
+//        final String t = scrapeMarkup("<html><p>hello</p><p>there</p>\n\n\n\n\n\nHello there.\n" +
 //                "&nbsp;    &#933;&#933; People of the world.\n" +
-//                "<a href=\"rubenkleiman.com\">Ruben</a>\n"));
+//                "<a href=\"rubenkleiman.com\">Ruben</a>\n");
+//        String p = scrapeMarkup("<html><input type='button' value='Click Test 2' onclick='alert(\"I just stole your wallet!\");' /></html>");
+//        String a = scrapeMarkup("%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20The%20Beatles%20will%20re-unite%20for%20a%20final%20send-off%20concert%20when%20the%20Messiah%20arrives.");
+//        String b = scrapeMarkup("%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20<b>The%20Beatles</b>%20will%20re-unite%20for%20a%20final%20send-off%20concert%20when%20the%20Messiah%20arrives.");
+//        String b = scrapeMarkup("%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20&gt;b&lt;The%20Beatles&gt;/b&lt;%20will%20re-unite%20for%20a%20final%20send-off%20concert%20when%20the%20Messiah%20arrives.");
+//        System.out.println(p);
 //    }
-
-
 }

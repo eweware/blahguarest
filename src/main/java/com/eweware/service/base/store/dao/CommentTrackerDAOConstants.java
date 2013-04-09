@@ -6,7 +6,7 @@ package main.java.com.eweware.service.base.store.dao;
  */
 public interface CommentTrackerDAOConstants {
 
-    public static final String CT_OBJECT_ID = "id"; // comment id TODO used by unit tests to delete related trackers
+    public static final String CT_OBJECT_ID = "id"; // comment id
     public static final String CT_AUTHOR_ID = "A";  // comment author id
 
     public static final String CT_UP_VOTES_FOR_COMMENT = "U";

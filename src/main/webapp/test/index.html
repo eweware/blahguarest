@@ -41,18 +41,18 @@
         <input id="refreshCaches" style="background-color: #fc4949" type="button" onclick="rest('POST', 'sys/refresh')" value="Refresh Caches"/>
     </div>
     <div style="margin-top: .5em;background-color: #fe8300;">
-        <input id="createChannelType" type="button" onclick="createChannelType()"  value="Create Channel Type"/>
-        &nbsp;
-        <input id="updateChannelType" type="button" onclick="updateChannelTypeName()"  value="Update Channel Name"/>
-        &nbsp;
+        <!--<input id="createChannelType" type="button" onclick="createChannelType()"  value="Create Channel Type"/>-->
+        <!--&nbsp;-->
+        <!--<input id="updateChannelType" type="button" onclick="updateChannelTypeName()"  value="Update Channel Name"/>-->
+        <!--&nbsp;-->
         <input id="getChannelType" type="button" onclick="rest('GET', 'groupTypes')"  value="Get Channel Types"/>
         &nbsp;
         <input id="getChannelTypeById" type="button" onclick="getChannelTypeById()"  value="Get Channel Type By Id"/>
         &nbsp;
-        <input id="createOpenChannel" type="button" onclick="createChannel('a')"  value="Create Open Channel"/>
-        &nbsp;
-        <input id="createChannel" type="button" onclick="createChannel('o')"  value="Create Closed Channel"/>
-        &nbsp;
+        <!--<input id="createOpenChannel" type="button" onclick="createChannel('a')"  value="Create Open Channel"/>-->
+        <!--&nbsp;-->
+        <!--<input id="createChannel" type="button" onclick="createChannel('o')"  value="Create Closed Channel"/>-->
+        <!--&nbsp;-->
         <input id="getChannels" type="button" onclick="rest('GET', 'groups');"  value="Get Channels"/>
         &nbsp;
         <input id="getUserChannels" type="button" onclick="rest('GET', 'userGroups');"  value="Get User Channels"/>
@@ -110,16 +110,16 @@
         &nbsp;
         <input id="createBlah" type="button" onclick="createBlah()" value="Create Blah"/>
         &nbsp;
-        <input id="voteBlah" type="button" onclick="voteBlah()" value="Vote Blah"/>
-        &nbsp;
         <input id="getBlah" type="button" onclick="getBlah()" value="Get Blah"/>
         &nbsp;
         <input id="getBlahAuthor" type="button" onclick="getBlahAuthor()" value="Get Blah's Author"/>
+        &nbsp;
+        <input id="voteBlah" type="button" onclick="voteBlah()" value="Vote Blah"/>
     </div>
     <div class="blah" style="margin-top: .5em">
-        <input id="getBlahComments" type="button" onclick="getBlahComments();"  value="Get Blah Comments"/>
-        &nbsp;
         <input id="createComment" type="button" onclick="createAComment();"  value="Create Comment"/>
+        &nbsp;
+        <input id="getBlahComments" type="button" onclick="getBlahComments();"  value="Get Blah Comments"/>
         &nbsp;
         <input id="getCommentAuthor" type="button" onclick="getCommentAuthor();"  value="Get Comment's Author"/>
         &nbsp;

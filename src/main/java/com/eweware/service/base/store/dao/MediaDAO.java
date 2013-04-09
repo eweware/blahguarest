@@ -17,12 +17,4 @@ public interface MediaDAO extends BaseDAO, MediaDAOConstants {
      * @param type Media type (a valid file extension)
      */
     public void setType(String type);
-
-    public String getBucketName();
-
-    public void setBucketName(String bucket);
-
-    public String getPathname();
-
-    public void setPathname(String pathname);
 }
