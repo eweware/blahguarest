@@ -111,13 +111,13 @@ public class SystemResource {
      * @return Http status code 200 with plain text specifying the new security state.
      */
     @POST
-    @Path("/security/{action}")
+    @Path("/security/{action}")                // TODO get rid of this "feature"
     @Produces(MediaType.TEXT_PLAIN)
     public Response flipSecurity(
             @PathParam("action") String action,
             @Context HttpServletRequest request) {
         try {
-//            BlahguaSession.ensureAdmin(request);
+            BlahguaSession.ensureAdmin(request);
             if (action.equals("get")) {
                 return Response.ok(BlahguaSession.getSecurity() ? "on" : "off").build();
             }
@@ -146,10 +146,8 @@ public class SystemResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getSessionInfo(@Context HttpServletRequest request) {
         try {
-//            BlahguaSession.ensureAdmin(request);
+            BlahguaSession.ensureAdmin(request);
             return Response.ok(BlahguaSession.getSessionInfo(request)).build();
-//        } catch (ResourceNotFoundException e) {
-//            return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
@@ -168,12 +166,13 @@ public class SystemResource {
     @POST
     @Path("/refresh")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshCaches() { // TODO not using
+    public Response refreshCaches(@PathParam("rk") String rk) { // TODO not using
         try {
+            if (!rk.equals("rk")) {
+                Response.status(Response.Status.FORBIDDEN).build();
+            }
             BlahManager.getInstance().refreshCaches();
             return RestUtilities.make202AcceptedResponse();
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }

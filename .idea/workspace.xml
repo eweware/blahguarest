@@ -10,35 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AWSConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/AWSUtilities.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AdminManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/AdminResource.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/GeneralUtilities.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentTrackerDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentTrackerDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/CommonUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/CommonUtilities.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAOConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/test/js/api.js" afterPath="$PROJECT_DIR$/src/main/webapp/test/js/api.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/test/index.html" afterPath="$PROJECT_DIR$/src/main/webapp/test/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
-    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364890043116" ignored="false" />
+    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536325959" ignored="false" />
     <file path="/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364891637650" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361424045729" ignored="false" />
     <file path="/InboxBlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364879960301" ignored="false" />
@@ -214,9 +193,9 @@
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363977754573" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365479732689" ignored="false" />
-    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365458581562" ignored="false" />
+    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537131685" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365449779226" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365538150278" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365477522765" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -378,19 +357,19 @@
     <file path="/Simple03UserTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362299994532" ignored="false" />
     <file path="/HighLevelAPICallMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365044642338" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/HighLevelAPICallMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365044646145" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362868604941" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Constants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362868697255" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535974623" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Constants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535949851" ignored="false" />
     <file path="/Constants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365459896359" ignored="false" />
     <file path="/Simple05UserStatsTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362037570169" ignored="false" />
-    <file path="/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362426881670" ignored="false" />
+    <file path="/DBMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535970149" ignored="false" />
     <file path="/Simple04BlahTests.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365044673045" ignored="false" />
     <file path="/BlahTypeCategoryType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365027509352" ignored="false" />
     <file path="/BlahTypePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362966967638" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/store/dao/BlahTypeDAOConstants.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361042119252" ignored="false" />
     <file path="/AWS.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362441770131" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365045543853" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363729447724" ignored="false" />
-    <file path="/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362301635323" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537135241" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365539100376" ignored="false" />
+    <file path="/LowLevelMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365539047457" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/demo-blah-text-source-37.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361133058123" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/demo-blah-text-source.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361133569925" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/BlahDistribution.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361223392229" ignored="false" />
@@ -404,11 +383,11 @@
     <file path="/UserBlahInfoDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363050960263" ignored="false" />
     <file path="/UserBlahInfoDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362954949694" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363225207449" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364327467769" ignored="false" />
-    <file path="/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364891520120" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536612523" ignored="false" />
+    <file path="/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536607582" ignored="false" />
     <file path="/TrackingManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361228746335" ignored="false" />
     <file path="/BlahTrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362175656091" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/suite/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361229369386" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/suite/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535949851" ignored="false" />
     <file path="/StatisticsManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362617678925" ignored="false" />
     <file path="/BlahInfoPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362958636717" ignored="false" />
     <file path="/BasePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363026238350" ignored="false" />
@@ -441,14 +420,14 @@
     <file path="/DAOMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362013450922" ignored="false" />
     <file path="/UserAccountDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362359334376" ignored="false" />
     <file path="/UserAccountDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362363683732" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/InitializeMongo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365106354426" ignored="false" />
-    <file path="/InitializeMongo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363281228379" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/InitializeMongo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537076207" ignored="false" />
+    <file path="/InitializeMongo.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536640405" ignored="false" />
     <file path="/api.js" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365043203520" ignored="false" />
     <file path="/AuthorizedState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362015753193" ignored="false" />
     <file path="/UserGroupsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365108239689" ignored="false" />
     <file path="/GroupTypesResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362682157850" ignored="false" />
     <file path="/CommentsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365043014662" ignored="false" />
-    <file path="/SystemResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362637467410" ignored="false" />
+    <file path="/SystemResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365534141855" ignored="false" />
     <file path="/UserProfileDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364325986710" ignored="false" />
     <file path="/UserProfileDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364322137070" ignored="false" />
     <file path="/UserProfilePermissions.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362121150914" ignored="false" />
@@ -536,14 +515,14 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364891585147" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363125163701" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/CommentDemographics.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364876440200" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363652686718" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535942060" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/BuildSocialGraph.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363237801639" ignored="false" />
     <file path="/BuildSocialGraph.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363237801639" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/README.md" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363646673582" ignored="false" />
     <file path="/BadgeAuthorityDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363894108754" ignored="false" />
     <file path="/BadgeAuthorityDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364240038655" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365449656558" ignored="false" />
-    <file path="/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365449591900" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365534864885" ignored="false" />
+    <file path="/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536509155" ignored="false" />
     <file path="/BadgesResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365042315909" ignored="false" />
     <file path="/BadgeManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365019020242" ignored="false" />
     <file path="/BadgesManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364333867010" ignored="false" />
@@ -578,13 +557,20 @@
     <file path="/CommentDemographics.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364876430640" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/stats.config" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364882348407" ignored="false" />
     <file path="/TrackerDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365035091120" ignored="false" />
-    <file path="/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365044781728" ignored="false" />
+    <file path="/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535599414" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/com/eweware/service/base/store/impl/mongo/dao/UserGroupDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365108111456" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/com/eweware/service/base/store/dao/UserGroupDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365108111456" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/com/eweware/service/mgr/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365108111456" ignored="false" />
     <file path="/AdminResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365484491038" ignored="false" />
     <file path="/AdminManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365484682856" ignored="false" />
     <file path="/AWSUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365478368255" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537281478" ignored="false" />
+    <file path="/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537201705" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/META-INF/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537201317" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/META-INF/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537215404" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/JSONUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537580034" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/common/utils/BadRequestException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537644765" ignored="false" />
+    <file path="/BadRequestException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537633770" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -604,40 +590,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-      <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-    </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" line="231" class="main.java.com.eweware.service.mgr.UserManager" package="main.java.com.eweware.service.mgr">
         <option name="ENABLED" value="true" />
@@ -794,6 +746,40 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </line_breakpoints>
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+    </breakpoint_any>
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
@@ -807,55 +793,79 @@
       <file leaf-file-name="AdminManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AdminManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="29" selection-start="5208" selection-end="5208" vertical-scroll-proportion="-10.490909">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#4064#4072#0" expanded="true" />
-              </folding>
+            <state line="118" column="29" selection-start="5208" selection-end="5208" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="38" selection-start="579" selection-end="579" vertical-scroll-proportion="0.21003501">
+            <state line="12" column="38" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UsersResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
+      <file leaf-file-name="index.jsp" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/index.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="593" column="27" selection-start="28772" selection-end="28772" vertical-scroll-proportion="0.0">
+            <state line="1" column="0" selection-start="87" selection-end="87" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserGroupsResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="111" column="110" selection-start="5300" selection-end="5380" vertical-scroll-proportion="-18.038462">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DAOMethods.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
+      <file leaf-file-name="MongoStoreManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="172" column="44" selection-start="7966" selection-end="7966" vertical-scroll-proportion="0.0">
+            <state line="376" column="57" selection-start="12212" selection-end="12212" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupDAO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAO.java">
+      <file leaf-file-name="SystemResource.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="16" selection-start="787" selection-end="787" vertical-scroll-proportion="0.0">
+            <state line="113" column="80" selection-start="4195" selection-end="4195" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="blahguarest.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/blahguarest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="483" column="16" selection-start="23263" selection-end="23263" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="default.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/blahgua/default.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="18" selection-start="488" selection-end="488" vertical-scroll-proportion="0.12605043">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DomPostInitAction.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/com/sun/xml/internal/bind/v2/runtime/DomPostInitAction.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -865,35 +875,6 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/AdminResource.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="87" column="51" selection-start="3140" selection-end="3140" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserGroupDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="17" selection-start="458" selection-end="458" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="17" selection-start="439" selection-end="439" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GroupDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="17" selection-start="382" selection-end="382" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -922,9 +903,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AdminManager/AdminManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/GeneralUtilities.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/Constants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAOConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java" />
@@ -938,6 +916,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/AdminResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AdminManager.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
+        <option value="$PROJECT_DIR$/src/main/webapp/index.jsp" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" />
+        <option value="$PROJECT_DIR$/blahguarest.xml" />
       </list>
     </option>
   </component>
@@ -981,7 +962,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1364,7 +1344,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; 1.6 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; 1.6 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1374,581 +1376,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="&lt; 1.6 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WEB-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WEB-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="conf" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="session" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resource" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mgr" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mongo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mongo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="store" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="type" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="docs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="docs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="classes.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1956,21 +1392,160 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="eweware" />
+              <option name="myItemId" value="sun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; 1.6 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes.jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="internal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; 1.6 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahgua" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="187" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="false" />
@@ -1979,7 +1554,7 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="true" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="198" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
@@ -1992,7 +1567,7 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="200" />
     <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="blahguarest" />
-    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
@@ -2009,11 +1584,11 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.lastSelected" value="preferences.pluginManager" />
-    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="false" />
     <property name="project.structure.side.proportion" value="0.26923078" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="false" />
     <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
   </component>
@@ -2507,7 +2082,11 @@
       <created>1365228829327</created>
       <updated>1365228829327</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="WRS-262, WRS-264">
+      <created>1365488347031</created>
+      <updated>1365488347031</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2532,28 +2111,28 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="22" width="1676" height="1028" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32268724" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2610132" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2852423" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.7389868" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30184048" sideWeight="0.73237884" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13251534" sideWeight="0.7389868" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30184048" sideWeight="0.7147577" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32268724" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2852423" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13251534" sideWeight="0.7389868" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39981097" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -2595,7 +2174,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Image upload returns errors in plain text." />
+    <option name="LAST_COMMIT_MESSAGE" value="WRS-262, WRS-264" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2608,7 +2187,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Account recovery code." />
     <MESSAGE value="Using AES algorithm with PKS padding for recovery encryption." />
     <MESSAGE value="User acct type in acct dao" />
     <MESSAGE value="Deployment checkin" />
@@ -2633,6 +2211,7 @@
     <MESSAGE value="Corrected typos in blah resource and api.js." />
     <MESSAGE value="removed validation code field from usergroups" />
     <MESSAGE value="Image upload returns errors in plain text." />
+    <MESSAGE value="WRS-262, WRS-264" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2646,64 +2225,9 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="0" selection-start="5216" selection-end="5216" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="325" column="35" selection-start="13514" selection-end="13514" vertical-scroll-proportion="-7.423077">
-          <folding>
-            <element signature="e#18990#18999#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MediaManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="18" selection-start="2032" selection-end="2032" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="454" column="39" selection-start="20460" selection-end="20460" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="7" selection-start="629" selection-end="629" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="17" selection-start="554" selection-end="554" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="16" selection-start="787" selection-end="787" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="172" column="44" selection-start="7966" selection-end="7966" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="172" column="44" selection-start="7966" selection-end="7966" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
@@ -2715,23 +2239,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="110" selection-start="5300" selection-end="5380" vertical-scroll-proportion="-18.038462">
+        <state line="111" column="110" selection-start="5300" selection-end="5380" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="17" selection-start="382" selection-end="382" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="10" column="17" selection-start="382" selection-end="382" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="17" selection-start="458" selection-end="458" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="11" column="17" selection-start="458" selection-end="458" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAOConstants.java">
@@ -2744,25 +2264,69 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/AdminResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="87" column="51" selection-start="3140" selection-end="3140" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AdminManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="29" selection-start="5208" selection-end="5208" vertical-scroll-proportion="-10.490909">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4064#4072#0" expanded="true" />
-          </folding>
+        <state line="118" column="29" selection-start="5208" selection-end="5208" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="38" selection-start="579" selection-end="579" vertical-scroll-proportion="0.21003501">
+        <state line="12" column="38" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/index.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="87" selection-end="87" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/com/sun/xml/internal/bind/v2/runtime/DomPostInitAction.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="376" column="57" selection-start="12212" selection-end="12212" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="80" selection-start="4195" selection-end="4195" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blahguarest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="483" column="16" selection-start="23263" selection-end="23263" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/blahgua/default.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="18" selection-start="488" selection-end="488" vertical-scroll-proportion="0.12605043">
           <folding />
         </state>
       </provider>
