@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.mgr.AWSConstants;
-import main.java.com.eweware.service.mgr.AdminManager;
 
 import java.io.InputStream;
 

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public final class MongoStoreManager implements StoreManager {
 
-    private static final Logger logger = Logger.getLogger("MongoStoreManager");
+    private static final Logger logger = Logger.getLogger("MongoStoreManager2");
 
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;

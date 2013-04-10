@@ -159,16 +159,16 @@ public class SystemResource {
      * public access once we launch.</b>
      * <p/>
      * <div><b>METHOD:</b> GET </div>
-     * <div><b>URL:</b> sys/refresh</div>
+     * <div><b>URL:</b> sys/refresh/{pass}</div>
      *
      * @return Returns http code 200 (ACCEPTED).
      */
     @POST
-    @Path("/refresh")
+    @Path("/refresh/{pass}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshCaches(@PathParam("rk") String rk) { // TODO not using
+    public Response refreshCaches(@PathParam("pass") String pass) { // TODO dangerous (remove as soon as feasible)
         try {
-            if (!rk.equals("rk")) {
+            if (!pass.equals("kwfew303bf3sss")) {
                 Response.status(Response.Status.FORBIDDEN).build();
             }
             BlahManager.getInstance().refreshCaches();

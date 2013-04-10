@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 @Path("xylo")
 public class AdminResource {
 
+/*
     @POST
     @Path("/blah/{blahId}")
     public Response deleteBlah(
@@ -95,6 +96,6 @@ public class AdminResource {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         }
     }
-
+*/
 
 }

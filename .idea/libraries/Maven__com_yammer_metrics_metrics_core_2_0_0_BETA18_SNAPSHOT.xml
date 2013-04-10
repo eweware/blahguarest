@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.yammer.metrics:metrics-core:2.0.0-BETA18-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-SNAPSHOT.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-20111205.222807-12.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-20111205.222807-12-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-20111205.222807-12-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="blahguarest" default="all">
+  
+  
+  <property file="base-library-build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="compiler.excluded"/>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.ftl"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.maven:_asm:asm:3.3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/asm/asm/3.3.1/asm-3.3.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_bsf:bsf:2.3.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/bsf/bsf/2.3.0/bsf-2.3.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.adobe.xmp:xmpcore:5.1.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/adobe/xmp/xmpcore/5.1.2/xmpcore-5.1.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.amazonaws:aws-java-sdk:1.3.27.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/amazonaws/aws-java-sdk/1.3.27/aws-java-sdk-1.3.27.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.drewnoakes:metadata-extractor:2.6.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/drewnoakes/metadata-extractor/2.6.2/metadata-extractor-2.6.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.google.code.simple-spring-memcached:spymemcached:2.8.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/google/code/simple-spring-memcached/spymemcached/2.8.4/spymemcached-2.8.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.googlecode.juniversalchardet:juniversalchardet:1.0.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.googlecode.mp4parser:isoparser:1.0-rc-1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/googlecode/mp4parser/isoparser/1.0-RC-1/isoparser-1.0-RC-1.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.linkedin.zoie:zoie-core:3.3.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/linkedin/zoie/zoie-core/3.3.0/zoie-core-3.3.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.linkedin.zoie:zoie-jms:3.3.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/linkedin/zoie/zoie-jms/3.3.0/zoie-jms-3.3.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.linkedin.zoie:zoie-perf:3.3.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/linkedin/zoie/zoie-perf/3.3.0/zoie-perf-3.3.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.linkedin.zoie:zoie-server:3.3.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/linkedin/zoie/zoie-server/3.3.0/zoie-server-3.3.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.jersey.contribs:jersey-multipart:1.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/jersey/contribs/jersey-multipart/1.8/jersey-multipart-1.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.jersey:jersey-client:1.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/jersey/jersey-client/1.8/jersey-client-1.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.jersey:jersey-core:1.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/jersey/jersey-core/1.8/jersey-core-1.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.jersey:jersey-json:1.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/jersey/jersey-json/1.8/jersey-json-1.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.jersey:jersey-server:1.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/jersey/jersey-server/1.8/jersey-server-1.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.xml.bind:jaxb-impl:2.2.3-1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/xml/bind/jaxb-impl/2.2.3-1/jaxb-impl-2.2.3-1.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.sun.xml.fastinfoset:fastinfoset:1.2.12.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/sun/xml/fastinfoset/FastInfoset/1.2.12/FastInfoset-1.2.12.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.yammer.metrics:metrics-core:2.0.0-beta18-snapshot.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/yammer/metrics/metrics-core/2.0.0-BETA18-SNAPSHOT/metrics-core-2.0.0-BETA18-SNAPSHOT.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-beanutils:commons-beanutils-core:1.8.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-beanutils/commons-beanutils-core/1.8.0/commons-beanutils-core-1.8.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-beanutils:commons-beanutils:1.8.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-beanutils/commons-beanutils/1.8.0/commons-beanutils-1.8.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-codec:commons-codec:1.7.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-codec/commons-codec/1.7/commons-codec-1.7.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-collections:commons-collections:3.2.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-configuration:commons-configuration:1.6.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-configuration/commons-configuration/1.6/commons-configuration-1.6.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-digester:commons-digester:1.8.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-digester/commons-digester/1.8.1/commons-digester-1.8.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-fileupload:commons-fileupload:1.2.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-fileupload/commons-fileupload/1.2.2/commons-fileupload-1.2.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-io:commons-io:2.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-io/commons-io/2.1/commons-io-2.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-lang:commons-lang:2.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-lang/commons-lang/2.4/commons-lang-2.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-logging:commons-logging:1.1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-pool:commons-pool:1.5.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-pool/commons-pool/1.5.3/commons-pool-1.5.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_de.l3s.boilerpipe:boilerpipe:1.1.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/de/l3s/boilerpipe/boilerpipe/1.1.0/boilerpipe-1.1.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_dom4j:dom4j:1.6.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_dwr:dwr:1.1.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/dwr/dwr/1.1.3/dwr-1.1.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_edu.ucar:netcdf:4.2-min.classpath">
+    <pathelement location="${path.variable.maven_repository}/edu/ucar/netcdf/4.2-min/netcdf-4.2-min.jar"/>
+  </path>
+  
+  <path id="library.maven:_fastutil:fastutil:5.0.5.classpath">
+    <pathelement location="${path.variable.maven_repository}/fastutil/fastutil/5.0.5/fastutil-5.0.5.jar"/>
+  </path>
+  
+  <path id="library.maven:_it.unimi.dsi:fastutil:6.5.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/it/unimi/dsi/fastutil/6.5.0/fastutil-6.5.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_jakarta-regexp:jakarta-regexp:1.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/jakarta-regexp/jakarta-regexp/1.4/jakarta-regexp-1.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.activation:activation:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/activation/activation/1.1/activation-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.jms:jms:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/jms/jms/1.1/jms-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.mail:mail:1.4.5.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/mail/mail/1.4.5/mail-1.4.5.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.xml.bind:jaxb-api:2.2.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/xml/bind/jaxb-api/2.2.3/jaxb-api-2.2.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.xml.bind:jsr173_api:1.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/xml/bind/jsr173_api/1.0/jsr173_api-1.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.xml.stream:stax-api:1.0-2.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar"/>
+  </path>
+  
+  <path id="library.maven:_jaxen:jaxen:1.1-beta-8.classpath">
+    <pathelement location="${path.variable.maven_repository}/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8.jar"/>
+  </path>
+  
+  <path id="library.maven:_jdom:jdom:1.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/jdom/jdom/1.0/jdom-1.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_junit:junit:3.8.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/junit/junit/3.8.1/junit-3.8.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_log4j:log4j:1.2.14.classpath">
+    <pathelement location="${path.variable.maven_repository}/log4j/log4j/1.2.14/log4j-1.2.14.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.commons:commons-compress:1.4.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/commons/commons-compress/1.4.1/commons-compress-1.4.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.commons:commons-lang3:3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.0.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0.2/geronimo-activation_1.1_spec-1.0.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/geronimo/specs/geronimo-stax-api_1.0_spec/1.0.1/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.httpcomponents:httpclient:4.2.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/httpcomponents/httpclient/4.2.3/httpclient-4.2.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.httpcomponents:httpcore:4.2.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/httpcomponents/httpcore/4.2.2/httpcore-4.2.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/james/apache-mime4j-core/0.7.2/apache-mime4j-core-0.7.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.james:apache-mime4j-dom:0.7.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/james/apache-mime4j-dom/0.7.2/apache-mime4j-dom-0.7.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.lucene:lucene-analyzers:3.5.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/lucene/lucene-analyzers/3.5.0/lucene-analyzers-3.5.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.lucene:lucene-core:3.5.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/lucene/lucene-core/3.5.0/lucene-core-3.5.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.lucene:lucene-queries:3.5.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/lucene/lucene-queries/3.5.0/lucene-queries-3.5.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.pdfbox:fontbox:1.7.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/pdfbox/fontbox/1.7.1/fontbox-1.7.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.pdfbox:jempbox:1.7.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/pdfbox/jempbox/1.7.1/jempbox-1.7.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.pdfbox:pdfbox:1.7.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/pdfbox/pdfbox/1.7.1/pdfbox-1.7.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.poi:poi-ooxml-schemas:3.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/poi/poi-ooxml-schemas/3.8/poi-ooxml-schemas-3.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.poi:poi-ooxml:3.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/poi/poi-ooxml/3.8/poi-ooxml-3.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.poi:poi-scratchpad:3.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/poi/poi-scratchpad/3.8/poi-scratchpad-3.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.poi:poi:3.8.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/poi/poi/3.8/poi-3.8.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-impl:2.2.4_2.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/servicemix/bundles/org.apache.servicemix.bundles.jaxb-impl/2.2.4_2/org.apache.servicemix.bundles.jaxb-impl-2.2.4_2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.jaxb-api-2.2:1.6.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/servicemix/specs/org.apache.servicemix.specs.jaxb-api-2.2/1.6.0/org.apache.servicemix.specs.jaxb-api-2.2-1.6.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0:1.0.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/servicemix/specs/org.apache.servicemix.specs.stax-api-1.0/1.0.0/org.apache.servicemix.specs.stax-api-1.0-1.0.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.tika:tika-core:1.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/tika/tika-core/1.3/tika-core-1.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.tika:tika-parsers:1.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/tika/tika-parsers/1.3/tika-parsers-1.3.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.xmlbeans:xmlbeans:2.3.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/xmlbeans/xmlbeans/2.3.0/xmlbeans-2.3.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.aspectj:aspectjrt:1.6.11.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/aspectj/aspectjrt/1.6.11/aspectjrt-1.6.11.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.bouncycastle:bcmail-jdk15:1.45.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/bouncycastle/bcmail-jdk15/1.45/bcmail-jdk15-1.45.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.bouncycastle:bcprov-jdk15:1.45.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/bouncycastle/bcprov-jdk15/1.45/bcprov-jdk15-1.45.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.ccil.cowan.tagsoup:tagsoup:1.2.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-core-asl:1.8.9.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-core-asl/1.8.9/jackson-core-asl-1.8.9.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.7.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-jaxrs/1.7.1/jackson-jaxrs-1.7.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.8.9.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-mapper-asl/1.8.9/jackson-mapper-asl-1.8.9.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-xc:1.7.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-xc/1.7.1/jackson-xc-1.7.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jettison:jettison:1.3.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jettison/jettison/1.3.2/jettison-1.3.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.gagravarr:vorbis-java-core:0.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/gagravarr/vorbis-java-core/0.1/vorbis-java-core-0.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.gagravarr:vorbis-java-core:tests:0.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/gagravarr/vorbis-java-core/0.1/vorbis-java-core-0.1-tests.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.gagravarr:vorbis-java-tika:0.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/gagravarr/vorbis-java-tika/0.1/vorbis-java-tika-0.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.im4java:im4java:1.2.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/im4java/im4java/1.2.0/im4java-1.2.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.json:json:20080701.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/json/json/20080701/json-20080701.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.jvnet:mimepull:1.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/jvnet/mimepull/1.4/mimepull-1.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.mongodb:mongo-java-driver:2.10.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/mongodb/mongo-java-driver/2.10.1/mongo-java-driver-2.10.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.mortbay.jetty:jetty-util:6.1.26.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/mortbay/jetty/jetty-util/6.1.26/jetty-util-6.1.26.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.mortbay.jetty:jetty:6.1.26.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/mortbay/jetty/jetty/6.1.26/jetty-6.1.26.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.mortbay.jetty:servlet-api:2.5-20081211.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.slf4j:slf4j-api:1.6.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.springframework:spring:2.5.6.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/springframework/spring/2.5.6/spring-2.5.6.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.tukaani:xz:1.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/tukaani/xz/1.0/xz-1.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_rome:rome:0.9.classpath">
+    <pathelement location="${path.variable.maven_repository}/rome/rome/0.9/rome-0.9.jar"/>
+  </path>
+  
+  <path id="library.maven:_stax:stax-api:1.0.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/stax/stax-api/1.0.1/stax-api-1.0.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_taglibs:standard:1.1.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/taglibs/standard/1.1.2/standard-1.1.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_xalan:xalan:2.7.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/xalan/xalan/2.7.0/xalan-2.7.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_xerces:xercesimpl:2.6.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_xerces:xmlparserapis:2.6.2.classpath">
+    <pathelement location="${path.variable.maven_repository}/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_xml-apis:xml-apis:1.0.b2.classpath">
+    <pathelement location="${path.variable.maven_repository}/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
+  </path>
+  
+  <path id="library.maven:_xom:xom:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/xom/xom/1.1/xom-1.1.jar"/>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module blahguarest -->
+  
+  <dirname property="module.blahguarest.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.blahguarest" value="${compiler.args}"/>
+  
+  <property name="blahguarest.output.dir" value="${module.blahguarest.basedir}/target/classes"/>
+  <property name="blahguarest.base.output.dir" value="${module.blahguarest.basedir}/target/classes/main/java/com/eweware/service/base/"/>
+
+  <property name="blahguarest.testoutput.dir" value="${module.blahguarest.basedir}/target/test-classes"/>
+  
+  <path id="blahguarest.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="blahguarest.module.production.classpath">
+    <path refid="library.maven:_com.amazonaws:aws-java-sdk:1.3.27.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.2.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.2.2.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.7.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_commons-lang:commons-lang:2.4.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-lang3:3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-core:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-client:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-json:1.8.classpath"/>
+    <path refid="library.maven:_org.codehaus.jettison:jettison:1.3.2.classpath"/>
+    <path refid="library.maven:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.maven:_com.sun.xml.bind:jaxb-impl:2.2.3-1.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jaxb-api:2.2.3.classpath"/>
+    <path refid="library.maven:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.maven:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.7.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.7.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-server:1.8.classpath"/>
+    <path refid="library.maven:_asm:asm:3.3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey.contribs:jersey-multipart:1.8.classpath"/>
+    <path refid="library.maven:_org.jvnet:mimepull:1.4.classpath"/>
+    <path refid="library.maven:_commons-fileupload:commons-fileupload:1.2.2.classpath"/>
+    <path refid="library.maven:_dwr:dwr:1.1.3.classpath"/>
+    <path refid="library.maven:_bsf:bsf:2.3.0.classpath"/>
+    <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
+    <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
+    <path refid="library.maven:_jdom:jdom:1.0.classpath"/>
+    <path refid="library.maven:_xom:xom:1.1.classpath"/>
+    <path refid="library.maven:_xerces:xmlparserapis:2.6.2.classpath"/>
+    <path refid="library.maven:_xerces:xercesimpl:2.6.2.classpath"/>
+    <path refid="library.maven:_xalan:xalan:2.7.0.classpath"/>
+    <path refid="library.maven:_jaxen:jaxen:1.1-beta-8.classpath"/>
+    <path refid="library.maven:_commons-pool:commons-pool:1.5.3.classpath"/>
+    <path refid="library.maven:_commons-configuration:commons-configuration:1.6.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.8.0.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils-core:1.8.0.classpath"/>
+    <path refid="library.maven:_log4j:log4j:1.2.14.classpath"/>
+    <path refid="library.maven:_org.springframework:spring:2.5.6.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-core:1.3.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-parsers:1.3.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-tika:0.1.classpath"/>
+    <path refid="library.maven:_edu.ucar:netcdf:4.2-min.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.6.4.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-dom:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-compress:1.4.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.0.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:pdfbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:fontbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:jempbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcmail-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcprov-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-scratchpad:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml-schemas:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.xmlbeans:xmlbeans:2.3.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath"/>
+    <path refid="library.maven:_org.ccil.cowan.tagsoup:tagsoup:1.2.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.mp4parser:isoparser:1.0-rc-1.classpath"/>
+    <path refid="library.maven:_org.aspectj:aspectjrt:1.6.11.classpath"/>
+    <path refid="library.maven:_com.drewnoakes:metadata-extractor:2.6.2.classpath"/>
+    <path refid="library.maven:_com.adobe.xmp:xmpcore:5.1.2.classpath"/>
+    <path refid="library.maven:_de.l3s.boilerpipe:boilerpipe:1.1.0.classpath"/>
+    <path refid="library.maven:_rome:rome:0.9.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.juniversalchardet:juniversalchardet:1.0.3.classpath"/>
+    <path refid="library.maven:_taglibs:standard:1.1.2.classpath"/>
+    <path refid="library.maven:_fastutil:fastutil:5.0.5.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.1.classpath"/>
+    <path refid="library.maven:_javax.mail:mail:1.4.5.classpath"/>
+    <path refid="library.maven:_com.sun.xml.fastinfoset:fastinfoset:1.2.12.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jsr173_api:1.0.classpath"/>
+    <path refid="library.maven:_it.unimi.dsi:fastutil:6.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-impl:2.2.4_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0:1.0.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.jaxb-api-2.2:1.6.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.0.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:2.10.1.classpath"/>
+    <path refid="library.maven:_org.json:json:20080701.classpath"/>
+    <path refid="library.maven:_com.yammer.metrics:metrics-core:2.0.0-beta18-snapshot.classpath"/>
+    <path refid="library.maven:_org.im4java:im4java:1.2.0.classpath"/>
+    <path refid="library.maven:_com.google.code.simple-spring-memcached:spymemcached:2.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-core:3.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-queries:3.5.0.classpath"/>
+    <path refid="library.maven:_jakarta-regexp:jakarta-regexp:1.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-analyzers:3.5.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-core:3.3.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-jms:3.3.0.classpath"/>
+    <path refid="library.maven:_javax.jms:jms:1.1.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-perf:3.3.0.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty-util:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:servlet-api:2.5-20081211.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-server:3.3.0.classpath"/>
+  </path>
+  
+  <path id="blahguarest.runtime.production.module.classpath">
+    <pathelement location="${blahguarest.output.dir}"/>
+    <path refid="library.maven:_com.amazonaws:aws-java-sdk:1.3.27.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.2.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.2.2.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.7.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_commons-lang:commons-lang:2.4.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-lang3:3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-core:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-client:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-json:1.8.classpath"/>
+    <path refid="library.maven:_org.codehaus.jettison:jettison:1.3.2.classpath"/>
+    <path refid="library.maven:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.maven:_com.sun.xml.bind:jaxb-impl:2.2.3-1.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jaxb-api:2.2.3.classpath"/>
+    <path refid="library.maven:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.maven:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.7.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.7.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-server:1.8.classpath"/>
+    <path refid="library.maven:_asm:asm:3.3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey.contribs:jersey-multipart:1.8.classpath"/>
+    <path refid="library.maven:_org.jvnet:mimepull:1.4.classpath"/>
+    <path refid="library.maven:_commons-fileupload:commons-fileupload:1.2.2.classpath"/>
+    <path refid="library.maven:_dwr:dwr:1.1.3.classpath"/>
+    <path refid="library.maven:_bsf:bsf:2.3.0.classpath"/>
+    <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
+    <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
+    <path refid="library.maven:_jdom:jdom:1.0.classpath"/>
+    <path refid="library.maven:_xom:xom:1.1.classpath"/>
+    <path refid="library.maven:_xerces:xmlparserapis:2.6.2.classpath"/>
+    <path refid="library.maven:_xerces:xercesimpl:2.6.2.classpath"/>
+    <path refid="library.maven:_xalan:xalan:2.7.0.classpath"/>
+    <path refid="library.maven:_jaxen:jaxen:1.1-beta-8.classpath"/>
+    <path refid="library.maven:_commons-pool:commons-pool:1.5.3.classpath"/>
+    <path refid="library.maven:_commons-configuration:commons-configuration:1.6.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.8.0.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils-core:1.8.0.classpath"/>
+    <path refid="library.maven:_log4j:log4j:1.2.14.classpath"/>
+    <path refid="library.maven:_org.springframework:spring:2.5.6.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-core:1.3.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-parsers:1.3.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-tika:0.1.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:tests:0.1.classpath"/>
+    <path refid="library.maven:_edu.ucar:netcdf:4.2-min.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.6.4.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-dom:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-compress:1.4.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.0.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:pdfbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:fontbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:jempbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcmail-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcprov-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-scratchpad:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml-schemas:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.xmlbeans:xmlbeans:2.3.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath"/>
+    <path refid="library.maven:_org.ccil.cowan.tagsoup:tagsoup:1.2.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.mp4parser:isoparser:1.0-rc-1.classpath"/>
+    <path refid="library.maven:_org.aspectj:aspectjrt:1.6.11.classpath"/>
+    <path refid="library.maven:_com.drewnoakes:metadata-extractor:2.6.2.classpath"/>
+    <path refid="library.maven:_com.adobe.xmp:xmpcore:5.1.2.classpath"/>
+    <path refid="library.maven:_de.l3s.boilerpipe:boilerpipe:1.1.0.classpath"/>
+    <path refid="library.maven:_rome:rome:0.9.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.juniversalchardet:juniversalchardet:1.0.3.classpath"/>
+    <path refid="library.maven:_taglibs:standard:1.1.2.classpath"/>
+    <path refid="library.maven:_fastutil:fastutil:5.0.5.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.1.classpath"/>
+    <path refid="library.maven:_javax.mail:mail:1.4.5.classpath"/>
+    <path refid="library.maven:_com.sun.xml.fastinfoset:fastinfoset:1.2.12.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jsr173_api:1.0.classpath"/>
+    <path refid="library.maven:_it.unimi.dsi:fastutil:6.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-impl:2.2.4_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0:1.0.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.jaxb-api-2.2:1.6.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.0.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:2.10.1.classpath"/>
+    <path refid="library.maven:_org.json:json:20080701.classpath"/>
+    <path refid="library.maven:_com.yammer.metrics:metrics-core:2.0.0-beta18-snapshot.classpath"/>
+    <path refid="library.maven:_org.im4java:im4java:1.2.0.classpath"/>
+    <path refid="library.maven:_com.google.code.simple-spring-memcached:spymemcached:2.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-core:3.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-queries:3.5.0.classpath"/>
+    <path refid="library.maven:_jakarta-regexp:jakarta-regexp:1.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-analyzers:3.5.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-core:3.3.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-jms:3.3.0.classpath"/>
+    <path refid="library.maven:_javax.jms:jms:1.1.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-perf:3.3.0.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty-util:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:servlet-api:2.5-20081211.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-server:3.3.0.classpath"/>
+  </path>
+  
+  <path id="blahguarest.module.classpath">
+    <pathelement location="${blahguarest.output.dir}"/>
+    <path refid="library.maven:_com.amazonaws:aws-java-sdk:1.3.27.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.2.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.2.2.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.7.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_commons-lang:commons-lang:2.4.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-lang3:3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-core:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-client:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-json:1.8.classpath"/>
+    <path refid="library.maven:_org.codehaus.jettison:jettison:1.3.2.classpath"/>
+    <path refid="library.maven:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.maven:_com.sun.xml.bind:jaxb-impl:2.2.3-1.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jaxb-api:2.2.3.classpath"/>
+    <path refid="library.maven:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.maven:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.7.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.7.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-server:1.8.classpath"/>
+    <path refid="library.maven:_asm:asm:3.3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey.contribs:jersey-multipart:1.8.classpath"/>
+    <path refid="library.maven:_org.jvnet:mimepull:1.4.classpath"/>
+    <path refid="library.maven:_commons-fileupload:commons-fileupload:1.2.2.classpath"/>
+    <path refid="library.maven:_dwr:dwr:1.1.3.classpath"/>
+    <path refid="library.maven:_bsf:bsf:2.3.0.classpath"/>
+    <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
+    <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
+    <path refid="library.maven:_jdom:jdom:1.0.classpath"/>
+    <path refid="library.maven:_xom:xom:1.1.classpath"/>
+    <path refid="library.maven:_xerces:xmlparserapis:2.6.2.classpath"/>
+    <path refid="library.maven:_xerces:xercesimpl:2.6.2.classpath"/>
+    <path refid="library.maven:_xalan:xalan:2.7.0.classpath"/>
+    <path refid="library.maven:_jaxen:jaxen:1.1-beta-8.classpath"/>
+    <path refid="library.maven:_commons-pool:commons-pool:1.5.3.classpath"/>
+    <path refid="library.maven:_commons-collections:commons-collections:3.2.1.classpath"/>
+    <path refid="library.maven:_commons-configuration:commons-configuration:1.6.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.8.0.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils-core:1.8.0.classpath"/>
+    <path refid="library.maven:_log4j:log4j:1.2.14.classpath"/>
+    <path refid="library.maven:_org.springframework:spring:2.5.6.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-core:1.3.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-parsers:1.3.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-tika:0.1.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:tests:0.1.classpath"/>
+    <path refid="library.maven:_edu.ucar:netcdf:4.2-min.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.6.4.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-dom:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-compress:1.4.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.0.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:pdfbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:fontbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:jempbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcmail-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcprov-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-scratchpad:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml-schemas:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.xmlbeans:xmlbeans:2.3.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath"/>
+    <path refid="library.maven:_org.ccil.cowan.tagsoup:tagsoup:1.2.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.mp4parser:isoparser:1.0-rc-1.classpath"/>
+    <path refid="library.maven:_org.aspectj:aspectjrt:1.6.11.classpath"/>
+    <path refid="library.maven:_com.drewnoakes:metadata-extractor:2.6.2.classpath"/>
+    <path refid="library.maven:_com.adobe.xmp:xmpcore:5.1.2.classpath"/>
+    <path refid="library.maven:_de.l3s.boilerpipe:boilerpipe:1.1.0.classpath"/>
+    <path refid="library.maven:_rome:rome:0.9.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.juniversalchardet:juniversalchardet:1.0.3.classpath"/>
+    <path refid="library.maven:_taglibs:standard:1.1.2.classpath"/>
+    <path refid="library.maven:_fastutil:fastutil:5.0.5.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.1.classpath"/>
+    <path refid="library.maven:_junit:junit:3.8.1.classpath"/>
+    <path refid="library.maven:_javax.mail:mail:1.4.5.classpath"/>
+    <path refid="library.maven:_com.sun.xml.fastinfoset:fastinfoset:1.2.12.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jsr173_api:1.0.classpath"/>
+    <path refid="library.maven:_it.unimi.dsi:fastutil:6.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-impl:2.2.4_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0:1.0.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.jaxb-api-2.2:1.6.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.0.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:2.10.1.classpath"/>
+    <path refid="library.maven:_org.json:json:20080701.classpath"/>
+    <path refid="library.maven:_com.yammer.metrics:metrics-core:2.0.0-beta18-snapshot.classpath"/>
+    <path refid="library.maven:_org.im4java:im4java:1.2.0.classpath"/>
+    <path refid="library.maven:_com.google.code.simple-spring-memcached:spymemcached:2.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-core:3.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-queries:3.5.0.classpath"/>
+    <path refid="library.maven:_jakarta-regexp:jakarta-regexp:1.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-analyzers:3.5.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-core:3.3.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-jms:3.3.0.classpath"/>
+    <path refid="library.maven:_javax.jms:jms:1.1.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-perf:3.3.0.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty-util:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:servlet-api:2.5-20081211.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-server:3.3.0.classpath"/>
+  </path>
+  
+  <path id="blahguarest.runtime.module.classpath">
+    <pathelement location="${blahguarest.testoutput.dir}"/>
+    <pathelement location="${blahguarest.output.dir}"/>
+    <path refid="library.maven:_com.amazonaws:aws-java-sdk:1.3.27.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.1.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.2.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.2.2.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.7.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.8.9.classpath"/>
+    <path refid="library.maven:_commons-lang:commons-lang:2.4.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-lang3:3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-core:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-client:1.8.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-json:1.8.classpath"/>
+    <path refid="library.maven:_org.codehaus.jettison:jettison:1.3.2.classpath"/>
+    <path refid="library.maven:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.maven:_com.sun.xml.bind:jaxb-impl:2.2.3-1.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jaxb-api:2.2.3.classpath"/>
+    <path refid="library.maven:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.maven:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.7.1.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.7.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey:jersey-server:1.8.classpath"/>
+    <path refid="library.maven:_asm:asm:3.3.1.classpath"/>
+    <path refid="library.maven:_com.sun.jersey.contribs:jersey-multipart:1.8.classpath"/>
+    <path refid="library.maven:_org.jvnet:mimepull:1.4.classpath"/>
+    <path refid="library.maven:_commons-fileupload:commons-fileupload:1.2.2.classpath"/>
+    <path refid="library.maven:_dwr:dwr:1.1.3.classpath"/>
+    <path refid="library.maven:_bsf:bsf:2.3.0.classpath"/>
+    <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
+    <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
+    <path refid="library.maven:_jdom:jdom:1.0.classpath"/>
+    <path refid="library.maven:_xom:xom:1.1.classpath"/>
+    <path refid="library.maven:_xerces:xmlparserapis:2.6.2.classpath"/>
+    <path refid="library.maven:_xerces:xercesimpl:2.6.2.classpath"/>
+    <path refid="library.maven:_xalan:xalan:2.7.0.classpath"/>
+    <path refid="library.maven:_jaxen:jaxen:1.1-beta-8.classpath"/>
+    <path refid="library.maven:_commons-pool:commons-pool:1.5.3.classpath"/>
+    <path refid="library.maven:_commons-collections:commons-collections:3.2.1.classpath"/>
+    <path refid="library.maven:_commons-configuration:commons-configuration:1.6.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.8.0.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils-core:1.8.0.classpath"/>
+    <path refid="library.maven:_log4j:log4j:1.2.14.classpath"/>
+    <path refid="library.maven:_org.springframework:spring:2.5.6.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-core:1.3.classpath"/>
+    <path refid="library.maven:_org.apache.tika:tika-parsers:1.3.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-tika:0.1.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:tests:0.1.classpath"/>
+    <path refid="library.maven:_edu.ucar:netcdf:4.2-min.classpath"/>
+    <path refid="library.maven:_org.slf4j:slf4j-api:1.6.4.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-core:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.james:apache-mime4j-dom:0.7.2.classpath"/>
+    <path refid="library.maven:_org.apache.commons:commons-compress:1.4.1.classpath"/>
+    <path refid="library.maven:_org.tukaani:xz:1.0.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:pdfbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:fontbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.apache.pdfbox:jempbox:1.7.1.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcmail-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.bouncycastle:bcprov-jdk15:1.45.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-scratchpad:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.poi:poi-ooxml-schemas:3.8.classpath"/>
+    <path refid="library.maven:_org.apache.xmlbeans:xmlbeans:2.3.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1.classpath"/>
+    <path refid="library.maven:_org.ccil.cowan.tagsoup:tagsoup:1.2.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.mp4parser:isoparser:1.0-rc-1.classpath"/>
+    <path refid="library.maven:_org.aspectj:aspectjrt:1.6.11.classpath"/>
+    <path refid="library.maven:_com.drewnoakes:metadata-extractor:2.6.2.classpath"/>
+    <path refid="library.maven:_com.adobe.xmp:xmpcore:5.1.2.classpath"/>
+    <path refid="library.maven:_de.l3s.boilerpipe:boilerpipe:1.1.0.classpath"/>
+    <path refid="library.maven:_rome:rome:0.9.classpath"/>
+    <path refid="library.maven:_org.gagravarr:vorbis-java-core:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.juniversalchardet:juniversalchardet:1.0.3.classpath"/>
+    <path refid="library.maven:_taglibs:standard:1.1.2.classpath"/>
+    <path refid="library.maven:_fastutil:fastutil:5.0.5.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.1.classpath"/>
+    <path refid="library.maven:_junit:junit:3.8.1.classpath"/>
+    <path refid="library.maven:_javax.mail:mail:1.4.5.classpath"/>
+    <path refid="library.maven:_com.sun.xml.fastinfoset:fastinfoset:1.2.12.classpath"/>
+    <path refid="library.maven:_javax.xml.bind:jsr173_api:1.0.classpath"/>
+    <path refid="library.maven:_it.unimi.dsi:fastutil:6.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.bundles:org.apache.servicemix.bundles.jaxb-impl:2.2.4_2.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0:1.0.0.classpath"/>
+    <path refid="library.maven:_org.apache.servicemix.specs:org.apache.servicemix.specs.jaxb-api-2.2:1.6.0.classpath"/>
+    <path refid="library.maven:_org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.0.2.classpath"/>
+    <path refid="library.maven:_org.mongodb:mongo-java-driver:2.10.1.classpath"/>
+    <path refid="library.maven:_org.json:json:20080701.classpath"/>
+    <path refid="library.maven:_com.yammer.metrics:metrics-core:2.0.0-beta18-snapshot.classpath"/>
+    <path refid="library.maven:_org.im4java:im4java:1.2.0.classpath"/>
+    <path refid="library.maven:_com.google.code.simple-spring-memcached:spymemcached:2.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-core:3.5.0.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-queries:3.5.0.classpath"/>
+    <path refid="library.maven:_jakarta-regexp:jakarta-regexp:1.4.classpath"/>
+    <path refid="library.maven:_org.apache.lucene:lucene-analyzers:3.5.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-core:3.3.0.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-jms:3.3.0.classpath"/>
+    <path refid="library.maven:_javax.jms:jms:1.1.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-perf:3.3.0.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:jetty-util:6.1.26.classpath"/>
+    <path refid="library.maven:_org.mortbay.jetty:servlet-api:2.5-20081211.classpath"/>
+    <path refid="library.maven:_com.linkedin.zoie:zoie-server:3.3.0.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.blahguarest">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.blahguarest">
+    <patternset refid="compiler.excluded"/>
+    <patternset refid="excluded.from.module.blahguarest"/>
+  </patternset>
+  
+  <path id="blahguarest.module.sourcepath">
+    <dirset dir="${module.blahguarest.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="blahguarest.module.test.sourcepath">
+    <dirset dir="${module.blahguarest.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.blahguarest" depends="compile.module.blahguarest.production,compile.module.blahguarest.tests" description="Compile module blahguarest"/>
+  
+  <target name="compile.module.blahguarest.production" description="Compile module blahguarest; production classes">
+    <mkdir dir="${blahguarest.output.dir}"/>
+    <javac destdir="${blahguarest.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.blahguarest}"/>
+      <bootclasspath refid="blahguarest.module.bootclasspath"/>
+      <classpath refid="blahguarest.module.production.classpath"/>
+      <src refid="blahguarest.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.blahguarest"/>
+    </javac>
+    
+    <copy todir="${blahguarest.output.dir}/main/java">
+      <fileset dir="${module.blahguarest.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.blahguarest"/>
+      </fileset>
+    </copy>
+    <copy todir="${blahguarest.output.dir}">
+      <fileset dir="${module.blahguarest.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.blahguarest"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.blahguarest.tests" depends="compile.module.blahguarest.production" description="compile module blahguarest; test classes" unless="skip.tests">
+    <mkdir dir="${blahguarest.testoutput.dir}"/>
+    <javac destdir="${blahguarest.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.blahguarest}"/>
+      <bootclasspath refid="blahguarest.module.bootclasspath"/>
+      <classpath refid="blahguarest.module.classpath"/>
+      <src refid="blahguarest.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.blahguarest"/>
+    </javac>
+    
+    <copy todir="${blahguarest.testoutput.dir}">
+      <fileset dir="${module.blahguarest.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.blahguarest"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.blahguarest" description="cleanup module">
+    <delete dir="${blahguarest.output.dir}"/>
+    <delete dir="${blahguarest.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.blahguarest" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.blahguarest" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.blahgua-base:jar" value="${basedir}/../RestUnitTests/lib"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.blahgua-base.jar" value="${artifacts.temp.dir}/blahgua-base.jar"/>
+  </target>
+  
+  <target name="artifact.blahgua-base:jar" depends="init.artifacts, compile.module.blahguarest" description="Build &#39;blahgua-base:jar&#39; artifact">
+    <property name="artifact.temp.output.blahgua-base:jar" value="${artifacts.temp.dir}/blahgua_base_jar"/>
+    <mkdir dir="${artifact.temp.output.blahgua-base:jar}"/>
+    <jar destfile="${temp.jar.path.blahgua-base.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${blahguarest.base.output.dir}" prefix="main/java/com/eweware/service/base" />
+      <zipfileset src="${path.variable.maven_repository}/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-configuration/commons-configuration/1.6/commons-configuration-1.6.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/codehaus/jackson/jackson-mapper-asl/1.8.9/jackson-mapper-asl-1.8.9.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-beanutils/commons-beanutils/1.8.0/commons-beanutils-1.8.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/mongodb/mongo-java-driver/2.9.3/mongo-java-driver-2.9.3.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/javax/xml/bind/jaxb-api/2.2.3/jaxb-api-2.2.3.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-beanutils/commons-beanutils-core/1.8.0/commons-beanutils-core-1.8.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/json/json/20080701/json-20080701.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/javax/xml/bind/jsr173_api/1.0/jsr173_api-1.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/apache/servicemix/bundles/org.apache.servicemix.bundles.jaxb-impl/2.2.4_2/org.apache.servicemix.bundles.jaxb-impl-2.2.4_2.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/xalan/xalan/2.7.0/xalan-2.7.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/log4j/log4j/1.2.14/log4j-1.2.14.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/xom/xom/1.1/xom-1.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-lang/commons-lang/2.4/commons-lang-2.4.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/com/sun/xml/bind/jaxb-impl/2.2.3-1/jaxb-impl-2.2.3-1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/apache/servicemix/specs/org.apache.servicemix.specs.jaxb-api-2.2/1.6.0/org.apache.servicemix.specs.jaxb-api-2.2-1.6.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/codehaus/jackson/jackson-xc/1.7.1/jackson-xc-1.7.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/jdom/jdom/1.0/jdom-1.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-pool/commons-pool/1.5.3/commons-pool-1.5.3.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-fileupload/commons-fileupload/1.2.2/commons-fileupload-1.2.2.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/apache/servicemix/specs/org.apache.servicemix.specs.stax-api-1.0/1.0.0/org.apache.servicemix.specs.stax-api-1.0-1.0.0.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-digester/commons-digester/1.8.1/commons-digester-1.8.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-codec/commons-codec/1.7/commons-codec-1.7.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/commons-io/commons-io/2.1/commons-io-2.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/codehaus/jackson/jackson-jaxrs/1.7.1/jackson-jaxrs-1.7.1.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/org/codehaus/jackson/jackson-core-asl/1.8.9/jackson-core-asl-1.8.9.jar"/>
+      <zipfileset src="${path.variable.maven_repository}/com/google/code/simple-spring-memcached/spymemcached/2.8.4/spymemcached-2.8.4.jar"/>
+      <zipfileset dir="${basedir}/src/main/java/com/eweware/service/base"/>
+    </jar>
+    <copy file="${temp.jar.path.blahgua-base.jar}" tofile="${artifact.temp.output.blahgua-base:jar}/blahgua-base.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.blahgua-base:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.blahgua-base:jar}"/>
+    <copy todir="${artifact.output.blahgua-base:jar}">
+      <fileset dir="${artifact.temp.output.blahgua-base:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
