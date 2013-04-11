@@ -337,6 +337,7 @@ public final class MongoStoreManager implements StoreManager {
                 // if sysmgr not initialized, no need for this.
             }
             final MongoOptions mongoOptions = new MongoOptions();
+            mongoOptions.slaveOk = true; // TODO use ReadPreferences whenever we can find good documentation for getName() and toDBObject() method for it!!!
             mongoOptions.connectionsPerHost = connectionsPerHost; // Use >db.serverStatus() to check number of connections in mongo server
             final ServerAddress serverAddress = new ServerAddress(mongoDbHostname, mongoDbPort);
 

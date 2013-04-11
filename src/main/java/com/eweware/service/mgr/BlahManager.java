@@ -693,7 +693,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer promotionOrDemotion = CommonUtilities.checkDiscreteValue(request.getUserPromotesOrDemotes(), request);
+        final Integer promotionOrDemotion = CommonUtilities.checkDiscreteValue(request.getUserPromotion(), request);
 
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
         final Integer viewCount = CommonUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);

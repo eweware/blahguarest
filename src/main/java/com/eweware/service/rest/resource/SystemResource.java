@@ -82,7 +82,6 @@ public class SystemResource {
      */
     @POST
     @Path("/metrics/reset")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getStats(@Context HttpServletRequest request) {
         try {
             BlahguaSession.ensureAdmin(request);

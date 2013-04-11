@@ -30,7 +30,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * is not stored in the db.</p>
      * TODO get rid of this https://eweware.atlassian.net/browse/WRS-234
      */
-    static final String USER_PROMOTES_OR_DEMOTES = "v";
+//    static final String USER_PROMOTES_OR_DEMOTES = "v";
 
     /**
      * <p>Records whether the user promoted this blah up or down.</p>
@@ -162,22 +162,22 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
         put(AUTHOR_ID, authorId);
     }
 
-    /**
-     * <p>When the client user id is available (e.g., user is logged in),
-     * returns the value indicating whether the user has promoted or demoted
-     * this blah.</p>
-     * <p>A value of +1 means the user has promoted it. A value of -1
-     * means the user has demoted it. If it is null or 0, then the user
-     * has neither promoted not demoted this blah.</p>
-     * @return  The demotion value or null if the user has not promoted/demoted this blah.
-     */
-    public Integer getUserPromotesOrDemotes() {
-        return (Integer) get(USER_PROMOTES_OR_DEMOTES);
-    }
-
-    public void setUserPromotesOrDemotes(Integer promotesOrDemotes) {
-        put(USER_PROMOTES_OR_DEMOTES, promotesOrDemotes);
-    }
+//    /**
+//     * <p>When the client user id is available (e.g., user is logged in),
+//     * returns the value indicating whether the user has promoted or demoted
+//     * this blah.</p>
+//     * <p>A value of +1 means the user has promoted it. A value of -1
+//     * means the user has demoted it. If it is null or 0, then the user
+//     * has neither promoted not demoted this blah.</p>
+//     * @return  The demotion value or null if the user has not promoted/demoted this blah.
+//     */
+//    public Integer getUserPromotesOrDemotes() {
+//        return (Integer) get(USER_PROMOTES_OR_DEMOTES);
+//    }
+//
+//    public void setUserPromotesOrDemotes(Integer promotesOrDemotes) {
+//        put(USER_PROMOTES_OR_DEMOTES, promotesOrDemotes);
+//    }
 
     /**
      * <p>Returns the count of users who have promoted this blah.</p>

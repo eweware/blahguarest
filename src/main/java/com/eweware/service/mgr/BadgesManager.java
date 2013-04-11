@@ -115,7 +115,7 @@ public final class BadgesManager {
         try {
             post = new HttpPost(endpoint);
             post.setHeader("Content-Type", MediaType.APPLICATION_JSON);
-            System.out.println("*** POSTING TO ENDPOINT '" + endpoint + "'");
+//            System.out.println("*** POSTING TO ENDPOINT '" + endpoint + "'");
 
             // Set the entity
             final Map<String, Object> map = new HashMap<String, Object>(3);
