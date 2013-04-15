@@ -5,7 +5,6 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import main.java.com.eweware.service.mgr.SystemManager;
 import org.bson.types.ObjectId;
 
@@ -28,6 +27,9 @@ public final class MongoStoreManager implements StoreManager {
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
     private String devMongoDbHostname;
+
+    // Whether we are using a replica or not
+    private boolean usingReplica;
 
     public static MongoStoreManager getInstance() throws SystemErrorException {
         if (MongoStoreManager.singleton == null) {
@@ -278,6 +280,14 @@ public final class MongoStoreManager implements StoreManager {
         demographicsCollectionName = name;
     }
 
+    public boolean getUsingReplica() {
+        return usingReplica;
+    }
+
+    public void setUsingReplica(boolean usingReplica) {
+        this.usingReplica = usingReplica;
+    }
+
 
     /**
      * tracks stats TODO will eventually be a separate tracking service *
@@ -336,12 +346,15 @@ public final class MongoStoreManager implements StoreManager {
             } catch (SystemErrorException e) {
                 // if sysmgr not initialized, no need for this.
             }
-            final MongoOptions mongoOptions = new MongoOptions();
-            mongoOptions.slaveOk = true; // TODO use ReadPreferences whenever we can find good documentation for getName() and toDBObject() method for it!!!
-            mongoOptions.connectionsPerHost = connectionsPerHost; // Use >db.serverStatus() to check number of connections in mongo server
+            final MongoClientOptions.Builder builder = new MongoClientOptions.Builder().connectionsPerHost(connectionsPerHost);
+            if (getUsingReplica()) {
+                builder
+                        .readPreference(ReadPreference.primaryPreferred()) // tries to read from primary
+                        .writeConcern(WriteConcern.MAJORITY);      // Writes to secondaries before returning
+                logger.info("*** Connecting to replica set ***");
+            }
             final ServerAddress serverAddress = new ServerAddress(mongoDbHostname, mongoDbPort);
-
-            this.mongo = new Mongo(serverAddress, mongoOptions);
+            this.mongo = new MongoClient(serverAddress, builder.build());
 
 
             // Add a hook to keep it independent of Spring

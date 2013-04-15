@@ -17,6 +17,10 @@
         <constructor-arg value="${blag.memcached.port}" />
         <constructor-arg value="${blag.dev.memcached.hostname}" />
         <constructor-arg value="${blag.dev.rest.port}" />
+        <property name="maxHttpConnections" value="${blah.sys.http.max.connections}"/>
+        <property name="maxHttpConnectionsPerRoute" value="${blah.sys.http.max.connections.per.route}"/>
+        <property name="httpConnectionTimeoutInMs" value="${blah.sys.http.connection.timeout.in.ms}"/>
+        <property name="devBadgeAuthorityPort" value="${blah.sys.localhost.dev.badge.authority.port}"/>
     </bean>
 
     <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
@@ -52,6 +56,7 @@
         <property name="inboxStateCollectionName" value="${blag.store.mongo.blahdb.collection.inboxstate}"/>
         <property name="blahInboxCollectionName" value="${blag.store.mongo.blahdb.collection.blahInbox}"/>
         <property name="demographicsCollectionName" value="${blag.store.mongo.userdb.collection.demographics}"/>
+        <property name="usingReplica" value="${blag.store.mongo.usingReplica}"/>
     </bean>
 
     <bean id="badgesManager" class="main.java.com.eweware.service.mgr.BadgesManager"

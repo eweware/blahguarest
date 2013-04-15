@@ -8,7 +8,14 @@ import main.java.com.eweware.service.base.mgr.ManagerState;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerPNames;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
 
 import javax.xml.ws.WebServiceException;
 import java.io.Serializable;
@@ -40,8 +47,14 @@ public final class SystemManager implements ManagerInterface {
     private String restEndpoint;
     private final String clientServiceEndpoint;
     private final boolean cryptoOn;
-    private DefaultHttpClient client;
-    private ClientConnectionManager connectionManager;
+    private HttpClient client;
+//    private ClientConnectionManager connectionManager;
+
+    private PoolingClientConnectionManager connectionPoolMgr;
+    private Integer maxHttpConnections;
+    private Integer maxHttpConnectionsPerRoute;
+    private Integer httpConnectionTimeoutInMs;
+    private Integer devBadgeAuthorityPort;
 
     /** for dev mode */
 
@@ -73,6 +86,7 @@ public final class SystemManager implements ManagerInterface {
                 restEndpoint = "localhost:" + devRestPort;
                 cryptoOn = true;
             }
+            logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
             this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(cacheHostname, cachePort).setInboxBlahExpirationTime(expirationTime);
@@ -158,6 +172,9 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public void shutdown() {
+        if (connectionPoolMgr != null) {
+            connectionPoolMgr.shutdown();
+        }
         blahCache.shutdown();
         this.state = ManagerState.SHUTDOWN;
         System.out.println("*** System shut down ***");
@@ -212,17 +229,80 @@ public final class SystemManager implements ManagerInterface {
     }
 
     private void startHttpClient() {
-        client = new DefaultHttpClient();
-        connectionManager = client.getConnectionManager();
+        final SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+        if (isDevMode()) { // Debug BA port 8081
+            schemeRegistry.register(new Scheme("http", getDevBadgeAuthorityPort(), PlainSocketFactory.getSocketFactory()));
+        }
+        connectionPoolMgr = new PoolingClientConnectionManager(schemeRegistry);
+        connectionPoolMgr.setMaxTotal(getMaxHttpConnections()); // maximum total connections
+        connectionPoolMgr.setDefaultMaxPerRoute(getMaxHttpConnectionsPerRoute()); // maximumconnections per route
+
+        // Create a client that can be shared by multiple threads
+        client = new DefaultHttpClient(connectionPoolMgr);
+
+        // Set timeouts (if not set, thread may block forever)
+        final HttpParams httpParams = client.getParams();
+        httpParams.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getHttpConnectionTimeoutInMs());
+        httpParams.setLongParameter(ConnManagerPNames.TIMEOUT, getHttpConnectionTimeoutInMs());
+        httpParams.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, getHttpConnectionTimeoutInMs());
+
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
-                if (connectionManager != null) {
-                    connectionManager.shutdown();
+                if (connectionPoolMgr != null) {
+                    connectionPoolMgr.shutdown();
                 }
             }
         }));
     }
+
+    public Integer getMaxHttpConnections() {
+        return maxHttpConnections;
+    }
+
+    public void setMaxHttpConnections(Integer maxHttpConnections) {
+        this.maxHttpConnections = maxHttpConnections;
+    }
+
+    public Integer getMaxHttpConnectionsPerRoute() {
+        return maxHttpConnectionsPerRoute;
+    }
+
+    public void setMaxHttpConnectionsPerRoute(Integer maxHttpConnectionsPerRoute) {
+        this.maxHttpConnectionsPerRoute = maxHttpConnectionsPerRoute;
+    }
+
+    public Integer getHttpConnectionTimeoutInMs() {
+        return httpConnectionTimeoutInMs;
+    }
+
+    public void setHttpConnectionTimeoutInMs(Integer httpConnectionTimeoutInMs) {
+        this.httpConnectionTimeoutInMs = httpConnectionTimeoutInMs;
+    }
+
+    public Integer getDevBadgeAuthorityPort() {
+        return devBadgeAuthorityPort;
+    }
+
+    public void setDevBadgeAuthorityPort(Integer port) {
+        this.devBadgeAuthorityPort = port;
+    }
+
+
+//    private void startHttpClientOld() {
+//
+//        client = new DefaultHttpClient();
+//        connectionManager = client.getConnectionManager();
+//        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (connectionManager != null) {
+//                    connectionManager.shutdown();
+//                }
+//            }
+//        }));
+//    }
 
 //    public static DefaultHttpClient createHttpClient(String endpoint, Integer port) {
 //        SchemeRegistry schemeRegistry = new SchemeRegistry();

@@ -194,6 +194,11 @@ function setBadgeDialog(data) {
    $("#badgedialog").html(data);
 }
 
+// Closes badge authority dialog (called by BA js)
+function ba_dialog_closed(msg) {
+    $("#badgedialog").empty();
+}
+
 function setChannelTypeData(channelType) {
 	defaultSuccessFunction(channelType);
 	var obj = jQuery.parseJSON(channelType);

@@ -21,7 +21,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -47,6 +51,8 @@ public final class BadgesManager {
 
     private static final int PROTOCOL_ERROR_ACCESSING_AUTHORITY = 1;
     private static final int NETWORK_IO_ERROR_ACCESSING_AUTHORITY = 2;
+    private static final int TIMEOUT_ACCESSING_AUTHORITY = 3;
+    private static final int SEVERE_ERROR_ACCESSING_AUTHORITY = 4;
 
 
     private static BadgesManager singleton;
@@ -113,6 +119,7 @@ public final class BadgesManager {
         HttpEntity entity = null;
         HttpPost post = null;
         try {
+            final BasicHttpContext httpContext = new BasicHttpContext(); // for this thread
             post = new HttpPost(endpoint);
             post.setHeader("Content-Type", MediaType.APPLICATION_JSON);
 //            System.out.println("*** POSTING TO ENDPOINT '" + endpoint + "'");
@@ -128,7 +135,7 @@ public final class BadgesManager {
             post.setEntity(stringEntity);
 
             // Execute remote method and get response
-            final HttpResponse response = SystemManager.getInstance().getHttpClient().execute(post);
+            final HttpResponse response = SystemManager.getInstance().getHttpClient().execute(post, httpContext);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
                 logger.log(Level.SEVERE, "Failed to initiate badge tx for authority id '" +
@@ -155,13 +162,30 @@ public final class BadgesManager {
 
             return Response.ok(result.get("form")).build();
 
+        } catch (ConnectionPoolTimeoutException e) {
+            post.abort();
+            logger.log(Level.SEVERE, "Timed out waiting for connection from authority id '" + authorityId + "'", e);
+            return Response.status(Response.Status.NOT_FOUND).entity("error=" + TIMEOUT_ACCESSING_AUTHORITY).build();
         } catch (ClientProtocolException e) {
-            logger.log(Level.SEVERE, "Cannot access authority id '" + authorityId + "'", e);
+            post.abort();
+            logger.log(Level.SEVERE, "Protocol error. Cannot access authority id '" + authorityId + "'", e);
             return Response.status(Response.Status.NOT_FOUND).entity("error=" + PROTOCOL_ERROR_ACCESSING_AUTHORITY).build();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Network error accessing authority id '"+authorityId+"'", e);
+            post.abort();
+            logger.log(Level.SEVERE, "Network error accessing authority id '" + authorityId + "'", e);
             return Response.status(Response.Status.NOT_FOUND).entity("error=" + NETWORK_IO_ERROR_ACCESSING_AUTHORITY).build();
+        } catch (Exception e) {
+            post.abort();
+            logger.log(Level.SEVERE, "Severe internal error accessing authority id '" + authorityId + "'", e);
+            return Response.status(Response.Status.NOT_FOUND).entity("error=" + SEVERE_ERROR_ACCESSING_AUTHORITY).build();
         } finally {
+            if (entity != null) {
+                try {
+                    EntityUtils.consume(entity);
+                } catch (IOException e) {
+                    throw new SystemErrorException("Error talking to badging authority", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                }
+            }
             if (post != null) {
                 post.releaseConnection();
             }
