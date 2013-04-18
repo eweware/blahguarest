@@ -287,10 +287,10 @@ public final class GroupManager implements ManagerInterface {
      *
      * @return A group payload with the current viewer count
      */
-    public GroupPayload getViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
+    public GroupPayload getViewerCount(String groupId) throws SystemErrorException {
         final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.CURRENT_VIEWER_COUNT);
         if (groupDAO == null) {
-            throw new ResourceNotFoundException("Group id '" + groupId + "' not found", ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Group id '" + groupId + "' not found", ErrorCodes.SERVER_SEVERE_ERROR);
         }
         final GroupPayload groupPayload = new GroupPayload(groupId);
         if (groupDAO.getCurrentViewerCount() == null) {

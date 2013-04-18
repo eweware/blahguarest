@@ -25,31 +25,19 @@ public final class RestUtilities {
         if (e.getCause() != null && e.getCause().getMessage() != null) {
             msg += ": "+e.getCause().getMessage();
         }
-//        final String st = stackTraceAsString(e);
-//        if (st.length() > 0) {
-//            msg += "\n" + st;
-//        }
         logger.log(Level.SEVERE, "System error", e);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
     }
 
     public static final Response make500AndLogSystemErrorResponse(Throwable e) {
         String msg = e.getMessage();
-//        final String st = stackTraceAsString(e);
-//        if (st.length() > 0) {
-//            msg += "\n" + st;
-//        }
         logger.log(Level.SEVERE, "System error", e);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, msg)).build();
     }
 
     public static Response make404ResourceNotFoundResponse(ResourceNotFoundException e) {
         String msg = e.getMessage();
-//        final String st = stackTraceAsString(e);
-//        if (st.length() > 0) {
-//            msg += "\n" + st;
-//        }
-        logger.log(Level.WARNING, "Resource Not Found", e);
+        logger.log(Level.WARNING, "Resource Not Found: " + e.getMessage());
         return Response.status(Response.Status.NOT_FOUND).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
     }
 
@@ -59,32 +47,17 @@ public final class RestUtilities {
     }
 
     public static Response make409StateConflictResponse(StateConflictException e) {
-        String msg = new Date() + ": makeStateConflictResponse: " + e.getMessage();
-//        final String st = stackTraceAsString(e);
-//        if (st.length() > 0) {
-//            msg += "\n" + st;
-//        }
-        logger.log(Level.WARNING, "State Conflict", e);
-        return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
+        logger.log(Level.WARNING, "State Conflict: " + e.getMessage());
+        return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
     }
 
     public static Response make400InvalidRequestResponse(InvalidRequestException e) {
-        String msg = new Date() + ": makeInvalidRequestException: " + e.getMessage();
-//        final String st = stackTraceAsString(e);
-//        if (st.length() > 0) {
-//            msg += "\n" + st;
-//        }
-        logger.log(Level.WARNING, "Invalid Request", e);
+        logger.log(Level.WARNING, "Invalid Request: " + e.getMessage());
         return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
     }
 
     public static Response make401UnauthorizedRequestResponse(InvalidAuthorizedStateException e) {
-        String msg = new Date() + ": makeUnauthorizedException: " + e.getMessage();
-//        final String st = stackTraceAsString(e);
-//        if (st.length() > 0) {
-//            msg += "\n" + st;
-//        }
-        logger.log(Level.WARNING, "Unauthorized", e);
+        logger.log(Level.WARNING, "Unauthorized: " + e.getMessage());
         return Response.status(Response.Status.UNAUTHORIZED).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
     }
 
@@ -103,11 +76,4 @@ public final class RestUtilities {
     public static Response make204OKNoContentResponse() {
         return Response.status(Response.Status.NO_CONTENT).header("Cache-Control", "no-cache").build();
     }
-
-//    private static String stackTraceAsString(Throwable t) {
-//        final Writer writer = new StringWriter();
-//        final PrintWriter printer = new PrintWriter(writer);
-//        t.printStackTrace(printer);
-//        return writer.toString();
-//    }
 }
