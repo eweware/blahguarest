@@ -10,18 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SearchResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SearchResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -205,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366317810299" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366318494700" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366318492139" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366318743640" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365477522765" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -400,7 +389,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/suite/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535949851" ignored="false" />
     <file path="/StatisticsManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362617678925" ignored="false" />
     <file path="/BlahInfoPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362958636717" ignored="false" />
-    <file path="/BasePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363026238350" ignored="false" />
+    <file path="/BasePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366324532813" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/payload/BasePayload.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361336375417" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/demo.log" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361238969841" ignored="false" />
     <file path="/GroupsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366317123204" ignored="false" />
@@ -617,7 +606,6 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/CleanSystemException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365543546457" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/AmazonAccessException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365546925431" ignored="false" />
     <file path="/AmazonAccessException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365546915673" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365622227539" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/BlahDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610723" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/BaseDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/UserDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
@@ -657,87 +645,19 @@
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/SchemaSpec.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/search/index/blah/BlahDataIndexable.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365622227667" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BaseSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/type/RecoveryMethodType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/type/DAOUpdateType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/SchemaDataType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/type/BlahTypeCategoryType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/type/BadgeTransactionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/type/UserAccountType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288609" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupTypeDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/GroupTypeDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxBlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxStateDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/InboxStateDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/TrackerDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/TrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190915" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahSummaryDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserCommentInfoDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190915" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserGroupDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserTrackerDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288611" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/PollOptionTextDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserAccountDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserAccountDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190915" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTypeDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190914" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190914" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentTrackerDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190913" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288612" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentTrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190915" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeTransactionDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190915" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288613" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DescriptiveUserStatsDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288613" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190914" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserTrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288613" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288613" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahSummaryDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288613" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserCommentInfoDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190915" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/GroupPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288614" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190919" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288614" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288615" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTypePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentTrackerPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/ErrorResponsePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/GroupTypePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/InboxBlahPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserGroupPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSessionListener.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserTrackerPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190918" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgingNotificationEntity.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972190918" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
-    <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/AuthorizedState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/rest/resource/BadgesResource.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972191143" ignored="false" />
     <file path="/*.regexp" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366143104025" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/restunittests.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366312500206" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/restunittests.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366312838382" ignored="false" />
+    <file path="/UserBlahInfoPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366324648188" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -803,93 +723,91 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GroupTypesResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java">
+      <file leaf-file-name="CommentPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="75" selection-start="3807" selection-end="3807" vertical-scroll-proportion="0.0">
+            <state line="14" column="19" selection-start="504" selection-end="504" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+      <file leaf-file-name="CommentTrackerPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentTrackerPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="201" column="30" selection-start="8538" selection-end="8549" vertical-scroll-proportion="0.0">
+            <state line="8" column="13" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MediaResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/MediaResource.java">
+      <file leaf-file-name="GroupPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/GroupPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="13" selection-start="648" selection-end="648" vertical-scroll-proportion="0.0">
+            <state line="13" column="19" selection-start="477" selection-end="477" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SearchResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SearchResource.java">
+      <file leaf-file-name="GroupTypePayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/GroupTypePayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="75" selection-start="2252" selection-end="2252" vertical-scroll-proportion="0.0">
+            <state line="13" column="19" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StatisticsResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java">
+      <file leaf-file-name="PollOptionsTextPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="87" column="60" selection-start="3992" selection-end="3992" vertical-scroll-proportion="0.0">
+            <state line="8" column="13" selection-start="221" selection-end="221" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SystemResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java">
+      <file leaf-file-name="UserBlahInfoPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="64" selection-start="1165" selection-end="1165" vertical-scroll-proportion="0.0">
+            <state line="42" column="33" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserGroupsResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
+      <file leaf-file-name="UserGroupPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserGroupPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="210" column="75" selection-start="10804" selection-end="10804" vertical-scroll-proportion="0.0">
+            <state line="14" column="19" selection-start="486" selection-end="486" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UsersResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
+      <file leaf-file-name="UserPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="113" column="26" selection-start="5030" selection-end="5030" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#4799#4815#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RestUtilities.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="90" column="30" selection-start="4467" selection-end="4467" vertical-scroll-proportion="0.0">
+            <state line="16" column="19" selection-start="621" selection-end="621" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlahsResource.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+      <file leaf-file-name="UserProfilePayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="451" column="71" selection-start="22975" selection-end="22975" vertical-scroll-proportion="0.51111114">
+            <state line="14" column="13" selection-start="521" selection-end="521" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserTrackerPayload.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserTrackerPayload.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="13" selection-start="166" selection-end="166" vertical-scroll-proportion="0.13333334">
               <folding />
             </state>
           </provider>
@@ -918,8 +836,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" />
@@ -934,6 +850,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java" />
       </list>
     </option>
   </component>
@@ -1348,6 +1266,112 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="store" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="store" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dao" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="payload" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1964,7 +1988,11 @@
       <created>1366315108341</created>
       <updated>1366315108341</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Log header info when there's a system error or an unauthorized user error.">
+      <created>1366318746378</created>
+      <updated>1366318746378</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2057,7 +2085,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Printing request headers on viewCount @GET errors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Log header info when there's a system error or an unauthorized user error." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2071,7 +2099,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Uses SES email." />
     <MESSAGE value="Slew of changes." />
     <MESSAGE value="Slew of changes + new docs" />
     <MESSAGE value="Added WRS-214" />
@@ -2096,6 +2123,7 @@
     <MESSAGE value="INF-55" />
     <MESSAGE value="Stale data from UI clients prompts exceptions. Lowering threshold for now." />
     <MESSAGE value="Printing request headers on viewCount @GET errors" />
+    <MESSAGE value="Log header info when there's a system error or an unauthorized user error." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2109,116 +2137,114 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/blahgua/default.html">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="15" column="41" selection-start="578" selection-end="581" vertical-scroll-proportion="-4.769231">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="289" column="24" selection-start="11527" selection-end="11527" vertical-scroll-proportion="0.0">
+        <state line="15" column="13" selection-start="524" selection-end="524" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211-sources.jar!/javax/servlet/http/HttpServletRequest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="229" column="23" selection-start="7116" selection-end="7116" vertical-scroll-proportion="0.0">
+        <state line="158" column="33" selection-start="5640" selection-end="5640" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="75" selection-start="6683" selection-end="6683" vertical-scroll-proportion="0.0">
+        <state line="76" column="10" selection-start="2702" selection-end="2813" vertical-scroll-proportion="-14.653846">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="165" column="59" selection-start="8254" selection-end="8254" vertical-scroll-proportion="-3.0">
+        <state line="10" column="13" selection-start="187" selection-end="187" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTypePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="75" selection-start="6819" selection-end="6819" vertical-scroll-proportion="0.0">
+        <state line="14" column="13" selection-start="516" selection-end="516" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="75" selection-start="3807" selection-end="3807" vertical-scroll-proportion="0.0">
+        <state line="14" column="19" selection-start="504" selection-end="504" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentTrackerPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="201" column="30" selection-start="8538" selection-end="8549" vertical-scroll-proportion="0.0">
+        <state line="8" column="13" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/MediaResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/GroupPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="13" selection-start="648" selection-end="648" vertical-scroll-proportion="0.0">
+        <state line="13" column="19" selection-start="477" selection-end="477" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SearchResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/GroupTypePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="75" selection-start="2252" selection-end="2252" vertical-scroll-proportion="0.0">
+        <state line="13" column="19" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/PollOptionsTextPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="210" column="75" selection-start="10804" selection-end="10804" vertical-scroll-proportion="0.0">
+        <state line="8" column="13" selection-start="221" selection-end="221" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="64" selection-start="1165" selection-end="1165" vertical-scroll-proportion="0.0">
+        <state line="42" column="33" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserGroupPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="26" selection-start="5030" selection-end="5030" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#4799#4815#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/StatisticsResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="60" selection-start="3992" selection-end="3992" vertical-scroll-proportion="0.0">
+        <state line="14" column="19" selection-start="486" selection-end="486" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="30" selection-start="4467" selection-end="4467" vertical-scroll-proportion="0.0">
+        <state line="16" column="19" selection-start="621" selection-end="621" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserProfilePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="451" column="71" selection-start="22975" selection-end="22975" vertical-scroll-proportion="0.51111114">
+        <state line="14" column="13" selection-start="521" selection-end="521" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserTrackerPayload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="13" selection-start="166" selection-end="166" vertical-scroll-proportion="0.13333334">
           <folding />
         </state>
       </provider>

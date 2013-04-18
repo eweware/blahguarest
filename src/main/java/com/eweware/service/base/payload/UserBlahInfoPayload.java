@@ -1,6 +1,12 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.UserBlahInfoDAO;
 import main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants;
+import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
+import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
+import main.java.com.eweware.service.base.store.dao.schema.UserBlahInfoSchema;
+import main.java.com.eweware.service.base.store.impl.mongo.dao.UserBlahInfoDAOImpl;
 
 import java.util.Date;
 import java.util.Map;
@@ -31,6 +37,10 @@ public class UserBlahInfoPayload extends BasePayload implements UserBlahInfoDAOC
     public UserBlahInfoPayload(String userId, String blahId) {
         setUserId(userId);
         setBlahId(blahId);
+    }
+
+    protected static final BaseSchema getSchema() {
+        return UserBlahInfoSchema.getSchema(LocaleId.en_us);
     }
 
     /**
