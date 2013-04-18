@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Enumeration;
 
 /**
  * <p>Group-specific API methods.</p>
@@ -41,10 +42,19 @@ public class GroupsResource {
     @GET
     @Path("/{groupId}/viewerCount")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewerAdded(@PathParam("groupId") String groupId) {
+    public Response viewerAdded(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getViewerCount(groupId));
         } catch (SystemErrorException e) {
+
+            final Enumeration headers = request.getHeaderNames();
+            while (headers.hasMoreElements()) {
+                String name = (String) headers.nextElement();
+                final String value = request.getHeader(name);
+                if (value != null) {
+                    System.out.println(name + "=" + value);
+                }
+            }
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);

@@ -10,14 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
-    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365552275550" ignored="false" />
+    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366314216364" ignored="false" />
     <file path="/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364891637650" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361424045729" ignored="false" />
     <file path="/InboxBlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364879960301" ignored="false" />
@@ -195,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365479732689" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366307248755" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366310489393" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366314529853" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365477522765" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -393,7 +392,7 @@
     <file path="/BasePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363026238350" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/payload/BasePayload.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361336375417" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/demo.log" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361238969841" ignored="false" />
-    <file path="/GroupsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366310659426" ignored="false" />
+    <file path="/GroupsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366315021871" ignored="false" />
     <file path="/GroupManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366310280683" ignored="false" />
     <file path="/GroupDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362178427872" ignored="false" />
     <file path="/GroupDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362196241337" ignored="false" />
@@ -564,7 +563,7 @@
     <file path="/AdminResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365484491038" ignored="false" />
     <file path="/AdminManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365484682856" ignored="false" />
     <file path="/AWSUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365478368255" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366308122915" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366314246302" ignored="false" />
     <file path="/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537201705" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/META-INF/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537201317" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/META-INF/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537215404" ignored="false" />
@@ -726,6 +725,8 @@
     <file path="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/AuthorizedState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812288628" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/rest/resource/BadgesResource.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365972191143" ignored="false" />
     <file path="/*.regexp" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366143104025" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/restunittests.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366312500206" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/restunittests.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366312838382" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -830,7 +831,7 @@
       <file leaf-file-name="GroupManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="289" column="82" selection-start="11585" selection-end="11585" vertical-scroll-proportion="0.0">
+            <state line="289" column="24" selection-start="11527" selection-end="11527" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -839,7 +840,25 @@
       <file leaf-file-name="GroupsResource.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="48" column="10" selection-start="1803" selection-end="1803" vertical-scroll-proportion="0.41666666">
+            <state line="57" column="69" selection-start="2227" selection-end="2227" vertical-scroll-proportion="0.58152795">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HttpServletRequest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211-sources.jar!/javax/servlet/http/HttpServletRequest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="229" column="23" selection-start="7116" selection-end="7116" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="default.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/blahgua/default.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
             </state>
           </provider>
@@ -869,9 +888,6 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
-  </component>
-  <component name="Git.Push.Settings">
-    <option name="myUpdateMethod" value="REBASE" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -954,6 +970,76 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="blahguarest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="servlet-api-2.5-20081211.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="servlet-api-2.5-20081211.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="servlet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="servlet-api-2.5-20081211.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="servlet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -1857,7 +1943,11 @@
       <created>1366310491834</created>
       <updated>1366310491834</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="Stale data from UI clients prompts exceptions. Lowering threshold for now.">
+      <created>1366311134293</created>
+      <updated>1366311134293</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1882,7 +1972,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="22" width="2556" height="1418" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1891,13 +1981,13 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2610132" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28505394" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28505394" sideWeight="0.98077977" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.7389868" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26733068" sideWeight="0.7149461" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26733068" sideWeight="0.7149461" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13227092" sideWeight="0.7149461" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2002,16 +2092,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/io/IOException.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="150" selection-end="150" vertical-scroll-proportion="0.08751459" />
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/io/InterruptedIOException.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="60" selection-start="197" selection-end="197" vertical-scroll-proportion="0.08751459" />
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpclient/4.2.4/httpclient-4.2.4.jar!/org/apache/http/conn/ConnectTimeoutException.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="70" selection-start="258" selection-end="258" vertical-scroll-proportion="0.10526316" />
@@ -2088,16 +2168,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/blahgua/default.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="289" column="82" selection-start="11585" selection-end="11585" vertical-scroll-proportion="0.0">
+        <state line="289" column="24" selection-start="11527" selection-end="11527" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211-sources.jar!/javax/servlet/http/HttpServletRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="229" column="23" selection-start="7116" selection-end="7116" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupsResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="10" selection-start="1803" selection-end="1803" vertical-scroll-proportion="0.41666666">
+        <state line="57" column="69" selection-start="2227" selection-end="2227" vertical-scroll-proportion="0.58152795">
           <folding />
         </state>
       </provider>
