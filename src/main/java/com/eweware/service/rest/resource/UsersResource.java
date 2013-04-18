@@ -69,7 +69,8 @@ public class UsersResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkUsername(
-            Map<String, String> entity) {
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
         try {
             final String username = entity.get("U");
             getUserManager().ensureUserExistsByUsername(username);
@@ -79,9 +80,9 @@ public class UsersResource {
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -103,13 +104,17 @@ public class UsersResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkLogin(@Context HttpServletRequest request) {
-        final Map<String, String> entity = new HashMap<String, String>(1);
-        if (BlahguaSession.isAuthenticated(request)) {
-            entity.put("loggedIn", "Y");
-        } else {
-            entity.put("loggedIn", "N");
+        try {
+            final Map<String, String> entity = new HashMap<String, String>(1);
+            if (BlahguaSession.isAuthenticated(request)) {
+                entity.put("loggedIn", "Y");
+            } else {
+                entity.put("loggedIn", "N");
+            }
+            return RestUtilities.make200OkResponse(entity);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
-        return RestUtilities.make200OkResponse(entity);
     }
 
     /**
@@ -148,13 +153,13 @@ public class UsersResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -177,7 +182,7 @@ public class UsersResource {
             BlahguaSession.destroySession(request);
             return RestUtilities.make202AcceptedResponse();
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -214,9 +219,9 @@ public class UsersResource {
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -260,11 +265,11 @@ public class UsersResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -300,15 +305,15 @@ public class UsersResource {
             getUserManager().setUserAccountData(userId, entity.containsKey("E"), entity.get("E"), entity.containsKey("A"), entity.get("A"));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -366,11 +371,11 @@ public class UsersResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -403,9 +408,9 @@ public class UsersResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -433,12 +438,12 @@ public class UsersResource {
             Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileSchema(LocaleId.en_us));
             getSystemManager().setResponseTime(GET_USER_PROFILE_SCHEMA_OPERATION, (System.currentTimeMillis() - s));
             return response;
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -473,11 +478,11 @@ public class UsersResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -520,11 +525,11 @@ public class UsersResource {
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -564,11 +569,11 @@ public class UsersResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -611,14 +616,16 @@ public class UsersResource {
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -671,9 +678,9 @@ public class UsersResource {
             getSystemManager().setResponseTime(GET_ANONYMOUS_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -684,17 +691,17 @@ public class UsersResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/info</div>
      *
-     * @param stats          <i>Query Parameter:</i> Optional. If true, include
-     *                       a user statistics record along with the standard user information.
-     *                       Default is false.
-     * @param s <i>Query Parameter:</i> Optional. When stats is true, this is used
-     *                       to filter the stats records with this as a start date (inclusive).
-     *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
-     * @param e   <i>Query Parameter:</i> Optional. When stats is true, this is used
-     *                       to filter the stats records with this as a end date (inclusive).
-     *                       Format is yymmdd (e.g., August 27, 2012 is 120827).
-     *                       A start date is required whenever an end date is provided (we don't
-     *                       want to retrieve stats until the beginning of time).
+     * @param stats <i>Query Parameter:</i> Optional. If true, include
+     *              a user statistics record along with the standard user information.
+     *              Default is false.
+     * @param s     <i>Query Parameter:</i> Optional. When stats is true, this is used
+     *              to filter the stats records with this as a start date (inclusive).
+     *              Format is yymmdd (e.g., August 27, 2012 is 120827).
+     * @param e     <i>Query Parameter:</i> Optional. When stats is true, this is used
+     *              to filter the stats records with this as a end date (inclusive).
+     *              Format is yymmdd (e.g., August 27, 2012 is 120827).
+     *              A start date is required whenever an end date is provided (we don't
+     *              want to retrieve stats until the beginning of time).
      * @return Returns with the user entity (a UserPayload) possibly including statistics) with
      *         an http status 200.
      *         If there is an error in the request, the code 400 (BAD REQUEST) is sent.
@@ -720,13 +727,13 @@ public class UsersResource {
         } catch (InvalidRequestException e1) {
             return RestUtilities.make400InvalidRequestResponse(e1);
         } catch (InvalidAuthorizedStateException e1) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e1);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e1);
         } catch (ResourceNotFoundException e1) {
             return RestUtilities.make404ResourceNotFoundResponse(e1);
         } catch (SystemErrorException e1) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e1);
         } catch (Exception e1) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e1);
         }
     }
 
@@ -759,11 +766,11 @@ public class UsersResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 

@@ -5,11 +5,9 @@ import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.payload.BadgePayload;
 import main.java.com.eweware.service.base.payload.BadgingNotificationEntity;
-import main.java.com.eweware.service.base.store.dao.BadgeAuthorityDAO;
 import main.java.com.eweware.service.mgr.BadgesManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
-import org.apache.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,11 +54,11 @@ public class BadgesResource {
     @GET
     @Path("authorities")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAuthorities() {
+    public Response getAuthorities(@Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse(getBadgesMgr().getAuthorities());
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -96,11 +94,13 @@ public class BadgesResource {
             final String badgeTypeId = (String) entity.get("T");
             return getBadgesMgr().createBadgeForUser(response, userId, authorityId, badgeTypeId);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -116,13 +116,17 @@ public class BadgesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addBadgeToUser(
-            Map<String, Object> entity
+            Map<String, Object> entity,
+            @Context HttpServletRequest request
     ) {
         try {
             return getBadgesMgr().addBadge(entity);
         } catch (SystemErrorException e) {
+            RestUtilities.printHeaders(request);
             logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(BadgesManager.makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_SERVER_ERROR, e.getMessage())).build();
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -139,11 +143,11 @@ public class BadgesResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 }

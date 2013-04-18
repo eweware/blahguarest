@@ -34,11 +34,11 @@ public class SystemResource {
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response sayBaaah() {
+    public Response sayBaaah(@Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse("No sheep here.\n");
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -63,9 +63,9 @@ public class SystemResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -90,9 +90,9 @@ public class SystemResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -124,7 +124,7 @@ public class SystemResource {
             BlahguaSession.setSecurity(on);
             return Response.ok("security " + (on ? "ON" : "OFF")).build();
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -148,7 +148,7 @@ public class SystemResource {
             BlahguaSession.ensureAdmin(request);
             return Response.ok(BlahguaSession.getSessionInfo(request)).build();
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -165,7 +165,7 @@ public class SystemResource {
     @POST
     @Path("/refresh/{pass}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshCaches(@PathParam("pass") String pass) { // TODO dangerous (remove as soon as feasible)
+    public Response refreshCaches(@PathParam("pass") String pass, @Context HttpServletRequest request) { // TODO dangerous (remove as soon as feasible)
         try {
             if (!pass.equals("kwfew303bf3sss")) {
                 Response.status(Response.Status.FORBIDDEN).build();
@@ -173,7 +173,7 @@ public class SystemResource {
             BlahManager.getInstance().refreshCaches();
             return RestUtilities.make202AcceptedResponse();
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 }

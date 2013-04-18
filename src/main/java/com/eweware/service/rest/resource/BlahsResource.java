@@ -74,12 +74,12 @@ public class BlahsResource {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -119,12 +119,12 @@ public class BlahsResource {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -164,13 +164,13 @@ public class BlahsResource {
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -200,11 +200,11 @@ public class BlahsResource {
             final UserBlahInfoPayload info = getBlahManager().getPollVoteInfo(LocaleId.en_us, blahId, userId);
             return RestUtilities.make200OkResponse(info);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -256,11 +256,13 @@ public class BlahsResource {
             getSystemManager().setResponseTime(PREDICTION_VOTE_OPERATION, (System.currentTimeMillis() - start));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -288,9 +290,11 @@ public class BlahsResource {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             return RestUtilities.make200OkResponse(getBlahManager().getPredictionVoteInfo(userId, blahId));
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -337,11 +341,11 @@ public class BlahsResource {
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -359,16 +363,16 @@ public class BlahsResource {
     @GET
     @Path("/types")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBlahTypes() {
+    public Response getBlahTypes(@Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
             final Response response = RestUtilities.make200OkResponse(getBlahManager().getBlahTypes(LocaleId.en_us));
             getSystemManager().setResponseTime(GET_BLAH_TYPES_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } finally {
 
         }
@@ -412,9 +416,9 @@ public class BlahsResource {
         } catch (InvalidRequestException e1) {
             return RestUtilities.make400InvalidRequestResponse(e1);
         } catch (SystemErrorException e1) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+            return RestUtilities.make500AndLogSystemErrorResponse(req, e1);
         } catch (Exception e1) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e1);
+            return RestUtilities.make500AndLogSystemErrorResponse(req, e1);
         }
     }
 
@@ -445,11 +449,11 @@ public class BlahsResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(req, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(req, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(req, e);
         }
     }
 

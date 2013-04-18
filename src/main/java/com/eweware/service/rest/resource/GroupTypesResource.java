@@ -45,13 +45,14 @@ public class GroupTypesResource {
     public Response getGroupTypes(
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count,
-            @QueryParam("sort") String sortFieldName) {
+            @QueryParam("sort") String sortFieldName,
+            @Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getGroupTypes(LocaleId.en_us, start, count, sortFieldName));
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -71,7 +72,8 @@ public class GroupTypesResource {
     @Path("/{groupTypeId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroupTypeById(
-            @PathParam("groupTypeId") String groupTypeId) {
+            @PathParam("groupTypeId") String groupTypeId,
+            @Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getGroupTypeById(LocaleId.en_us, groupTypeId));
         } catch (InvalidRequestException e) {
@@ -79,9 +81,9 @@ public class GroupTypesResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 

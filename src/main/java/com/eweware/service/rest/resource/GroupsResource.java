@@ -2,7 +2,6 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.GroupPayload;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
@@ -12,9 +11,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-import java.util.Enumeration;
 
 /**
  * <p>Group-specific API methods.</p>
@@ -46,18 +42,9 @@ public class GroupsResource {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getViewerCount(groupId));
         } catch (SystemErrorException e) {
-
-            final Enumeration headers = request.getHeaderNames();
-            while (headers.hasMoreElements()) {
-                String name = (String) headers.nextElement();
-                final String value = request.getHeader(name);
-                if (value != null) {
-                    System.out.println(name + "=" + value);
-                }
-            }
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -79,13 +66,14 @@ public class GroupsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFeaturedGroups(
             @QueryParam("start") Integer start,
-            @QueryParam("count") Integer count) {
+            @QueryParam("count") Integer count,
+            @Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getOpenGroups(LocaleId.en_us, start, count));
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -126,11 +114,11 @@ public class GroupsResource {
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(e);
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -148,7 +136,7 @@ public class GroupsResource {
     @GET
     @Path("/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGroupById(@PathParam("groupId") String groupId) {
+    public Response getGroupById(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getGroupById(LocaleId.en_us, groupId));
         } catch (InvalidRequestException e) {
@@ -156,9 +144,9 @@ public class GroupsResource {
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 

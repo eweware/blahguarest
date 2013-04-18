@@ -49,11 +49,11 @@ public class SearchResource {
             BlahManager blahMgr = BlahManager.getInstance();
             return RestUtilities.make200OkResponse(blahMgr.search(LocaleId.en_us, fieldName, query, subset, count));
 		} catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-			return RestUtilities.make500AndLogSystemErrorResponse(e);
+			return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
@@ -73,7 +73,7 @@ public class SearchResource {
             UserManager userManager = UserManager.getInstance();
             return RestUtilities.make200OkResponse(userManager.searchUserIndex(LocaleId.en_us, fieldName, query));
         } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(e);
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(e);
         } catch (Exception e) {
