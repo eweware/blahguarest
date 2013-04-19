@@ -26,7 +26,7 @@
     <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
     init-method="start" destroy-method="shutdown">
 
-        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.hostname}" />
+        <constructor-arg  type="java.lang.String" value="${blag.store.mongo.hostnames}" />
         <constructor-arg  type="java.lang.String" value="${blag.dev.mongo.hostname}" />
         <constructor-arg  type="java.lang.String" value="${blag.store.mongo.port}" />
         <!--<constructor-arg  type="java.lang.String" value="${blag.store.mongo.mediaDBName}" />-->

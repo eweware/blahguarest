@@ -117,7 +117,10 @@ public final class BlahguaSession {
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
         final HttpSession session = request.getSession(); // don't create a session
-        return (session != null) && ((SessionState) session.getAttribute(AUTHENTICATION_STATE_ATTRIBUTE) == SessionState.AUTHENTICATED);
+        final Object userId = session.getAttribute(USER_ID_ATTRIBUTE);
+        final Object username = session.getAttribute(USERNAME_ATTRIBUTE);
+        final SessionState state = (SessionState) session.getAttribute(AUTHENTICATION_STATE_ATTRIBUTE);
+        return (session != null) && (state == SessionState.AUTHENTICATED);
     }
 
     /**

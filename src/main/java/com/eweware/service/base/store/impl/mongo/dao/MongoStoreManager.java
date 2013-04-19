@@ -8,8 +8,8 @@ import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.mgr.SystemManager;
 import org.bson.types.ObjectId;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.ws.WebServiceException;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -27,6 +27,7 @@ public final class MongoStoreManager implements StoreManager {
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
     private String devMongoDbHostname;
+    private List<String> hostnames;
 
     // Whether we are using a replica or not
     private boolean usingReplica;
@@ -40,7 +41,6 @@ public final class MongoStoreManager implements StoreManager {
 
     private ManagerState status = ManagerState.UNINITIALIZED;
     private int mongoDbPort;
-    private String mongoDbHostname;
     private Integer connectionsPerHost = 10; // default
     private Mongo mongo;
     private Map<String, DB> dbNameToDbMap;
@@ -88,10 +88,9 @@ public final class MongoStoreManager implements StoreManager {
      */
     public MongoStoreManager(
 
-            String mongoDbHostname,
+            String hostnames,
             String devMongoDbHostname,
             String mongoDbPort,
-
             String userDbName,
             String blahDbName,
             String trackerDbName,
@@ -99,7 +98,7 @@ public final class MongoStoreManager implements StoreManager {
             Integer connectionsPerHost
     ) {
         this.devMongoDbHostname = devMongoDbHostname;
-        doInitialize(mongoDbHostname, mongoDbPort, userDbName, blahDbName, trackerDbName,
+        doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, trackerDbName,
                 connectionsPerHost);
     }
 
@@ -297,16 +296,20 @@ public final class MongoStoreManager implements StoreManager {
      * Initializes the store manager. This method is public to allow
      * test units to initialize it outside the context of the web server.
      *
-     * @param mongoDbHostname
+     * @param hostnames
      * @param port
      * @param userDbName
      * @param blahDbName
      * @param trackerDbName
      * @param connectionsPerHost
      */
-    public void doInitialize(String mongoDbHostname, String port, String userDbName, String blahDbName, String trackerDbName,
+    public void doInitialize(String hostnames, String port, String userDbName, String blahDbName, String trackerDbName,
                              Integer connectionsPerHost) {
-        this.mongoDbHostname = mongoDbHostname;
+
+        if (hostnames == null || hostnames.length() == 0) {
+            throw new WebServiceException("Failed to start store manager: missing hostnames");
+        }
+        this.hostnames = Arrays.asList(hostnames.split("\\|"));
         this.mongoDbPort = Integer.parseInt(port);
         this.connectionsPerHost = connectionsPerHost;
 
@@ -338,23 +341,34 @@ public final class MongoStoreManager implements StoreManager {
 
     public void start() {
         try {
+            boolean devMode = false;
             try {
-                if (SystemManager.getInstance().isDevMode() && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-                    this.mongoDbHostname = devMongoDbHostname;  // same default 21191 port
+                devMode = SystemManager.getInstance().isDevMode();
+                if (devMode && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
+                    this.hostnames = new ArrayList<String>();
+                    this.hostnames.add(devMongoDbHostname);  // same default 21191 port
                 }
-                logger.info("MongoDB hostname '" + this.mongoDbHostname + "' port '" + this.mongoDbPort + "'");
-            } catch (SystemErrorException e) {
+                logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
+            } catch (Exception e) {
                 // if sysmgr not initialized, no need for this.
+                throw new WebServiceException("Failed to find System Manager?", e);
             }
             final MongoClientOptions.Builder builder = new MongoClientOptions.Builder().connectionsPerHost(connectionsPerHost);
-            if (getUsingReplica()) {
+            List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
+            for (String hostname : hostnames) {
+                serverAddresses.add(new ServerAddress(hostname, mongoDbPort));
+            }
+            if (devMode || serverAddresses.size() == 1) {
+                logger.info("*** Connecting to standalone hostname " + hostnames + " port=" + mongoDbPort + " ***");
+            } else if (usingReplica) {
                 builder
                         .readPreference(ReadPreference.primaryPreferred()) // tries to read from primary
                         .writeConcern(WriteConcern.MAJORITY);      // Writes to secondaries before returning
-                logger.info("*** Connecting to replica set ***");
+                logger.info("*** Connecting to hostname(s) in replica set: " + hostnames + " port=" + mongoDbPort + " ***");
+            } else {
+                throw new WebServiceException("Neither using replica not in standalone");
             }
-            final ServerAddress serverAddress = new ServerAddress(mongoDbHostname, mongoDbPort);
-            this.mongo = new MongoClient(serverAddress, builder.build());
+            this.mongo = new MongoClient(serverAddresses, builder.build());
 
 
             // Add a hook to keep it independent of Spring
@@ -419,7 +433,7 @@ public final class MongoStoreManager implements StoreManager {
 
             this.status = ManagerState.STARTED;
 
-            System.out.println("*** MongoStoreManager started *** (connected to MongoDB at " + mongoDbHostname + ":" + mongoDbPort +
+            System.out.println("*** MongoStoreManager started *** (connected to MongoDB using hostnames " + hostnames + ":" + mongoDbPort +
                     " for dbs: " + dbNameToDbMap + ") # pooled connections=" + connectionsPerHost);
 
         } catch (Exception e) {
