@@ -75,9 +75,9 @@ public class SearchResource {
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 }

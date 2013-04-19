@@ -52,7 +52,7 @@ public class StatisticsResource {
             SystemManager.getInstance().setResponseTime(GET_GROUP_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {

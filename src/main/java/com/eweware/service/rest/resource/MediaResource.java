@@ -6,10 +6,12 @@ import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.mgr.MediaManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 /**
@@ -29,15 +31,16 @@ public class MediaResource {
 	@GET
 	@Path("/{filename}")
 	@Produces("image/*,audio/*")
-	public Response streamFromMedia(@PathParam("filename") String filename) {
+	public Response streamFromMedia(@PathParam("filename") String filename,
+                                    @Context HttpServletRequest request) {
 		try {
 			return MediaManager.getInstance().getImage(LocaleId.en_us, filename);
 		} catch (ResourceNotFoundException e) {
-			return RestUtilities.make404ResourceNotFoundResponse(e);
+			return RestUtilities.make404ResourceNotFoundResponse(request, e);
 		} catch (SystemErrorException e) {
-			return RestUtilities.make500AndLogSystemErrorResponse(e);
+			return RestUtilities.make500AndLogSystemErrorResponse(request, e);
 		} catch (Exception e) {
-			return RestUtilities.make500AndLogSystemErrorResponse(e);
+			return RestUtilities.make500AndLogSystemErrorResponse(request, e);
 		}
 	}
 }

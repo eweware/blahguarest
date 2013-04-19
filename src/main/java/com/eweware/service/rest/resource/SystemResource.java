@@ -61,7 +61,7 @@ public class SystemResource {
             BlahguaSession.ensureAdmin(request);
             return RestUtilities.make200OkResponse(SystemManager.getInstance().processMetrics(false));
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class SystemResource {
             SystemManager.getInstance().processMetrics(true);
             return RestUtilities.make202AcceptedResponse();
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

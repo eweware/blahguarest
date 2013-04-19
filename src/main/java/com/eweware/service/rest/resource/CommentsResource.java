@@ -67,9 +67,9 @@ public class CommentsResource {
             getSystemManager().setResponseTime(GET_COMMENT_AUTHOR_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -110,11 +110,11 @@ public class CommentsResource {
             getSystemManager().setResponseTime(CREATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -158,11 +158,11 @@ public class CommentsResource {
             getSystemManager().setResponseTime(UPDATE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -211,9 +211,9 @@ public class CommentsResource {
             getSystemManager().setResponseTime(GET_COMMENT_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e1) {
-            return RestUtilities.make400InvalidRequestResponse(e1);
+            return RestUtilities.make400InvalidRequestResponse(request, e1);
         } catch (ResourceNotFoundException e1) {
-            return RestUtilities.make404ResourceNotFoundResponse(e1);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e1);
         } catch (SystemErrorException e1) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e1);
         } catch (Exception e1) {
@@ -258,9 +258,9 @@ public class CommentsResource {
             getSystemManager().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

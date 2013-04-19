@@ -55,30 +55,23 @@ public class UsersResource {
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users/check/username</div>
      *
-     * @param entity Expects a JSON entity with the username in a
-     *               parameter named 'U'. The username be at least three
-     *               and less than 64 characters long.
-     * @return If successful (username is available), returns an http code of 204 (OK NO CONTENT).
-     *         If the request is invalid, it returns 400 (BAD REQUEST).
-     *         If the username already exists, it returns 409 (CONFLICT).
+     * @return If successful (username is available), returns an http code of 200
+     *         with a JSON entity with a field named "ok" whose value is a boolean: true
+     *         if the username exists; else false.
      *         On error conditions, a JSON object is returned with details.
      * @see UserDAOConstants
      */
     @POST
-    @Path("/check/username")
+    @Path("/check/username/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkUsername(
-            Map<String, String> entity,
+            @PathParam("username") String username,
             @Context HttpServletRequest request) {
         try {
-            final String username = entity.get("U");
-            getUserManager().ensureUserExistsByUsername(username);
-            return RestUtilities.make204OKNoContentResponse();
-        } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
-        } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            final Map<String, Object> entity = new HashMap<String, Object>(1);
+            entity.put("ok", getUserManager().usernameExistsP(username));
+            return RestUtilities.make200OkResponse(entity);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -151,11 +144,11 @@ public class UsersResource {
             getSystemManager().setResponseTime(LOGIN_USER_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -215,9 +208,9 @@ public class UsersResource {
             getSystemManager().setResponseTime(CREATE_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -259,11 +252,11 @@ public class UsersResource {
             getSystemManager().setResponseTime(CREATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -307,9 +300,9 @@ public class UsersResource {
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -365,11 +358,11 @@ public class UsersResource {
             getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -404,9 +397,9 @@ public class UsersResource {
             final String userId = entity.get("I");
             return RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -474,9 +467,9 @@ public class UsersResource {
             getSystemManager().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -519,11 +512,11 @@ public class UsersResource {
             getSystemManager().setResponseTime(UPDATE_USERNAME_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -567,7 +560,7 @@ public class UsersResource {
             getSystemManager().setResponseTime(UPDATE_PASSWORD_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -617,9 +610,9 @@ public class UsersResource {
             getSystemManager().setResponseTime(RECOVER_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -725,11 +718,11 @@ public class UsersResource {
             getSystemManager().setResponseTime(GET_USER_INFO_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e1) {
-            return RestUtilities.make400InvalidRequestResponse(e1);
+            return RestUtilities.make400InvalidRequestResponse(request, e1);
         } catch (InvalidAuthorizedStateException e1) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e1);
         } catch (ResourceNotFoundException e1) {
-            return RestUtilities.make404ResourceNotFoundResponse(e1);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e1);
         } catch (SystemErrorException e1) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e1);
         } catch (Exception e1) {
@@ -764,7 +757,7 @@ public class UsersResource {
             getSystemManager().setResponseTime(GET_USER_INFO_FOR_BLAH_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {

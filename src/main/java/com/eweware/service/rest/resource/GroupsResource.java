@@ -112,7 +112,7 @@ public class GroupsResource {
             BlahguaSession.ensureAuthenticated(request);
             return RestUtilities.make200OkResponse(getGroupManager().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -140,9 +140,9 @@ public class GroupsResource {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getGroupById(LocaleId.en_us, groupId));
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

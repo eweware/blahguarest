@@ -174,7 +174,7 @@ public class UserManager implements ManagerInterface {
             username = Login.ensureUsernameString(username);
             password = Login.ensurePasswordString(password);
 
-            ensureUserExistsByUsername(username); // this is just a prelim check: final is at DB monitor level
+            ensureUsernameNotExists(username); // this is just a prelim check: final is at DB monitor level
 
             userDAO = getStoreManager().createUser();
             userDAO.initToDefaultValues(localeId);
@@ -271,15 +271,28 @@ public class UserManager implements ManagerInterface {
      * @throws StateConflictException  Thrown if the username is already taken
      * @throws InvalidRequestException Thrown if the specified username is either null or an empty string
      */
-    public void ensureUserExistsByUsername(String username) throws SystemErrorException, StateConflictException, InvalidRequestException {
+    public void ensureUsernameNotExists(String username) throws SystemErrorException, StateConflictException, InvalidRequestException {
         if (username == null || username.length() == 0) {
             throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
         }
-        final UserAccountDAO dao = getStoreManager().createUserAccount();
-        dao.setCanonicalUsername(Login.makeCanonicalUsername(username));
-        if (dao._exists()) {
+        if (usernameExistsP(username)) {
             throw new StateConflictException("username already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
         }
+    }
+
+    /**
+     * <p>Returns true if the username already exists.</p>
+     * @param username The username
+     * @return  True if it exists
+     * @throws SystemErrorException
+     */
+    public boolean usernameExistsP(String username) throws SystemErrorException {
+        if (username == null) {
+            return false;
+        }
+        final UserAccountDAO dao = getStoreManager().createUserAccount();
+        dao.setCanonicalUsername(Login.makeCanonicalUsername(username));
+        return dao._exists();
     }
 
     /**
@@ -601,10 +614,11 @@ public class UserManager implements ManagerInterface {
      *
      * @param localeId
      * @param request
-     * @param username @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @param newUsername
+     * @throws main.java.com.eweware.service.base.error.SystemErrorException
      * @throws InvalidRequestException
      */
-    public void updateUsername(LocaleId localeId, HttpServletRequest request, String username) throws InvalidAuthorizedStateException, InvalidRequestException,
+    public void updateUsername(LocaleId localeId, HttpServletRequest request, String newUsername) throws InvalidAuthorizedStateException, InvalidRequestException,
             StateConflictException, SystemErrorException, ResourceNotFoundException {
 
         if (!BlahguaSession.isAuthenticated(request)) {
@@ -612,20 +626,20 @@ public class UserManager implements ManagerInterface {
         }
         final String userId = BlahguaSession.getUserId(request);
 
-        username = Login.ensureUsernameString(username);
+        newUsername = Login.ensureUsernameString(newUsername);
 
-        ensureUserExistsByUsername(username);
+        ensureUsernameNotExists(newUsername);
 
         // Must be changed in the accounts and username areas
         final UserAccountDAO userAccountDAO = getStoreManager().createUserAccount(userId);
-        userAccountDAO.setCanonicalUsername(Login.makeCanonicalUsername(username));
+        userAccountDAO.setCanonicalUsername(Login.makeCanonicalUsername(newUsername));
         userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         final UserDAO userDAO = getStoreManager().createUser(userId);
-        userDAO.setUsername(username);
+        userDAO.setUsername(newUsername);
         userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-        BlahguaSession.setUsername(request, username);
+        BlahguaSession.setUsername(request, newUsername);
 
         maybeUpdateUserInIndex(userDAO);
     }

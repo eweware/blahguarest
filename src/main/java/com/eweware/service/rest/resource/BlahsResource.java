@@ -71,9 +71,9 @@ public class BlahsResource {
             getSystemManager().setResponseTime(GET_BLAH_AUTHOR_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -114,11 +114,11 @@ public class BlahsResource {
             getSystemManager().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -160,13 +160,13 @@ public class BlahsResource {
             getSystemManager().setResponseTime(POLL_VOTE_OPERATION, (System.currentTimeMillis() - start));
             return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -258,7 +258,7 @@ public class BlahsResource {
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -335,11 +335,11 @@ public class BlahsResource {
             getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (StateConflictException e) {
-            return RestUtilities.make409StateConflictResponse(e);
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -412,9 +412,9 @@ public class BlahsResource {
             getSystemManager().setResponseTime(GET_BLAH_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (ResourceNotFoundException e1) {
-            return RestUtilities.make404ResourceNotFoundResponse(e1);
+            return RestUtilities.make404ResourceNotFoundResponse(req, e1);
         } catch (InvalidRequestException e1) {
-            return RestUtilities.make400InvalidRequestResponse(e1);
+            return RestUtilities.make400InvalidRequestResponse(req, e1);
         } catch (SystemErrorException e1) {
             return RestUtilities.make500AndLogSystemErrorResponse(req, e1);
         } catch (Exception e1) {
@@ -447,7 +447,7 @@ public class BlahsResource {
             getSystemManager().setResponseTime(GET_BLAHS_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (InvalidRequestException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(req, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(req, e);
         } catch (SystemErrorException e) {

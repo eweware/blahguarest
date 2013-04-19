@@ -96,7 +96,7 @@ public class BadgesResource {
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -122,9 +122,8 @@ public class BadgesResource {
         try {
             return getBadgesMgr().addBadge(entity);
         } catch (SystemErrorException e) {
-            RestUtilities.printHeaders(request);
-            logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(BadgesManager.makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_SERVER_ERROR, e.getMessage())).build();
+            logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity + "\nHeaders: " + RestUtilities.getHeaders(request), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(BadgesManager.makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_SERVER_ERROR, "System Error")).build();
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
@@ -141,7 +140,7 @@ public class BadgesResource {
             final BadgePayload entity = getBadgesMgr().getBadgeById(badgeId);
             return RestUtilities.make200OkResponse(entity);
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {

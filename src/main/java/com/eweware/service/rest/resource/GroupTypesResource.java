@@ -2,18 +2,14 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.GroupTypePayload;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 /**
  * <p>Group type-specific API methods.</p>
@@ -77,9 +73,9 @@ public class GroupTypesResource {
         try {
             return RestUtilities.make200OkResponse(getGroupManager().getGroupTypeById(LocaleId.en_us, groupTypeId));
         } catch (InvalidRequestException e) {
-            return RestUtilities.make400InvalidRequestResponse(e);
+            return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(e);
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

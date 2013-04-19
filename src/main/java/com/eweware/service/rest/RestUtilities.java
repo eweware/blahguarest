@@ -5,11 +5,7 @@ import main.java.com.eweware.service.base.payload.ErrorResponsePayload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.URI;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,74 +18,33 @@ public final class RestUtilities {
 
     private static final Logger logger = Logger.getLogger("RestUtilities");
 
-    public static final Response make500AndLogSystemErrorResponse(HttpServletRequest request, BaseException e) {
-        printHeaders(request);
-        logger.log(Level.SEVERE, "System error", e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
-    }
-
-    public static void printHeaders(HttpServletRequest request) {
-        final Enumeration headers = request.getHeaderNames();
-        final StringBuilder b = new StringBuilder();
-        while (headers.hasMoreElements()) {
-            String name = (String) headers.nextElement();
-            final String value = request.getHeader(name);
-            if (value != null) {
-                b.append(name);
-                b.append("=");
-                b.append(value);
-                b.append("\n");
-            }
-        }
-        logger.warning(b.toString());
-    }
-
-    public static final Response make500AndLogSystemErrorResponse(BaseException e) {
-        String msg = e.getMessage();
-        if (e.getCause() != null && e.getCause().getMessage() != null) {
-            msg += ": "+e.getCause().getMessage();
-        }
-        logger.log(Level.SEVERE, "System error", e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
-    }
+    private static final String SYSTEM_ERROR = "System error";
+    private static final String APPLICATION_ERROR = "Application error";
+    private static final String AUTHORIZATION_ERROR = "Authorization error";
 
     public static final Response make500AndLogSystemErrorResponse(HttpServletRequest request, Throwable e) {
-        printHeaders(request);
-        logger.log(Level.SEVERE, "System error", e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, e.getMessage())).build();
+        logger.log(Level.SEVERE, "Internal System Error. Headers: " + getHeaders(request), e);
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, SYSTEM_ERROR)).build();
     }
 
-    public static final Response make500AndLogSystemErrorResponse(Throwable e) {
-        String msg = e.getMessage();
-        logger.log(Level.SEVERE, "System error", e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, msg)).build();
+    public static Response make404ResourceNotFoundResponse(HttpServletRequest request, ResourceNotFoundException e) {
+        logger.log(Level.WARNING, "Resource Not Found. Headers: " + getHeaders(request), e);
+        return Response.status(Response.Status.NOT_FOUND).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), APPLICATION_ERROR, e.getEntity())).build();
     }
 
-    public static Response make404ResourceNotFoundResponse(ResourceNotFoundException e) {
-        String msg = e.getMessage();
-        logger.log(Level.WARNING, "Resource Not Found: " + e.getMessage());
-        return Response.status(Response.Status.NOT_FOUND).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), msg, e.getEntity())).build();
+    public static Response make409StateConflictResponse(HttpServletRequest request, StateConflictException e) {
+        logger.log(Level.WARNING, "State Conflict. Headers: " + getHeaders(request), e);
+        return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), APPLICATION_ERROR, e.getEntity())).build();
     }
 
-    public static Response make409StateConflictResponse(String msg, int errorCode) {
-        logger.log(Level.WARNING, "State Conflict");
-        return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(errorCode, msg, null)).build();
-    }
-
-    public static Response make409StateConflictResponse(StateConflictException e) {
-        logger.log(Level.WARNING, "State Conflict: " + e.getMessage());
-        return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
-    }
-
-    public static Response make400InvalidRequestResponse(InvalidRequestException e) {
-        logger.log(Level.WARNING, "Invalid Request: " + e.getMessage());
-        return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
+    public static Response make400InvalidRequestResponse(HttpServletRequest request, InvalidRequestException e) {
+        logger.log(Level.WARNING, "Invalid Request. Headers: " + getHeaders(request), e);
+        return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), APPLICATION_ERROR, e.getEntity())).build();
     }
 
     public static Response make401UnauthorizedRequestResponse(HttpServletRequest request, InvalidAuthorizedStateException e) {
-        printHeaders(request);
-        logger.log(Level.WARNING, "Unauthorized: " + e.getMessage());
-        return Response.status(Response.Status.UNAUTHORIZED).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), e.getMessage(), e.getEntity())).build();
+        logger.log(Level.WARNING, "Unauthorized Access. Headers: " + getHeaders(request), e);
+        return Response.status(Response.Status.UNAUTHORIZED).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), AUTHORIZATION_ERROR, e.getEntity())).build();
     }
 
     public static final Response make201CreatedResourceResponse(Object entity, URI location) {
@@ -106,5 +61,21 @@ public final class RestUtilities {
 
     public static Response make204OKNoContentResponse() {
         return Response.status(Response.Status.NO_CONTENT).header("Cache-Control", "no-cache").build();
+    }
+
+    public static String getHeaders(HttpServletRequest request) {
+        final Enumeration headers = request.getHeaderNames();
+        final StringBuilder b = new StringBuilder();
+        while (headers.hasMoreElements()) {
+            String name = (String) headers.nextElement();
+            final String value = request.getHeader(name);
+            if (value != null) {
+                b.append(name);
+                b.append("=");
+                b.append(value);
+                b.append("\n");
+            }
+        }
+        return b.toString();
     }
 }

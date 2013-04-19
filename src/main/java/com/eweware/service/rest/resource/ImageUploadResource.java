@@ -166,13 +166,12 @@ public class ImageUploadResource {
             }
             objectType = ObjectType.valueOf(objType);
         } catch (IllegalArgumentException e) {
-            RestUtilities.printHeaders(request);
+            logger.warning("error=missing or invalid objectType. Headers: " + RestUtilities.getHeaders(request));
             return Response.status(500).entity("error=missing or invalid objectType").build();
         } catch (InvalidAuthorizedStateException e) {
             return Response.status(401).entity("error=unauthorized").build();
         } catch (Exception e) {
-            RestUtilities.printHeaders(request);
-            logger.log(Level.SEVERE, "Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'", e);
+            logger.log(Level.SEVERE, "Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'\nHeaders: " + RestUtilities.getHeaders(request), e);
             return Response.status(500).entity("error=" + e.getMessage()).build();
         }
 
@@ -180,8 +179,7 @@ public class ImageUploadResource {
         try {
             s3 = AWSUtilities.getAmazonS3();
         } catch (Exception e) {
-            RestUtilities.printHeaders(request);
-            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'", e);
+            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'\nHeaders: " + RestUtilities.getHeaders(request), e);
             return Response.status(400).entity("error=credentials error" + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
         }
 
@@ -189,8 +187,7 @@ public class ImageUploadResource {
         try {
             msg = processFile(in, metadata, s3, objectType, objectId);
         } catch (Exception e) {
-            RestUtilities.printHeaders(request);
-            logger.log(Level.SEVERE, "Failed to process file", e);
+            logger.log(Level.SEVERE, "Failed to process file. Headers: " + RestUtilities.getHeaders(request), e);
             return Response.status(400).entity("error=Failed to process file: " + e.getMessage()).build();
         }
         return (msg == null) ? Response.status(400).build() :
