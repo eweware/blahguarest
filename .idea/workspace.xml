@@ -10,9 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -168,7 +165,7 @@
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Entry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357330149291" ignored="false" />
     <file path="/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328258608" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328273494" ignored="false" />
-    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366331693268" ignored="false" />
+    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366339554215" ignored="false" />
     <file path="/CommonUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365286598709" ignored="false" />
     <file path="/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326722605" ignored="false" />
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326595135" ignored="false" />
@@ -197,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366317810299" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366318494700" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366332740678" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366339405807" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365477522765" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -818,7 +815,16 @@
       <file leaf-file-name="applicationConfiguration.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="33" selection-start="4652" selection-end="4656" vertical-scroll-proportion="0.0">
+            <state line="29" column="82" selection-start="1638" selection-end="1661" vertical-scroll-proportion="-11.307693">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="36" column="35" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.4945055">
               <folding />
             </state>
           </provider>
@@ -827,7 +833,7 @@
       <file leaf-file-name="MongoStoreManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="359" column="38" selection-start="11081" selection-end="11081" vertical-scroll-proportion="-15.653846">
+            <state line="343" column="27" selection-start="10077" selection-end="10084" vertical-scroll-proportion="-6.423077">
               <folding />
             </state>
           </provider>
@@ -853,10 +859,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlahguaSession.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BlahguaSession.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="0" selection-start="4203" selection-end="4203" vertical-scroll-proportion="0.33296582">
+            <state line="118" column="0" selection-start="4203" selection-end="4203" vertical-scroll-proportion="-11.615385">
               <folding />
             </state>
           </provider>
@@ -922,12 +928,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/UserBlahInfoPayload.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" />
-        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSessionListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
       </list>
     </option>
   </component>
@@ -2468,7 +2474,15 @@
       <created>1366324760080</created>
       <updated>1366324760080</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="INF-54">
+      <created>1366339275575</created>
+      <updated>1366339275576</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Point at db.blahgua.com standalone for now">
+      <created>1366339408377</created>
+      <updated>1366339408378</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2561,7 +2575,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="WRS-268" />
+    <option name="LAST_COMMIT_MESSAGE" value="Point at db.blahgua.com standalone for now" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2575,8 +2589,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Slew of changes + new docs" />
-    <MESSAGE value="Added WRS-214" />
     <MESSAGE value="MongoDB driver patch added for memory leak." />
     <MESSAGE value="New validation/conversion functionality for schema. Not quite there, but much more powerful." />
     <MESSAGE value="New docs" />
@@ -2600,6 +2612,8 @@
     <MESSAGE value="Printing request headers on viewCount @GET errors" />
     <MESSAGE value="Log header info when there's a system error or an unauthorized user error." />
     <MESSAGE value="WRS-268" />
+    <MESSAGE value="INF-54" />
+    <MESSAGE value="Point at db.blahgua.com standalone for now" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2623,13 +2637,6 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentPayload.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="19" selection-start="504" selection-end="504" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="34" selection-start="1358" selection-end="1358" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -2671,13 +2678,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="359" column="38" selection-start="11081" selection-end="11081" vertical-scroll-proportion="-15.653846">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/Login.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="52" column="0" selection-start="2004" selection-end="2004" vertical-scroll-proportion="0.0">
@@ -2715,16 +2715,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="33" selection-start="4652" selection-end="4656" vertical-scroll-proportion="0.0">
+        <state line="118" column="0" selection-start="4203" selection-end="4203" vertical-scroll-proportion="-11.615385">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="0" selection-start="4203" selection-end="4203" vertical-scroll-proportion="0.33296582">
+        <state line="343" column="27" selection-start="10077" selection-end="10084" vertical-scroll-proportion="-6.423077">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="82" selection-start="1638" selection-end="1661" vertical-scroll-proportion="-11.307693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="35" selection-start="1359" selection-end="1359" vertical-scroll-proportion="0.4945055">
           <folding />
         </state>
       </provider>
