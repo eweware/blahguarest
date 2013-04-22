@@ -366,7 +366,7 @@ public final class MongoStoreManager implements StoreManager {
                         .writeConcern(WriteConcern.MAJORITY);      // Writes to secondaries before returning
                 logger.info("*** Connecting to hostname(s) in replica set: " + hostnames + " port=" + mongoDbPort + " ***");
             } else {
-                throw new WebServiceException("Neither using replica not in standalone");
+                throw new WebServiceException("Neither using replica nor using standalone DB");
             }
             this.mongo = new MongoClient(serverAddresses, builder.build());
 
