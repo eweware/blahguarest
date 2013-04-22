@@ -7,10 +7,11 @@ import com.mongodb.DBObject;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.payload.BlahTypePayload;
 import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.demo.DemographicsObjectDAOConstants;
+import main.java.com.eweware.service.base.store.dao.DemographicsObjectDAOConstants;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 
 import javax.xml.ws.WebServiceException;

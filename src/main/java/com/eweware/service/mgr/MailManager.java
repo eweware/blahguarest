@@ -1,7 +1,9 @@
 package main.java.com.eweware.service.mgr;
 
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.*;

@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.demo;
+package main.java.com.eweware.service.base.store.dao;
 
 /**
  * @author rk@post.harvard.edu

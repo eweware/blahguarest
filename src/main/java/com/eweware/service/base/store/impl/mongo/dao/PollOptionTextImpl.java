@@ -57,8 +57,8 @@ public class PollOptionTextImpl extends BaseDAOImpl implements PollOptionTextDAO
         put(TEXT, text);
     }
 
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
+//    @Override
+//    public Map<String, Object> toMap() {
+//        return super.toMap();
+//    }
 }

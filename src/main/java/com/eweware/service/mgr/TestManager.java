@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.mgr;
 
+import main.java.com.eweware.service.base.mgr.ManagerInterface;
+
 /**
  * @author rk@post.harvard.edu
  *         Date: 7/10/12 Time: 3:53 PM

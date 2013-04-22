@@ -1,7 +1,7 @@
 package main.java.com.eweware.service.servlet;
 
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.UserManager;
 
 import javax.servlet.ServletException;

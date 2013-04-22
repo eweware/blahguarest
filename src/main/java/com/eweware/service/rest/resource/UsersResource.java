@@ -6,7 +6,7 @@ import main.java.com.eweware.service.base.payload.UserPayload;
 import main.java.com.eweware.service.base.payload.UserProfilePayload;
 import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
 import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;

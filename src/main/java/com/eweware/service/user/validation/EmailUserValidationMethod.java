@@ -6,7 +6,7 @@ import main.java.com.eweware.service.base.error.InvalidUserValidationMethodParam
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.payload.AuthorizedState;
 import main.java.com.eweware.service.mgr.MailManager;
-import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 
 import java.util.regex.Pattern;
 

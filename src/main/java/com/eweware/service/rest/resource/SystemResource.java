@@ -3,7 +3,7 @@ package main.java.com.eweware.service.rest.resource;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 

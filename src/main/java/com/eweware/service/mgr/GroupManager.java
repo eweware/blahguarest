@@ -1,8 +1,8 @@
 package main.java.com.eweware.service.mgr;
 
-import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.payload.AuthorizedState;
 import main.java.com.eweware.service.base.payload.GroupPayload;
@@ -14,8 +14,6 @@ import main.java.com.eweware.service.base.store.dao.GroupDAOConstants;
 import main.java.com.eweware.service.base.store.dao.GroupTypeDAO;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.user.validation.DefaultUserValidationMethod;
-import main.java.com.eweware.service.user.validation.UserValidationMethod;
 
 import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;

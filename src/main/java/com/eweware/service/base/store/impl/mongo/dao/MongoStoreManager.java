@@ -5,7 +5,7 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import org.bson.types.ObjectId;
 
 import javax.xml.ws.WebServiceException;
@@ -42,7 +42,7 @@ public final class MongoStoreManager implements StoreManager {
     private ManagerState status = ManagerState.UNINITIALIZED;
     private int mongoDbPort;
     private Integer connectionsPerHost = 10; // default
-    private Mongo mongo;
+    private MongoClient mongo;
     private Map<String, DB> dbNameToDbMap;
     private String sysDbName;
     private String userDbName;

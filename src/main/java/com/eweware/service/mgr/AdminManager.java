@@ -2,6 +2,7 @@ package main.java.com.eweware.service.mgr;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import main.java.com.eweware.service.base.AWSConstants;
 import main.java.com.eweware.service.base.AWSUtilities;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;

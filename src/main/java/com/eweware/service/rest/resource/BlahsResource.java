@@ -5,7 +5,7 @@ import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.payload.UserBlahInfoPayload;
 import main.java.com.eweware.service.base.payload.BlahPayload;
 import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.mgr.SystemManager;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.type.PredictionExpirationType;
 import main.java.com.eweware.service.mgr.type.PredictionVote;
 import main.java.com.eweware.service.rest.RestUtilities;

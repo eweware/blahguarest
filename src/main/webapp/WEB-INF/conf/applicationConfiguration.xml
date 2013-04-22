@@ -9,7 +9,7 @@
 
 	<import resource="applicationPropertiesLoader.xml" />
 
-    <bean id="systemManager" class="main.java.com.eweware.service.mgr.SystemManager"
+    <bean id="systemManager" class="main.java.com.eweware.service.base.mgr.SystemManager"
           init-method="start" destroy-method="shutdown">
         <constructor-arg value="${blag.crypto.on}" />
         <constructor-arg value="${blah.rest.service.endpoint}" />

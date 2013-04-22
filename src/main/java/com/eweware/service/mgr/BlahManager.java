@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.cache.Inbox;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.payload.*;
 import main.java.com.eweware.service.base.store.StoreManager;
