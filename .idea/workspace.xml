@@ -10,14 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/test/landing-pad.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/webapp/test/nibola.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/webapp/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/webapp/test/index.html" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/webapp/upload-image.html" afterPath="$PROJECT_DIR$/src/main/webapp/test/upload-image.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -201,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366700029057" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366688524548" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366749824489" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366750100352" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1082,7 +1075,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/foo/META-INF/maven/org.apache.httpcomponents/httpcore/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678249428" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/#ff#" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678249428" ignored="false" />
     <file path="/BlahTrackerPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366680158045" ignored="false" />
-    <file path="/BlahTrackerSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366680129523" ignored="false" />
+    <file path="/BlahTrackerSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366752240007" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/service/base/store/dao/UserAccountDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/service/base/store/dao/TrackerDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/service/base/store/dao/GroupDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
@@ -1283,17 +1276,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GroupManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="110" column="29" selection-start="4235" selection-end="4235" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#1694#1716#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="landing-pad.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/test/landing-pad.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -1339,10 +1321,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlahTrackerPayload.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BlahTrackerPayload.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="13" selection-start="471" selection-end="471" vertical-scroll-proportion="0.17564403">
+            <state line="18" column="30" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlahTrackerSchema.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="1" selection-start="276" selection-end="276" vertical-scroll-proportion="0.14051522">
               <folding />
             </state>
           </provider>
@@ -1403,7 +1394,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" />
@@ -1414,6 +1404,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/GroupManager.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/test/nibola.html" />
         <option value="$PROJECT_DIR$/src/main/webapp/test/landing-pad.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java" />
       </list>
     </option>
   </component>
@@ -2668,7 +2659,11 @@
       <created>1366741453847</created>
       <updated>1366741453847</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="https://eweware.atlassian.net/browse/WRS-271, https://eweware.atlassian.net/browse/WRS-272, https://eweware.atlassian.net/browse/WRS-274">
+      <created>1366750103653</created>
+      <updated>1366750103653</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2761,7 +2756,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Permissions null ptr error" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/WRS-271, https://eweware.atlassian.net/browse/WRS-272, https://eweware.atlassian.net/browse/WRS-274" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2775,7 +2770,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="wrs-192" />
     <MESSAGE value="pre field change checkin" />
     <MESSAGE value="field change checkin" />
     <MESSAGE value="Corrected typos in blah resource and api.js." />
@@ -2800,6 +2794,7 @@
     <MESSAGE value="WRS-270" />
     <MESSAGE value="Adding error to uploader" />
     <MESSAGE value="Permissions null ptr error" />
+    <MESSAGE value="https://eweware.atlassian.net/browse/WRS-271, https://eweware.atlassian.net/browse/WRS-272, https://eweware.atlassian.net/browse/WRS-274" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2813,13 +2808,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="865" column="54" selection-start="42554" selection-end="42554" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/AdminManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="12" selection-start="1486" selection-end="1488" vertical-scroll-proportion="-13.423077">
@@ -2924,7 +2912,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="471" selection-end="471" vertical-scroll-proportion="0.17564403">
+        <state line="18" column="30" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="1" selection-start="276" selection-end="276" vertical-scroll-proportion="0.14051522">
           <folding />
         </state>
       </provider>

@@ -14,7 +14,7 @@ public class BlahTrackerSchema extends BaseSchema implements BlahTrackerDAOConst
     }
 
     public static final BlahTrackerSchema getSchema(LocaleId localeId) {
-        BlahTrackerSchema schema = (BlahTrackerSchema) BlahTrackerSchema.getCachedSchema(UserSchema.class, localeId);
+        BlahTrackerSchema schema = (BlahTrackerSchema) BlahTrackerSchema.getCachedSchema(BlahTrackerSchema.class, localeId);
         if (schema != null) {
             return schema;
         }
