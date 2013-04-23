@@ -193,7 +193,7 @@ public final class BlahCache {
             if (value instanceof BasicDBObject) {
                 items.add(new InboxBlahPayload((BasicDBObject) value));
             } else {
-                throw new SystemErrorException("inbox value from cache should have been a BasicDBObject", value, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("inbox value from cache should have been a BasicDBObject, but it was a '" + value.getClass().getSimpleName() + "'", value, ErrorCodes.SERVER_SEVERE_ERROR);
             }
         }
 
