@@ -43,6 +43,11 @@ public class UsersResource {
     private static final String CREATE_USER_PROFILE_OPERATION = "createUserProfile";
     private static final String RECOVER_USER_OPERATION = "recoverUser";
     private static final String LOGIN_USER_OPERATION = "loginUser";
+    private static final String CHECK_USERNAME_OPERATION = "checkUsername";
+    private static final String CHECK_LOGIN_OPERATION = "checkLogin";
+    private static final String LOGOUT_USER_OPERATION = "logoutUser";
+    private static final String SET_ACCOUNT_INFO_OPERATION = "setAccountInfo";
+    private static final String UPDATE_ACCOUNT_OPERATION = "updateAccount";
 
     private UserManager userManager;
     private SystemManager systemManager;
@@ -69,9 +74,12 @@ public class UsersResource {
             @PathParam("username") String username,
             @Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             final Map<String, Object> entity = new HashMap<String, Object>(1);
             entity.put("ok", getUserManager().usernameExistsP(username));
-            return RestUtilities.make200OkResponse(entity);
+            final Response response = RestUtilities.make200OkResponse(entity);
+            getSystemManager().setResponseTime(CHECK_USERNAME_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -98,13 +106,16 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkLogin(@Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             final Map<String, String> entity = new HashMap<String, String>(1);
             if (BlahguaSession.isAuthenticated(request)) {
                 entity.put("loggedIn", "Y");
             } else {
                 entity.put("loggedIn", "N");
             }
-            return RestUtilities.make200OkResponse(entity);
+            final Response response = RestUtilities.make200OkResponse(entity);
+            getSystemManager().setResponseTime(CHECK_LOGIN_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
@@ -172,8 +183,11 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response logoutUser(@Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             BlahguaSession.destroySession(request);
-            return RestUtilities.make202AcceptedResponse();
+            final Response response = RestUtilities.make202AcceptedResponse();
+            getSystemManager().setResponseTime(LOGOUT_USER_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
@@ -294,9 +308,12 @@ public class UsersResource {
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             getUserManager().setUserAccountData(userId, entity.containsKey("E"), entity.get("E"), entity.containsKey("A"), entity.get("A"));
-            return RestUtilities.make204OKNoContentResponse();
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            getSystemManager().setResponseTime(SET_ACCOUNT_INFO_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (StateConflictException e) {
@@ -324,7 +341,14 @@ public class UsersResource {
     public Response updateAccount(
             Map<String, String> entity,
             @Context HttpServletRequest request) {
-        return setAccountInfo(entity, request);
+        final long s = System.currentTimeMillis();
+        try {
+            final Response response = setAccountInfo(entity, request);
+            getSystemManager().setResponseTime(UPDATE_ACCOUNT_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
     }
 
     /**
@@ -394,8 +418,11 @@ public class UsersResource {
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             final String userId = entity.get("I");
-            return RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
+            getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {

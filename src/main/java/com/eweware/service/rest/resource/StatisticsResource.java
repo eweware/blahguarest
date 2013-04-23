@@ -28,6 +28,15 @@ public class StatisticsResource {
     private static final String GET_BLAH_DEMOGRAPHICS_OPERATION = "getBlahDemographics";
     private static final String GET_GROUP_DEMOGRAPHICS_OPERATION = "getGroupDemographics";
 
+    private SystemManager systemManager;
+
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = getSystemManager();
+        }
+        return systemManager;
+    }
+
     /**
      * <p>Use this method to obtain demographics for a group.</p>
      * <p><i>User must be logged in to use this method.</i></p>
@@ -46,10 +55,10 @@ public class StatisticsResource {
             @PathParam("groupId") String groupId,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
             final long start = System.currentTimeMillis();
+            BlahguaSession.ensureAuthenticated(request);
             final Response response = RestUtilities.make200OkResponse(StatisticsManager.getInstance().getGroupDemographics(groupId));
-            SystemManager.getInstance().setResponseTime(GET_GROUP_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(GET_GROUP_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
@@ -79,10 +88,10 @@ public class StatisticsResource {
             @QueryParam("type") boolean type,
             @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request);
             final long start = System.currentTimeMillis();
+            BlahguaSession.ensureAuthenticated(request);
             final Response response = RestUtilities.make200OkResponse(StatisticsManager.getInstance().getBlahDemographics(type));
-            SystemManager.getInstance().setResponseTime(GET_BLAH_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(GET_BLAH_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
@@ -110,7 +119,7 @@ public class StatisticsResource {
             BlahguaSession.ensureAuthenticated(request);
             final long start = System.currentTimeMillis();
             final Response response = RestUtilities.make200OkResponse(StatisticsManager.getInstance().getCommentDemographics());
-            SystemManager.getInstance().setResponseTime(GET_COMMENT_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(GET_COMMENT_DEMOGRAPHICS_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);

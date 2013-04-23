@@ -2,6 +2,7 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
@@ -21,7 +22,12 @@ import javax.ws.rs.core.Response;
 @Path("/groups")
 public class GroupsResource {
 
+    private static final String GET_VIEWER_COUNT_OPERATION = "getViewerCount";
+    private static final String GET_OPEN_GROUPS_OPERATION = "getOpenGroups";
+    private static final String GET_GROUPS_OPERATION = "getGroups";
+    private static final String GET_GROUP_BY_ID_OPERATION = "getGroupById";
     private static GroupManager groupManager;
+    private static SystemManager systemManager;
 
 
     /**
@@ -38,9 +44,12 @@ public class GroupsResource {
     @GET
     @Path("/{groupId}/viewerCount")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewerAdded(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
+    public Response getViewerCount(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
         try {
-            return RestUtilities.make200OkResponse(getGroupManager().getViewerCount(groupId));
+            final long start = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getViewerCount(groupId));
+            getSystemManager().setResponseTime(GET_VIEWER_COUNT_OPERATION, (System.currentTimeMillis() - start));
+            return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -69,7 +78,10 @@ public class GroupsResource {
             @QueryParam("count") Integer count,
             @Context HttpServletRequest request) {
         try {
-            return RestUtilities.make200OkResponse(getGroupManager().getOpenGroups(LocaleId.en_us, start, count));
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getOpenGroups(LocaleId.en_us, start, count));
+            getSystemManager().setResponseTime(GET_OPEN_GROUPS_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -109,8 +121,11 @@ public class GroupsResource {
             @QueryParam("sort") String sortFieldName,
             @Context HttpServletRequest request) {
         try {
+            final long s = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request);
-            return RestUtilities.make200OkResponse(getGroupManager().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getGroups(LocaleId.en_us, groupTypeId, name, state, start, count, sortFieldName));
+            getSystemManager().setResponseTime(GET_GROUPS_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
@@ -138,7 +153,10 @@ public class GroupsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroupById(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
         try {
-            return RestUtilities.make200OkResponse(getGroupManager().getGroupById(LocaleId.en_us, groupId));
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getGroupById(LocaleId.en_us, groupId));
+            getSystemManager().setResponseTime(GET_GROUP_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
@@ -155,6 +173,13 @@ public class GroupsResource {
             groupManager = GroupManager.getInstance();
         }
         return groupManager;
+    }
+
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 }
 

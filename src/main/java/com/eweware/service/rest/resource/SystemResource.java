@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.logging.Logger;
 
 /**
  * <p>System-level API.</p>
@@ -25,6 +26,8 @@ import javax.ws.rs.core.Response;
 
 @Path("/sys")
 public class SystemResource {
+
+    private static final Logger logger = Logger.getLogger("SystemResource");
 
     /**
      * <p>Sheep stuff</p>
@@ -97,37 +100,37 @@ public class SystemResource {
         }
     }
 
-    /**
-     * <p>Use this method to turn security on/off.</p>
-     * <b>This method is for development only and will be removed from
-     * public access once we launch.</b>
-     * <p><i>User must be authenticated and have an admin account.</i></p>
-     * <p/>
-     * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> sys/secure/{on}</div>
-     *
-     * @param action <i>Path Parameter:</i> If "on" turns security on.
-     *               If "get" returns security state. Any other value turns security off.
-     * @return Http status code 200 with plain text specifying the new security state.
-     */
-    @POST
-    @Path("/security/{action}")                // TODO get rid of this "feature"
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response flipSecurity(
-            @PathParam("action") String action,
-            @Context HttpServletRequest request) {
-        try {
-            BlahguaSession.ensureAdmin(request);
-            if (action.equals("get")) {
-                return Response.ok(BlahguaSession.getSecurity() ? "on" : "off").build();
-            }
-            final boolean on = action.equals("on");
-            BlahguaSession.setSecurity(on);
-            return Response.ok("security " + (on ? "ON" : "OFF")).build();
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
-        }
-    }
+//    /**
+//     * <p>Use this method to turn security on/off.</p>
+//     * <b>This method is for development only and will be removed from
+//     * public access once we launch.</b>
+//     * <p><i>User must be authenticated and have an admin account.</i></p>
+//     * <p/>
+//     * <div><b>METHOD:</b> GET</div>
+//     * <div><b>URL:</b> sys/secure/{on}</div>
+//     *
+//     * @param action <i>Path Parameter:</i> If "on" turns security on.
+//     *               If "get" returns security state. Any other value turns security off.
+//     * @return Http status code 200 with plain text specifying the new security state.
+//     */
+//    @POST
+//    @Path("/security/{action}")                // TODO get rid of this "feature"
+//    @Produces(MediaType.TEXT_PLAIN)
+//    public Response flipSecurity(
+//            @PathParam("action") String action,
+//            @Context HttpServletRequest request) {
+//        try {
+//            BlahguaSession.ensureAdmin(request);
+//            if (action.equals("get")) {
+//                return Response.ok(BlahguaSession.getSecurity() ? "on" : "off").build();
+//            }
+//            final boolean on = action.equals("on");
+//            BlahguaSession.setSecurity(on);
+//            return Response.ok("security " + (on ? "ON" : "OFF")).build();
+//        } catch (Exception e) {
+//            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+//        }
+//    }
 
 
     /**
@@ -173,6 +176,7 @@ public class SystemResource {
             }
             BlahManager.getInstance().refreshCaches();
             GroupManager.getInstance().refreshCaches();
+            logger.info("Refreshed blah manager and group manager local caches");
             return RestUtilities.make202AcceptedResponse();
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);

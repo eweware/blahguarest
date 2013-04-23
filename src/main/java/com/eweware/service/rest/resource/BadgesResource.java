@@ -3,6 +3,7 @@ package main.java.com.eweware.service.rest.resource;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.payload.BadgePayload;
 import main.java.com.eweware.service.base.payload.BadgingNotificationEntity;
 import main.java.com.eweware.service.mgr.BadgesManager;
@@ -30,13 +31,25 @@ public class BadgesResource {
 
     private static final Logger logger = Logger.getLogger("BadgesResource");
 
+    private static final String CREATE_BADGE_OPERATION = "createBadge";
+    private static final String GET_BADGE_BY_ID_OPERATION = "getBadgeById";
+    private static final String ADD_BADGE_TO_USER_OPERATION = "addBadgeToUser";
+
     private BadgesManager badgesMgr;
+    private SystemManager systemManager;
 
     private BadgesManager getBadgesMgr() {
         if (badgesMgr == null) {
             badgesMgr = BadgesManager.getInstance();
         }
         return badgesMgr;
+    }
+
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 
     /**
@@ -89,10 +102,13 @@ public class BadgesResource {
             @Context HttpServletRequest request,
             @Context HttpServletResponse response) {
         try {
+            final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final String authorityId = (String) entity.get("I");
             final String badgeTypeId = (String) entity.get("T");
-            return getBadgesMgr().createBadgeForUser(response, userId, authorityId, badgeTypeId);
+            final Response badgeForUser = getBadgesMgr().createBadgeForUser(response, userId, authorityId, badgeTypeId);
+            getSystemManager().setResponseTime(CREATE_BADGE_OPERATION, (System.currentTimeMillis() - start));
+            return badgeForUser;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (InvalidRequestException e) {
@@ -120,7 +136,10 @@ public class BadgesResource {
             @Context HttpServletRequest request
     ) {
         try {
-            return getBadgesMgr().addBadge(entity);
+            final long start = System.currentTimeMillis();
+            final Response response = getBadgesMgr().addBadge(entity);
+            getSystemManager().setResponseTime(ADD_BADGE_TO_USER_OPERATION, (System.currentTimeMillis() - start));
+            return response;
         } catch (SystemErrorException e) {
             logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity + "\nHeaders: " + RestUtilities.getHeaders(request), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(BadgesManager.makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_SERVER_ERROR, "System Error")).build();
@@ -136,9 +155,12 @@ public class BadgesResource {
     public Response getBadgeById(@PathParam("badgeId") String badgeId,
                                  @Context HttpServletRequest request) {
         try {
+            final long start = System.currentTimeMillis();
             BlahguaSession.ensureAuthenticated(request);
             final BadgePayload entity = getBadgesMgr().getBadgeById(badgeId);
-            return RestUtilities.make200OkResponse(entity);
+            final Response response = RestUtilities.make200OkResponse(entity);
+            getSystemManager().setResponseTime(GET_BADGE_BY_ID_OPERATION, (System.currentTimeMillis() - start));
+            return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {

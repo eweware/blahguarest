@@ -7,6 +7,7 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import main.java.com.eweware.service.base.AWSUtilities;
 import main.java.com.eweware.service.base.error.*;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.CommentDAO;
@@ -49,11 +50,13 @@ public class ImageUploadResource {
      */
     private static final String localOriginalImagePath = "/app/blahguarest/images/original/";   // TODO add to config
     private static final String localFormattedImagePath = "/app/blahguarest/images/image/";     // TODO add to config
+    private static final String UPLOAD_IMAGE_OPERATION = "uploadImage";
     private static String s3BucketName;
     private static String s3OriginalImageDirname;
     private static String s3FormattedImageDirname;
 
-    private static StoreManager storeManager;
+    private StoreManager storeManager;
+    private SystemManager systemManager;
 
     public static final String canonicalImageFileFormat = ".jpg";
 
@@ -131,12 +134,12 @@ public class ImageUploadResource {
     }
 
     /**
-     *
      * <p>Use this method to upload an image to be related to an object. Currently, only
      * blah and comment images are supported. Each object can hold multiple images, but
      * the semantics for their use are currently not well-defined.</p>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> images/upload</div>
+     *
      * @param objType   The object type. 'B' means a Blah image, 'C' means a comment image.
      * @param objectId  The object id (e.g., the blah id if the object type is 'B').
      * @param isPrimary Designates whether the image is "primary". A crude way to get at
@@ -144,8 +147,8 @@ public class ImageUploadResource {
      * @param in        The input stream with the image data. TIF, PNG, JPG and GIF images
      *                  are acceptable.
      * @param metadata  Input metadata.
-     * @return  Http status of 200.
-     * If there is an error in the request, returns status 400.
+     * @return Http status of 200.
+     *         If there is an error in the request, returns status 400.
      */
     @POST
     @Path("/upload")
@@ -158,6 +161,18 @@ public class ImageUploadResource {
             @FormDataParam("file") InputStream in,
             @FormDataParam("file") FormDataContentDisposition metadata,
             @Context HttpServletRequest request) {
+        final long s = System.currentTimeMillis();
+        final Response response = doUpload(objType, objectId, in, metadata, request);
+        try {
+            getSystemManager().setResponseTime(UPLOAD_IMAGE_OPERATION, (System.currentTimeMillis() - s));
+        } catch (SystemErrorException e) {
+            logger.log(Level.SEVERE, "Failed to acquire SystemManager when attempting to upload image", e);
+            return Response.status(500).entity("error=no sys mgr").build();
+        }
+        return response;
+    }
+
+    private Response doUpload(String objType, String objectId, InputStream in, FormDataContentDisposition metadata, HttpServletRequest request) {
         final ObjectType objectType;
         try {
             BlahguaSession.ensureAuthenticated(request);
@@ -429,6 +444,13 @@ public class ImageUploadResource {
             storeManager = MongoStoreManager.getInstance();
         }
         return storeManager;
+    }
+
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 }
 

@@ -38,6 +38,8 @@ public class BlahsResource {
     private static final String GET_BLAH_AUTHOR_OPERATION = "getBlahAuthor";
     private static final String PREDICTION_VOTE_OPERATION = "predictVote";
     private static final String POLL_VOTE_OPERATION = "pollVote";
+    private static final String GET_POLL_VOTE_INFO_OPERATION = "getPollVoteInfo";
+    private static final String GET_PREDICTION_VOTE_OPERATION = "getPredictionVote";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;
@@ -157,8 +159,9 @@ public class BlahsResource {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             getBlahManager().pollVote(LocaleId.en_us, blahId, userId, index);
+            final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(POLL_VOTE_OPERATION, (System.currentTimeMillis() - start));
-            return RestUtilities.make204OKNoContentResponse();
+            return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (StateConflictException e) {
@@ -196,9 +199,12 @@ public class BlahsResource {
     public Response getPollVoteInfo(@PathParam("blahId") String blahId,
                                     @Context HttpServletRequest request) {
         try {
+            final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final UserBlahInfoPayload info = getBlahManager().getPollVoteInfo(LocaleId.en_us, blahId, userId);
-            return RestUtilities.make200OkResponse(info);
+            final Response response = RestUtilities.make200OkResponse(info);
+            getSystemManager().setResponseTime(GET_POLL_VOTE_INFO_OPERATION, (System.currentTimeMillis() - start));
+            return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
@@ -253,8 +259,9 @@ public class BlahsResource {
             final String preOrPostExpiration = (String) entity.get(PredictionExpirationType.PREDICTION_VOTE_TYPE_FIELD_NAME);
             final String vote = (String) entity.get(PredictionVote.PREDICTION_VOTE_FIELD_NAME);
             getBlahManager().predictionVote(userId, blahId, preOrPostExpiration, vote);
+            final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(PREDICTION_VOTE_OPERATION, (System.currentTimeMillis() - start));
-            return RestUtilities.make204OKNoContentResponse();
+            return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (InvalidRequestException e) {
@@ -287,8 +294,11 @@ public class BlahsResource {
             @PathParam("blahId") String blahId,
             @Context HttpServletRequest request) {
         try {
+            final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            return RestUtilities.make200OkResponse(getBlahManager().getPredictionVoteInfo(userId, blahId));
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getPredictionVoteInfo(userId, blahId));
+            getSystemManager().setResponseTime(GET_PREDICTION_VOTE_OPERATION, (System.currentTimeMillis() - start));
+            return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {

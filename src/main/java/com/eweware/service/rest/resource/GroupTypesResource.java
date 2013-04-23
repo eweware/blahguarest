@@ -2,6 +2,7 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 
@@ -20,7 +21,10 @@ import javax.ws.rs.core.Response;
 @Path("/groupTypes")
 public class GroupTypesResource {
 
+    private static final String GET_GROUP_TYPES_OPERATION = "getGroupTypes";
+    private static final String GET_GROUP_TYPE_BY_ID_OPERATION = "getGroupTypeById";
     private GroupManager groupManager;
+    private SystemManager systemManager;
 
     /**
      * <p>Use this method to obtain existing group types.</p>
@@ -44,7 +48,10 @@ public class GroupTypesResource {
             @QueryParam("sort") String sortFieldName,
             @Context HttpServletRequest request) {
         try {
-            return RestUtilities.make200OkResponse(getGroupManager().getGroupTypes(LocaleId.en_us, start, count, sortFieldName));
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getGroupTypes(LocaleId.en_us, start, count, sortFieldName));
+            getSystemManager().setResponseTime(GET_GROUP_TYPES_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -71,7 +78,10 @@ public class GroupTypesResource {
             @PathParam("groupTypeId") String groupTypeId,
             @Context HttpServletRequest request) {
         try {
-            return RestUtilities.make200OkResponse(getGroupManager().getGroupTypeById(LocaleId.en_us, groupTypeId));
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getGroupTypeById(LocaleId.en_us, groupTypeId));
+            getSystemManager().setResponseTime(GET_GROUP_TYPE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
@@ -89,6 +99,13 @@ public class GroupTypesResource {
             groupManager = GroupManager.getInstance();
         }
         return groupManager;
+    }
+
+    private SystemManager getSystemManager() throws SystemErrorException {
+        if (systemManager == null) {
+            systemManager = SystemManager.getInstance();
+        }
+        return systemManager;
     }
 }
 
