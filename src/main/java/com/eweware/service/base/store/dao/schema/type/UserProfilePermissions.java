@@ -11,25 +11,25 @@ public enum UserProfilePermissions {
     /**
      * Only user can see this profile datum
      */
-    PRIVATE(0),
+    PRIVATE(new Integer(0)),
 
     /**
      * Only users who are logged in can see this profile datum
      */
-    MEMBERS(1),
+    MEMBERS(new Integer(1)),
 
     /**
      * Anyone (including anonymous users) can see this profile datum
      */
-    PUBLIC(2);
+    PUBLIC(new Integer(2));
 
-    private final int code;
+    private final Integer code;
 
-    UserProfilePermissions(int code) {
+    UserProfilePermissions(Integer code) {
         this.code = code;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 }

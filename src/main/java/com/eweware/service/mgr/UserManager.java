@@ -865,9 +865,9 @@ public class UserManager implements ManagerInterface {
     }
 
     private boolean hasProfilePermission(boolean authenticated, Integer permissions) {
-        return (permissions != null &&
-                (permissions == UserProfilePermissions.PUBLIC.getCode()) ||
-                (authenticated && permissions == UserProfilePermissions.MEMBERS.getCode()));
+        return ((permissions != null) &&
+                ((permissions == UserProfilePermissions.PUBLIC.getCode()) ||
+                        (authenticated && (permissions == UserProfilePermissions.MEMBERS.getCode()))));
     }
 
     private UserProfileDAO getUserProfileDAO(String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
