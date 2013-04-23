@@ -1,5 +1,10 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.BlahTrackerDAOConstants;
+import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
+import main.java.com.eweware.service.base.store.dao.schema.BlahTrackerSchema;
+
 import java.util.Map;
 
 /**
@@ -8,7 +13,11 @@ import java.util.Map;
  *
  *         Dummy
  */
-public class BlahTrackerPayload extends BasePayload {
+public class BlahTrackerPayload extends BasePayload implements BlahTrackerDAOConstants {
+
+    protected static final BaseSchema getSchema() {
+        return BlahTrackerSchema.getSchema(LocaleId.en_us);
+    }
 
     public BlahTrackerPayload() {
         super();

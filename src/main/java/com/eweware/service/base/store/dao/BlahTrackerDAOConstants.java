@@ -1,5 +1,8 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
+
 /**
  * Used internally by the tracker.
  *
@@ -25,5 +28,9 @@ public interface BlahTrackerDAOConstants {
             BT_POLL_OPTION_INDEX,
             BT_VIEWS,
             BT_OPENS,
+    };
+
+    static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{BT_OBJECT_ID, BT_AUTHOR_ID, BT_COMMENTS, BT_UP_VOTES, BT_DOWN_VOTES, BT_POLL_OPTION_INDEX, BT_VIEWS, BT_OPENS}),
     };
 }
