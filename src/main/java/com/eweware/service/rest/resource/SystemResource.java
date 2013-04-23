@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.base.mgr.SystemManager;
+import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 
@@ -171,6 +172,7 @@ public class SystemResource {
                 Response.status(Response.Status.FORBIDDEN).build();
             }
             BlahManager.getInstance().refreshCaches();
+            GroupManager.getInstance().refreshCaches();
             return RestUtilities.make202AcceptedResponse();
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);

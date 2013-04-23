@@ -86,6 +86,11 @@ public final class GroupManager implements ManagerInterface {
         }
     }
 
+    public void refreshCaches() throws SystemErrorException {
+        groupMap.clear();
+        initializeGroupCache();
+    }
+
     public void shutdown() {
         this.state = ManagerState.SHUTDOWN;
         System.out.println("*** GroupManager shut down ***");
@@ -147,25 +152,25 @@ public final class GroupManager implements ManagerInterface {
         return groupMap.get(groupId) != null;
     }
 
-    /**
-     * Registers the group with the specified descriptor. Only open groups are actually registered.
-     *
-     * @param groupId The group's id (unchecked!)
-     * @param payload The group's payload (unchecked!)
-     */
-    public void registerGroup(String groupId, GroupPayload payload) {
-        if (GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode().equals(payload.getDescriptor())) {
-            if (groupMap.containsKey(groupId)) {
-                groupMap.replace(groupId, payload);
-            } else {
-                groupMap.putIfAbsent(groupId, payload);
-            }
-        } else { /* ignore others for now */ }
-    }
-
-    public void unregisterGroup(String groupId) {
-        groupMap.remove(groupId);
-    }
+//    /**
+//     * Registers the group with the specified descriptor. Only open groups are actually registered.
+//     *
+//     * @param groupId The group's id (unchecked!)
+//     * @param payload The group's payload (unchecked!)
+//     */
+//    public void registerGroup(String groupId, GroupPayload payload) {
+//        if (GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode().equals(payload.getDescriptor())) {
+//            if (groupMap.containsKey(groupId)) {
+//                groupMap.replace(groupId, payload);
+//            } else {
+//                groupMap.putIfAbsent(groupId, payload);
+//            }
+//        } else { /* ignore others for now */ }
+//    }
+//
+//    public void unregisterGroup(String groupId) {
+//        groupMap.remove(groupId);
+//    }
 
 
 
