@@ -399,7 +399,7 @@ public class ImageUploadResource {
             out.flush();
 //            System.out.println("Saved " + infile.getAbsolutePath() + " (" + bytecount + " bytes)");
         } catch (IOException e) {
-            throw new SystemErrorException("Failed to save uploaded file " + infile.getAbsolutePath());
+            throw new SystemErrorException("Failed to save uploaded file " + infile.getAbsolutePath(), e, ErrorCodes.SERVER_SEVERE_ERROR);
         } finally {
             if (out != null) {
                 try {

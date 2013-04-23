@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -191,10 +191,10 @@
     <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366397673822" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363977754573" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
-    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366394283213" ignored="false" />
+    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366700029057" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366688524548" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366680905285" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366692885033" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -383,7 +383,7 @@
     <file path="/UserBlahInfoDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362954949694" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/demo/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363225207449" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/base/store/impl/mongo/dao/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366411519930" ignored="false" />
-    <file path="/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366688762739" ignored="false" />
+    <file path="/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366695640487" ignored="false" />
     <file path="/TrackingManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361228746335" ignored="false" />
     <file path="/BlahTrackerDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362175656091" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/service/test/suite/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366411309394" ignored="false" />
@@ -511,7 +511,7 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364581853750" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366661043861" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366689660477" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366693312773" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366689487677" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/CommentDemographics.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535942060" ignored="false" />
@@ -694,7 +694,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/FieldMapComparator.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421104508" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/Inbox.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421089606" ignored="false" />
     <file path="/Inbox.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421074039" ignored="false" />
-    <file path="/BlahCache.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366692540729" ignored="false" />
+    <file path="/BlahCache.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366694859345" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/CacheException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421296341" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/CacheException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678249428" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/DumpToR.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
@@ -815,9 +815,9 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/base/schema/UserProfileSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366589434257" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/base/schema/GroupSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641372811" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/base/schema/UserGroupSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641372811" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366688799022" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366692497335" ignored="false" />
-    <file path="/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366691569071" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366695643131" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366697379110" ignored="false" />
+    <file path="/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366697364975" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/AuthorizedState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366595161575" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641640091" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/error/ResourceNotFoundException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641693548" ignored="false" />
@@ -1175,23 +1175,8 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" line="99" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager" package="main.java.com.eweware.service.base.store.impl.mongo.dao">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" line="108" class="main.java.com.eweware.service.rest.session.BlahguaSession" package="main.java.com.eweware.service.rest.session">
-        <option name="ENABLED" value="true" />
+        <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="REMOVE_AFTER_HIT" value="false" />
@@ -1202,11 +1187,11 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" line="201" class="main.java.com.eweware.service.rest.session.BlahguaSession" package="main.java.com.eweware.service.rest.session">
-        <option name="ENABLED" value="true" />
+        <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="REMOVE_AFTER_HIT" value="false" />
@@ -1217,11 +1202,11 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" line="118" class="main.java.com.eweware.service.rest.session.BlahguaSession" package="main.java.com.eweware.service.rest.session">
-        <option name="ENABLED" value="true" />
+        <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="REMOVE_AFTER_HIT" value="false" />
@@ -1232,11 +1217,11 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSessionListener.java" line="18" class="main.java.com.eweware.service.rest.session.BlahguaSessionListener" package="main.java.com.eweware.service.rest.session">
-        <option name="ENABLED" value="true" />
+        <option name="ENABLED" value="false" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
         <option name="REMOVE_AFTER_HIT" value="false" />
@@ -1247,10 +1232,25 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSessionListener.java" line="28" class="main.java.com.eweware.service.rest.session.BlahguaSessionListener" package="main.java.com.eweware.service.rest.session">
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" line="195" class="main.java.com.eweware.service.base.cache.BlahCache" package="main.java.com.eweware.service.base.cache">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -1275,54 +1275,69 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BlahTrackerSchema.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="73" selection-start="348" selection-end="348" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlahTrackerDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="182" selection-start="1377" selection-end="1377" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="868" column="58" selection-start="42739" selection-end="42739" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommonUtilities.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/CommonUtilities.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="9" selection-start="1587" selection-end="1587" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BlahCache.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BlahCache.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="178" column="97" selection-start="7999" selection-end="7999" vertical-scroll-proportion="0.3149883">
+            <state line="189" column="64" selection-start="8496" selection-end="8526" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#4329#4341#0" expanded="true" />
                 <element signature="e#7697#7727#0" expanded="true" />
+                <element signature="e#8623#8641#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="412" column="106" selection-start="18869" selection-end="18869" vertical-scroll-proportion="0.51488423">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MemcachedClient.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/simple-spring-memcached/spymemcached/2.8.4/spymemcached-2.8.4.jar!/net/spy/memcached/MemcachedClient.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="125" column="60" selection-start="10039" selection-end="10039" vertical-scroll-proportion="-12.24">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InboxState.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/InboxState.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="19" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1498" column="0" selection-start="72744" selection-end="72744" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InboxHandler.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="191" column="0" selection-start="8446" selection-end="8446" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MongoStoreManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="352" column="138" selection-start="10643" selection-end="10643" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1354,24 +1369,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserProfilePermissions.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/UserProfilePermissions.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="4" selection-start="527" selection-end="527" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TrackerDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/TrackerDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="93" selection-start="2527" selection-end="2964" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindManager">
@@ -1395,7 +1392,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
@@ -1411,6 +1407,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahTrackerDAOConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       </list>
     </option>
   </component>
@@ -1535,6 +1532,46 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: com.google.code.simple-spring-memcached:spymemcached:2.8.4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spymemcached-2.8.4.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: com.google.code.simple-spring-memcached:spymemcached:2.8.4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spymemcached-2.8.4.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="memcached" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="blahguarest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1572,6 +1609,58 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resource" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aux" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1598,6 +1687,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="mgr" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dao" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2504,7 +2619,11 @@
       <created>1366680364864</created>
       <updated>1366680364864</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="WRS-270">
+      <created>1366692888358</created>
+      <updated>1366692888358</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2534,9 +2653,9 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32049307" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32049307" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2596302" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2596302" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -2545,7 +2664,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.7389868" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26733068" sideWeight="0.67950696" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26733068" sideWeight="0.7403698" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -2649,50 +2768,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="44" selection-start="1718" selection-end="1718" vertical-scroll-proportion="-7.1153846">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="26" selection-start="994" selection-end="994" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="96" selection-start="538" selection-end="660" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BaseSchema.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="22" selection-start="2795" selection-end="2795" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/TrackerSchema.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="323" selection-end="844" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahTrackerPayload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="32" selection-start="632" selection-end="632" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/BlahTrackerSchema.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="73" selection-start="348" selection-end="348" vertical-scroll-proportion="0.0">
@@ -2760,13 +2835,56 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="352" column="138" selection-start="10643" selection-end="10643" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1498" column="0" selection-start="72744" selection-end="72744" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="191" column="0" selection-start="8446" selection-end="8446" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/InboxState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="19" selection-start="467" selection-end="467" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/simple-spring-memcached/spymemcached/2.8.4/spymemcached-2.8.4.jar!/net/spy/memcached/MemcachedClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="60" selection-start="10039" selection-end="10039" vertical-scroll-proportion="-12.24">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="178" column="97" selection-start="7999" selection-end="7999" vertical-scroll-proportion="0.3149883">
+        <state line="189" column="64" selection-start="8496" selection-end="8526" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#4329#4341#0" expanded="true" />
             <element signature="e#7697#7727#0" expanded="true" />
+            <element signature="e#8623#8641#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="412" column="106" selection-start="18869" selection-end="18869" vertical-scroll-proportion="0.51488423">
+          <folding />
         </state>
       </provider>
     </entry>
