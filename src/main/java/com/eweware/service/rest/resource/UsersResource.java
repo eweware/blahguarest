@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * <p>User-related API methods.</p>
@@ -30,6 +31,8 @@ import java.util.Map;
 
 @Path("/users")
 public class UsersResource {
+
+    private static final Logger logger = Logger.getLogger("UsersResource");
 
     private static final String GET_USER_INFO_OPERATION = "getUserInfo";
     private static final String GET_USER_INFO_FOR_BLAH_OPERATION = "getUserInfo4Blah";
@@ -184,7 +187,12 @@ public class UsersResource {
     public Response logoutUser(@Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.destroySession(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            if (userId == null) {
+                logger.info("Attempt to logout when there's no authenticated user in session. Headers=" + RestUtilities.getHeaders(request));
+            } else {
+                getUserManager().logoutUser(LocaleId.en_us, request, userId);
+            }
             final Response response = RestUtilities.make202AcceptedResponse();
             getSystemManager().setResponseTime(LOGOUT_USER_OPERATION, (System.currentTimeMillis() - s));
             return response;

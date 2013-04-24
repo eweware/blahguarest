@@ -321,7 +321,7 @@ public class UserManager implements ManagerInterface {
             throw new ResourceNotFoundException("No such user '" + username + "'", ErrorCodes.UNAUTHORIZED_USER);
         }
 
-        BlahguaSession.destroySession(request);
+        BlahguaSession.destroySession(request, true);
 
         if (Login.authenticate(accountDAO.getDigest(), accountDAO.getSalt(), password)) {
             BlahguaSession.markAuthenticated(request, accountDAO.getId(), accountDAO.getAccountType(), canonicalUsername);
@@ -329,6 +329,17 @@ public class UserManager implements ManagerInterface {
             BlahguaSession.markAnonymous(request);
             throw new InvalidAuthorizedStateException("User not authorized", ErrorCodes.UNAUTHORIZED_USER);
         }
+    }
+
+
+    /**
+     * Logs out a user. It's been established that the user is authenticated (logged in).
+     * @param en_us
+     * @param request
+     * @param userId
+     */
+    public void logoutUser(LocaleId en_us, HttpServletRequest request, String userId) throws SystemErrorException {
+        BlahguaSession.destroySession(request, false);
     }
 
     /**

@@ -5,8 +5,12 @@ import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.store.dao.UserAccountDAO;
 import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
+import main.java.com.eweware.service.base.store.impl.mongo.dao.UserAccountDAOImpl;
 import main.java.com.eweware.service.mgr.GroupManager;
+import main.java.com.eweware.service.rest.RestUtilities;
+import main.java.com.eweware.service.user.validation.Login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -76,6 +80,15 @@ public final class BlahguaSession {
     public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username) throws SystemErrorException {
         final HttpSession session = request.getSession(true);
         markAuthenticated(session, userId, accountType, username);
+        final StringBuilder b = new StringBuilder("Authenticated username '");
+        b.append(username);
+        b.append("' (canonical name '");
+        b.append(Login.makeCanonicalUsername(username));
+        b.append("'), user id '");
+        b.append(userId);
+        b.append(". Headers=");
+        b.append(RestUtilities.getHeaders(request));
+        logger.info(b.toString());
     }
 
     /**
@@ -374,11 +387,19 @@ public final class BlahguaSession {
     }
 
     /**
-     * Destroys the current session.
+     * Destroys the current session. Called either when logging in or logging out.
+     * <p>When logging in, we first destroy the current session and that's when this method is called.
+     * We must delete the current session for security: typically, we may go from an http session
+     * to an https session at this point and we must make sure that the session id can't be
+     * hijacked: we do this by creating a new session (and new session id) that will
+     * henceforward be encrypted and therefore safe(r).</p>
+     * <p>When logging out, we destroy the session and allow an anonymous session to take
+     * over when further operations are performed by the same user agent.</p>
      *
      * @param request The http request object
+     * @param login   True if in a login context; false in a logout context.
      */
-    public static void destroySession(HttpServletRequest request) throws SystemErrorException {
+    public static void destroySession(HttpServletRequest request, boolean login) throws SystemErrorException {
         final HttpSession session = request.getSession();
         if (session != null) {
             String groupId = null;
@@ -387,6 +408,28 @@ public final class BlahguaSession {
                 if (groupId != null) {
                     decrementViewerCount(groupId);
                 }
+                if (!login) {
+                    final String userId = (String) session.getAttribute(BlahguaSession.USER_ID_ATTRIBUTE);
+                    final String username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE);
+                    if (userId != null || username != null) {
+                        final StringBuilder b = new StringBuilder("Logged out");
+                        if (username != null) {
+                            b.append(" username '");
+                            b.append(username);
+                            b.append("'");
+                        }
+                        if (userId != null) {
+                            b.append(" user id '");
+                            b.append(userId);
+                            b.append("'");
+                        }
+                        b.append(". Headers=");
+                        b.append(RestUtilities.getHeaders(request));
+                        logger.info(b.toString());
+                    }
+
+                }
+
             } catch (IllegalStateException e) {
                 throw new SystemErrorException("Failed to decrement current viewer count for a group because session id '" + session.getId() + "' was invalidated", e);
             } catch (Exception e) {
@@ -395,12 +438,12 @@ public final class BlahguaSession {
                 try {
                     removeAllAttributes(session);
                 } catch (Exception e) {
-                    logger.log(Level.WARNING, "Invalidating session id '" + session.getId() + "', but attributes could not be removed.", e);
+                    logger.log(Level.WARNING, "Invalidating session id '" + session.getId() + "', but attributes could not be removed during a " + (login ? "login" : "logout") + " operation", e);
                 }
                 try {
                     session.invalidate();
                 } catch (IllegalStateException e) {
-                    throw new SystemErrorException("Failed to invalidate session id '" + session.getId() + "' because session was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+                    throw new SystemErrorException("Failed to invalidate session id '" + session.getId() + "' during a " + (login ? "login" : "logout") + " operation because session was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
                 }
             }
         }
@@ -416,11 +459,10 @@ public final class BlahguaSession {
     public static void sessionDestroyed(HttpSession session) throws SystemErrorException {
         String groupId = null;
         String username = null;
+        String userId = null;
         try {
             username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE);
-            if (username == null) {
-                username = "unknown";
-            } // dbg username
+            userId = (String) session.getAttribute(BlahguaSession.USER_ID_ATTRIBUTE);
             groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
             if (groupId != null) {
                 decrementViewerCount(groupId);
@@ -436,11 +478,22 @@ public final class BlahguaSession {
                 // just log it and fall through
                 logger.log(Level.WARNING, "Failed to remove all attributes for invalidated session id '" + session.getId() + "'. Not crucial.", e);
             }
-            final StringBuilder b = new StringBuilder("Session id '");
+            final StringBuilder b = new StringBuilder("Destroyed session id '");
             b.append(session.getId());
-            b.append("' destroyed for username '");
-            b.append(username);
-            b.append("'");
+            if (username == null) {
+                b.append("' for anonymous username");
+            } else {
+                b.append("' for username '");
+                b.append(username);
+                b.append("'");
+            }
+            if (userId == null) {
+                b.append(" unknown user id");
+            } else {
+                b.append(" user id '");
+                b.append(userId);
+                b.append("'");
+            }
             if (groupId != null) {
                 b.append(" viewing group id '");
                 b.append(groupId);
