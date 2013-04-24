@@ -380,10 +380,12 @@ public final class BlahguaSession {
 
     private static void incrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
         GroupManager.getInstance().updateViewerCount(groupId, true);
+        logger.info("Incremented viewer count for group id '" + groupId + "'");
     }
 
     private static void decrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
         GroupManager.getInstance().updateViewerCount(groupId, false);
+        logger.info("Decremented viewer count for group id '" + groupId + "'");
     }
 
     /**
