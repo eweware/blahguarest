@@ -27,30 +27,10 @@ public final class BlahguaSession {
     private static final Logger logger = Logger.getLogger("BlahguaSession");
 
     /**
-     * <p>Dubious workaround by yours truly to facilitate debugging and testing.</p>
-     */
-    private static boolean securityOn = true;
-
-
-    // TODO remove this before rollout: security must always be on
-    public static final void setSecurity(boolean onOrOff) {
-        securityOn = onOrOff;
-    }
-
-    public static final boolean getSecurity() {
-        return securityOn;
-    }
-
-    /**
      * <p>Marks whether the account is authenticated or not.</p>
      * <p>If set, it's set to Boolean.TRUE</p>
      */
     private static final String ACCOUNT_TYPE_ATTRIBUTE = "T";
-
-    /**
-     * Set to a Boolean. Indicates whether the user was authenticated or not.
-     */
-    private static final String AUTHENTICATION_STATE_ATTRIBUTE = "A";
 
     /**
      * Set to a Set of Strings, each string is a group id
@@ -76,6 +56,14 @@ public final class BlahguaSession {
      */
     private static final String INBOX_INFO_ATTRIBUTE = "i";
 
+    private static final String[] ATTRIBUTE_NAMES = new String[]{
+            ACCOUNT_TYPE_ATTRIBUTE,
+//            AUTHENTICATION_STATE_ATTRIBUTE,
+            VIEWING_GROUP_ID_ATTRIBUTE,
+            USER_ID_ATTRIBUTE,
+            USERNAME_ATTRIBUTE
+    };
+
     /**
      * Marks the user session as authenticated.
      * Input parameters are not checked!
@@ -85,7 +73,7 @@ public final class BlahguaSession {
      * @param accountType The account type. Currently is set only if it is an admin account. (unchecked!)
      * @param username    The username (unchecked!)
      */
-    public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username) {
+    public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username) throws SystemErrorException {
         final HttpSession session = request.getSession(true);
         markAuthenticated(session, userId, accountType, username);
     }
@@ -98,15 +86,18 @@ public final class BlahguaSession {
      * @param username    The username (unchecked!)
      * @param accountType The account type. Currently is set only if it is an admin account
      */
-    private static void markAuthenticated(HttpSession session, String userId, String accountType, String username) {
-        if (username != null) {
-            session.setAttribute(USERNAME_ATTRIBUTE, username);
+    private static void markAuthenticated(HttpSession session, String userId, String accountType, String username) throws SystemErrorException {
+        try {
+            if (username != null) {
+                session.setAttribute(USERNAME_ATTRIBUTE, username);
+            }
+            if (accountType != null && accountType.equals(UserAccountType.ADMIN.getCode())) {
+                session.setAttribute(ACCOUNT_TYPE_ATTRIBUTE, Boolean.TRUE);
+            }
+            session.setAttribute(USER_ID_ATTRIBUTE, userId);
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Attempted to set username '" + username + "', user id '" + userId + "' to an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
         }
-        if (accountType != null && accountType.equals(UserAccountType.ADMIN.getCode())) {
-            session.setAttribute(ACCOUNT_TYPE_ATTRIBUTE, Boolean.TRUE);
-        }
-        session.setAttribute(USER_ID_ATTRIBUTE, userId);
-        session.setAttribute(AUTHENTICATION_STATE_ATTRIBUTE, SessionState.AUTHENTICATED);
     }
 
     /**
@@ -115,12 +106,13 @@ public final class BlahguaSession {
      * @param request The http request (unchecked!)
      * @return True if the user is logged in (authenticated)
      */
-    public static boolean isAuthenticated(HttpServletRequest request) {
+    public static boolean isAuthenticated(HttpServletRequest request) throws SystemErrorException {
         final HttpSession session = request.getSession(); // don't create a session
-        final Object userId = session.getAttribute(USER_ID_ATTRIBUTE);
-        final Object username = session.getAttribute(USERNAME_ATTRIBUTE);
-        final SessionState state = (SessionState) session.getAttribute(AUTHENTICATION_STATE_ATTRIBUTE);
-        return (session != null) && (state == SessionState.AUTHENTICATED);
+        try {
+            return (session.getAttribute(USER_ID_ATTRIBUTE) != null);
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Attempted to get attributes from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
     }
 
     /**
@@ -132,31 +124,43 @@ public final class BlahguaSession {
      * @throws InvalidAuthorizedStateException
      *          If there is no authenticated session.
      */
-    public static String ensureAuthenticated(HttpServletRequest request, boolean returnId) throws InvalidAuthorizedStateException {
+    public static String ensureAuthenticated(HttpServletRequest request, boolean returnId) throws InvalidAuthorizedStateException, SystemErrorException {
         ensureAuthenticated(request);
-        return (String) request.getSession().getAttribute(returnId ? USER_ID_ATTRIBUTE : USERNAME_ATTRIBUTE);
+        final HttpSession session = request.getSession();
+        try {
+            return (String) session.getAttribute(returnId ? USER_ID_ATTRIBUTE : USERNAME_ATTRIBUTE);
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Attempted to get user id/name attributes from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
     }
 
     /**
      * <p>Ensures that user is authenticated.</p>
-     * @param request   The request
-     * @throws InvalidAuthorizedStateException Thrown if the user is not authenticated
+     *
+     * @param request The request
+     * @throws InvalidAuthorizedStateException
+     *          Thrown if the user is not authenticated
      */
-    public static void ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException {
-        if (securityOn && !isAuthenticated(request)) {
+    public static void ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException, SystemErrorException {
+        if (!isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
         }
     }
 
     /**
      * <p>Updates the username</p>
-     * @param request   The request
-     * @param username  The username
+     *
+     * @param request  The request
+     * @param username The username
      */
-    public static void setUsername(HttpServletRequest request, String username) {
+    public static void setUsername(HttpServletRequest request, String username) throws SystemErrorException {
         final HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute(USERNAME_ATTRIBUTE, username);
+            try {
+                session.setAttribute(USERNAME_ATTRIBUTE, username);
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Attempted to set username '" + username + "' attribute to an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+            }
         }
     }
 
@@ -166,15 +170,17 @@ public final class BlahguaSession {
      *
      * @param request
      */
-    public static void ensureAdmin(HttpServletRequest request) throws ResourceNotFoundException {
+    public static void ensureAdmin(HttpServletRequest request) throws ResourceNotFoundException, SystemErrorException {
         final HttpSession session = request.getSession();
-        if (!securityOn) {    // !!
-            return;
-        }
         if (session != null) {
-            final Object attribute = session.getAttribute(ACCOUNT_TYPE_ATTRIBUTE);
-            if (attribute != null && attribute.equals(Boolean.TRUE)) {
-                return;
+            final Object attribute;
+            try {
+                attribute = session.getAttribute(ACCOUNT_TYPE_ATTRIBUTE);
+                if (attribute != null && attribute.equals(Boolean.TRUE)) {
+                    return;
+                }
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Attempted to get account type attribute from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
             }
         }
         throw new ResourceNotFoundException("Incapable", ErrorCodes.UNAUTHORIZED_USER);
@@ -185,7 +191,7 @@ public final class BlahguaSession {
      *
      * @param request The http request (unchecked!)
      */
-    public static void markAnonymous(HttpServletRequest request) {
+    public static void markAnonymous(HttpServletRequest request) throws SystemErrorException {
         final HttpSession session = request.getSession();
         markAnonymous(session);
     }
@@ -195,11 +201,14 @@ public final class BlahguaSession {
      *
      * @param session The http session object
      */
-    public static void markAnonymous(HttpSession session) {
+    public static void markAnonymous(HttpSession session) throws SystemErrorException {
         if (session != null) {
-            session.removeAttribute(USER_ID_ATTRIBUTE);
-            session.removeAttribute(USERNAME_ATTRIBUTE);
-            session.setAttribute(AUTHENTICATION_STATE_ATTRIBUTE, SessionState.ANONYMOUS);
+            try {
+                session.removeAttribute(USER_ID_ATTRIBUTE);
+                session.removeAttribute(USERNAME_ATTRIBUTE);
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Failed to mark session anonymous because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+            }
         }
     }
 
@@ -210,9 +219,13 @@ public final class BlahguaSession {
      * @return The userId for this session (if it is authenticated) or
      *         null if this is not an authenticated session or there is no session.
      */
-    public static String getUserId(HttpServletRequest request) {
+    public static String getUserId(HttpServletRequest request) throws SystemErrorException {
         final HttpSession session = request.getSession();
-        return (session == null) ? null : (String) session.getAttribute(USER_ID_ATTRIBUTE);
+        try {
+            return (session == null) ? null : (String) session.getAttribute(USER_ID_ATTRIBUTE);
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Can't get user id because session id '" + session.getId() + " is invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
     }
 
     /**
@@ -222,7 +235,7 @@ public final class BlahguaSession {
         final HttpSession s = request.getSession();
         final StringBuilder b = new StringBuilder();
         if (s != null) {
-            if (s.getAttribute(AUTHENTICATION_STATE_ATTRIBUTE) == SessionState.AUTHENTICATED) {
+            if (s.getAttribute(USER_ID_ATTRIBUTE) != null) {
                 b.append("Authenticated Session");
                 final Object userId = s.getAttribute(USER_ID_ATTRIBUTE);
                 if (userId != null) {
@@ -296,7 +309,7 @@ public final class BlahguaSession {
      * @param groupId The group id of the inbox
      * @return The last inbox number or null if the inbox has not been visited during this session.
      */
-    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId) {
+    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId) throws SystemErrorException {
         final InboxInfo info = getInboxInfo(request);
         return (info == null) ? null : info.getLastInboxNumber(groupId);
     }
@@ -308,7 +321,7 @@ public final class BlahguaSession {
      * @param groupId         The group id (unchecked!)
      * @param lastInboxNumber The last inbox number in the group to have been fetched.
      */
-    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber) throws SystemErrorException, ResourceNotFoundException {
+    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber) throws ResourceNotFoundException, SystemErrorException {
         final InboxInfo inboxInfo = getInboxInfo(request);
         if (inboxInfo != null) {
             inboxInfo.setLastInboxNumber(groupId, lastInboxNumber);
@@ -329,23 +342,35 @@ public final class BlahguaSession {
     public static void setCurrentlyViewedGroup(HttpServletRequest request, String groupId) throws SystemErrorException, ResourceNotFoundException {
         if (groupId != null) {
             final HttpSession session = request.getSession(true);
-            final String currentlyWatched = (String) session.getAttribute(VIEWING_GROUP_ID_ATTRIBUTE);
-            session.setAttribute(VIEWING_GROUP_ID_ATTRIBUTE, groupId);
+            try {
+                final String currentlyWatched = (String) session.getAttribute(VIEWING_GROUP_ID_ATTRIBUTE);
+                session.setAttribute(VIEWING_GROUP_ID_ATTRIBUTE, groupId);
 
-            // Update DB
-            if (currentlyWatched != null) {
-                if (!currentlyWatched.equals(groupId)) { // watching a different group
-                    // decrement count in DB for current
-                    GroupManager.getInstance().updateViewerCount(currentlyWatched, false);
-                    // increment count in DB for new
-                    GroupManager.getInstance().updateViewerCount(groupId, true);
-                } else { // watching same group as before
-                    // do nothing
+                // Update DB
+                if (currentlyWatched != null) {
+                    if (!currentlyWatched.equals(groupId)) { // watching a different group
+                        // decrement count in DB for current
+                        decrementViewerCount(currentlyWatched);
+                        // increment count in DB for new
+                        incrementViewerCount(groupId);
+                    } else { // watching same group as before
+                        // do nothing
+                    }
+                } else { // increment count in DB
+                    incrementViewerCount(groupId);
                 }
-            } else { // increment count in DB
-                GroupManager.getInstance().updateViewerCount(groupId, true);
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Failed to set group id '" + groupId + "' viewer count (and possibly decrement an old group) because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
             }
         }
+    }
+
+    private static void incrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
+        GroupManager.getInstance().updateViewerCount(groupId, true);
+    }
+
+    private static void decrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
+        GroupManager.getInstance().updateViewerCount(groupId, false);
     }
 
     /**
@@ -353,43 +378,112 @@ public final class BlahguaSession {
      *
      * @param request The http request object
      */
-    public static void destroySession(HttpServletRequest request) {
+    public static void destroySession(HttpServletRequest request) throws SystemErrorException {
         final HttpSession session = request.getSession();
         if (session != null) {
-            session.invalidate();
+            String groupId = null;
+            try {
+                groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
+                if (groupId != null) {
+                    decrementViewerCount(groupId);
+                }
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Failed to decrement current viewer count for a group because session id '" + session.getId() + "' was invalidated", e);
+            } catch (Exception e) {
+                throw new SystemErrorException("Failed to decrement current viewer count for group id '" + groupId + "' because session id '" + session.getId() + "' was invalidated", e);
+            } finally {
+                try {
+                    removeAllAttributes(session);
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "Invalidating session id '" + session.getId() + "', but attributes could not be removed.", e);
+                }
+                try {
+                    session.invalidate();
+                } catch (IllegalStateException e) {
+                    throw new SystemErrorException("Failed to invalidate session id '" + session.getId() + "' because session was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+                }
+            }
         }
     }
 
     /**
-     * <p>Called when the user session is destroyed.</p>
+     * <p>Called by the session listener when the user session is destroyed.</p>
      * <p>Reduces the current viewer count for all groups in which this user
      * is participating.</p>
      *
      * @param session The http session object
      */
-    public static void sessionDestroyed(HttpSession session) {
-        final String groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
-        String username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE);
-        if (username == null) {
-            username = "unknown";
-        } // dbg username
-        if (groupId != null) {
-            try {
-                GroupManager.getInstance().updateViewerCount(groupId, false);
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Failed to reduce current viewer count for groupId '" + groupId + "'", e);
-                // continue
+    public static void sessionDestroyed(HttpSession session) throws SystemErrorException {
+        String groupId = null;
+        String username = null;
+        try {
+            username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE);
+            if (username == null) {
+                username = "unknown";
+            } // dbg username
+            groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
+            if (groupId != null) {
+                decrementViewerCount(groupId);
             }
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Failed to decrement current viewer count because session was already invalidated for some groupId", e);
+        } catch (Exception e) {
+            throw new SystemErrorException("Failed to decrement current viewer count for groupId '" + groupId + "'", e);
+        } finally {
+            try {
+                removeAllAttributes(session);
+            } catch (Exception e) {
+                // just log it and fall through
+                logger.log(Level.WARNING, "Failed to remove all attributes for invalidated session id '" + session.getId() + "'. Not crucial.", e);
+            }
+            final StringBuilder b = new StringBuilder("Session id '");
+            b.append(session.getId());
+            b.append("' destroyed for username '");
+            b.append(username);
+            b.append("'");
+            if (groupId != null) {
+                b.append(" viewing group id '");
+                b.append(groupId);
+                b.append("'");
+            } else {
+                b.append(" not viewing any group");
+            }
+            logger.log((groupId == null ? Level.WARNING : Level.INFO), b.toString());
         }
-        logger.info("Session destroyed for username '" + username + "': viewing group ids: " + ((groupId == null) ? null : groupId));
+    }
+
+    /**
+     * Cleanse session from its attributes. Doing this for sanity's sake.
+     *
+     * @param session
+     * @throws SystemErrorException If and only if the session has been invalidated!
+     */
+    private static void removeAllAttributes(HttpSession session) throws SystemErrorException {
+        try {
+            for (String attribute : ATTRIBUTE_NAMES) {
+                session.removeAttribute(attribute);
+            }
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Failed to remove all attributes on invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
     }
 
 
-    private static void setInboxInfo(HttpServletRequest request, String groupId, Integer lastInboxNumber) {
-        request.getSession().setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber));
+    private static void setInboxInfo(HttpServletRequest request, String groupId, Integer lastInboxNumber) throws SystemErrorException {
+        final HttpSession session = request.getSession();
+        try {
+            session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber));
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Failed to set inbox info for group id '" + groupId + "' because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
     }
 
-    private static InboxInfo getInboxInfo(HttpServletRequest request) {
-        return (InboxInfo) request.getSession(true).getAttribute(INBOX_INFO_ATTRIBUTE);
+    private static InboxInfo getInboxInfo(HttpServletRequest request) throws SystemErrorException {
+        final HttpSession session = request.getSession(true);
+        try {
+            return (InboxInfo) session.getAttribute(INBOX_INFO_ATTRIBUTE);
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Failed to get inbox info attribute because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
     }
 }

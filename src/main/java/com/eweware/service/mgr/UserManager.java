@@ -331,10 +331,6 @@ public class UserManager implements ManagerInterface {
         }
     }
 
-    public void logoutUser(LocaleId locale, HttpServletRequest request) {
-        BlahguaSession.destroySession(request);
-    }
-
     /**
      * Creates or updates the user profile.
      *
@@ -435,7 +431,7 @@ public class UserManager implements ManagerInterface {
             throw new InvalidAuthorizedStateException("Illegal attempt to access system - no ac", ErrorCodes.NOT_FOUND_USER_ACCOUNT);
         }
         if (!userAccountDAO.getCanonicalUsername().equals(canonicalUsername)) {
-            throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.INVALID_USERNAME);
+            throw new InvalidAuthorizedStateException("Illegal access username '" + canonicalUsername + "'", ErrorCodes.INVALID_USERNAME);
         }
 
         // Check expiration

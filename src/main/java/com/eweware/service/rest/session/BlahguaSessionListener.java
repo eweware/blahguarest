@@ -1,8 +1,12 @@
 package main.java.com.eweware.service.rest.session;
 
+import main.java.com.eweware.service.base.error.SystemErrorException;
+
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
@@ -10,13 +14,20 @@ import javax.servlet.http.HttpSessionListener;
  */
 public class BlahguaSessionListener implements HttpSessionListener {
 
+    private static Logger logger = Logger.getLogger("BlahguaSessionListener");
+
     /**
      * <p>A new session is created in the anonymous user state.</p>
      * @param se The session event
      */
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        BlahguaSession.markAnonymous(se.getSession());
+        final HttpSession session = se.getSession();
+        try {
+            BlahguaSession.markAnonymous(session);
+        } catch (SystemErrorException e) {
+            logger.log(Level.SEVERE, "Failed to make newly created session id '" + session.getId() + "' as anonymous", e);
+        }
     }
 
     /**
@@ -27,6 +38,10 @@ public class BlahguaSessionListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent se) {
 
         final HttpSession session = se.getSession();
-        BlahguaSession.sessionDestroyed(session);
+        try {
+            BlahguaSession.sessionDestroyed(session);
+        } catch (SystemErrorException e) {
+            logger.log(Level.SEVERE, "Failed to completely destroy session state for session id '" + session.getId(), e);
+        }
     }
 }
