@@ -407,8 +407,14 @@ public class UsersResource {
     /**
      * <p>Use this method to obtain a string descriptor of the user's profile.</p>
      * <p/>
-     * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> users/descriptor</div>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/profiles/descriptor</div>
+     *
+     * @param entity Expects a JSON entity containing the user id in a
+     *               field named 'I'. If the JSON entity is empty, then
+     *               the user id is assumed to be that of the logged in user;
+     *               and, if there is no logged in user, then the user
+     *               is assumed to be anonymous.
      *
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
@@ -416,15 +422,17 @@ public class UsersResource {
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         On error conditions, a JSON object is returned with details.
      */
-    @GET
+    @POST
     @Path("/descriptor")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserDescriptorString(
+            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, BlahguaSession.getUserId(request)));
+            final String userId = (entity == null) ? (BlahguaSession.getUserId(request)) : entity.get("I");
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
             getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (ResourceNotFoundException e) {

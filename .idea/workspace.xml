@@ -173,7 +173,7 @@
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326595135" ignored="false" />
     <file path="/UserDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326483201" ignored="false" />
     <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326420358" ignored="false" />
-    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366843468621" ignored="false" />
+    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844746887" ignored="false" />
     <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362353119618" ignored="false" />
     <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365980700164" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
@@ -190,13 +190,13 @@
     <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361325117523" ignored="false" />
     <file path="/RestUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366399290780" ignored="false" />
     <file path="/index.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365715185676" ignored="false" />
-    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366843315252" ignored="false" />
+    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844517090" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363977754573" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366754774183" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366790447731" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366842848449" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366843701694" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1122,6 +1122,8 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963377" ignored="false" />
     <file path="/landing-pad.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366747151544" ignored="false" />
     <file path="/SessionInvalidationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366780577059" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/rest/resource/UsersResource.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844823944" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/index-all.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844823944" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1222,7 +1224,7 @@
       <file leaf-file-name="UsersResource.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="417" column="10" selection-start="19845" selection-end="20407" vertical-scroll-proportion="0.34850165">
+            <state line="425" column="33" selection-start="19837" selection-end="20800" vertical-scroll-proportion="0.51498336">
               <folding />
             </state>
           </provider>
@@ -1297,14 +1299,14 @@
       <file leaf-file-name="UserManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="743" column="49" selection-start="36691" selection-end="36691" vertical-scroll-proportion="0.0">
+            <state line="748" column="40" selection-start="36929" selection-end="36936" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#43074#43090#0" expanded="true" />
-                <element signature="e#51108#51122#0" expanded="true" />
-                <element signature="e#59957#59966#0" expanded="true" />
-                <element signature="e#60049#60069#0" expanded="true" />
-                <element signature="e#60592#60601#0" expanded="true" />
+                <element signature="e#43838#43854#0" expanded="true" />
+                <element signature="e#51658#51672#0" expanded="true" />
+                <element signature="e#60507#60516#0" expanded="true" />
+                <element signature="e#60599#60619#0" expanded="true" />
+                <element signature="e#61142#61151#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2402,7 +2404,11 @@
       <created>1366842850612</created>
       <updated>1366842850612</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="https://eweware.atlassian.net/browse/WRS-277 + new documentation">
+      <created>1366843703663</created>
+      <updated>1366843703663</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2495,7 +2501,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/DB-27" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/WRS-277 + new documentation" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2509,7 +2515,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Pointing to db.blahgua.com &amp; removed AdminResource calls" />
     <MESSAGE value="INF-37, WRS-256" />
     <MESSAGE value="Upgraded to Mongo driver 2.11.1" />
     <MESSAGE value="INF-55" />
@@ -2534,6 +2539,7 @@
     <MESSAGE value="Logging details of each login/logout and anonymous session creation/termination." />
     <MESSAGE value="Log increment/decrement of viewer count for a group" />
     <MESSAGE value="https://eweware.atlassian.net/browse/DB-27" />
+    <MESSAGE value="https://eweware.atlassian.net/browse/WRS-277 + new documentation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2648,21 +2654,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="743" column="49" selection-start="36691" selection-end="36691" vertical-scroll-proportion="0.0">
+        <state line="748" column="40" selection-start="36929" selection-end="36936" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#43074#43090#0" expanded="true" />
-            <element signature="e#51108#51122#0" expanded="true" />
-            <element signature="e#59957#59966#0" expanded="true" />
-            <element signature="e#60049#60069#0" expanded="true" />
-            <element signature="e#60592#60601#0" expanded="true" />
+            <element signature="e#43838#43854#0" expanded="true" />
+            <element signature="e#51658#51672#0" expanded="true" />
+            <element signature="e#60507#60516#0" expanded="true" />
+            <element signature="e#60599#60619#0" expanded="true" />
+            <element signature="e#61142#61151#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="417" column="10" selection-start="19845" selection-end="20407" vertical-scroll-proportion="0.34850165">
+        <state line="425" column="33" selection-start="19837" selection-end="20800" vertical-scroll-proportion="0.51498336">
           <folding />
         </state>
       </provider>
