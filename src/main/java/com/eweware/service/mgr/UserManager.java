@@ -737,127 +737,129 @@ public class UserManager implements ManagerInterface {
     public Map<String, String> getUserProfileDescriptor(LocaleId localeId, HttpServletRequest request, String userId)
             throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
 
-        final boolean authenticated = BlahguaSession.isAuthenticated(request);
-
-        final UserProfileDAO profile = getUserProfileDAO(userId);
-
-        final UserProfileSchema schema = UserProfileSchema.getSchema(localeId);
-        if (schema == null) {
-            throw new SystemErrorException("missing schema for user profile", ErrorCodes.SERVER_SEVERE_ERROR);
-        }
-
-        // TODO simplify the following blocks of code into an engine
-        boolean shownAge = false;
         final StringBuilder descriptor = new StringBuilder();
-        final Integer dobPermissions = profile.getDateOfBirthPermissions();
-        if (hasProfilePermission(authenticated, dobPermissions)) {
-            final Date dob = profile.getDateOfBirth(); // no need to look up data type
-            if (dob != null) {
-                descriptor.append("A ");
-                descriptor.append(CommonUtilities.getAgeInYears(dob));
-                descriptor.append(" year old");
-                shownAge = true;
-            }
-        }
 
-        boolean shownGender = false;
-        final Integer genderPermissions = profile.getGenderPermissions();
-        if (hasProfilePermission(authenticated, genderPermissions)) {
-            final String genderKey = profile.getGender();
-            if (genderKey != null) {
-                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_GENDER);
-                if (spec != null) {
-                    switch (spec.getDataType()) {
-                        case ILS:
-                            final String gender = (String) spec.getValidationMap().get(genderKey);
-                            if (gender != null) {
-                                descriptor.append(shownAge ? " " : "A ");
-                                descriptor.append(gender.toLowerCase());
-                                shownGender = true;
-                            }
-                            break;
-                        default:
-                            throw new SystemErrorException("gender data type has changed (expected list of string) and I don't know how to handle it");
+        if (userId != null) {
+
+            final UserProfileDAO profile = getUserProfileDAO(userId);
+
+            final UserProfileSchema schema = UserProfileSchema.getSchema(localeId);
+            if (schema == null) {
+                throw new SystemErrorException("missing schema for user profile", ErrorCodes.SERVER_SEVERE_ERROR);
+            }
+
+            // TODO simplify the following blocks of code into an engine
+            boolean shownAge = false;
+            final Integer dobPermissions = profile.getDateOfBirthPermissions();
+            if (hasProfilePermission(dobPermissions)) {
+                final Date dob = profile.getDateOfBirth(); // no need to look up data type
+                if (dob != null) {
+                    descriptor.append("A ");
+                    descriptor.append(CommonUtilities.getAgeInYears(dob));
+                    descriptor.append(" year old");
+                    shownAge = true;
+                }
+            }
+
+            boolean shownGender = false;
+            final Integer genderPermissions = profile.getGenderPermissions();
+            if (hasProfilePermission(genderPermissions)) {
+                final String genderKey = profile.getGender();
+                if (genderKey != null) {
+                    final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_GENDER);
+                    if (spec != null) {
+                        switch (spec.getDataType()) {
+                            case ILS:
+                                final String gender = (String) spec.getValidationMap().get(genderKey);
+                                if (gender != null) {
+                                    descriptor.append(shownAge ? " " : "A ");
+                                    descriptor.append(gender.toLowerCase());
+                                    shownGender = true;
+                                }
+                                break;
+                            default:
+                                throw new SystemErrorException("gender data type has changed (expected list of string) and I don't know how to handle it");
+                        }
                     }
                 }
             }
-        }
 
-        boolean shownCity = false;
-        final Integer cityPermissions = profile.getCityPermissions();
-        if (hasProfilePermission(authenticated, cityPermissions)) {
-            final String city = profile.getCity();
-            if (city != null) {
-                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_CITY);
-                if (spec != null) {
-                    switch (spec.getDataType()) {
-                        case S:
-                            if (!(shownAge || shownGender)) {
-                                descriptor.append("Someone");
-                            }
-                            descriptor.append(" from ");
-                            descriptor.append(city);
-                            shownCity = true;
-                            break;
-                        default:
-                            throw new SystemErrorException("city data type has changed (expected String) and I don't know how to handle it");
-                    }
-                }
-            }
-        }
-
-        boolean shownState = false;
-        final Integer statePermissions = profile.getStatePermissions();
-        if (hasProfilePermission(authenticated, statePermissions)) {
-            final String state = profile.getState();
-            if (state != null) {
-                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_STATE);
-                if (spec != null) {
-                    switch (spec.getDataType()) {
-                        case S:
-                            if (!(shownAge || shownGender || shownCity)) {
-                                descriptor.append("Someone");
-                            }
-                            if (!shownCity) {
-                                descriptor.append(" from");
-                            } else {
-                                descriptor.append(',');
-                            }
-                            descriptor.append(' ');
-                            descriptor.append(state);
-                            shownState = true;
-                            break;
-                        default:
-                            throw new SystemErrorException("state data type has changed (expected String) and I don't know how to handle it");
-                    }
-                }
-            }
-        }
-
-        final Integer countryPermissions = profile.getCountryPermissions();
-        if (hasProfilePermission(authenticated, countryPermissions)) {
-            final String countryKey = profile.getCountry();
-            if (countryKey != null) {
-                final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_COUNTRY);
-                if (spec != null) {
-                    switch (spec.getDataType()) {
-                        case ILS:
-                            final String country = (String) spec.getValidationMap().get(countryKey);
-                            if (country != null) {
-                                if (!(shownAge || shownGender || shownCity || shownState)) {
+            boolean shownCity = false;
+            final Integer cityPermissions = profile.getCityPermissions();
+            if (hasProfilePermission(cityPermissions)) {
+                final String city = profile.getCity();
+                if (city != null) {
+                    final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_CITY);
+                    if (spec != null) {
+                        switch (spec.getDataType()) {
+                            case S:
+                                if (!(shownAge || shownGender)) {
                                     descriptor.append("Someone");
                                 }
-                                if (!(shownCity || shownState)) {
+                                descriptor.append(" from ");
+                                descriptor.append(city);
+                                shownCity = true;
+                                break;
+                            default:
+                                throw new SystemErrorException("city data type has changed (expected String) and I don't know how to handle it");
+                        }
+                    }
+                }
+            }
+
+            boolean shownState = false;
+            final Integer statePermissions = profile.getStatePermissions();
+            if (hasProfilePermission(statePermissions)) {
+                final String state = profile.getState();
+                if (state != null) {
+                    final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_STATE);
+                    if (spec != null) {
+                        switch (spec.getDataType()) {
+                            case S:
+                                if (!(shownAge || shownGender || shownCity)) {
+                                    descriptor.append("Someone");
+                                }
+                                if (!shownCity) {
                                     descriptor.append(" from");
                                 } else {
                                     descriptor.append(',');
                                 }
                                 descriptor.append(' ');
-                                descriptor.append(country);
-                            }
-                            break;
-                        default:
-                            throw new SystemErrorException("country data type has changed (expected list of string) and I don't know how to handle it");
+                                descriptor.append(state);
+                                shownState = true;
+                                break;
+                            default:
+                                throw new SystemErrorException("state data type has changed (expected String) and I don't know how to handle it");
+                        }
+                    }
+                }
+            }
+
+            final Integer countryPermissions = profile.getCountryPermissions();
+            if (hasProfilePermission(countryPermissions)) {
+                final String countryKey = profile.getCountry();
+                if (countryKey != null) {
+                    final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_COUNTRY);
+                    if (spec != null) {
+                        switch (spec.getDataType()) {
+                            case ILS:
+                                final String country = (String) spec.getValidationMap().get(countryKey);
+                                if (country != null) {
+                                    if (!(shownAge || shownGender || shownCity || shownState)) {
+                                        descriptor.append("Someone");
+                                    }
+                                    if (!(shownCity || shownState)) {
+                                        descriptor.append(" from");
+                                    } else {
+                                        descriptor.append(',');
+                                    }
+                                    descriptor.append(' ');
+                                    descriptor.append(country);
+                                }
+                                break;
+                            default:
+                                throw new SystemErrorException("country data type has changed (expected list of string) and I don't know how to handle it");
+                        }
                     }
                 }
             }
@@ -871,10 +873,10 @@ public class UserManager implements ManagerInterface {
 
     }
 
-    private boolean hasProfilePermission(boolean authenticated, Integer permissions) {
+    private boolean hasProfilePermission(Integer permissions) {
         return ((permissions != null) &&
                 ((permissions == UserProfilePermissions.PUBLIC.getCode()) ||
-                        (authenticated && (permissions == UserProfilePermissions.MEMBERS.getCode()))));
+                        (permissions == UserProfilePermissions.MEMBERS.getCode())));
     }
 
     private UserProfileDAO getUserProfileDAO(String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {

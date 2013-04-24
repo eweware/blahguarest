@@ -407,28 +407,24 @@ public class UsersResource {
     /**
      * <p>Use this method to obtain a string descriptor of the user's profile.</p>
      * <p/>
-     * <div><b>METHOD:</b> POST</div>
-     * <div><b>URL:</b> users/profiles/descriptor</div>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/descriptor</div>
      *
-     * @param entity Expects a JSON entity containing the user id in a
-     *               field named 'I'
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         On error conditions, a JSON object is returned with details.
      */
-    @POST
+    @GET
     @Path("/descriptor")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserDescriptorString(
-            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String userId = entity.get("I");
-            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, BlahguaSession.getUserId(request)));
             getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (ResourceNotFoundException e) {
