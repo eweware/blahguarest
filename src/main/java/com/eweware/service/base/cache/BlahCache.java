@@ -200,14 +200,14 @@ public final class BlahCache {
         Future<Object> future = null;
         try {
             future = client.asyncGet(makeInboxStateKey(groupId, inbox));
-            return (InboxState) future.get(5, TimeUnit.SECONDS);  // 5 second timeout (default is 1)
+            return (InboxState) future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
         } catch (Exception e) {
 
             if (future != null) {
                 future.cancel(false);
             }
             if (e instanceof TimeoutException) {
-                logger.log(Level.WARNING, "Failed to get inbox state from memcached due to a timeout (set to 5 seconds)", e);
+                logger.log(Level.WARNING, "Failed to get inbox state from memcached due to a timeout (set to 2 seconds)", e);
             }
 
             try {
@@ -332,7 +332,7 @@ public final class BlahCache {
         BulkFuture<Map<String, Object>> future = null;
         try {
             future = client.asyncGetBulk(keys);
-            return future.get(5, TimeUnit.SECONDS);  // 5 second timeout (default is 1)
+            return future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
         } catch (Exception e) {
 
             if (future != null) {
@@ -340,7 +340,7 @@ public final class BlahCache {
             }
 
             if (e instanceof TimeoutException) {
-                logger.log(Level.WARNING, "Inbox #" + inbox + ", group id '" + groupId + ": Failed to get inbox state from memcached due to a timeout (set to 5 seconds)", e);
+                logger.log(Level.WARNING, "Inbox #" + inbox + ", group id '" + groupId + ": Failed to get inbox state from memcached due to a timeout (set to 2 seconds)", e);
                 // continue
             }
 

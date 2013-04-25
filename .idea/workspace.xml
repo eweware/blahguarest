@@ -11,7 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -195,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916493854" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366923576482" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366925074016" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366926885127" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1207,10 +1206,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BlahCache.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="BlahCache.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="136" column="69" selection-start="5605" selection-end="5605" vertical-scroll-proportion="0.0">
+            <state line="342" column="159" selection-start="15805" selection-end="15805" vertical-scroll-proportion="0.4876126">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5855#6268#0" expanded="true" />
@@ -1226,10 +1225,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InboxHandler.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="InboxHandler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="165" column="30" selection-start="6707" selection-end="6707" vertical-scroll-proportion="0.4328524">
+            <state line="165" column="30" selection-start="6707" selection-end="6707" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -2752,7 +2751,11 @@
       <created>1366925075850</created>
       <updated>1366925075850</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="https://eweware.atlassian.net/browse/DB-30 was calling wrong collection">
+      <created>1366926887338</created>
+      <updated>1366926887338</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2997,9 +3000,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="165" column="30" selection-start="6707" selection-end="6707" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="69" selection-start="5605" selection-end="5605" vertical-scroll-proportion="0.0">
+        <state line="342" column="159" selection-start="15805" selection-end="15805" vertical-scroll-proportion="0.4876126">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5855#6268#0" expanded="true" />
@@ -3011,13 +3021,6 @@
             <element signature="e#16126#16136#0" expanded="true" />
             <element signature="e#16630#16646#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="165" column="30" selection-start="6707" selection-end="6707" vertical-scroll-proportion="0.4328524">
-          <folding />
         </state>
       </provider>
     </entry>
