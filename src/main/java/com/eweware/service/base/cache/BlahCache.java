@@ -125,35 +125,43 @@ public final class BlahCache {
      *                  reference at a later time.
      * @throws SystemErrorException
      */
-    public void addInboxItem(String itemDBId, final Map<String, Object> inboxItem, Integer inbox, final String groupId) throws SystemErrorException {
+    public void addInboxItem(String itemDBId, final Map<String, Object> inboxItem, Integer inbox, final String groupId) {
 
-        // Write the inbox item: this item is not referenced by the status
-        final String itemCacheKey = makeInboxItemKey(itemDBId);
-        final OperationStatus status = client.set(itemCacheKey, config.getInboxBlahExpiration(), inboxItem).getStatus();
-        if (!status.isSuccess()) {
-            throw new SystemErrorException("Failed to add blah to inbox: " + status.getMessage(), ErrorCodes.SERVER_CACHE_ERROR);
-        }
+        try {
+            // Write the inbox item: this item is not referenced by the status
+            final String itemCacheKey = makeInboxItemKey(itemDBId);
 
-        // Write a reference to the item in the status
-        if (groupId != null) { // groupId may be null to defer this operation (e.g., by the stats application)
-            final CASMutation<InboxState> casMutation = new CASMutation<InboxState>() {
-                @Override
-                public InboxState getNewValue(InboxState currentState) {
-                    final List<String> update = new ArrayList<String>(currentState.getItemIds());
-                    update.add(itemCacheKey);
-                    return new InboxState(currentState.getTopInbox(), update);
-                }
-            };
-            // initial inbox state: the top inbox number is 0 (first inbox for group)
-            final int topInbox = 0;
-            final InboxState newState = new InboxState(topInbox, Arrays.asList(new String[]{itemCacheKey}));
-            final String newStateKey = makeInboxStateKey(groupId, inbox);
-            final CASMutator<InboxState> mutator = new CASMutator(client, client.getTranscoder());
-            try {
-                mutator.cas(newStateKey, newState, 0, casMutation);
-            } catch (Exception e) {
-                throw new SystemErrorException("failed cache write through mutator", e, ErrorCodes.SERVER_CACHE_ERROR);
+            final OperationStatus status = client.set(itemCacheKey, config.getInboxBlahExpiration(), inboxItem).getStatus();
+            if (!status.isSuccess()) {
+                logger.log(Level.SEVERE, "Inbox #" + inbox + ", groupId '" + groupId + ": Failed to add inbox item id '" + itemDBId + " to memcached. client.set status: '" + status.getMessage() + "'. Now backed by DB.");
+                return; // don't throw error TODO should set an alarm
             }
+
+            // Write a reference to the item in the status
+            if (groupId != null) { // groupId may be null to defer this operation (e.g., by the stats application)
+                final CASMutation<InboxState> casMutation = new CASMutation<InboxState>() {
+                    @Override
+                    public InboxState getNewValue(InboxState currentState) {
+                        final List<String> update = new ArrayList<String>(currentState.getItemIds());
+                        update.add(itemCacheKey);
+                        return new InboxState(currentState.getTopInbox(), update);
+                    }
+                };
+                // initial inbox state: the top inbox number is 0 (first inbox for group)
+                final int topInbox = 0;
+                final InboxState newState = new InboxState(topInbox, Arrays.asList(new String[]{itemCacheKey}));
+                final String newStateKey = makeInboxStateKey(groupId, inbox);
+                final CASMutator<InboxState> mutator = new CASMutator(client, client.getTranscoder());
+                try {
+                    mutator.cas(newStateKey, newState, 0, casMutation);
+                } catch (Exception e) {
+                    throw new SystemErrorException("failed cache write through mutator", e, ErrorCodes.SERVER_CACHE_ERROR);
+                }
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Inbox #" + inbox + ", groupId '" + groupId + ": Failed to add inbox item id '" + itemDBId + " to memcached. Now backed by DB.", e);
+            // don't throw it
+            // TODO should set an alarm
         }
     }
 

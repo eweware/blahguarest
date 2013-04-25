@@ -24,7 +24,7 @@ public final class RestUtilities {
 
     public static final Response make500AndLogSystemErrorResponse(HttpServletRequest request, Throwable e) {
         logger.log(Level.SEVERE, "Internal System Error. Headers: " + getHeaders(request), e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, SYSTEM_ERROR)).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, e.getMessage(), SYSTEM_ERROR)).build();
     }
 
     public static Response make404ResourceNotFoundResponse(HttpServletRequest request, ResourceNotFoundException e) {
