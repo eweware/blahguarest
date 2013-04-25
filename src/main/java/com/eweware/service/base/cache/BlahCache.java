@@ -61,9 +61,9 @@ public final class BlahCache {
         return singleton;
     }
 
-    public DBCollection getBlahStateCollection() {
+    public DBCollection getBlahStateCollection() throws SystemErrorException {
         if (inboxStateCollection == null) {
-            inboxStateCollection = storeManager.getCollection(storeManager.getInboxStateCollectionName());
+            inboxStateCollection = getStoreManager().getCollection(storeManager.getInboxStateCollectionName());
         }
         return inboxStateCollection;
     }

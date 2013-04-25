@@ -10,28 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/BaseException.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/BaseException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/CommonUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/CommonUtilities.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/Login.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/Login.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/TrackerDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/TrackerDAOImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
-    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366918687473" ignored="false" />
+    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366922476257" ignored="false" />
     <file path="/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366681079315" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361424045729" ignored="false" />
     <file path="/InboxBlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364879960301" ignored="false" />
@@ -209,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916493854" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366851472368" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366910238673" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366921399481" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -526,7 +511,7 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364581853750" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366661043861" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366825370718" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366922484812" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366689487677" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/CommentDemographics.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535942060" ignored="false" />
@@ -578,7 +563,7 @@
     <file path="/AdminResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365484491038" ignored="false" />
     <file path="/AdminManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365484682856" ignored="false" />
     <file path="/AWSUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366420266055" ignored="false" />
-    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366918691145" ignored="false" />
+    <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366921669857" ignored="false" />
     <file path="/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537201705" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/META-INF/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366414296380" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/META-INF/MANIFEST.MF" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365537215404" ignored="false" />
@@ -709,7 +694,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/FieldMapComparator.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421104508" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/Inbox.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421089606" ignored="false" />
     <file path="/Inbox.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421074039" ignored="false" />
-    <file path="/BlahCache.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366918216802" ignored="false" />
+    <file path="/BlahCache.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366922894527" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/CacheException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421296341" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/CacheException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678249428" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/DumpToR.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
@@ -831,8 +816,8 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/base/schema/GroupSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641372811" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/base/schema/UserGroupSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641372811" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/DBCollections.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366695643131" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366697379110" ignored="false" />
-    <file path="/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366697364975" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366922291622" ignored="false" />
+    <file path="/Boxer.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366922288940" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/AuthorizedState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366595161575" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641640091" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/error/ResourceNotFoundException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366641693548" ignored="false" />
@@ -1137,8 +1122,8 @@
     <file path="/SessionInvalidationException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366780577059" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/rest/resource/UsersResource.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844823944" ignored="false" />
     <file path="$PROJECT_DIR$/docs/index-all.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844823944" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/ResourcesMonitor.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366912929365" ignored="false" />
-    <file path="/ResourcesMonitor.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366912926071" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/ResourcesMonitor.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366920213081" ignored="false" />
+    <file path="/ResourcesMonitor.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366920088921" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1278,14 +1263,14 @@
       <file leaf-file-name="BlahCache.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="57" selection-start="1475" selection-end="1484" vertical-scroll-proportion="-2.0742857">
+            <state line="63" column="30" selection-start="2158" selection-end="2158" vertical-scroll-proportion="0.31853497">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5343#5355#0" expanded="true" />
-                <element signature="e#10038#10046#0" expanded="true" />
-                <element signature="e#11051#11081#0" expanded="true" />
-                <element signature="e#14711#14721#0" expanded="true" />
-                <element signature="e#15219#15235#0" expanded="true" />
+                <element signature="e#5376#5388#0" expanded="true" />
+                <element signature="e#10071#10079#0" expanded="true" />
+                <element signature="e#11084#11114#0" expanded="true" />
+                <element signature="e#14744#14754#0" expanded="true" />
+                <element signature="e#15252#15268#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2745,7 +2730,11 @@
       <created>1366848499431</created>
       <updated>1366848499431</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="https://eweware.atlassian.net/browse/DB-30, plus checked all exceptions to make sure that previous exception is not missing">
+      <created>1366919438656</created>
+      <updated>1366919438656</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2838,7 +2827,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="connections per host 100" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/DB-30, plus checked all exceptions to make sure that previous exception is not missing" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2852,7 +2841,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="INF-55" />
     <MESSAGE value="Stale data from UI clients prompts exceptions. Lowering threshold for now." />
     <MESSAGE value="Printing request headers on viewCount @GET errors" />
     <MESSAGE value="Log header info when there's a system error or an unauthorized user error." />
@@ -2877,6 +2865,7 @@
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-277 + new documentation" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-277 as a @POST + new documentation" />
     <MESSAGE value="connections per host 100" />
+    <MESSAGE value="https://eweware.atlassian.net/browse/DB-30, plus checked all exceptions to make sure that previous exception is not missing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2997,14 +2986,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="57" selection-start="1475" selection-end="1484" vertical-scroll-proportion="-2.0742857">
+        <state line="63" column="30" selection-start="2158" selection-end="2158" vertical-scroll-proportion="0.31853497">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5343#5355#0" expanded="true" />
-            <element signature="e#10038#10046#0" expanded="true" />
-            <element signature="e#11051#11081#0" expanded="true" />
-            <element signature="e#14711#14721#0" expanded="true" />
-            <element signature="e#15219#15235#0" expanded="true" />
+            <element signature="e#5376#5388#0" expanded="true" />
+            <element signature="e#10071#10079#0" expanded="true" />
+            <element signature="e#11084#11114#0" expanded="true" />
+            <element signature="e#14744#14754#0" expanded="true" />
+            <element signature="e#15252#15268#0" expanded="true" />
           </folding>
         </state>
       </provider>
