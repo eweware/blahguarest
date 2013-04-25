@@ -194,7 +194,13 @@ public class UserManager implements ManagerInterface {
                 userAccount.setAccountType(UserAccountType.STANDARD.getCode());
                 userAccount._insert();
             } catch (Exception e) {
-                throw new SystemErrorException("Failed to create account for username'" + username + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                final StringBuilder b = new StringBuilder("Failed to create account for username'");
+                b.append(username);
+                b.append("'");
+                if (e instanceof DuplicateKeyException) {
+                    b.append(" because account already exists");
+                }
+                throw new SystemErrorException(b.toString(), e, ErrorCodes.SERVER_SEVERE_ERROR);
             }
             createdAccount = true;
 
@@ -278,7 +284,7 @@ public class UserManager implements ManagerInterface {
             throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
         }
         if (usernameExistsP(username)) {
-            throw new StateConflictException("username already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
+            throw new StateConflictException("username '"+username+"' already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
         }
     }
 

@@ -24,7 +24,7 @@ public final class RestUtilities {
 
     public static final Response make500AndLogSystemErrorResponse(HttpServletRequest request, Throwable e) {
         logger.log(Level.SEVERE, "Internal System Error. Headers: " + getHeaders(request), e);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, e.getMessage(), SYSTEM_ERROR)).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, getFullMessage(e), SYSTEM_ERROR)).build();
     }
 
     public static Response make404ResourceNotFoundResponse(HttpServletRequest request, ResourceNotFoundException e) {
@@ -77,5 +77,23 @@ public final class RestUtilities {
             }
         }
         return b.toString();
+    }
+
+    private static String getFullMessage(Throwable e) {
+        final StringBuilder b = new StringBuilder();
+        getFullMessage1(e, b);
+        return b.toString();
+    }
+
+    private static void getFullMessage1(Throwable e, StringBuilder b) {
+        final String msg = e.getMessage();
+        if (msg != null) {
+            b.append(msg);
+            b.append("\n");
+        }
+        final Throwable cause = e.getCause();
+        if (cause != null) {
+            getFullMessage1(cause, b);
+        }
     }
 }
