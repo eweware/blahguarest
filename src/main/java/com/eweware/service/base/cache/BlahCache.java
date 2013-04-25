@@ -40,6 +40,7 @@ public final class BlahCache {
     private static BlahCache singleton;
     private static MongoStoreManager storeManager;
     private DBCollection inboxStateCollection;
+    private DBCollection inboxCollection;
 
 
     /**
@@ -61,11 +62,18 @@ public final class BlahCache {
         return singleton;
     }
 
-    public DBCollection getBlahStateCollection() throws SystemErrorException {
+    private DBCollection getInboxStateCollection() throws SystemErrorException {
         if (inboxStateCollection == null) {
             inboxStateCollection = getStoreManager().getCollection(storeManager.getInboxStateCollectionName());
         }
         return inboxStateCollection;
+    }
+
+    private DBCollection getInboxCollection() throws SystemErrorException {
+        if (inboxCollection == null) {
+            inboxCollection = getStoreManager().getCollection(storeManager.getBlahInboxCollectionName());
+        }
+        return inboxCollection;
     }
 
     /**
@@ -198,7 +206,7 @@ public final class BlahCache {
                 logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox state from DB...");
                 final String stateId = makeInboxStateKey(groupId, inbox);
                 final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
-                final DBObject state = getBlahStateCollection().findOne(query);
+                final DBObject state = getInboxStateCollection().findOne(query);
                 if (state != null) {
                     logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Successfully obtained inbox state from DB");
                 }
@@ -339,7 +347,7 @@ public final class BlahCache {
 
                 //final String stateId = makeInboxStateKey(groupId, inbox);
                 final DBObject query = new BasicDBObject(BaseDAOConstants.ID, new BasicDBObject("$in", oids));
-                final DBCursor cursor = getBlahStateCollection().find(query);
+                final DBCursor cursor = getInboxCollection().find(query);
                 final Map<String, Object> result = new HashMap<String, Object>(cursor.size()); // doesn't take limit into consideration!
                 for (DBObject obj : cursor) {
                     result.put(obj.get(BaseDAOConstants.ID).toString(), obj);
