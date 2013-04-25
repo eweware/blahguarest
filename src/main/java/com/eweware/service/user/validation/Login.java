@@ -45,7 +45,7 @@ public final class Login {
     public static boolean authenticate(String digest, String salt, final String password) throws SystemErrorException {
         try {
             if (CommonUtilities.isEmptyString(digest) || CommonUtilities.isEmptyString(salt)) {
-                throw new SystemErrorException("Missing validation data", ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("Missing validation data", ErrorCodes.INVALID_DIGEST_OR_SALT);
             }
 
             final byte[] proposedDigest = getHash(ITERATIONS, password, Base64.decodeBase64(salt));
@@ -53,7 +53,7 @@ public final class Login {
             return Arrays.equals(proposedDigest, Base64.decodeBase64(digest));
 
         } catch (Exception ex) {
-            throw new SystemErrorException("Unable to support validation", ex, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Unable to support validation due to crypt problem", ex, ErrorCodes.SERVER_CRYPT_ERROR);
         }
     }
 
@@ -187,7 +187,7 @@ public final class Login {
             );
             return recoveryCode;
         } catch (Exception e) {
-            throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_CRYPT_ERROR);
         }
     }
 
@@ -200,7 +200,7 @@ public final class Login {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec);
             return new String(cipher.doFinal(Base64.decodeBase64(cipherBase64)), "UTF-8");
         } catch (Exception e) {
-            throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Server error", e, ErrorCodes.SERVER_CRYPT_ERROR);
         }
     }
 }

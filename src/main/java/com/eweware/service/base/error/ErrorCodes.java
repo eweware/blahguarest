@@ -36,7 +36,7 @@ public final class ErrorCodes {
     public static final Integer SERVER_INDEXING_ERROR = 26;
     public static final Integer MISSING_TEXT = 27;
     public static final Integer MISSING_BLAH_TYPE_ID = 28;
-    public static final Integer USER_NOT_ACTIVE_IN_GROUP = 29;
+    public static final Integer USER_NOT_JOINED_GROUP = 29;
     public static final Integer CANNOT_EDIT_TEXT = 30;
     public static final Integer MISSING_BLAH_ID = 31;
     public static final Integer MISSING_AUTHOR_ID = 32;
@@ -97,4 +97,9 @@ public final class ErrorCodes {
     public static final Integer RECOVERY_CODE_INVALID = 78;
     public static final Integer INVALID_TEXT_INPUT = 79;
     public static final Integer SERVER_DATA_INCONSISTENT = 80; // TODO refactor: use this where appropriate
+    public static final Integer MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED = 81;
+    public static final Integer SEVERE_AWS_ERROR = 82;
+    public static final Integer INVALID_DIGEST_OR_SALT = 83;
+    public static final Integer SERVER_CRYPT_ERROR = 84;
+    public static final Integer EMAIL_SYSTEM_ERROR = 85;
 }

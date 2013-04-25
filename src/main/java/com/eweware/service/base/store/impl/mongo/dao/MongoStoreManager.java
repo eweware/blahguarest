@@ -1,6 +1,7 @@
 package main.java.com.eweware.service.base.store.impl.mongo.dao;
 
 import com.mongodb.*;
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.StoreManager;
@@ -335,7 +336,7 @@ public final class MongoStoreManager implements StoreManager {
         try {
             return new ObjectId(id);
         } catch (IllegalArgumentException e) {
-            throw new SystemErrorException("the id is not valid (it must be an UUID string); id=" + id, e);
+            throw new SystemErrorException("the id is not valid (it must be an UUID string); id=" + id, e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 

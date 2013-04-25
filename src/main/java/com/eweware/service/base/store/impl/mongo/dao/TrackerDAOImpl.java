@@ -248,9 +248,4 @@ public class TrackerDAOImpl extends BaseDAOImpl implements main.java.com.eweware
         }
         return TrackerDAOImpl.collection;
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.mgr;
 
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
@@ -140,8 +141,9 @@ public class MailManager implements ManagerInterface {
             final String recipient = devMode ? "rk@eweware.com" : "rk@eweware.com, davevr@eweware.com";
             send(recipient, subject.toString(), body.toString());
         } catch (SendFailedException e) {
+            e.printStackTrace(); // TODO should prob throw sys error: might be done this way when email is disabled? check!
         } catch (Exception e) {
-            throw new SystemErrorException(e);
+            throw new SystemErrorException("Failed to send test email", e, ErrorCodes.EMAIL_SYSTEM_ERROR);
         }
     }
 

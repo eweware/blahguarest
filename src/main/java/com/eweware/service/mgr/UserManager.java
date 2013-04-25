@@ -194,7 +194,7 @@ public class UserManager implements ManagerInterface {
                 userAccount.setAccountType(UserAccountType.STANDARD.getCode());
                 userAccount._insert();
             } catch (Exception e) {
-                throw new SystemErrorException("Failed to create account for username'" + username + "'", ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("Failed to create account for username'" + username + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
             }
             createdAccount = true;
 
@@ -420,12 +420,12 @@ public class UserManager implements ManagerInterface {
                 final String decoded = new String(Base64.decodeBase64(inputRecoveryCode), "UTF8");
                 final String[] parts = decoded.split("\\|");
                 if (parts.length != 2) {
-                    throw new SystemErrorException("Workaround failed; has " + parts.length + " components");
+                    throw new SystemErrorException("While recovering user and sending to main page: crypto workaround failed; has " + parts.length + " components", ErrorCodes.SERVER_CRYPT_ERROR);
                 }
                 userId = parts[0];
                 canonicalUsername = parts[1];
             } catch (UnsupportedEncodingException e) {
-                throw new SystemErrorException("error decoding base64", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("error decoding base64", e, ErrorCodes.SERVER_CRYPT_ERROR);
             }
         } else {
             final RecoveryCodeComponents inputComponents = RecoveryCode.getRecoveryComponents(inputRecoveryCode);
@@ -516,7 +516,7 @@ public class UserManager implements ManagerInterface {
                 nonCryptoUrlEncodedBase64RecoveryCode = URLEncoder.encode(base64Encoded, "UTF-8");
                 updateAccountDAO.setRecoveryCode(base64Encoded);
             } catch (UnsupportedEncodingException e) {
-                throw new SystemErrorException("workaround error", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("workaround error", e, ErrorCodes.SERVER_CRYPT_ERROR);
             }
         } else {   // use crypto
             recoveryCode = RecoveryCode.createRecoveryCode(userId, canonicalUsername);
@@ -534,9 +534,9 @@ public class UserManager implements ManagerInterface {
         try {
             getMailManager().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, nonCryptoUrlEncodedBase64RecoveryCode));
         } catch (MessagingException e) {
-            throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+            throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.EMAIL_SYSTEM_ERROR);
         } catch (UnsupportedEncodingException e) {
-            throw new SystemErrorException("encd", ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("encd", e, ErrorCodes.SERVER_CRYPT_ERROR);
         }
     }
 
@@ -677,7 +677,7 @@ public class UserManager implements ManagerInterface {
             userAccountDAO.setSalt(pwd[1]);
             userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } catch (Exception e) {
-            throw new SystemErrorException("Failed to update password due to system error", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Failed to update password due to system error", e, ErrorCodes.SERVER_CRYPT_ERROR);
         }
 
     }

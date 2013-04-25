@@ -105,7 +105,7 @@ public final class SystemManager implements ManagerInterface {
         try {
             return new String(rand, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new SystemErrorException("Unable to create secure random string", e);
+            throw new SystemErrorException("Unable to create secure random string", e, ErrorCodes.SERVER_CRYPT_ERROR);
         }
     }
 
@@ -146,7 +146,7 @@ public final class SystemManager implements ManagerInterface {
             String s = new String(Base64.encodeBase64(Long.toHexString(UUID.randomUUID().getLeastSignificantBits()).getBytes("UTF-8")), "UTF-8");
             return s.substring(2, Math.min(14, s.length() - 1)); // TODO does well for 10000+ trials: as a safety valve, the DB will drop a dup code
         } catch (UnsupportedEncodingException e) {
-            throw new SystemErrorException("Unable to generate recovery codes", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Unable to generate recovery codes", e, ErrorCodes.SERVER_CRYPT_ERROR);
         }
     }
 

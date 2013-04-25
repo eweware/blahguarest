@@ -382,7 +382,7 @@ public final class BlahManager implements ManagerInterface {
         userGroupDAO.setGroupId(groupId);
         userGroupDAO = (UserGroupDAO) userGroupDAO._findByCompositeId(new String[]{UserGroupDAO.STATE}, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
         if (userGroupDAO == null || !userGroupDAO.getState().equals(AuthorizedState.A.toString())) {
-            throw new StateConflictException("userId=" + userId + " is not active in groupId=" + groupId, ErrorCodes.USER_NOT_ACTIVE_IN_GROUP);
+            throw new StateConflictException("userId=" + userId + " is not active in groupId=" + groupId, ErrorCodes.USER_NOT_JOINED_GROUP);
         }
     }
 
@@ -1721,7 +1721,7 @@ public final class BlahManager implements ManagerInterface {
             }
             return payload;
         } catch (IOException e) {
-            throw new SystemErrorException("IO error while retrieving from blahs/comment index", e);
+            throw new SystemErrorException("IO error while retrieving from blahs/comment index", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } finally {
             if (readerList != null) {
                 indexingSystem.returnIndexReaders(readerList);

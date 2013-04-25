@@ -82,7 +82,7 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
             if (DateUtils.checkISODateTime(utc)) {
                 put(CREATED, utc);
             } else {
-                throw new SystemErrorException("invalid UTC date=" + utc);
+                throw new SystemErrorException("on setCreated, invalid UTC date=" + utc);
             }
         } else {
             remove(CREATED);
@@ -98,7 +98,7 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
             if (DateUtils.checkISODateTime(utc)) {
                 put(UPDATED, utc);
             } else {
-                throw new SystemErrorException("invalid UTC date=" + utc);
+                throw new SystemErrorException("on setUpdated, invalid UTC date=" + utc);
             }
         } else {
             remove(UPDATED);
@@ -142,9 +142,9 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
         } catch (NoSuchMethodException e) {
             throw new SystemErrorException("Method '" + BaseSchema.GET_SCHEMA_METHOD_NAME + "' not found via reflection: was name refactored?", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } catch (InvocationTargetException e) {
-            throw new SystemErrorException("Method '" + BaseSchema.GET_SCHEMA_METHOD_NAME + "' not be invoked via reflection: were params refactored?", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Method '" + BaseSchema.GET_SCHEMA_METHOD_NAME + "' could not be invoked via reflection: were params refactored?", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } catch (IllegalAccessException e) {
-            throw new SystemErrorException("Method '" + BaseSchema.GET_SCHEMA_METHOD_NAME + "' not be queried via reflection: were params refactored?", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Method '" + BaseSchema.GET_SCHEMA_METHOD_NAME + "' could not be queried via reflection: were params refactored?", e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
         return cachedSchema;
     }

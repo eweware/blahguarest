@@ -46,7 +46,7 @@ public final class CommonUtilities {
         if (val instanceof String) {
             return Double.parseDouble((String) val);
         }
-        throw new SystemErrorException("Can't handle value=" + val);
+        throw new SystemErrorException("getValueAsDouble: Can't handle value=" + val);
     }
 
     public static final Long getValueAsLong(Object val) throws SystemErrorException {
@@ -63,7 +63,7 @@ public final class CommonUtilities {
         if (val instanceof String) {
             return Long.parseLong((String) val);
         }
-        throw new SystemErrorException("Can't handle value=" + val);
+        throw new SystemErrorException("getValueAsLong: Can't handle value=" + val);
     }
 
     public static final Integer getValueAsInteger(Object val) throws SystemErrorException {
@@ -80,7 +80,7 @@ public final class CommonUtilities {
         if (val instanceof String) {
             return Integer.parseInt((String)val);
         }
-        throw new SystemErrorException("Can't handle value=" + val);
+        throw new SystemErrorException("getValueAsInteger: Can't handle value=" + val);
     }
 
     public static boolean isEmptyString(String string) {

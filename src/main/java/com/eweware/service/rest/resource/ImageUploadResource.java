@@ -299,11 +299,11 @@ public class ImageUploadResource {
                     s3.putObject(new PutObjectRequest(s3BucketName, s3FormattedImageDirname + newFilename, newFile));
                     System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
                 } catch (com.amazonaws.AmazonServiceException e) {
-                    throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 } catch (com.amazonaws.AmazonClientException e) {
-                    throw new SystemErrorException("AWS client exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    throw new SystemErrorException("AWS client exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 } catch (Exception e) {
-                    throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 }
             }
 
@@ -370,11 +370,11 @@ public class ImageUploadResource {
             ensureBucketMetadata();
             s3.putObject(new PutObjectRequest(s3BucketName, s3OriginalImageDirname + infile.getName(), infile));
         } catch (com.amazonaws.AmazonServiceException e) {
-            throw new SystemErrorException("AWS service exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("AWS service exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
         } catch (com.amazonaws.AmazonClientException e) {
-            throw new SystemErrorException("AWS client exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("AWS client exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
         } catch (Exception e) {
-            throw new SystemErrorException("Exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
         }
     }
 
@@ -420,7 +420,7 @@ public class ImageUploadResource {
                 try {
                     out.close();
                 } catch (IOException e) {
-                    throw new SystemErrorException("Failed to save local file " + infile.getAbsolutePath(), e, ErrorCodes.SERVER_SEVERE_ERROR);
+                    throw new SystemErrorException("Failed to close io for local file " + infile.getAbsolutePath(), e, ErrorCodes.SERVER_SEVERE_ERROR);
                 }
             }
         }

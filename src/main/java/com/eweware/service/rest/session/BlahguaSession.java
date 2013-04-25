@@ -433,9 +433,9 @@ public final class BlahguaSession {
                 }
 
             } catch (IllegalStateException e) {
-                throw new SystemErrorException("Failed to decrement current viewer count for a group because session id '" + session.getId() + "' was invalidated", e);
+                throw new SystemErrorException("Failed to decrement current viewer count for a group because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.SERVER_SEVERE_ERROR);
             } catch (Exception e) {
-                throw new SystemErrorException("Failed to decrement current viewer count for group id '" + groupId + "' because session id '" + session.getId() + "' was invalidated", e);
+                throw new SystemErrorException("Failed to decrement current viewer count for group id '" + groupId + "' because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.SERVER_SEVERE_ERROR);
             } finally {
                 try {
                     removeAllAttributes(session);
@@ -470,9 +470,9 @@ public final class BlahguaSession {
                 decrementViewerCount(groupId);
             }
         } catch (IllegalStateException e) {
-            throw new SystemErrorException("Failed to decrement current viewer count because session was already invalidated for some groupId", e);
+            throw new SystemErrorException("Failed to decrement current viewer count because session was already invalidated for some groupId", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } catch (Exception e) {
-            throw new SystemErrorException("Failed to decrement current viewer count for groupId '" + groupId + "'", e);
+            throw new SystemErrorException("Failed to decrement current viewer count for groupId '" + groupId + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } finally {
             try {
                 removeAllAttributes(session);

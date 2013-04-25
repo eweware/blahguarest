@@ -1,20 +1,33 @@
 package main.java.com.eweware.service.base.cache;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.payload.InboxBlahPayload;
+import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
+import main.java.com.eweware.service.base.store.dao.InboxStateDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.InboxBlahSchema;
 import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
+import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.CASMutation;
 import net.spy.memcached.CASMutator;
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.internal.BulkFuture;
 import net.spy.memcached.ops.OperationStatus;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
@@ -22,7 +35,12 @@ import java.util.*;
  */
 public final class BlahCache {
 
+    private static final Logger logger = Logger.getLogger("BlahCache");
+
     private static BlahCache singleton;
+    private static MongoStoreManager storeManager;
+    private DBCollection inboxStateCollection;
+
 
     /**
      * This is the namespace for an inbox status record
@@ -43,6 +61,13 @@ public final class BlahCache {
         return singleton;
     }
 
+    public DBCollection getBlahStateCollection() {
+        if (inboxStateCollection == null) {
+            inboxStateCollection = storeManager.getCollection(storeManager.getInboxStateCollectionName());
+        }
+        return inboxStateCollection;
+    }
+
     /**
      * TODO remove call: used temporarily for testing clients...
      *
@@ -60,7 +85,7 @@ public final class BlahCache {
             this.client = new MemcachedClient(AddrUtil.getAddresses(config.getHostname() + ":" + config.getPort()));
             this.config = config;
             singleton = this;
-            System.out.println("*** BlahCache initialized: "+config+" ***");
+            System.out.println("*** BlahCache initialized: " + config + " ***");
         } catch (IOException e) {
             throw new SystemErrorException("Cache cannot be created", e, ErrorCodes.SERVER_CACHE_ERROR);
         }
@@ -155,13 +180,61 @@ public final class BlahCache {
      * @param inbox   The inbox number
      * @return InboxState The state of the inbox
      */
-    public InboxState getInboxState(String groupId, Integer inbox) {
-        return (InboxState) client.get(makeInboxStateKey(groupId, inbox));
+    public InboxState getInboxState(String groupId, Integer inbox) throws SystemErrorException {
+        Future<Object> future = null;
+        try {
+            future = client.asyncGet(makeInboxStateKey(groupId, inbox));
+            return (InboxState) future.get(5, TimeUnit.SECONDS);  // 5 second timeout (default is 1)
+        } catch (Exception e) {
+
+            if (future != null) {
+                future.cancel(false);
+            }
+            if (e instanceof TimeoutException) {
+                logger.log(Level.WARNING, "Failed to get inbox state from memcached due to a timeout (set to 5 seconds)", e);
+            }
+
+            try {
+                // now retrieve the data from the database
+                final String stateId = makeInboxStateKey(groupId, inbox);
+                final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
+                final DBObject state = getBlahStateCollection().findOne(query);
+                return toInboxState(state);
+            } catch (SystemErrorException e1) {
+                throw new SystemErrorException("DB error while trying to get inbox #" + inbox + " for group id '" + groupId + "'", e1, ErrorCodes.SERVER_CACHE_ERROR);
+            }
+        }
+//        return (InboxState) client.get(makeInboxStateKey(groupId, inbox));
+    }
+
+    private InboxState toInboxState(DBObject state) throws SystemErrorException {
+        if (state == null) {
+            return null;
+        }
+        final List<ObjectId> inboxItemObjectIds = (List<ObjectId>) state.get(InboxStateDAOConstants.INBOX_ITEM_IDS);
+        if (inboxItemObjectIds == null) {
+            throw new SystemErrorException("InboxState dao missing item object ids; dao=" + state, ErrorCodes.SERVER_CACHE_ERROR);
+        }
+        final Integer inbox = (Integer) state.get(InboxStateDAOConstants.INBOX_NUMBER_TOP);
+        if (inbox == null) {
+            throw new SystemErrorException("InboxState dao missing inbox number; dao=" + state, ErrorCodes.SERVER_CACHE_ERROR);
+        }
+        final List<String> inboxItemIds = new ArrayList<String>(inboxItemObjectIds.size());
+        for (ObjectId id : inboxItemObjectIds) {
+            inboxItemIds.add(id.toString());
+        }
+        return new InboxState(inbox, inboxItemIds);
+    }
+
+    private MongoStoreManager getStoreManager() throws SystemErrorException {
+        if (storeManager == null) {
+            storeManager = MongoStoreManager.getInstance();
+        }
+        return storeManager;
     }
 
     /**
      * Returns the cached inbox items for the specified group's inbox.
-     *
      *
      * @param groupId       The group id
      * @param inbox         The inbox number
@@ -187,13 +260,15 @@ public final class BlahCache {
         }
 
         // Bulk-fetch the referenced items
-        final Map<String, Object> inboxReferenceItemKeyToItemMap = client.getBulk(referencedItemKeys);
+//        final Map<String, Object> inboxReferenceItemKeyToItemMap = client.getBulk(referencedItemKeys);
+        final Map<String, Object> inboxReferenceItemKeyToItemMap = doGetInboxItems(referencedItemKeys);
+
         final List<InboxBlahPayload> items = new ArrayList<InboxBlahPayload>(inboxReferenceItemKeyToItemMap.size());
         for (Object value : inboxReferenceItemKeyToItemMap.values()) {
             if (value instanceof BasicDBObject) {
                 items.add(new InboxBlahPayload((BasicDBObject) value));
             } else {
-                throw new SystemErrorException("inbox value from cache should have been a BasicDBObject, but it was a '" + value.getClass().getSimpleName() + "'", value, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("inbox #"+inbox+" for group id '"+groupId+"': value should have been a BasicDBObject, but it was a '" + value.getClass().getSimpleName() + "'", value, ErrorCodes.SERVER_CACHE_ERROR);
             }
         }
 
@@ -225,6 +300,49 @@ public final class BlahCache {
             }
         }
         return new Inbox(state.getTopInbox(), selected);
+    }
+
+    /**
+     * <p>Try to get the inbox items from memcached. If that fails, try to get them from the database.</p>
+     * @param keys Inbox item ids
+     * @return Map whose values are the DBObject instances for each inbox item
+     */
+    private Map<String, Object> doGetInboxItems(List<String> keys) throws SystemErrorException {
+        BulkFuture<Map<String, Object>> future = null;
+        try {
+            future = client.asyncGetBulk(keys);
+            return future.get(5, TimeUnit.SECONDS);  // 5 second timeout (default is 1)
+        } catch (Exception e) {
+
+            if (future != null) {
+                future.cancel(false);
+            }
+
+            if (e instanceof TimeoutException) {
+                logger.log(Level.WARNING, "Failed to get inbox state from memcached due to a timeout (set to 5 seconds)", e);
+                // continue
+            }
+
+            try {
+                // now retrieve the data from the database
+                final List<ObjectId> oids = new ArrayList<ObjectId>(keys.size());
+                for (String key : keys) {
+                    final ObjectId oid = new ObjectId(key);
+                    oids.add(oid);
+                }
+
+                //final String stateId = makeInboxStateKey(groupId, inbox);
+                final DBObject query = new BasicDBObject(BaseDAOConstants.ID, new BasicDBObject("$in", oids));
+                final DBCursor cursor = getBlahStateCollection().find(query);
+                final Map<String, Object> result = new HashMap<String, Object>(cursor.size()); // doesn't take limit into consideration!
+                for (DBObject obj : cursor) {
+                    result.put(obj.get(BaseDAOConstants.ID).toString(), obj);
+                }
+                return result;
+            } catch (Exception e1) {
+                throw new SystemErrorException("Failed to get inbox from DB for inbox item keys: "+keys, e1, ErrorCodes.SERVER_CACHE_ERROR);
+            }
+        }
     }
 
     private void maybeCacheSchema() {

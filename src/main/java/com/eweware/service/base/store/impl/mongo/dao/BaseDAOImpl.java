@@ -83,7 +83,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
      * @return BaseSchema   The schema for this DAO.
      */
     public static BaseSchema getSchema(LocaleId localeId) throws SystemErrorException {
-        throw new SystemErrorException("getSchema not implemented by DAO class", ErrorCodes.SERVER_SEVERE_ERROR);
+        throw new SystemErrorException("getSchema not implemented by BaseSchema class ", ErrorCodes.SERVER_SEVERE_ERROR);
     }
 
     private final static Map<Class, Method> classToGetSchemaMethodMap = new HashMap<Class, Method>();
@@ -157,7 +157,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     final SchemaDataType dataType = spec.getDataType();
                     if (dataType == SchemaDataType.S) {
                         if (value != null && ((String) value).length() > 4000) {
-                            throw new SystemErrorException(getClass().getSimpleName()+": String field '" + fieldName + "'s length was " + ((String) value).length() + " but maximum allowed is 4000", ErrorCodes.INVALID_INPUT);
+                            throw new SystemErrorException(getClass().getSimpleName()+": String field '" + fieldName + "'s length was " + ((String) value).length() + " but maximum allowed is 4000", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
                         }
                     }
                     final FieldValidator converter = spec.getValidator() == null ? dataType.getConverter() : spec.getValidator();
@@ -188,7 +188,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         } catch (Exception e) {
             final Throwable cause = e.getCause();
             String error = (cause != null && cause.getMessage() != null) ? cause.getMessage() : e.getMessage();
-            throw new SystemErrorException(getClass().getSimpleName()+": Error trying to get schema\nERROR: " + error + "\nMAP: " + this, e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName()+": Error for class "+getClass().getSimpleName()+" trying to get schema\nERROR: " + error + "\nMAP: " + this, e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
@@ -318,7 +318,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             }
             return findDAOConstructor().newInstance(dao, false);
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Server configuration error. Failed to find objects in object=" + this, e);
+            throw new SystemErrorException(getClass().getSimpleName()+": Server configuration error. Failed to find objects in object=" + this, e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
@@ -353,14 +353,14 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             }
             return daos;
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Server configuration error: introspection. Failed to find objects in object=" + this, e);
+            throw new SystemErrorException(getClass().getSimpleName()+": Server configuration error: introspection. Failed to find objects in object=" + this, e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     @Override
     public List<? extends BaseDAO> _findManyByPrimaryIds(String[] primaryIds) throws SystemErrorException {
         if (primaryIds == null || primaryIds.length == 0) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects. Missing primary ids in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects. Missing primary ids in object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
         }
         try {
             final List<Object> ids = new ArrayList<Object>(primaryIds.length);
@@ -381,20 +381,20 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
             return result;
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects with ids=" + primaryIds + "in object=" + this, e);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects with ids=" + primaryIds + "in object=" + this, e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     public List<? extends BaseDAO> _findManyByCompositeId(Integer start, Integer count, String sortFieldName, String[] fieldsToReturnHint, String... idFieldNames) throws SystemErrorException {
         if (idFieldNames.length == 0) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects. Missing id field names: must have at least one in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects. Missing id field names: must have at least one in object=" + this, ErrorCodes.SERVER_DB_ERROR);
         }
         DBObject criteria = new BasicDBObject();
         try {
             for (String idFieldName : idFieldNames) {
                 final Object obj = get(idFieldName);
                 if (obj == null) {
-                    throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects. Missing compound id field '" + idFieldName + "' in object=" + this);
+                    throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects. Missing compound id field '" + idFieldName + "' in object=" + this, ErrorCodes.SERVER_DB_ERROR);
                 }
                 criteria.put(idFieldName, obj);
             }
@@ -424,21 +424,21 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             }
             return daos;
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects with compound id fields=" + idFieldNames + " in object=" + this, e);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects with compound id fields=" + idFieldNames + " in object=" + this, e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     @Override
     public BaseDAO _findByCompositeId(String[] fieldsToReturnHint, String... idFieldNames) throws SystemErrorException {
         if (idFieldNames.length == 0) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find object. Missing composite id field names: must have at least one composite id in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find object. Missing composite id field names: must have at least one composite id in object=" + this, ErrorCodes.SERVER_DB_ERROR);
         }
         final DBObject criteria = new BasicDBObject();
         try {
             for (String idFieldName : idFieldNames) {
                 final Object obj = get(idFieldName);
                 if (obj == null) {
-                    throw new SystemErrorException(getClass().getSimpleName()+": Failed to find object. null value for compound id field '" + idFieldName + "' in object=" + this);
+                    throw new SystemErrorException(getClass().getSimpleName()+": Failed to find object. null value for compound id field '" + idFieldName + "' in object=" + this, ErrorCodes.SERVER_DB_ERROR);
                 }
                 criteria.put(idFieldName, obj);
             }
@@ -449,7 +449,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             }
             return findDAOConstructor().newInstance(dao, false);
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find object with compound id fields=" + idFieldNames + " in object=" + this, e);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find object with compound id fields=" + idFieldNames + " in object=" + this, e, ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
@@ -475,7 +475,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 matches.add(constructor.newInstance(obj, false));
             }
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects in range in object=" + this + ": " + e.getMessage(), ErrorCodes.SERVER_RECOVERABLE_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to find objects in range in object=" + this, e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
 
         return matches;
@@ -495,17 +495,17 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (e.getCode() == MONGO_DUPLICATE_KEY_ERROR_CODE) {
                 throw new DuplicateKeyException(e.getMessage(), e);
             }
-            throw new SystemErrorException(getClass().getSimpleName()+": DB error. Failed to update dao id=" + this.getId() + " object=" + this + "\nERROR CODE=" + e.getCode() + "\nERROR: " + e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName()+": DB error. Failed to update dao id=" + this.getId() + " object=" + this + "\nERROR CODE=" + e.getCode(), e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     @Override
     public void _updateByPrimaryId(DAOUpdateType updateType) throws SystemErrorException, DuplicateKeyException {
         if (this.getId() == null) {
-            throw new SystemErrorException(getClass().getSimpleName()+": null primary id in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": null primary id in object=" + this, ErrorCodes.SERVER_DB_ERROR);
         }
         if (updateType == null) {
-            throw new SystemErrorException(getClass().getSimpleName()+": null update type in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": null update type in object=" + this, ErrorCodes.SERVER_DB_ERROR);
         }
 
         try {
@@ -521,24 +521,24 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (e.getCode() == MONGO_DUPLICATE_KEY_ERROR_CODE) {
                 throw new DuplicateKeyException(e.getMessage(), e);
             }
-            throw new SystemErrorException(getClass().getSimpleName()+": DB error. Failed to update dao id=" + this.getId() + " object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName()+": DB error. Failed to update dao id=" + this.getId() + " object=" + this + "\nERROR CODE=" + e.getCode(), e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     @Override
     public void _updateByCompoundId(DAOUpdateType updateType, String... idFieldNames) throws SystemErrorException, DuplicateKeyException {
         if (idFieldNames.length == 0) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to update object. Missing compound id field names in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to update object. Missing compound id field names in object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
         }
         if (updateType == null) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to update object. Missing update type in object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to update object. Missing update type in object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
         }
         final DBObject criteria = new BasicDBObject();
         this.setUpdated(new Date());
         for (String idFieldName : idFieldNames) {
             final Object obj = get(idFieldName);
             if (obj == null) {
-                throw new SystemErrorException(getClass().getSimpleName()+": Failed to update object. null compound id field value '" + idFieldName + "' in object=" + this);
+                throw new SystemErrorException(getClass().getSimpleName()+": Failed to update object. null compound id field value '" + idFieldName + "' in object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
             }
             criteria.put(idFieldName, obj);
         }
@@ -548,7 +548,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     makeAtomicUpdateObject(updateType),
                     false, false, WriteConcern.SAFE);
             if (result.getError() != null) {
-                throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to update object=" + this + "\nERROR: " + result.getError());
+                throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to update object=" + this + "\nERROR: " + result.getError(), ErrorCodes.SERVER_DB_ERROR);
             }
         } catch (MongoException e) {
             if (e.getCode() == MONGO_DUPLICATE_KEY_ERROR_CODE) {
@@ -566,10 +566,10 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         try {
             final WriteResult result = _getCollection().remove(new BasicDBObject(ID, makeMongoId(this.getId())), WriteConcern.SAFE);
             if (result.getError() != null) {
-                throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to delete due to DB error; object=" + this + "\nERROR: " + result.getError());
+                throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to delete due to DB error; object=" + this + "\nERROR: " + result.getError(), ErrorCodes.SERVER_DB_ERROR);
             }
         } catch (MongoException e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to update dao id=" + this.getId() + " in object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to update dao id=" + this.getId() + " in object=" + this + "\nERROR CODE=" + e.getCode(), e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
@@ -582,24 +582,24 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         for (String idFieldName : idFieldNames) {
             final Object value = this.get(idFieldName);
             if (value == null) {
-                throw new SystemErrorException(getClass().getSimpleName()+": Did not delete: id component due to null value in composite id field '" + idFieldName + "' object=" + this);
+                throw new SystemErrorException(getClass().getSimpleName()+": Did not delete: id component due to null value in composite id field '" + idFieldName + "' object=" + this, ErrorCodes.SERVER_DB_ERROR);
             }
             query.put(idFieldName, value);
         }
         try {
             final WriteResult result = _getCollection().remove(query, WriteConcern.SAFE);
             if (result.getError() != null) {
-                throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to delete object=" + this + "\nERROR " + result.getError());
+                throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to delete object=" + this + "\nERROR " + result.getError(), ErrorCodes.SERVER_DB_ERROR);
             }
         } catch (MongoException e) {
-            throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to update dao id=" + this.getId() + " in object=" + this + "\nERROR CODE=" + e.getCode()+"\nERROR: "+e.getMessage(), ErrorCodes.SERVER_DB_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName()+": DB error; Failed to update dao id=" + this.getId() + " in object=" + this + "\nERROR CODE=" + e.getCode(), e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     @Override
     public void addFromMap(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
         if (map == null) {
-            throw new SystemErrorException(getClass().getSimpleName()+": Failed to add fields to this DAO. map to add was null for dao object=" + this);
+            throw new SystemErrorException(getClass().getSimpleName()+": Failed to add fields to this DAO. map to add was null for dao object=" + this, ErrorCodes.SERVER_DB_ERROR);
         }
         if (validateAndConvert) {
             validateAndConvertFields(map);

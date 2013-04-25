@@ -51,6 +51,15 @@ public class InboxHandler extends Thread {
 
     private MongoStoreManager storeManager;
 
+    private BlahCache blahCache;
+
+    private BlahCache getBlahCache() {
+        if (blahCache == null) {
+            blahCache = BlahCache.getInstance();
+        }
+        return blahCache;
+    }
+
     /**
      * Maps a group id to the maximum number of inboxes in the group
      */
@@ -154,11 +163,11 @@ public class InboxHandler extends Thread {
         updateInboxStateInDB(groupId, inbox, dao.getId());
 
         // Insert into cache
-        BlahCache.getInstance().addInboxItem(dao.getId(), dao, inbox, groupId);
+        getBlahCache().addInboxItem(dao.getId(), dao, inbox, groupId);
     }
 
     private void updateInboxStateInDB(String groupId, Integer inbox, String inboxItemId) {
-        final String stateId = BlahCache.getInstance().makeInboxStateKey(groupId, inbox);
+        final String stateId = getBlahCache().makeInboxStateKey(groupId, inbox);
         final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
         final DBCollection stateCol = storeManager.getCollection(storeManager.getInboxStateCollectionName());
         final DBObject state = stateCol.findOne(query);
@@ -189,7 +198,7 @@ public class InboxHandler extends Thread {
      */
     public Inbox getInboxFromCache(String groupId, Integer inbox, String type, Integer start, Integer count, String sortFieldName, Integer sortDirection) throws SystemErrorException {
         // TODO type parameter ignored!
-        final Inbox box = BlahCache.getInstance().getInbox(groupId, inbox, start, count, sortFieldName, sortDirection);
+        final Inbox box = getBlahCache().getInbox(groupId, inbox, start, count, sortFieldName, sortDirection);
         if (box != null) {
             setMaxInbox(groupId, box.getTopInbox()); // update the max inbox for this group
         }
