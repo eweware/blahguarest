@@ -219,7 +219,7 @@ public class ImageUploadResource {
         final String file = metadata.getFileName();
         final String extension = getExtension(file);
         if (!isFormatSupported(extension)) {
-            throw new InvalidRequestException("File format not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
+            throw new InvalidRequestException("File format '"+extension+"' is not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
         final String filename = getFilename(file);
         final MediaDAO mediaDAO = makeMediaRecord(objectType);

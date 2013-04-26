@@ -10,13 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357874482881" ignored="false" />
-    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366953236712" ignored="false" />
+    <file path="/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366954956331" ignored="false" />
     <file path="/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366681079315" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361424045729" ignored="false" />
     <file path="/InboxBlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364879960301" ignored="false" />
@@ -176,7 +177,7 @@
     <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916843616" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
-    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366953053805" ignored="false" />
+    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366956575316" ignored="false" />
     <file path="/SessionAttributes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361315297858" ignored="false" />
     <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366952164783" ignored="false" />
     <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
@@ -191,10 +192,10 @@
     <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366844517090" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363977754573" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357865954095" ignored="false" />
-    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916493854" ignored="false" />
+    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366956616390" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366948656491" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366952279058" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366956481994" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -511,7 +512,7 @@
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364581853750" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366661043861" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366953258639" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366954966834" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366689487677" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/CommentDemographics.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535942060" ignored="false" />
@@ -1209,7 +1210,7 @@
       <file leaf-file-name="BaseDAOImpl.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="448" column="47" selection-start="20275" selection-end="20275" vertical-scroll-proportion="-7.1538463">
+            <state line="310" column="19" selection-start="12911" selection-end="12911" vertical-scroll-proportion="-11.038462">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3284#3299#0" expanded="true" />
@@ -1222,73 +1223,66 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ErrorCodes.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java">
+      <file leaf-file-name="Constructor.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/lang/reflect/Constructor.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="104" selection-start="211" selection-end="211" vertical-scroll-proportion="0.0">
+            <state line="54" column="13" selection-start="2410" selection-end="2410" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WriteResult.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/WriteResult.java">
+      <file leaf-file-name="UserProfileDAOImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="117" column="26" selection-start="3727" selection-end="3727" vertical-scroll-proportion="0.0">
+            <state line="23" column="111" selection-start="948" selection-end="948" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserProfileDAOConstants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="57" column="53" selection-start="2607" selection-end="2607" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="InboxHandler.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
+      <file leaf-file-name="UserProfileSchema.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="163" column="22" selection-start="6677" selection-end="6768" vertical-scroll-proportion="0.33307087">
+            <state line="129" column="121" selection-start="6544" selection-end="6544" vertical-scroll-proportion="-16.5">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Exception.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/lang/Exception.class">
+      <file leaf-file-name="DateUtils.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/date/DateUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="13" selection-start="152" selection-end="152" vertical-scroll-proportion="0.0">
+            <state line="23" column="31" selection-start="700" selection-end="700" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MongoException.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/MongoException.java">
+      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="13" selection-start="776" selection-end="776" vertical-scroll-proportion="0.0">
+            <state line="221" column="78" selection-start="10085" selection-end="10085" vertical-scroll-proportion="0.3676815">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DBCollection.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/DBCollection.java">
+      <file leaf-file-name="UserManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="681" column="17" selection-start="24747" selection-end="24747" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Mongo.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/Mongo.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="616" column="12" selection-start="18797" selection-end="18797" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="QueryOpBuilder.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/QueryOpBuilder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="26" selection-start="765" selection-end="765" vertical-scroll-proportion="0.0">
+            <state line="899" column="82" selection-start="44956" selection-end="44956" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1297,7 +1291,16 @@
       <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="439" column="12" selection-start="19584" selection-end="19584" vertical-scroll-proportion="0.0">
+            <state line="1009" column="47" selection-start="46464" selection-end="46464" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DAOMethods.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="199" column="28" selection-start="9683" selection-end="9683" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1326,9 +1329,7 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/BaseException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/CommonUtilities.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/Login.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
@@ -1342,6 +1343,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       </list>
     </option>
   </component>
@@ -2107,7 +2110,11 @@
       <created>1366952280931</created>
       <updated>1366952280931</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="patch inbox spreader. insert into db switched">
+      <created>1366954149832</created>
+      <updated>1366954149832</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2137,7 +2144,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32049307" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32049307" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2596302" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
@@ -2200,7 +2207,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/WRS-284, https://eweware.atlassian.net/browse/DB-27, https://eweware.atlassian.net/browse/WRS-278" />
+    <option name="LAST_COMMIT_MESSAGE" value="patch inbox spreader. insert into db switched" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2214,7 +2221,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="WRS-269, BWC-229, WRS-268" />
     <MESSAGE value="Pointing to db cluster. Some refactoring." />
     <MESSAGE value="Set usingReplica to true" />
     <MESSAGE value="WRS-270" />
@@ -2239,6 +2245,7 @@
     <MESSAGE value="Added FINEST logging for mongo" />
     <MESSAGE value="throw error on mongod timeout exception when trying to update the inbox state" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-284, https://eweware.atlassian.net/browse/DB-27, https://eweware.atlassian.net/browse/WRS-278" />
+    <MESSAGE value="patch inbox spreader. insert into db switched" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2252,93 +2259,109 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="190" column="38" selection-start="7859" selection-end="7859" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/net/SocketException.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="53" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/io/IOException.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="150" selection-end="161" vertical-scroll-proportion="0.05905512">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/WriteConcern.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="37" selection-start="4311" selection-end="4311" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/DuplicateKeyException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="11" selection-start="333" selection-end="333" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="202" column="19" selection-start="9438" selection-end="9438" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="139" column="38" selection-start="5958" selection-end="5958" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="439" column="12" selection-start="19584" selection-end="19584" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/MongoException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="13" selection-start="776" selection-end="776" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/QueryOpBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="26" selection-start="765" selection-end="765" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/Mongo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="616" column="12" selection-start="18797" selection-end="18797" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/DBCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="681" column="17" selection-start="24747" selection-end="24747" vertical-scroll-proportion="0.0">
+        <state line="6" column="52" selection-start="189" selection-end="189" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/lang/Exception.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="152" selection-end="152" vertical-scroll-proportion="0.0">
+        <state line="6" column="49" selection-start="188" selection-end="188" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/WriteResult.java">
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/lang/Throwable.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="26" selection-start="3727" selection-end="3727" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="152" selection-end="152" vertical-scroll-proportion="0.05905512">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/DBCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="680" column="20" selection-start="24689" selection-end="24689" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="53" selection-start="2607" selection-end="2607" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="129" column="121" selection-start="6544" selection-end="6544" vertical-scroll-proportion="-16.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/date/DateUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="31" selection-start="700" selection-end="700" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="111" selection-start="948" selection-end="948" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="899" column="82" selection-start="44956" selection-end="44956" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/lang/reflect/Constructor.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="13" selection-start="2410" selection-end="2410" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1009" column="47" selection-start="46464" selection-end="46464" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="199" column="28" selection-start="9683" selection-end="9683" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="448" column="47" selection-start="20275" selection-end="20275" vertical-scroll-proportion="-7.1538463">
+        <state line="310" column="19" selection-start="12911" selection-end="12911" vertical-scroll-proportion="-11.038462">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3284#3299#0" expanded="true" />
@@ -2350,23 +2373,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="17" selection-start="211" selection-end="211" vertical-scroll-proportion="0.11653718">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="104" selection-start="211" selection-end="211" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/aux/InboxHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="22" selection-start="6677" selection-end="6768" vertical-scroll-proportion="0.33307087">
+        <state line="221" column="78" selection-start="10085" selection-end="10085" vertical-scroll-proportion="0.3676815">
           <folding />
         </state>
       </provider>

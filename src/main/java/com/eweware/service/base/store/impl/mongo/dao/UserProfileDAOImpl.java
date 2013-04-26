@@ -10,7 +10,6 @@ import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +21,7 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     private static String collectionName;
     private static DBCollection collection;
 
-    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(10);
+    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
 
     static { // TODO should be derived from schema
         UserProfileDAOImpl.FIELD_TO_TYPE_MAP.put(USER_PROFILE_USER_TYPE, MongoFieldTypes.STRING);
@@ -351,10 +350,5 @@ public class UserProfileDAOImpl extends BaseDAOImpl implements UserProfileDAO {
     @Override
     public void setCountryPermissions(Integer p) {
         put(USER_PROFILE_COUNTRY_PERMISSIONS, p);
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
     }
 }
