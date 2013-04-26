@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 
 import javax.xml.ws.WebServiceException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -342,6 +343,7 @@ public final class MongoStoreManager implements StoreManager {
 
     public void start() {
         try {
+            setMongoDebuggingLevel();
             boolean devMode = false;
             try {
                 devMode = SystemManager.getInstance().isDevMode();
@@ -439,6 +441,15 @@ public final class MongoStoreManager implements StoreManager {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setMongoDebuggingLevel() {
+        Logger logger = Logger.getLogger( "com.mongodb" );
+        if (logger != null) {
+            logger.setLevel(Level.FINEST);
+        } else {
+            logger.log(Level.WARNING, "Didn't find mongo logger at com.mongodb");
         }
     }
 
