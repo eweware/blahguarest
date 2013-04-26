@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
@@ -49,6 +51,8 @@ import java.util.Random;
  *         <p/>
  */
 public class InboxHandler extends Thread {
+
+    private static final Logger logger = Logger.getLogger("InboxHandler");
 
     private MongoStoreManager storeManager;
 
@@ -156,17 +160,36 @@ public class InboxHandler extends Thread {
 
         dao.setInboxNumber(inbox);
 
-        // Insert into db
-        dao._insert();
-
         // Update inbox state in db
         updateInboxStateInDB(groupId, inbox, dao.getId());
+
+        // Insert into db after state has been successfully updated
+        dao._insert();
 
         // Insert into cache
         getBlahCache().addInboxItem(dao.getId(), dao, inbox, groupId);
     }
 
     private void updateInboxStateInDB(String groupId, Integer inbox, String inboxItemId) throws SystemErrorException {
+        int retryCount = 0;
+        for (int i = 0; i < 4; i++) {
+            try {
+                updateInboxStateInDBTry(groupId, inbox, inboxItemId);
+                return;
+            } catch (SystemErrorException e) {
+                if (i > 2) {
+                    throw new SystemErrorException("Inbox #" + inbox + " for group id '" + groupId + "': failed to  update inbox state after retrying " + retryCount + " times", e, ErrorCodes.SERVER_DB_ERROR);
+                }
+                retryCount++;
+            } finally {
+                if (retryCount > 0) {
+                    logger.warning("Inbox #" + inbox + " for group id '" + groupId + "': Retried updating inbox state " + retryCount + " times");
+                }
+            }
+        }
+    }
+
+    private void updateInboxStateInDBTry(String groupId, Integer inbox, String inboxItemId) throws SystemErrorException {
         try {
             final String stateId = getBlahCache().makeInboxStateKey(groupId, inbox);
             final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);

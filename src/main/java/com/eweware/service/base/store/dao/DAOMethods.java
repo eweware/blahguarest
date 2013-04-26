@@ -143,16 +143,16 @@ public interface DAOMethods {
      */
     public abstract List<? extends BaseDAO> _findMany(Integer start, Integer count, String sortFieldName) throws SystemErrorException;
 
-    /**
-     * For each primary field id value, tries to find a db object with
-     * that key and returns it in the resulting list.
-     *
-     * @param primaryIds List of primary key id values
-     * @return List<BaseDAO>    Returns possibly empty list of daos.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *          TODO should also support fields to return hint
-     */
-    public abstract List<? extends BaseDAO> _findManyByPrimaryIds(String[] primaryIds) throws SystemErrorException;
+//    /**
+//     * For each primary field id value, tries to find a db object with
+//     * that key and returns it in the resulting list.
+//     *
+//     * @param primaryIds List of primary key id values
+//     * @return List<BaseDAO>    Returns possibly empty list of daos.
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *          TODO should also support fields to return hint
+//     */
+//    public abstract List<? extends BaseDAO> _findManyByPrimaryIds(String[] primaryIds) throws SystemErrorException;
 
     /**
      * Returns a list of objects that match the criteria or an empty list if no such
