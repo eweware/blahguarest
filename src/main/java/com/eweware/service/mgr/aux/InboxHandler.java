@@ -160,11 +160,11 @@ public class InboxHandler extends Thread {
 
         dao.setInboxNumber(inbox);
 
-        // Update inbox state in db
-        updateInboxStateInDB(groupId, inbox, dao.getId());
-
         // Insert into db after state has been successfully updated
         dao._insert();
+
+        // Update inbox state in db
+        updateInboxStateInDB(groupId, inbox, dao.getId());
 
         // Insert into cache
         getBlahCache().addInboxItem(dao.getId(), dao, inbox, groupId);
