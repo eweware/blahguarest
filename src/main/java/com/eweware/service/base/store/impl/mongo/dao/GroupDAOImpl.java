@@ -177,9 +177,4 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     public void setValidationParameters(String params) {
         put(USER_VALIDATION_PARAMETERS, params);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

@@ -226,7 +226,7 @@ public final class BlahManager implements ManagerInterface {
 
         final String typeId = entity.getTypeId();
         if (!isTypeIdValid(typeId)) {
-            throw new InvalidRequestException("invalid field typeId=" + typeId, ErrorCodes.MISSING_BLAH_TYPE_ID);
+            throw new InvalidRequestException("invalid blah type id '" + typeId + "'", ErrorCodes.MISSING_BLAH_TYPE_ID);
         }
 
         // Ensure user is active in group  // TODO authorized groups could be cached in session obj
@@ -1474,6 +1474,7 @@ public final class BlahManager implements ManagerInterface {
         if (groupId == null) {
             throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
         }
+
         count = ensureCount(count);
         if (sortDirection == null || (sortDirection != 1 && sortDirection != -1)) {
             sortDirection = -1;
@@ -1523,7 +1524,11 @@ public final class BlahManager implements ManagerInterface {
      *                              is not open and the user does not have access to it because
      *                              either he's not logged in and/or has not joined the group.
      */
-    private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException {
+    private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException {
+
+        if (!storeManager.createGroup(groupId)._exists()) {
+            throw new ResourceNotFoundException("Group id '" + groupId + "' does not exist");
+        }
 
         final boolean isOpenGroup = groupManager.isOpenGroup(groupId);
 

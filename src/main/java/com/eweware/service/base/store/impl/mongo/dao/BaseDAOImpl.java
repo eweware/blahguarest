@@ -162,7 +162,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     }
                     final FieldValidator converter = spec.getValidator() == null ? dataType.getConverter() : spec.getValidator();
                     if (!converter.isValid(value, spec)) {
-                        logger.warning(getClass().getSimpleName() + "validateAndConvertFields: Ignored invalid value=" + value + " for fieldName=" + fieldName + " in: " + this.getClass().getSimpleName() + "\nspec=" + spec); // TODO dbg
+                        logger.warning(getClass().getSimpleName() + ": validateAndConvertFields: Ignored invalid value '" + value + "' for fieldName=" + fieldName + " in: " + this.getClass().getSimpleName() + "\nspec=" + spec); // TODO dbg
                         it.remove(); // not a valid value: remove it
                     } else {
                         entry.setValue(converter.toValidValue(value, spec));

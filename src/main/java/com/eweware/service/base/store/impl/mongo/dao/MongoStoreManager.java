@@ -361,8 +361,8 @@ public final class MongoStoreManager implements StoreManager {
             for (String hostname : hostnames) {
                 serverAddresses.add(new ServerAddress(hostname, mongoDbPort));
             }
-            if (devMode || serverAddresses.size() == 1) {
-                logger.info("*** Connecting to standalone hostname " + hostnames + " port=" + mongoDbPort + " ***");
+            if (serverAddresses.size() == 1) {
+                logger.info("*** Connecting as a standalone hostname " + hostnames + " port=" + mongoDbPort + " ***");
             } else if (usingReplica) {
                 builder
                         .readPreference(ReadPreference.primaryPreferred()) // tries to read from primary
