@@ -5,9 +5,7 @@ import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.UserAccountDAO;
 import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.UserAccountDAOImpl;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.user.validation.Login;
@@ -350,9 +348,9 @@ public final class BlahguaSession {
      * count for that group in the DB.</p>
      *
      * @param request The http request (unchecked!)
-     * @param groupId The groupId (may be null but unchecked for validity)
+     * @param groupId The groupId. It must be verified to exist before calling this method.
      */
-    public static void setCurrentlyViewedGroup(HttpServletRequest request, String groupId) throws SystemErrorException, ResourceNotFoundException {
+    private static void setCurrentlyViewedGroup(HttpServletRequest request, String groupId) throws SystemErrorException, ResourceNotFoundException {
         if (groupId != null) {
             final HttpSession session = request.getSession(true);
             try {
@@ -363,9 +361,17 @@ public final class BlahguaSession {
                 if (currentlyWatched != null) {
                     if (!currentlyWatched.equals(groupId)) { // watching a different group
                         // decrement count in DB for current
-                        decrementViewerCount(currentlyWatched);
+                        try {
+                            decrementViewerCount(currentlyWatched);
+                        } catch (SystemErrorException e) {
+                            throw e;
+                        } catch (ResourceNotFoundException e) {
+                            logger.log(Level.WARNING, "Failed to decrement viewer count for a group that did not exist", e);
+                            // fall through to allow increment
+                        }
                         // increment count in DB for new
                         incrementViewerCount(groupId);
+
                     } else { // watching same group as before
                         // do nothing
                     }
@@ -378,13 +384,13 @@ public final class BlahguaSession {
         }
     }
 
-    private static void incrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
-        GroupManager.getInstance().updateViewerCount(groupId, true);
+    public static void incrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
+        GroupManager.getInstance().updateViewerCountInDB(groupId, true);
         logger.info("Incremented viewer count for group id '" + groupId + "'");
     }
 
-    private static void decrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
-        GroupManager.getInstance().updateViewerCount(groupId, false);
+    public static void decrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
+        GroupManager.getInstance().updateViewerCountInDB(groupId, false);
         logger.info("Decremented viewer count for group id '" + groupId + "'");
     }
 
@@ -408,7 +414,14 @@ public final class BlahguaSession {
             try {
                 groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
                 if (groupId != null) {
-                    decrementViewerCount(groupId);
+                    try {
+                        decrementViewerCount(groupId);
+                    } catch (SystemErrorException e) {
+                        throw e;
+                    } catch (ResourceNotFoundException e) {
+                        logger.log(Level.WARNING, "Tried to decrement view count for a non-existent group", e);
+                        // fall through
+                    }
                 }
                 if (!login) {
                     final String userId = (String) session.getAttribute(BlahguaSession.USER_ID_ATTRIBUTE);
@@ -458,7 +471,7 @@ public final class BlahguaSession {
      *
      * @param session The http session object
      */
-    public static void sessionDestroyed(HttpSession session) throws SystemErrorException {
+    public static void sessionDestroyed(HttpSession session) throws SystemErrorException, ResourceNotFoundException {
         String groupId = null;
         String username = null;
         String userId = null;
@@ -471,6 +484,9 @@ public final class BlahguaSession {
             }
         } catch (IllegalStateException e) {
             throw new SystemErrorException("Failed to decrement current viewer count because session was already invalidated for some groupId", e, ErrorCodes.SERVER_SEVERE_ERROR);
+        } catch (ResourceNotFoundException e) {
+            logger.log(Level.WARNING, "Did not decrement group id '" + groupId + "' because it does not exist", e);
+            // fall through
         } catch (Exception e) {
             throw new SystemErrorException("Failed to decrement current viewer count for groupId '" + groupId + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } finally {

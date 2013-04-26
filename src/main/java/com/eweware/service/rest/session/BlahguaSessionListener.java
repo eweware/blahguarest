@@ -41,7 +41,7 @@ public class BlahguaSessionListener implements HttpSessionListener {
         final HttpSession session = se.getSession();
         try {
             BlahguaSession.sessionDestroyed(session);
-        } catch (SystemErrorException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to completely destroy session state for session id '" + session.getId(), e);
         }
     }

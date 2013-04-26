@@ -276,7 +276,7 @@ public final class GroupManager implements ManagerInterface {
      * @param groupId The group id
      * @param added   If true, add one to the count, else subtract one
      */
-    public void updateViewerCount(String groupId, Boolean added) throws SystemErrorException, ResourceNotFoundException {
+    public void updateViewerCountInDB(String groupId, Boolean added) throws SystemErrorException, ResourceNotFoundException {
         final GroupDAO group = getStoreManager().createGroup(groupId);
         if (!group._exists()) {
             throw new ResourceNotFoundException("No such group id '" + groupId + "'", ErrorCodes.NOT_FOUND_GROUP_ID);
