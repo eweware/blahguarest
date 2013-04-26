@@ -6,6 +6,7 @@ import com.mongodb.DBObject;
 import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.cache.BlahCache;
 import main.java.com.eweware.service.base.cache.Inbox;
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
@@ -149,7 +150,6 @@ public class InboxHandler extends Thread {
         dao.setStrength(0.85);
         dao.setRecentStrength(0.85);
 
-        // TODO QA this:
         final Integer maxInbox = getMaxInbox(groupId);
         // maxinbox of -1 is unknown and 0 means no inboxes: in that case, start inbox 0
         final Integer inbox = (maxInbox <= 0) ? 0 : random.nextInt(maxInbox + 1);
@@ -166,20 +166,24 @@ public class InboxHandler extends Thread {
         getBlahCache().addInboxItem(dao.getId(), dao, inbox, groupId);
     }
 
-    private void updateInboxStateInDB(String groupId, Integer inbox, String inboxItemId) {
-        final String stateId = getBlahCache().makeInboxStateKey(groupId, inbox);
-        final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
-        final DBCollection stateCol = storeManager.getCollection(storeManager.getInboxStateCollectionName());
-        final DBObject state = stateCol.findOne(query);
-        if (state == null) {
-            final DBObject insert = new BasicDBObject(BaseDAOConstants.ID, stateId);
-            insert.put(InboxStateDAOConstants.INBOX_ITEM_IDS, Arrays.asList(new ObjectId[]{new ObjectId(inboxItemId)}));
-            insert.put(InboxStateDAOConstants.INBOX_NUMBER_TOP, inbox);
-            stateCol.insert(insert);
-        } else {
-            final DBObject push = new BasicDBObject(InboxStateDAOConstants.INBOX_ITEM_IDS, new ObjectId(inboxItemId));
-            final BasicDBObject update = new BasicDBObject("$push", push);
-            stateCol.update(new BasicDBObject(BaseDAOConstants.ID, stateId), update);
+    private void updateInboxStateInDB(String groupId, Integer inbox, String inboxItemId) throws SystemErrorException {
+        try {
+            final String stateId = getBlahCache().makeInboxStateKey(groupId, inbox);
+            final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
+            final DBCollection stateCol = storeManager.getCollection(storeManager.getInboxStateCollectionName());
+            final DBObject state = stateCol.findOne(query);
+            if (state == null) {
+                final DBObject insert = new BasicDBObject(BaseDAOConstants.ID, stateId);
+                insert.put(InboxStateDAOConstants.INBOX_ITEM_IDS, Arrays.asList(new ObjectId[]{new ObjectId(inboxItemId)}));
+                insert.put(InboxStateDAOConstants.INBOX_NUMBER_TOP, inbox);
+                stateCol.insert(insert);
+            } else {
+                final DBObject push = new BasicDBObject(InboxStateDAOConstants.INBOX_ITEM_IDS, new ObjectId(inboxItemId));
+                final BasicDBObject update = new BasicDBObject("$push", push);
+                stateCol.update(new BasicDBObject(BaseDAOConstants.ID, stateId), update);
+            }
+        } catch (Exception e) {
+            throw new SystemErrorException("Inbox #" + inbox + " for group id '" + groupId + "': Failed to update the inbox state for inbox item id '" + inboxItemId + "'", e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
