@@ -172,8 +172,8 @@ public final class SystemManager implements ManagerInterface {
     }
 
     private void configureLogger(String logLevel) {
-        final Logger logmgrlogger = LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logmgrlogger.setLevel(Level.parse(logLevel));
+//        final Logger logmgrlogger = LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME);
+//        logmgrlogger.setLevel(Level.parse(logLevel));
 //        final LogFormatter logFormatter = new LogFormatter();
 
     }
