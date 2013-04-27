@@ -52,6 +52,7 @@ public final class BlahCache {
      * This is the namespace for an inbox item
      */
     private static final String inboxItemNamespace = "I:";
+    private static final int inboxItemIdStartIndex = inboxItemNamespace.length();
 
 
     private final MemcachedClient client;
@@ -280,10 +281,10 @@ public final class BlahCache {
 
         // Bulk-fetch the referenced items
 //        final Map<String, Object> inboxReferenceItemKeyToItemMap = client.getBulk(referencedItemKeys);
-        final Map<String, Object> inboxReferenceItemKeyToItemMap = doGetInboxItems(referencedItemKeys, groupId, inbox);
+        final Map<String, Object> inboxReferenceItemIdToItemMap = doGetInboxItems(referencedItemKeys, groupId, inbox);
 
-        final List<InboxBlahPayload> items = new ArrayList<InboxBlahPayload>(inboxReferenceItemKeyToItemMap.size());
-        for (Object value : inboxReferenceItemKeyToItemMap.values()) {
+        final List<InboxBlahPayload> items = new ArrayList<InboxBlahPayload>(inboxReferenceItemIdToItemMap.size());
+        for (Object value : inboxReferenceItemIdToItemMap.values()) {
             if (value instanceof BasicDBObject) {
                 items.add(new InboxBlahPayload((BasicDBObject) value));
             } else {
@@ -349,7 +350,7 @@ public final class BlahCache {
                 // now retrieve the data from the database
                 final List<ObjectId> oids = new ArrayList<ObjectId>(keys.size());
                 for (String key : keys) {
-                    final ObjectId oid = new ObjectId(key);
+                    final ObjectId oid = new ObjectId(getInboxItemIdFromItemKey(key));
                     oids.add(oid);
                 }
 
@@ -392,5 +393,12 @@ public final class BlahCache {
 
     public final String makeInboxItemKey(String itemId) {
         return inboxItemNamespace + itemId;
+    }
+
+    private final String getInboxItemIdFromItemKey(String key) throws SystemErrorException {
+        if (key == null || key.length() < 3) {
+            throw new SystemErrorException("Inbox item key length is incorrect; key: '" + key + "'", ErrorCodes.INVALID_INBOX_ITEM_KEY);
+        }
+        return key.substring(inboxItemIdStartIndex);
     }
 }

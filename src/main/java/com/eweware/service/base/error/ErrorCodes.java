@@ -435,4 +435,9 @@ public final class ErrorCodes {
      * EMAIL_SYSTEM_ERROR = 85
      */
     public static final Integer EMAIL_SYSTEM_ERROR = 85;
+
+    /**
+     *  INVALID_INBOX_ITEM_KEY = 86
+     */
+    public static final Integer INVALID_INBOX_ITEM_KEY = 86;
 }
