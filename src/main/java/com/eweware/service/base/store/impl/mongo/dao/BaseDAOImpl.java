@@ -330,7 +330,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         DBObject obj = null;
         for (int i = 0; i < 4; i++) {
             try {
-                obj = collection.findOne(criteria, fields);
+                obj = collection.findOne(criteria, fields);  // getting SocketException inside here
                 break;
             } catch (Exception e) {
                 if (i > 2) {

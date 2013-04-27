@@ -11,6 +11,7 @@
 
     <bean id="systemManager" class="main.java.com.eweware.service.base.mgr.SystemManager"
           init-method="start" destroy-method="shutdown">
+        <constructor-arg value="${blag.sys.log.level}" />
         <constructor-arg value="${blag.crypto.on}" />
         <constructor-arg value="${blah.rest.service.endpoint}" />
         <constructor-arg value="${blag.memcached.hostname}" />

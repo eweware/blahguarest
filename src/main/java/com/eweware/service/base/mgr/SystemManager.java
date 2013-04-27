@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.cache.BlahCache;
 import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.log.LogFormatter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.params.ConnManagerPNames;
@@ -25,6 +26,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -46,7 +49,6 @@ public final class SystemManager implements ManagerInterface {
     private final String clientServiceEndpoint;
     private final boolean cryptoOn;
     private HttpClient client;
-//    private ClientConnectionManager connectionManager;
 
     private PoolingClientConnectionManager connectionPoolMgr;
     private Integer maxHttpConnections;
@@ -65,6 +67,7 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public SystemManager(
+            String logLevel,
             boolean cryptoOn,
             String clientServiceEndpoint,
             String cacheHostname,
@@ -74,6 +77,7 @@ public final class SystemManager implements ManagerInterface {
             ) {
         final String randomProvider = "SHA1PRNG";
         try {
+            configureLogger(logLevel);
             this.cryptoOn = cryptoOn;
             maybeSetDevelopmentMode();
             if (isDevMode()) {
@@ -92,7 +96,9 @@ public final class SystemManager implements ManagerInterface {
             randomizer.generateSeed(20);
             this.sha1Digest = MessageDigest.getInstance("SHA-1"); // TODO try SHA-2
         } catch (NoSuchAlgorithmException e) {
-            throw new WebServiceException("Failed to initialized SystemManager due to unavailable secure random provider '"+randomProvider+"'", e);
+            throw new WebServiceException("Failed to initialized SystemManager due to unavailable secure random provider '" + randomProvider + "'", e);
+        } catch (Exception e) {
+            throw new WebServiceException("Failed to initialize SystemManager", e);
         }
         SystemManager.singleton = this;
         this.state = ManagerState.INITIALIZED;
@@ -163,6 +169,13 @@ public final class SystemManager implements ManagerInterface {
         } catch (Exception e) {
             throw new WebServiceException("Problem starting SystemManager", e);
         }
+    }
+
+    private void configureLogger(String logLevel) {
+        final Logger logmgrlogger = LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME);
+        logmgrlogger.setLevel(Level.parse(logLevel));
+//        final LogFormatter logFormatter = new LogFormatter();
+
     }
 
     public BlahCache getBlahCache() {
