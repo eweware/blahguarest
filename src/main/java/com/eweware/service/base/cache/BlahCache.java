@@ -345,11 +345,12 @@ public final class BlahCache {
                 // continue
             }
 
+            final int keyCount = keys.size();
             try {
-                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for keys: " + keys);
+                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for " + keyCount + " keys" + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""));
                 // now retrieve the data from the database
-                final List<ObjectId> oids = new ArrayList<ObjectId>(keys.size());
-                final boolean memcachedKeyName = (keys.size() > 0) && keys.get(0).startsWith(inboxItemNamespace);
+                final List<ObjectId> oids = new ArrayList<ObjectId>(keyCount);
+                final boolean memcachedKeyName = (keyCount > 0) && keys.get(0).startsWith(inboxItemNamespace);
                 for (String key : keys) {
                     final ObjectId oid = new ObjectId(memcachedKeyName ? getInboxItemIdFromItemKey(key) : key);
                     oids.add(oid);
@@ -361,10 +362,10 @@ public final class BlahCache {
                 for (DBObject obj : cursor) {
                     result.put(obj.get(BaseDAOConstants.ID).toString(), obj);
                 }
-                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': successfully retrieved " + result.size() + " inbox items for " + keys.size() + " keys");
+                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': successfully retrieved " + result.size() + " inbox items for " + keyCount + " keys");
                 return result;
             } catch (Exception e1) {
-                throw new SystemErrorException("Failed to get inbox from DB for inbox item keys: "+keys, e1, ErrorCodes.SERVER_CACHE_ERROR);
+                throw new SystemErrorException("Failed to get inbox from DB for " + keyCount + " inbox item keys " + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""), e1, ErrorCodes.SERVER_CACHE_ERROR);
             }
         }
     }

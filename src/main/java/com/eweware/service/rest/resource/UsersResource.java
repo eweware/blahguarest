@@ -187,7 +187,7 @@ public class UsersResource {
     public Response logoutUser(@Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String userId = BlahguaSession.getUserId(request);
             if (userId == null) {
                 logger.info("Attempt to logout when there's no authenticated user in session. Headers=" + RestUtilities.getHeaders(request));
             } else {
