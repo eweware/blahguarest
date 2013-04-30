@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 public final class BlahCache {
 
-    private static final Logger logger = Logger.getLogger("BlahCache");
+    private static final Logger logger = Logger.getLogger(BlahCache.class.getName());
 
     private static BlahCache singleton;
     private static MongoStoreManager storeManager;
@@ -349,12 +349,12 @@ public final class BlahCache {
                 logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for keys: " + keys);
                 // now retrieve the data from the database
                 final List<ObjectId> oids = new ArrayList<ObjectId>(keys.size());
+                final boolean memcachedKeyName = (keys.size() > 0) && keys.get(0).startsWith(inboxItemNamespace);
                 for (String key : keys) {
-                    final ObjectId oid = new ObjectId(getInboxItemIdFromItemKey(key));
+                    final ObjectId oid = new ObjectId(memcachedKeyName ? getInboxItemIdFromItemKey(key) : key);
                     oids.add(oid);
                 }
 
-                //final String stateId = makeInboxStateKey(groupId, inbox);
                 final DBObject query = new BasicDBObject(BaseDAOConstants.ID, new BasicDBObject("$in", oids));
                 final DBCursor cursor = getInboxCollection().find(query);
                 final Map<String, Object> result = new HashMap<String, Object>(cursor.size()); // doesn't take limit into consideration!
