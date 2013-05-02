@@ -189,7 +189,7 @@ public class UsersResource {
             final long s = System.currentTimeMillis();
             final String userId = BlahguaSession.getUserId(request);
             if (userId == null) {
-                logger.info("Attempt to logout when there's no authenticated user in session. Headers=" + RestUtilities.getHeaders(request));
+                logger.info("Attempt to logout when there's no authenticated user in session. INFO:\n" + RestUtilities.getRequestInfo(request));
             } else {
                 getUserManager().logoutUser(LocaleId.en_us, request, userId);
             }

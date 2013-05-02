@@ -64,7 +64,7 @@ public final class RestUtilities {
         return Response.status(Response.Status.NO_CONTENT).header("Cache-Control", "no-cache").build();
     }
 
-    private static String getRequestInfo(HttpServletRequest request) {
+    public static String getRequestInfo(HttpServletRequest request) {
         final Enumeration headers = request.getHeaderNames();
         final StringBuilder b = new StringBuilder();
         final String remoteHost = request.getRemoteHost();

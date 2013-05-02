@@ -84,8 +84,8 @@ public final class BlahguaSession {
         b.append(Login.makeCanonicalUsername(username));
         b.append("'), user id '");
         b.append(userId);
-        b.append(". Headers=");
-        b.append(RestUtilities.getHeaders(request));
+        b.append(". INFO:\n");
+        b.append(RestUtilities.getRequestInfo(request));
         logger.info(b.toString());
     }
 
@@ -438,8 +438,8 @@ public final class BlahguaSession {
                             b.append(userId);
                             b.append("'");
                         }
-                        b.append(". Headers=");
-                        b.append(RestUtilities.getHeaders(request));
+                        b.append(". INFO:\n");
+                        b.append(RestUtilities.getRequestInfo(request));
                         logger.info(b.toString());
                     }
 

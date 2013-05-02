@@ -141,7 +141,7 @@ public class BadgesResource {
             getSystemManager().setResponseTime(ADD_BADGE_TO_USER_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (SystemErrorException e) {
-            logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity + "\nHeaders: " + RestUtilities.getHeaders(request), e);
+            logger.log(Level.SEVERE, "Error processing add badge notification. Entity: " + entity + "\nINFO:\n" + RestUtilities.getRequestInfo(request), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(BadgesManager.makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_SERVER_ERROR, "System Error")).build();
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
