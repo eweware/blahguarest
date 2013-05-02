@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366956616390" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367523061065" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367531281026" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367536048291" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -694,7 +694,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/FieldMapComparator.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421104508" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/Inbox.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421089606" ignored="false" />
     <file path="/Inbox.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421074039" ignored="false" />
-    <file path="/BlahCache.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367534213819" ignored="false" />
+    <file path="/BlahCache.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367536290621" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/cache/CacheException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366421296341" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/CacheException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678249428" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/DumpToR.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366687963083" ignored="false" />
@@ -1242,13 +1242,13 @@
       <file leaf-file-name="BlahCache.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="404" column="17" selection-start="18836" selection-end="18836" vertical-scroll-proportion="3.2184465">
+            <state line="213" column="34" selection-start="9520" selection-end="9520" vertical-scroll-proportion="-2.346602">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#6335#6347#0" expanded="true" />
-                <element signature="e#12907#12937#0" expanded="true" />
-                <element signature="e#17201#17211#0" expanded="true" />
-                <element signature="e#17757#17773#0" expanded="true" />
+                <element signature="e#6530#6542#0" expanded="true" />
+                <element signature="e#13102#13132#0" expanded="true" />
+                <element signature="e#17396#17406#0" expanded="true" />
+                <element signature="e#17952#17968#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2187,7 +2187,11 @@
       <created>1367531283871</created>
       <updated>1367531283871</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="https://eweware.atlassian.net/browse/WRS-289:by default, memcached is off.">
+      <created>1367536051918</created>
+      <updated>1367536051918</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2280,7 +2284,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/WRS-289" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/WRS-289:by default, memcached is off." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2294,7 +2298,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Lowering session idle timeout to 5 minutes to further pronounce any underlying group view count issues." />
     <MESSAGE value="Logging details of each login/logout and anonymous session creation/termination." />
     <MESSAGE value="Log increment/decrement of viewer count for a group" />
     <MESSAGE value="https://eweware.atlassian.net/browse/DB-27" />
@@ -2319,6 +2322,7 @@
     <MESSAGE value="print only one key in blahcache log; don't error when logout and no user (just log); set loglevel to INFO" />
     <MESSAGE value="Print remote host information along with headers" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-289" />
+    <MESSAGE value="https://eweware.atlassian.net/browse/WRS-289:by default, memcached is off." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2445,13 +2449,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="404" column="17" selection-start="18836" selection-end="18836" vertical-scroll-proportion="3.2184465">
+        <state line="213" column="34" selection-start="9520" selection-end="9520" vertical-scroll-proportion="-2.346602">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6335#6347#0" expanded="true" />
-            <element signature="e#12907#12937#0" expanded="true" />
-            <element signature="e#17201#17211#0" expanded="true" />
-            <element signature="e#17757#17773#0" expanded="true" />
+            <element signature="e#6530#6542#0" expanded="true" />
+            <element signature="e#13102#13132#0" expanded="true" />
+            <element signature="e#17396#17406#0" expanded="true" />
+            <element signature="e#17952#17968#0" expanded="true" />
           </folding>
         </state>
       </provider>

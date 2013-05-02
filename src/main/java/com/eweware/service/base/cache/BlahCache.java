@@ -83,7 +83,9 @@ public final class BlahCache {
             throw new SystemErrorException("Cache singleton already exists", ErrorCodes.SERVER_CACHE_ERROR);
         }
         try {
-            initializeClient(config);
+            if (memcachedEnabled) {
+                initializeClient(config);
+            }
             this.config = config;
             singleton = this;
             System.out.println("*** BlahCache initialized: " + config + " ***");
@@ -94,6 +96,9 @@ public final class BlahCache {
 
     private void initializeClient(BlahCacheConfiguration config) throws IOException {
         try {
+            if (client != null) {
+                shutdownClient();
+            }
             this.client = new MemcachedClient(AddrUtil.getAddresses(config.getHostname() + ":" + config.getPort()));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to initialize memcached client. Falling back on DB.", e);
@@ -108,6 +113,7 @@ public final class BlahCache {
         if (client != null) {
             try {
                 client.shutdown();
+                logger.info("Shut down memcached client");
             } finally {
                 client = null;
             }
@@ -403,7 +409,11 @@ public final class BlahCache {
                 } catch (IOException e) {
                     throw new SystemErrorException("Failed to enable memcached", e, ErrorCodes.SERVER_CACHE_ERROR);
                 }
+            } else {
+                logger.warning("While enabling memcached... client was already initialized");
             }
+        } else {
+            shutdownClient();
         }
         logger.warning("Memcached reads " + (enable ? "enabled" : "disabled"));
     }
