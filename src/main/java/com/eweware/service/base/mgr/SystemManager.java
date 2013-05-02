@@ -70,8 +70,8 @@ public final class SystemManager implements ManagerInterface {
             String logLevel,
             boolean cryptoOn,
             String clientServiceEndpoint,
-            String cacheHostname,
-            String cachePort,
+            String memcachedHostname,
+            String memcachedPort,
             String devMemcachedHostname,
             String devRestPort
             ) {
@@ -82,16 +82,16 @@ public final class SystemManager implements ManagerInterface {
             maybeSetDevelopmentMode();
             if (isDevMode()) {
                 if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-                    cacheHostname = devMemcachedHostname; // same port 21191
+                    memcachedHostname = devMemcachedHostname; // same port 21191
                 }
-                logger.info("Memcached hostname '" + cacheHostname + "' port '" + cachePort + "'");
+                logger.info("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
                 restEndpoint = "localhost:" + devRestPort;
                 cryptoOn = true;
             }
             logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
             this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
-            this.blahCacheConfiguration = new BlahCacheConfiguration(cacheHostname, cachePort).setInboxBlahExpirationTime(expirationTime);
+            this.blahCacheConfiguration = new BlahCacheConfiguration(memcachedHostname, memcachedPort).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance(randomProvider);
             randomizer.generateSeed(20);
             this.sha1Digest = MessageDigest.getInstance("SHA-1"); // TODO try SHA-2

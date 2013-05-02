@@ -186,19 +186,19 @@ public class SystemResource {
     }
 
     @GET
-    @Path("/memcached/{enable}")
+    @Path("/memcached/{enable}/{pass}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setMemcachedEnable(@PathParam("enable") boolean enable, @Context HttpServletRequest request) {
+    public Response setMemcachedEnable(@PathParam("enable") boolean enable, @PathParam("pass") String pass, @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAdmin(request);
+            if (!pass.equals("kwfew303bf3sss")) {
+                Response.status(Response.Status.FORBIDDEN).build();
+            }
             SystemManager.getInstance().setMemcachedEnable(enable);
             final Map<String, Object> map = new HashMap<String, Object>(1);
             map.put("newState", enable);
             return RestUtilities.make200OkResponse(map);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
