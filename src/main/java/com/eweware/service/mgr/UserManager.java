@@ -750,9 +750,13 @@ public class UserManager implements ManagerInterface {
 
         final StringBuilder descriptor = new StringBuilder();
 
+        logger.info("*** get descriptor for user id '" + userId + "'");
+
         if (userId != null) {
 
             final UserProfileDAO profile = getUserProfileDAO(userId);
+
+            logger.info("*** get descriptor for user id '" + userId + "' profile exists=" + ((profile == null) ? "true" : "false") + "***");
 
             if (profile != null) {
 
@@ -788,6 +792,8 @@ public class UserManager implements ManagerInterface {
                                         descriptor.append(shownAge ? " " : "A ");
                                         descriptor.append(gender.toLowerCase());
                                         shownGender = true;
+                                    } else {
+                                        logger.warning("User id '" + userId + "' profile has gender permissions but no gender for key '" + genderKey + "'");
                                     }
                                     break;
                                 default:
@@ -817,6 +823,8 @@ public class UserManager implements ManagerInterface {
                                     throw new SystemErrorException("city data type has changed (expected String) and I don't know how to handle it");
                             }
                         }
+                    } else {
+                        logger.warning("User id '" + userId + "' profile has city permissions but no city");
                     }
                 }
 

@@ -408,7 +408,7 @@ public class UsersResource {
      * <p>Use this method to obtain a string descriptor of the user's profile.</p>
      * <p/>
      * <div><b>METHOD:</b> POST</div>
-     * <div><b>URL:</b> users/profiles/descriptor</div>
+     * <div><b>URL:</b> users/descriptor</div>
      *
      * @param entity Expects a JSON entity containing the user id in a
      *               field named 'I'. If the JSON entity is empty, then
