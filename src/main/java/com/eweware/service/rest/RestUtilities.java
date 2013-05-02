@@ -84,7 +84,7 @@ public final class RestUtilities {
             b.append("\nRemote User: ");
             b.append(remoteUser);
         }
-        b.append("\nHEADERS:\n")
+        b.append("\nHEADERS:\n");
         while (headers.hasMoreElements()) {
             String name = (String) headers.nextElement();
             final String value = request.getHeader(name);
