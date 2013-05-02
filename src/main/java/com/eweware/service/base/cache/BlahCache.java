@@ -41,7 +41,7 @@ public final class BlahCache {
     private static MongoStoreManager storeManager;
     private DBCollection inboxStateCollection;
     private DBCollection inboxCollection;
-    private boolean memcachedEnabled = true;
+    private boolean memcachedEnabled = false; // By default, memcached is not used.
 
 
     /**
@@ -56,7 +56,7 @@ public final class BlahCache {
     private static final int inboxItemIdStartIndex = inboxItemNamespace.length();
 
 
-    private final MemcachedClient client;
+    private MemcachedClient client;
     private final BlahCacheConfiguration config;
     private Map<String, SchemaSpec> fieldNameToSpecMap;
 
@@ -78,21 +78,12 @@ public final class BlahCache {
         return inboxCollection;
     }
 
-    /**
-     * TODO remove call: used temporarily for testing clients...
-     *
-     * @return MemcachedClient Returns the memcached client implementation.
-     */
-    public final MemcachedClient getClient() {
-        return client;
-    }
-
     public BlahCache(BlahCacheConfiguration config) throws SystemErrorException {
         if (singleton != null) {
             throw new SystemErrorException("Cache singleton already exists", ErrorCodes.SERVER_CACHE_ERROR);
         }
         try {
-            this.client = new MemcachedClient(AddrUtil.getAddresses(config.getHostname() + ":" + config.getPort()));
+            initializeClient(config);
             this.config = config;
             singleton = this;
             System.out.println("*** BlahCache initialized: " + config + " ***");
@@ -101,9 +92,25 @@ public final class BlahCache {
         }
     }
 
+    private void initializeClient(BlahCacheConfiguration config) throws IOException {
+        try {
+            this.client = new MemcachedClient(AddrUtil.getAddresses(config.getHostname() + ":" + config.getPort()));
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to initialize memcached client. Falling back on DB.", e);
+        }
+    }
+
     public void shutdown() {
+        shutdownClient();
+    }
+
+    private void shutdownClient() {
         if (client != null) {
-            client.shutdown();
+            try {
+                client.shutdown();
+            } finally {
+                client = null;
+            }
         }
     }
 
@@ -128,7 +135,9 @@ public final class BlahCache {
      * @throws SystemErrorException
      */
     public void addInboxItem(String itemDBId, final Map<String, Object> inboxItem, Integer inbox, final String groupId) {
-
+        if (!memcachedEnabled || client == null) {
+            return;
+        }
         try {
             // Write the inbox item: this item is not referenced by the status
             final String itemCacheKey = makeInboxItemKey(itemDBId);
@@ -169,27 +178,27 @@ public final class BlahCache {
 
 //    final CASValue<Object> cas = client.getAndTouch(makeInboxStateKey(groupId, inbox), 0);
 
-    /**
-     * Sets the state of the specified group's inbox.
-     * This could be called, directly or indirectly, by the stats
-     * application (which uses the base library) or by the BlahManager.
-     * No attempt is made to synchronize this update: if
-     *
-     * @param groupId  The group id
-     * @param inbox    The inbox number
-     * @param topInbox The top inbox number (high watermark for this group (see notes in InboxStateDAOConstants for explanation)
-     * @param inboxIds A list of inbox item ids that belong to the group's inbox. Each id must have been
-     *                 generated using the makeInboxItemKey method of this class.
-     * @throws SystemErrorException
-     */
-    public void setInboxState(String groupId, Integer inbox, Integer topInbox, List<String> inboxIds) throws SystemErrorException {
-        // TODO this should be an atomic operation!
-        final InboxState state = new InboxState(topInbox, inboxIds);
-        final OperationStatus status = client.set(makeInboxStateKey(groupId, inbox), config.getInboxBlahExpiration(), state).getStatus();
-        if (!status.isSuccess()) {
-            throw new SystemErrorException("Failed to set inbox state: " + status.getMessage(), ErrorCodes.SERVER_CACHE_ERROR);
-        }
-    }
+//    /**
+//     * Sets the state of the specified group's inbox.
+//     * This could be called, directly or indirectly, by the stats
+//     * application (which uses the base library) or by the BlahManager.
+//     * No attempt is made to synchronize this update: if
+//     *
+//     * @param groupId  The group id
+//     * @param inbox    The inbox number
+//     * @param topInbox The top inbox number (high watermark for this group (see notes in InboxStateDAOConstants for explanation)
+//     * @param inboxIds A list of inbox item ids that belong to the group's inbox. Each id must have been
+//     *                 generated using the makeInboxItemKey method of this class.
+//     * @throws SystemErrorException
+//     */
+//    public void setInboxState(String groupId, Integer inbox, Integer topInbox, List<String> inboxIds) throws SystemErrorException {
+//        // TODO this should be an atomic operation!
+//        final InboxState state = new InboxState(topInbox, inboxIds);
+//        final OperationStatus status = client.set(makeInboxStateKey(groupId, inbox), config.getInboxBlahExpiration(), state).getStatus();
+//        if (!status.isSuccess()) {
+//            throw new SystemErrorException("Failed to set inbox state: " + status.getMessage(), ErrorCodes.SERVER_CACHE_ERROR);
+//        }
+//    }
 
     /**
      * Returns the state of the specified group's inbox.
@@ -201,7 +210,7 @@ public final class BlahCache {
     public InboxState getInboxState(String groupId, Integer inbox) throws SystemErrorException {
         Future<Object> future = null;
         try {
-            if (memcachedEnabled) {
+            if (memcachedEnabled && client != null) {
                 future = client.asyncGet(makeInboxStateKey(groupId, inbox));
                 return (InboxState) future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
             } else {
@@ -339,7 +348,7 @@ public final class BlahCache {
     private Map<String, Object> doGetInboxItems(List<String> keys, String groupId, Integer inbox) throws SystemErrorException {
         BulkFuture<Map<String, Object>> future = null;
         try {
-            if (memcachedEnabled) {
+            if (memcachedEnabled && client != null) {
                 future = client.asyncGetBulk(keys);
                 return future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
             } else {
@@ -385,8 +394,17 @@ public final class BlahCache {
         }
     }
 
-    public void setMemcachedEnable(boolean enable) {
+    public void setMemcachedEnable(boolean enable) throws SystemErrorException {
         memcachedEnabled = enable;
+        if (memcachedEnabled) {
+            if (client != null) {
+                try {
+                    initializeClient(config);
+                } catch (IOException e) {
+                    throw new SystemErrorException("Failed to enable memcached", e, ErrorCodes.SERVER_CACHE_ERROR);
+                }
+            }
+        }
         logger.warning("Memcached reads " + (enable ? "enabled" : "disabled"));
     }
 
