@@ -13,6 +13,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -178,6 +180,25 @@ public class SystemResource {
             GroupManager.getInstance().refreshCaches();
             logger.info("Refreshed blah manager and group manager local caches");
             return RestUtilities.make202AcceptedResponse();
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @GET
+    @Path("/memcached/{enable}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setMemcachedEnable(@PathParam("enable") boolean enable, @Context HttpServletRequest request) {
+        try {
+            BlahguaSession.ensureAdmin(request);
+            SystemManager.getInstance().setMemcachedEnable(enable);
+            final Map<String, Object> map = new HashMap<String, Object>(1);
+            map.put("newState", enable);
+            return RestUtilities.make200OkResponse(map);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }

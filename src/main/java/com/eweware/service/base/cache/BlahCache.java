@@ -41,6 +41,7 @@ public final class BlahCache {
     private static MongoStoreManager storeManager;
     private DBCollection inboxStateCollection;
     private DBCollection inboxCollection;
+    private boolean memcachedEnabled = true;
 
 
     /**
@@ -200,8 +201,12 @@ public final class BlahCache {
     public InboxState getInboxState(String groupId, Integer inbox) throws SystemErrorException {
         Future<Object> future = null;
         try {
-            future = client.asyncGet(makeInboxStateKey(groupId, inbox));
-            return (InboxState) future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
+            if (memcachedEnabled) {
+                future = client.asyncGet(makeInboxStateKey(groupId, inbox));
+                return (InboxState) future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
+            } else {
+                return getInboxStateFromDB(groupId, inbox);
+            }
         } catch (Exception e) {
 
             if (future != null) {
@@ -211,20 +216,23 @@ public final class BlahCache {
                 logger.log(Level.WARNING, "Failed to get inbox state from memcached due to a timeout (set to 2 seconds)", e);
             }
 
-            try {
-                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox state from DB...");
-                final String stateId = makeInboxStateKey(groupId, inbox);
-                final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
-                final DBObject state = getInboxStateCollection().findOne(query);
-                if (state != null) {
-                    logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Successfully obtained inbox state from DB");
-                }
-                return (state == null) ? null : toInboxState(state);
-            } catch (SystemErrorException e1) {
-                throw new SystemErrorException("DB error while trying to get inbox #" + inbox + " for group id '" + groupId + "'", e1, ErrorCodes.SERVER_CACHE_ERROR);
-            }
+            return getInboxStateFromDB(groupId, inbox);
         }
-//        return (InboxState) client.get(makeInboxStateKey(groupId, inbox));
+    }
+
+    private InboxState getInboxStateFromDB(String groupId, Integer inbox) throws SystemErrorException {
+        try {
+            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox state from DB...");
+            final String stateId = makeInboxStateKey(groupId, inbox);
+            final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
+            final DBObject state = getInboxStateCollection().findOne(query);
+            if (state != null) {
+                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Successfully obtained inbox state from DB");
+            }
+            return (state == null) ? null : toInboxState(state);
+        } catch (SystemErrorException e1) {
+            throw new SystemErrorException("DB error while trying to get inbox #" + inbox + " for group id '" + groupId + "'", e1, ErrorCodes.SERVER_CACHE_ERROR);
+        }
     }
 
     private InboxState toInboxState(DBObject state) throws SystemErrorException {
@@ -280,7 +288,6 @@ public final class BlahCache {
         }
 
         // Bulk-fetch the referenced items
-//        final Map<String, Object> inboxReferenceItemKeyToItemMap = client.getBulk(referencedItemKeys);
         final Map<String, Object> inboxReferenceItemIdToItemMap = doGetInboxItems(referencedItemKeys, groupId, inbox);
 
         final List<InboxBlahPayload> items = new ArrayList<InboxBlahPayload>(inboxReferenceItemIdToItemMap.size());
@@ -332,8 +339,12 @@ public final class BlahCache {
     private Map<String, Object> doGetInboxItems(List<String> keys, String groupId, Integer inbox) throws SystemErrorException {
         BulkFuture<Map<String, Object>> future = null;
         try {
-            future = client.asyncGetBulk(keys);
-            return future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
+            if (memcachedEnabled) {
+                future = client.asyncGetBulk(keys);
+                return future.get(2, TimeUnit.SECONDS);  // 2 second timeout (default is 1)
+            } else {
+                return doGetInboxItemsFromDB(keys, groupId, inbox);
+            }
         } catch (Exception e) {
 
             if (future != null) {
@@ -345,29 +356,38 @@ public final class BlahCache {
                 // continue
             }
 
-            final int keyCount = keys.size();
-            try {
-                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for " + keyCount + " keys" + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""));
-                // now retrieve the data from the database
-                final List<ObjectId> oids = new ArrayList<ObjectId>(keyCount);
-                final boolean memcachedKeyName = (keyCount > 0) && keys.get(0).startsWith(inboxItemNamespace);
-                for (String key : keys) {
-                    final ObjectId oid = new ObjectId(memcachedKeyName ? getInboxItemIdFromItemKey(key) : key);
-                    oids.add(oid);
-                }
-
-                final DBObject query = new BasicDBObject(BaseDAOConstants.ID, new BasicDBObject("$in", oids));
-                final DBCursor cursor = getInboxCollection().find(query);
-                final Map<String, Object> result = new HashMap<String, Object>(cursor.size()); // doesn't take limit into consideration!
-                for (DBObject obj : cursor) {
-                    result.put(obj.get(BaseDAOConstants.ID).toString(), obj);
-                }
-                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': successfully retrieved " + result.size() + " inbox items for " + keyCount + " keys");
-                return result;
-            } catch (Exception e1) {
-                throw new SystemErrorException("Failed to get inbox from DB for " + keyCount + " inbox item keys " + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""), e1, ErrorCodes.SERVER_CACHE_ERROR);
-            }
+            return doGetInboxItemsFromDB(keys, groupId, inbox);
         }
+    }
+
+    private Map<String, Object> doGetInboxItemsFromDB(List<String> keys, String groupId, Integer inbox) throws SystemErrorException {
+        final int keyCount = keys.size();
+        try {
+            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for " + keyCount + " keys" + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""));
+            // now retrieve the data from the database
+            final List<ObjectId> oids = new ArrayList<ObjectId>(keyCount);
+            final boolean memcachedKeyName = (keyCount > 0) && keys.get(0).startsWith(inboxItemNamespace);
+            for (String key : keys) {
+                final ObjectId oid = new ObjectId(memcachedKeyName ? getInboxItemIdFromItemKey(key) : key);
+                oids.add(oid);
+            }
+
+            final DBObject query = new BasicDBObject(BaseDAOConstants.ID, new BasicDBObject("$in", oids));
+            final DBCursor cursor = getInboxCollection().find(query);
+            final Map<String, Object> result = new HashMap<String, Object>(cursor.size()); // doesn't take limit into consideration!
+            for (DBObject obj : cursor) {
+                result.put(obj.get(BaseDAOConstants.ID).toString(), obj);
+            }
+            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': successfully retrieved " + result.size() + " inbox items for " + keyCount + " keys");
+            return result;
+        } catch (Exception e1) {
+            throw new SystemErrorException("Failed to get inbox from DB for " + keyCount + " inbox item keys " + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""), e1, ErrorCodes.SERVER_CACHE_ERROR);
+        }
+    }
+
+    public void setMemcachedEnable(boolean enable) {
+        memcachedEnabled = enable;
+        logger.warning("Memcached reads " + (enable ? "enabled" : "disabled"));
     }
 
     private void maybeCacheSchema() {

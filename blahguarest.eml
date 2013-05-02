@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component inheritJdk="true">
-	<contentEntry url="file://$MODULE_DIR$"/>
+<component LANGUAGE_LEVEL="JDK_1_6" inheritJdk="true">
+	<contentEntry url="file://$MODULE_DIR$/src"/>
 	<levels>
 		<level name="Maven: com.amazonaws:aws-java-sdk:1.4.1" value="project"/>
 		<level name="Maven: commons-logging:commons-logging:1.1.1" value="project"/>
