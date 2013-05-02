@@ -160,7 +160,7 @@ public final class SystemManager implements ManagerInterface {
         return state;
     }
 
-    public void setMemcachedEnable(boolean on) {
+    public void setMemcachedEnable(boolean on) throws SystemErrorException {
         getBlahCache().setMemcachedEnable(on);
     }
 
