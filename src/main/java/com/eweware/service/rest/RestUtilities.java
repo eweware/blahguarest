@@ -5,6 +5,7 @@ import main.java.com.eweware.service.base.payload.ErrorResponsePayload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
+import java.lang.String;
 import java.net.URI;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -23,27 +24,27 @@ public final class RestUtilities {
     private static final String AUTHORIZATION_ERROR = "Authorization error";
 
     public static final Response make500AndLogSystemErrorResponse(HttpServletRequest request, Throwable e) {
-        logger.log(Level.SEVERE, "Internal System Error. Headers: " + getHeaders(request), e);
+        logger.log(Level.SEVERE, "Internal System Error. Info:\n" + getRequestInfo(request), e);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(ErrorCodes.SERVER_SEVERE_ERROR, getFullMessage(e), SYSTEM_ERROR)).build();
     }
 
     public static Response make404ResourceNotFoundResponse(HttpServletRequest request, ResourceNotFoundException e) {
-        logger.log(Level.WARNING, "Resource Not Found. Headers: " + getHeaders(request), e);
+        logger.log(Level.WARNING, "Resource Not Found. Info: " + getRequestInfo(request), e);
         return Response.status(Response.Status.NOT_FOUND).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), APPLICATION_ERROR, e.getEntity())).build();
     }
 
     public static Response make409StateConflictResponse(HttpServletRequest request, StateConflictException e) {
-        logger.log(Level.WARNING, "State Conflict. Headers: " + getHeaders(request), e);
+        logger.log(Level.WARNING, "State Conflict. Info: " + getRequestInfo(request), e);
         return Response.status(Response.Status.CONFLICT).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), APPLICATION_ERROR, e.getEntity())).build();
     }
 
     public static Response make400InvalidRequestResponse(HttpServletRequest request, InvalidRequestException e) {
-        logger.log(Level.WARNING, "Invalid Request. Headers: " + getHeaders(request), e);
+        logger.log(Level.WARNING, "Invalid Request. Info: " + getRequestInfo(request), e);
         return Response.status(Response.Status.BAD_REQUEST).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), APPLICATION_ERROR, e.getEntity())).build();
     }
 
     public static Response make401UnauthorizedRequestResponse(HttpServletRequest request, InvalidAuthorizedStateException e) {
-        logger.log(Level.WARNING, "Unauthorized Access. Headers: " + getHeaders(request), e);
+        logger.log(Level.WARNING, "Unauthorized Access. Info: " + getRequestInfo(request), e);
         return Response.status(Response.Status.UNAUTHORIZED).header("Cache-Control", "no-cache").entity(new ErrorResponsePayload(e.getErrorCode(), AUTHORIZATION_ERROR, e.getEntity())).build();
     }
 
@@ -63,9 +64,27 @@ public final class RestUtilities {
         return Response.status(Response.Status.NO_CONTENT).header("Cache-Control", "no-cache").build();
     }
 
-    public static String getHeaders(HttpServletRequest request) {
+    private static String getRequestInfo(HttpServletRequest request) {
         final Enumeration headers = request.getHeaderNames();
         final StringBuilder b = new StringBuilder();
+        final String remoteHost = request.getRemoteHost();
+        if (remoteHost != null) {
+            b.append("Remote Host: ");
+            b.append(remoteHost);
+        }
+        final String remoteAddr = request.getRemoteAddr();
+        if (remoteAddr != null) {
+            b.append("\nRemote Addr: ");
+            b.append(remoteAddr);
+            b.append("\nRemote Port: ");
+            b.append(request.getRemotePort());
+        }
+        final String remoteUser = request.getRemoteUser();
+        if (remoteUser != null) {
+            b.append("\nRemote User: ");
+            b.append(remoteUser);
+        }
+        b.append("\nHEADERS:\n")
         while (headers.hasMoreElements()) {
             String name = (String) headers.nextElement();
             final String value = request.getHeader(name);
