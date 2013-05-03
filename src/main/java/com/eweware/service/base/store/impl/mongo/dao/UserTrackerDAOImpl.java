@@ -145,9 +145,4 @@ public class UserTrackerDAOImpl extends BaseDAOImpl implements UserTrackerDAO {
     public void setUserId(String userId) {
         put(UT_USER_ID, userId);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

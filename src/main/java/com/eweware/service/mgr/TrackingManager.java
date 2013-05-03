@@ -1,10 +1,7 @@
 package main.java.com.eweware.service.mgr;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.WriteResult;
+import com.mongodb.*;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.InvalidRequestException;
@@ -19,6 +16,8 @@ import main.java.com.eweware.service.base.type.TrackerType;
 
 import javax.xml.ws.WebServiceException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // TODO remove this dependency
 
@@ -55,6 +54,8 @@ import java.util.*;
 public final class TrackingManager implements ManagerInterface, UserTrackerDAOConstants, BlahTrackerDAOConstants, CommentTrackerDAOConstants {
 
 
+    private static final Logger logger = Logger.getLogger(TrackingManager.class.getName());
+
     private MongoStoreManager storeManager;
 
     private MongoStoreManager getStoreManager() {
@@ -81,19 +82,19 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         /**
          * Constructor for a tracker queue item.
          *
-         * @param operation   The operation
-         * @param userId      The user id for this operation
-         * @param authorId    The id of the author of the blah or comment, depending on the operation
-         * @param isBlah      True if the object is a blah, else it's a comment
-         * @param isNewObject True if this is a new blah or comment (i.e., was created by userId)
-         * @param objectId    The blah or comment id
-         * @param subObjectId If this is a comment (i.e., !isBlah), then this is the id of the blah
-*                    upon which it is commenting.
-         * @param voteUp   True if the vote is up for this operation
-         * @param voteDown True if the vote is down for this operation
-         * @param pollOptionIndex  If not null, the poll option index for the option for which the specified user voted
-         * @param viewCount   Number of added views
-         * @param openCount   Number of added opens
+         * @param operation       The operation
+         * @param userId          The user id for this operation
+         * @param authorId        The id of the author of the blah or comment, depending on the operation
+         * @param isBlah          True if the object is a blah, else it's a comment
+         * @param isNewObject     True if this is a new blah or comment (i.e., was created by userId)
+         * @param objectId        The blah or comment id
+         * @param subObjectId     If this is a comment (i.e., !isBlah), then this is the id of the blah
+         *                        upon which it is commenting.
+         * @param voteUp          True if the vote is up for this operation
+         * @param voteDown        True if the vote is down for this operation
+         * @param pollOptionIndex If not null, the poll option index for the option for which the specified user voted
+         * @param viewCount       Number of added views
+         * @param openCount       Number of added opens
          */
         TrackerQueueItem(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) {
             this.operation = operation;
@@ -150,35 +151,43 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * This method is the interface between the REST API service
      * and the Tracking service. TODO Eventually, this method will queue up the tracker data for the tracking service.
      *
-     *
-     *
-     * @param operation   The operation
-     * @param userId      The id of the user for this operation
-     * @param authorId    The id of the author of a blah or comment, depending on the operation
-     * @param isBlah      True if the object is a blah; else it's a comment
-     * @param isNewObject True if the blah or comment is new. Implies that
-*                    the userId is the author's id.
-     * @param objectId    The blah or comment id
-     * @param subObjectId If the object is a comment, this is optionally it's blah's id
-     * @param voteUp      Vote up for a blah or a comment
-     * @param voteDown    Vote up for a blah or a comment
+     * @param operation       The operation
+     * @param userId          The id of the user for this operation
+     * @param authorId        The id of the author of a blah or comment, depending on the operation
+     * @param isBlah          True if the object is a blah; else it's a comment
+     * @param isNewObject     True if the blah or comment is new. Implies that
+     *                        the userId is the author's id.
+     * @param objectId        The blah or comment id
+     * @param subObjectId     If the object is a comment, this is optionally it's blah's id
+     * @param voteUp          Vote up for a blah or a comment
+     * @param voteDown        Vote up for a blah or a comment
      * @param pollOptionIndex
-     * @param viewCount   Number of views
-     * @param openCount   Number of opens         @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @param viewCount       Number of views
+     * @param openCount       Number of opens         @throws main.java.com.eweware.service.base.error.SystemErrorException
      */
     public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
         if (!isBlah && subObjectId == null) {
             throw new SystemErrorException("missing subObjectId", ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
         final TrackerQueueItem trackerData = new TrackerQueueItem(operation, userId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, pollOptionIndex, viewCount, openCount);
-        trackUserStats(trackerData);
-        trackBlahOrCommentStats(trackerData);
+        try {
+            trackUserStats(trackerData);
+            trackBlahOrCommentStats(trackerData);
+        } catch (MongoException e) {  // TODO this should be offline and in a queue, anyway, but see RTUA-8
+            logger.log(Level.SEVERE, "Ignored db exception while writing tracker object for user id '" + userId + "' author id '" + authorId + "' isBlah="
+                    + isBlah + " isNewObject=" + isNewObject + " object id '" + objectId + "' sub-object id '" + subObjectId + "'", e);
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (InvalidRequestException e) {
+            throw e;
+        }
     }
 
     /**
      * Tracks the user stats for authors and consumers of blahs.
      *
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     private void trackUserStats(TrackerQueueItem trackerData) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
 
@@ -243,7 +252,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         String trackerId = maybeAllocateUserTracker(trackerData.userId);
         final String blahAuthorId = BlahManager.getInstance().getAuthorIdForBlah(trackerData.subObjectId);
         boolean trackerIsForUser = true;
-        final boolean   userIsBlahCreator = blahAuthorId.equals(trackerData.userId);
+        final boolean userIsBlahCreator = blahAuthorId.equals(trackerData.userId);
 
         updateUserStats(trackerData, trackerIsForUser, trackerId, userIsBlahCreator);
 
@@ -289,6 +298,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param userId The user id
      * @return String   The tracker id for the tracker
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     private String maybeAllocateUserTracker(String userId) throws SystemErrorException {
         final TrackerType trackerType = TrackerType.USER;
@@ -306,6 +316,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param trackerIsForUser
      * @param userIsBlahCreator
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     private void updateUserStats(TrackerQueueItem trackerData, boolean trackerIsForUser, String trackerId, boolean userIsBlahCreator) throws SystemErrorException {
 
@@ -514,6 +525,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      *
      * @param trackerData A tracker data instance.
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     private void trackBlahOrCommentStats(TrackerQueueItem trackerData) throws SystemErrorException {
 
@@ -730,10 +742,9 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param objectId    A userId, blahId, or commentId, depending on the tracker type
      * @return String  The tracker id
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      */
     public static final String makeUserTrackerIdExternal(TrackerType trackerType, Calendar cal, String objectId) throws SystemErrorException {
-        final int month = cal.get(Calendar.MONTH);
-        final int year = cal.get(Calendar.YEAR);
         return makeTrackerIdInternal(trackerType, objectId, cal);
     }
 
@@ -810,7 +821,6 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         System.out.println("*** TrackingManager shutdown ***");
     }
 }
-
 
 
 //    public void track(LocaleId localeId, TrackerDAO tracker) throws SystemErrorException {

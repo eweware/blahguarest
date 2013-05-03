@@ -1,10 +1,7 @@
 package main.java.com.eweware.service.base.mgr;
 
-import main.java.com.eweware.service.base.cache.BlahCache;
-import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.log.LogFormatter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.params.ConnManagerPNames;
@@ -26,8 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -43,8 +38,8 @@ public final class SystemManager implements ManagerInterface {
     private boolean devMode;
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
-    private BlahCache blahCache;
-    private final BlahCacheConfiguration blahCacheConfiguration;
+//    private BlahCache blahCache;
+//    private final BlahCacheConfiguration blahCacheConfiguration;
     private String restEndpoint;
     private final String clientServiceEndpoint;
     private final boolean cryptoOn;
@@ -70,9 +65,9 @@ public final class SystemManager implements ManagerInterface {
             String logLevel,
             boolean cryptoOn,
             String clientServiceEndpoint,
-            String memcachedHostname,
-            String memcachedPort,
-            String devMemcachedHostname,
+//            String memcachedHostname,
+//            String memcachedPort,
+//            String devMemcachedHostname,
             String devRestPort
             ) {
         final String randomProvider = "SHA1PRNG";
@@ -81,17 +76,17 @@ public final class SystemManager implements ManagerInterface {
             this.cryptoOn = cryptoOn;
             maybeSetDevelopmentMode();
             if (isDevMode()) {
-                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-                    memcachedHostname = devMemcachedHostname; // same port 21191
-                }
-                logger.info("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
+//                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
+//                    memcachedHostname = devMemcachedHostname; // same port 21191
+//                }
+//                logger.info("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
                 restEndpoint = "localhost:" + devRestPort;
                 cryptoOn = true;
             }
             logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
             this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
-            this.blahCacheConfiguration = new BlahCacheConfiguration(memcachedHostname, memcachedPort).setInboxBlahExpirationTime(expirationTime);
+//            this.blahCacheConfiguration = new BlahCacheConfiguration(memcachedHostname, memcachedPort).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance(randomProvider);
             randomizer.generateSeed(20);
             this.sha1Digest = MessageDigest.getInstance("SHA-1"); // TODO try SHA-2
@@ -160,13 +155,13 @@ public final class SystemManager implements ManagerInterface {
         return state;
     }
 
-    public void setMemcachedEnable(boolean on) throws SystemErrorException {
-        getBlahCache().setMemcachedEnable(on);
-    }
+//    public void setMemcachedEnable(boolean on) throws SystemErrorException {
+//        getBlahCache().setMemcachedEnable(on);
+//    }
 
     public void start() {
         try {
-            this.blahCache = new BlahCache(blahCacheConfiguration);
+//            this.blahCache = new BlahCache(blahCacheConfiguration);
             startHttpClient();
             this.state = ManagerState.STARTED;
             System.out.println("*** SystemManager started ***");
@@ -182,15 +177,15 @@ public final class SystemManager implements ManagerInterface {
 
     }
 
-    public BlahCache getBlahCache() {
-        return blahCache;
-    }
+//    public BlahCache getBlahCache() {
+//        return blahCache;
+//    }
 
     public void shutdown() {
         if (connectionPoolMgr != null) {
             connectionPoolMgr.shutdown();
         }
-        blahCache.shutdown();
+//        blahCache.shutdown();
         this.state = ManagerState.SHUTDOWN;
         System.out.println("*** System shut down ***");
     }
@@ -303,36 +298,6 @@ public final class SystemManager implements ManagerInterface {
     public void setDevBadgeAuthorityPort(Integer port) {
         this.devBadgeAuthorityPort = port;
     }
-
-
-//    private void startHttpClientOld() {
-//
-//        client = new DefaultHttpClient();
-//        connectionManager = client.getConnectionManager();
-//        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (connectionManager != null) {
-//                    connectionManager.shutdown();
-//                }
-//            }
-//        }));
-//    }
-
-//    public static DefaultHttpClient createHttpClient(String endpoint, Integer port) {
-//        SchemeRegistry schemeRegistry = new SchemeRegistry();
-//        schemeRegistry.register(
-//                new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
-////        schemeRegistry.register(
-////                new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
-//
-//        PoolingClientConnectionManager cm = new PoolingClientConnectionManager(schemeRegistry);
-//        cm.setMaxTotal(400);
-//        cm.setDefaultMaxPerRoute(100);
-////        HttpHost host = new HttpHost(endpoint, port);
-////        cm.setMaxPerRoute(new HttpRoute(host), 400);
-//        return new DefaultHttpClient(cm);
-//    }
 
     java.util.Map<String, OperationInfo> operationToOpInfoMap = new HashMap<String, OperationInfo>();
     final Object infomapLock = new Object();
