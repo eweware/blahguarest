@@ -756,7 +756,7 @@ public class UserManager implements ManagerInterface {
 
             final UserProfileDAO profile = getUserProfileDAO(userId);
 
-            logger.info("*** get descriptor for user id '" + userId + "' profile exists=" + ((profile == null) ? "true" : "false") + "***");
+            logger.info("*** get descriptor for user id '" + userId + "' profile=" + (profile != null ? profile.toMap() : "none") + "***");
 
             if (profile != null) {
 
