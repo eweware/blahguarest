@@ -9,7 +9,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
+    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="wrs-286">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -171,7 +172,7 @@
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326595135" ignored="false" />
     <file path="/UserDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326483201" ignored="false" />
     <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364326420358" ignored="false" />
-    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367539710031" ignored="false" />
+    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367542136174" ignored="false" />
     <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916650152" ignored="false" />
     <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367528633766" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
@@ -194,7 +195,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366956616390" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367523061065" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367539068538" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367552159018" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1214,7 +1215,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" line="312" class="main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl" package="main.java.com.eweware.service.base.store.impl.mongo.dao">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" line="805" class="main.java.com.eweware.service.mgr.UserManager" package="main.java.com.eweware.service.mgr">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -1242,16 +1243,47 @@
       <file leaf-file-name="UsersResource.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="434" column="99" selection-start="21275" selection-end="21275" vertical-scroll-proportion="0.0">
+            <state line="432" column="0" selection-start="21013" selection-end="21013" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#3669#3685#0" expanded="false" />
+                <element signature="e#5163#5179#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="888" column="0" selection-start="44597" selection-end="44597" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserManager.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
+      <file leaf-file-name="ErrorCodes.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="758" column="139" selection-start="37540" selection-end="37540" vertical-scroll-proportion="0.22736418">
+            <state line="160" column="48" selection-start="3861" selection-end="3861" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ManagerInterface.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/ManagerInterface.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="25" selection-start="188" selection-end="188" vertical-scroll-proportion="0.28235295">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserProfilePermissions.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/UserProfilePermissions.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="19" selection-start="706" selection-end="706" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1261,7 +1293,9 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="199" column="28" selection-start="9683" selection-end="9683" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1270,7 +1304,9 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="48" column="35" selection-start="2020" selection-end="2020" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1278,7 +1314,7 @@
       <file leaf-file-name="MongoStoreManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="540" column="31" selection-start="18702" selection-end="18702" vertical-scroll-proportion="0.0">
+            <state line="352" column="19" selection-start="10366" selection-end="10602" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1288,7 +1324,10 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="82" column="11" selection-start="4796" selection-end="4796" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#922#947#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1296,34 +1335,7 @@
       <file leaf-file-name="BaseDAOImpl.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="310" column="32" selection-start="12928" selection-end="12928" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserProfileDAO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="19" selection-start="609" selection-end="609" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserProfileDAOConstants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="24" selection-start="2151" selection-end="2151" vertical-scroll-proportion="-12.846154">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserProfilePermissions.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/UserProfilePermissions.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="12" selection-start="239" selection-end="239" vertical-scroll-proportion="0.0">
+            <state line="312" column="0" selection-start="13006" selection-end="13006" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1352,8 +1364,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/log/MyHtmlFormatter.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/log/LogFormatter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" />
@@ -1367,7 +1377,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/ManagerInterface.java" />
       </list>
     </option>
   </component>
@@ -2193,7 +2205,11 @@
       <created>1367539074056</created>
       <updated>1367539074056</updated>
     </task>
-    <option name="localTasksCounter" value="110" />
+    <task id="LOCAL-00110" summary="wrs-286">
+      <created>1367539742019</created>
+      <updated>1367539742019</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2225,7 +2241,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32041588" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2596302" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.57183367" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -2235,7 +2251,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36467022" sideWeight="0.45673078" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21176471" sideWeight="0.7164461" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21176471" sideWeight="0.42816636" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32797733" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2338,20 +2354,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="360" column="29" selection-start="8364" selection-end="8366" vertical-scroll-proportion="-12.846154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/simple-spring-memcached/spymemcached/2.8.4/spymemcached-2.8.4.jar!/net/spy/memcached/AddrUtil.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="61" selection-start="286" selection-end="286" vertical-scroll-proportion="-4.8">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCacheConfiguration.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="24" selection-start="513" selection-end="513" vertical-scroll-proportion="0.0">
@@ -2363,11 +2365,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="213" column="34" selection-start="9520" selection-end="9520" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#6530#6542#0" expanded="true" />
-            <element signature="e#13102#13132#0" expanded="true" />
-            <element signature="e#17396#17406#0" expanded="true" />
-            <element signature="e#17952#17968#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#6530#6542#0" expanded="false" />
+            <element signature="e#13102#13132#0" expanded="false" />
+            <element signature="e#17396#17406#0" expanded="false" />
+            <element signature="e#17952#17968#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2388,72 +2390,101 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/UserProfilePermissions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="12" selection-start="239" selection-end="239" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="19" selection-start="609" selection-end="609" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserProfileDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="46" column="24" selection-start="2151" selection-end="2151" vertical-scroll-proportion="-12.846154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="434" column="99" selection-start="21275" selection-end="21275" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserProfileDAOImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="82" column="11" selection-start="4796" selection-end="4796" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="540" column="31" selection-start="18702" selection-end="18702" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#922#947#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="48" column="35" selection-start="2020" selection-end="2020" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="310" column="32" selection-start="12928" selection-end="12928" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="199" column="28" selection-start="9683" selection-end="9683" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="352" column="19" selection-start="10366" selection-end="10602" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="312" column="0" selection-start="13006" selection-end="13006" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="432" column="0" selection-start="21013" selection-end="21013" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3669#3685#0" expanded="false" />
+            <element signature="e#5163#5179#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/type/UserProfilePermissions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="19" selection-start="706" selection-end="706" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="758" column="139" selection-start="37540" selection-end="37540" vertical-scroll-proportion="0.22736418">
+        <state line="888" column="0" selection-start="44597" selection-end="44597" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="160" column="48" selection-start="3861" selection-end="3861" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/ManagerInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="25" selection-start="188" selection-end="188" vertical-scroll-proportion="0.28235295">
           <folding />
         </state>
       </provider>

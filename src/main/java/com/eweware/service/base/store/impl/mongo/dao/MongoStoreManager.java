@@ -347,10 +347,10 @@ public final class MongoStoreManager implements StoreManager {
             boolean devMode = false;
             try {
                 devMode = SystemManager.getInstance().isDevMode();
-                if (devMode && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-                    this.hostnames = new ArrayList<String>();
-                    this.hostnames.add(devMongoDbHostname);  // same default 21191 port
-                }
+//                if (devMode && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
+//                    this.hostnames = new ArrayList<String>();
+//                    this.hostnames.add(devMongoDbHostname);  // same default 21191 port
+//                }
                 logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
             } catch (Exception e) {
                 // if sysmgr not initialized, no need for this.
