@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.base.mgr;
 
+import main.java.com.eweware.service.base.cache.BlahCache;
+import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import org.apache.commons.codec.binary.Base64;
@@ -38,8 +40,8 @@ public final class SystemManager implements ManagerInterface {
     private boolean devMode;
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
-//    private BlahCache blahCache;
-//    private final BlahCacheConfiguration blahCacheConfiguration;
+    private BlahCache blahCache;
+    private final BlahCacheConfiguration blahCacheConfiguration;
     private String restEndpoint;
     private final String clientServiceEndpoint;
     private final boolean cryptoOn;
@@ -86,7 +88,7 @@ public final class SystemManager implements ManagerInterface {
             logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
             this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
-//            this.blahCacheConfiguration = new BlahCacheConfiguration(memcachedHostname, memcachedPort).setInboxBlahExpirationTime(expirationTime);
+            this.blahCacheConfiguration = new BlahCacheConfiguration(null, null).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance(randomProvider);
             randomizer.generateSeed(20);
             this.sha1Digest = MessageDigest.getInstance("SHA-1"); // TODO try SHA-2
@@ -161,7 +163,7 @@ public final class SystemManager implements ManagerInterface {
 
     public void start() {
         try {
-//            this.blahCache = new BlahCache(blahCacheConfiguration);
+            this.blahCache = new BlahCache(blahCacheConfiguration);
             startHttpClient();
             this.state = ManagerState.STARTED;
             System.out.println("*** SystemManager started ***");

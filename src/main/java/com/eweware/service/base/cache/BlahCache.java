@@ -78,6 +78,7 @@ public final class BlahCache {
         return inboxCollection;
     }
 
+
     public BlahCache(BlahCacheConfiguration config) throws SystemErrorException {
         if (singleton != null) {
             throw new SystemErrorException("Cache singleton already exists", ErrorCodes.SERVER_CACHE_ERROR);
