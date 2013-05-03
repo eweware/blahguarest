@@ -14,9 +14,9 @@
         <constructor-arg value="${blag.sys.log.level}" />
         <constructor-arg value="${blag.crypto.on}" />
         <constructor-arg value="${blah.rest.service.endpoint}" />
-        <constructor-arg value="${blag.memcached.hostname}" />
-        <constructor-arg value="${blag.memcached.port}" />
-        <constructor-arg value="${blag.dev.memcached.hostname}" />
+        <!--<constructor-arg value="${blag.memcached.hostname}" />-->
+        <!--<constructor-arg value="${blag.memcached.port}" />-->
+        <!--<constructor-arg value="${blag.dev.memcached.hostname}" />-->
         <constructor-arg value="${blag.dev.rest.port}" />
         <property name="maxHttpConnections" value="${blah.sys.http.max.connections}"/>
         <property name="maxHttpConnectionsPerRoute" value="${blah.sys.http.max.connections.per.route}"/>
