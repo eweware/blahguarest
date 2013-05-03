@@ -778,6 +778,28 @@ public class UserManager implements ManagerInterface {
                     }
                 }
 
+                boolean shownRace = false;
+                final Integer racePermissions = profile.getRacePermissions();
+                if (hasProfilePermission(racePermissions)) {
+                    final String raceKey = profile.getRace();
+                    if (raceKey != null) {
+                        final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_RACE);
+                        if (spec != null) {
+                            switch (spec.getDataType()) {
+                                case ILS:
+                                    final String race = (String) spec.getValidationMap().get(raceKey);
+                                    if (race != null) {
+                                        descriptor.append(shownAge ? " " : "A ");
+                                        descriptor.append(race.toLowerCase());
+                                        shownRace = true;
+                                    } else {
+                                        logger.warning("User id '" + userId + "' profile has race permissions but no race for key '" + raceKey + "'");
+                                    }
+                            }
+                        }
+                    }
+                }
+
                 boolean shownGender = false;
                 final Integer genderPermissions = profile.getGenderPermissions();
                 if (hasProfilePermission(genderPermissions)) {
@@ -789,7 +811,7 @@ public class UserManager implements ManagerInterface {
                                 case ILS:
                                     final String gender = (String) spec.getValidationMap().get(genderKey);
                                     if (gender != null) {
-                                        descriptor.append(shownAge ? " " : "A ");
+                                        descriptor.append(shownAge || shownRace ? " " : "A ");
                                         descriptor.append(gender.toLowerCase());
                                         shownGender = true;
                                     } else {
@@ -812,7 +834,7 @@ public class UserManager implements ManagerInterface {
                         if (spec != null) {
                             switch (spec.getDataType()) {
                                 case S:
-                                    if (!(shownAge || shownGender)) {
+                                    if (!(shownAge || shownRace || shownGender)) {
                                         descriptor.append("Someone");
                                     }
                                     descriptor.append(" from ");
@@ -837,7 +859,7 @@ public class UserManager implements ManagerInterface {
                         if (spec != null) {
                             switch (spec.getDataType()) {
                                 case S:
-                                    if (!(shownAge || shownGender || shownCity)) {
+                                    if (!(shownAge || shownRace || shownGender || shownCity)) {
                                         descriptor.append("Someone");
                                     }
                                     if (!shownCity) {
@@ -866,7 +888,7 @@ public class UserManager implements ManagerInterface {
                                 case ILS:
                                     final String country = (String) spec.getValidationMap().get(countryKey);
                                     if (country != null) {
-                                        if (!(shownAge || shownGender || shownCity || shownState)) {
+                                        if (!(shownAge || shownRace || shownGender || shownCity || shownState)) {
                                             descriptor.append("Someone");
                                         }
                                         if (!(shownCity || shownState)) {
