@@ -27,6 +27,11 @@ public interface BadgeDAOConstants {
     static final String DISPLAY_NAME = "N";
 
     /**
+     * <p>The badge's type</p>
+     */
+    static final String BADGE_TYPE = "Y";
+
+    /**
      * <p>This field's value is an URL to a 128x128 icon that may be used
      * to represent the badge.</p>
      */
@@ -45,4 +50,10 @@ public interface BadgeDAOConstants {
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                     AUTHORITY_BADGE_ID, AUTHORITY_ID, DISPLAY_NAME, ICON_URL, USER_ID, EXPIRATION_DATE})};
+
+    /**
+     * Badge type values
+     */
+    public static final String BADGE_TYPE_EMAIL = "e";
+    public static final String BADGE_TYPE_ABSTRACTION = "a";
 }

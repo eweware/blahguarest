@@ -58,6 +58,16 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
     }
 
     @Override
+    public String getBadgeType() {
+        return (String) get(BADGE_TYPE);
+    }
+
+    @Override
+    public void setBadgeType(String badgeType) {
+        put(BADGE_TYPE, badgeType);
+    }
+
+    @Override
     public String getIconUrl() {
         return (String) get(ICON_URL);
     }
@@ -85,11 +95,6 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
     @Override
     public void setExpirationDate(Date expirationDate) {
         put(EXPIRATION_DATE, expirationDate);
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
     }
 
     @Override

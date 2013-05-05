@@ -22,6 +22,10 @@ public interface BadgeDAO extends BaseDAO, BadgeDAOConstants {
 
     public void setDisplayName(String displayName);
 
+    public String getBadgeType();
+
+    public void setBadgeType(String badgeType);
+
     public String getIconUrl();
 
     public void setIconUrl(String iconUrl);

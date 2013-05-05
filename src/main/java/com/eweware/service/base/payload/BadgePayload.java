@@ -59,12 +59,18 @@ public class BadgePayload extends BasePayload implements BadgeDAOConstants {
         put(DISPLAY_NAME, displayName);
     }
 
-   
+    public String getBadgeType() {
+        return (String) get(BADGE_TYPE);
+    }
+
+    public void setBadgeType(String badgeType) {
+        put(BADGE_TYPE, badgeType);
+    }
+
     public String getIconUrl() {
         return (String) get(ICON_URL);
     }
 
-   
     public void setIconUrl(String iconUrl) {
         put(ICON_URL, iconUrl);
     }
