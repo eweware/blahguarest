@@ -241,6 +241,7 @@ public final class BadgesManager {
 
         final String authority = (String) entity.get(BadgingNotificationEntity.AUTHORITY_FIELDNAME);
         final List<Map<String, Object>> badgeEntities = (List<Map<String, Object>>) entity.get("badges");
+        logger.info("RECEIVED BADGES:\n" + entity);
 
         if (badgeEntities != null) {
             final DBCollection txCollection = MongoStoreManager.getInstance().getCollection(MongoStoreManager.getInstance().getBadgeTransactionCollectionName());
