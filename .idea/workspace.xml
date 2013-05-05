@@ -9,8 +9,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" />
+    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="https://eweware.atlassian.net/browse/WRS-286">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -194,7 +193,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366956616390" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367523061065" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367788596208" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367790073232" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -523,7 +522,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365534864885" ignored="false" />
     <file path="/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536509155" ignored="false" />
     <file path="/BadgesResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366753796588" ignored="false" />
-    <file path="/BadgeManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367788404031" ignored="false" />
+    <file path="/BadgeManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367789718430" ignored="false" />
     <file path="/BadgesManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367788569736" ignored="false" />
     <file path="/BadgeDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367778405457" ignored="false" />
     <file path="/BadgeDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367778496031" ignored="false" />
@@ -537,7 +536,7 @@
     <file path="/BadgePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367778631139" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/src/main/webapp/js/ba_api.js" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812887082" ignored="false" />
     <file path="/ba_api.js" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365623297596" ignored="false" />
-    <file path="$PROJECT_DIR$/../badge-authority/src/main/java/com/eweware/badging/mgr/BadgeManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367788409519" ignored="false" />
+    <file path="$PROJECT_DIR$/../badge-authority/src/main/java/com/eweware/badging/mgr/BadgeManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367789719968" ignored="false" />
     <file path="/BadgeStateType.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363990125535" ignored="false" />
     <file path="/BadgeTransactionDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364233433888" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/src/main/java/com/eweware/badging/dao/TransactionDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812887082" ignored="false" />
@@ -1260,7 +1259,7 @@
       <file leaf-file-name="BadgesManager.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="281" column="39" selection-start="14408" selection-end="14408" vertical-scroll-proportion="0.52988046">
+            <state line="249" column="85" selection-start="12423" selection-end="12423" vertical-scroll-proportion="-0.3814741">
               <folding>
                 <element signature="e#12518#12526#0" expanded="true" />
               </folding>
@@ -2438,7 +2437,11 @@
       <created>1367786436643</created>
       <updated>1367786436643</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="https://eweware.atlassian.net/browse/WRS-286">
+      <created>1367788714029</created>
+      <updated>1367788714029</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2690,7 +2693,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="281" column="39" selection-start="14408" selection-end="14408" vertical-scroll-proportion="0.52988046">
+        <state line="249" column="85" selection-start="12423" selection-end="12423" vertical-scroll-proportion="-0.3814741">
           <folding>
             <element signature="e#12518#12526#0" expanded="true" />
           </folding>
