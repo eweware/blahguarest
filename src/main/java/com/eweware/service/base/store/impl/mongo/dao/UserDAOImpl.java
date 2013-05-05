@@ -118,9 +118,4 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     public void setBadgeIds(List<String> badgeIds) {
         put(BADGE_IDS, badgeIds);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

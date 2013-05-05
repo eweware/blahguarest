@@ -771,11 +771,17 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
             if (value == null && operation.equals("$unset")) {
                 operationContents.put(fieldName, 1); // deletes
-            } else if (type == MongoFieldTypes.SET || type == MongoFieldTypes.ARRAY) {   // TODO we're not properly dealing with SET and ARRAY, but we're not using it (so little time..)
+            } else if (type == MongoFieldTypes.SET) {
                 if (value instanceof Collection<?>) {
                     for (Object obj : (Collection<?>) value) {
                         operationContents.put(fieldName, obj); // TODO test whether mongo complains if there are two fields with the same name (e.g., pushing two values into same field)
                     }
+                }
+            } else if (type == MongoFieldTypes.ARRAY) {
+                if (value instanceof Collection<?>) {
+                    operationContents.put(fieldName, new BasicDBObject("$each", value));
+                } else {
+                    throw new SystemErrorException("Expected collection in field '" + fieldName + "' operation '" + operation + "'", ErrorCodes.SERVER_SEVERE_ERROR);
                 }
             } else {
                 operationContents.put(fieldName, value);
