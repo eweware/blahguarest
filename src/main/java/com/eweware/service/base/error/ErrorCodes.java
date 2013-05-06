@@ -437,7 +437,17 @@ public final class ErrorCodes {
     public static final Integer EMAIL_SYSTEM_ERROR = 85;
 
     /**
-     *  INVALID_INBOX_ITEM_KEY = 86
+     * INVALID_INBOX_ITEM_KEY = 86
      */
     public static final Integer INVALID_INBOX_ITEM_KEY = 86;
+
+    /**
+     * NOT_FOUND_BADGE_ID = 87
+     */
+    public static final Integer NOT_FOUND_BADGE_ID = 87;
+
+    /**
+     * BADGE_NOT_OWNED_BY_USER = 88
+     */
+    public static final Integer BADGE_NOT_OWNED_BY_USER = 88;
 }

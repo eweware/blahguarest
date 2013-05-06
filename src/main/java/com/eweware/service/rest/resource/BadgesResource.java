@@ -1,8 +1,6 @@
 package main.java.com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.payload.BadgePayload;
 import main.java.com.eweware.service.base.payload.BadgingNotificationEntity;
@@ -34,6 +32,7 @@ public class BadgesResource {
     private static final String CREATE_BADGE_OPERATION = "createBadge";
     private static final String GET_BADGE_BY_ID_OPERATION = "getBadgeById";
     private static final String ADD_BADGE_TO_USER_OPERATION = "addBadgeToUser";
+    private static final String DELETE_BADGE_OPERATION = "deleteBadge";
 
     private BadgesManager badgesMgr;
     private SystemManager systemManager;
@@ -115,6 +114,29 @@ public class BadgesResource {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBadge(@PathParam("i") String badgeId, @Context HttpServletRequest request) {
+        final long start = System.currentTimeMillis();
+        try {
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            getBadgesMgr().deleteBadgeForUser(userId, badgeId);
+            final Response response = RestUtilities.make202AcceptedResponse();
+            getSystemManager().setResponseTime(DELETE_BADGE_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }

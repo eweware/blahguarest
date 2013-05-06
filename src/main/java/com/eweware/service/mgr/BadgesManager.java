@@ -5,9 +5,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.payload.BadgeAuthorityPayload;
 import main.java.com.eweware.service.base.payload.BadgePayload;
@@ -342,6 +340,23 @@ public final class BadgesManager {
             throw new InvalidRequestException("Badge id '" + badgeId + "' doesn't exist", ErrorCodes.INVALID_INPUT);
         }
         return new BadgePayload(badge);
+    }
+
+    public void deleteBadgeForUser(String userId, String badgeId) throws SystemErrorException, ResourceNotFoundException, StateConflictException {
+        final BadgeDAO badgeDAO = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId(BadgeDAOConstants.USER_ID);
+        if (badgeDAO == null) {
+            throw new ResourceNotFoundException("Badge id '" + badgeId + "' not found", ErrorCodes.NOT_FOUND_BADGE_ID);
+        }
+        final String uid = badgeDAO.getUserId();
+        if (uid != null) {
+            if (uid.equals(userId)) {
+                badgeDAO._deleteByPrimaryId();
+            } else {
+                throw new StateConflictException("Badge is not owned by user", ErrorCodes.BADGE_NOT_OWNED_BY_USER);
+            }
+        } else {
+            // fall through
+        }
     }
 }
 
