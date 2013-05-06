@@ -12,6 +12,7 @@ import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
 import main.java.com.eweware.service.base.store.dao.CommentDAO;
 import main.java.com.eweware.service.base.store.dao.MediaDAO;
+import main.java.com.eweware.service.base.store.dao.UserDAO;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.MediaManager;
@@ -110,7 +111,8 @@ public class ImageUploadResource {
      */
     private enum ObjectType {
         B, // A blah
-        C; // A comment
+        C, // A comment
+        U; // A user
     }
 
     /**
@@ -331,21 +333,28 @@ public class ImageUploadResource {
         List<String> imageIds = new ArrayList<String>(1);
         imageIds.add(mediaId);
         if (objectType == ObjectType.B) {
-            if (!getStoreManager().createBlah(objectId)._exists()) {
-                throw new ResourceNotFoundException("No blahId '" + objectId + "' exists");
+            final BlahDAO blah = getStoreManager().createBlah(objectId);
+            if (!blah._exists()) {
+                throw new ResourceNotFoundException("No blahId '" + objectId + "' exists", ErrorCodes.NOT_FOUND_BLAH_ID);
             }
-            final BlahDAO blah = (BlahDAO) getStoreManager().createBlah(objectId);
             blah.setImageIds(imageIds);
             blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else if (objectType == ObjectType.C) {
-            if (!getStoreManager().createComment(objectId)._exists()) {
-                throw new ResourceNotFoundException("No commentId '" + objectId + "' exists");
+            final CommentDAO comment = getStoreManager().createComment(objectId);
+            if (!comment._exists()) {
+                throw new ResourceNotFoundException("No commentId '" + objectId + "' exists", ErrorCodes.NOT_FOUND_COMMENT_ID);
             }
-            final CommentDAO comment = (CommentDAO) getStoreManager().createComment(objectId);
             comment.setImageIds(imageIds);
             comment._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        } else if (objectType == ObjectType.U) {
+            final UserDAO user = getStoreManager().createUser(objectId);
+            if (!user._exists()) {
+                throw new ResourceNotFoundException("No user id '" + objectId + "'", ErrorCodes.NOT_FOUND_USER_ID);
+            }
+            user.setImageIds(imageIds);
+            user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
-            throw new SystemErrorException("Object type '" + objectType + "' not supported");
+            throw new SystemErrorException("Object type '" + objectType + "' not supported", ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 

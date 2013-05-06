@@ -28,6 +28,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_CONTROVERSY_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
+        UserDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -117,5 +118,15 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     @Override
     public void setBadgeIds(List<String> badgeIds) {
         put(BADGE_IDS, badgeIds);
+    }
+
+    @Override
+    public List<String> getImageids() {
+        return (List<String>) get(IMAGE_IDS);
+    }
+
+    @Override
+    public void setImageIds(List<String> imageIds) {
+        put(IMAGE_IDS, imageIds);
     }
 }

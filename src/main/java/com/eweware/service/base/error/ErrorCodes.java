@@ -450,4 +450,9 @@ public final class ErrorCodes {
      * BADGE_NOT_OWNED_BY_USER = 88
      */
     public static final Integer BADGE_NOT_OWNED_BY_USER = 88;
+
+    /**
+     * MISSING_TEXT_OR_BODY = 89
+     */
+    public static final Integer MISSING_TEXT_OR_BODY = 89;
 }

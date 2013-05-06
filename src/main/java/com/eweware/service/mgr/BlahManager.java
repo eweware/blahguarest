@@ -68,6 +68,7 @@ public final class BlahManager implements ManagerInterface {
 
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
+    private static final String EMPTY_STRING = "";
 
     private boolean debug;
     private final boolean doIndex;
@@ -207,14 +208,19 @@ public final class BlahManager implements ManagerInterface {
         }
 
         String text = entity.getText();
+        String body = entity.getBody();
+        final boolean hasBody = !CommonUtilities.isEmptyString(body);
         if (CommonUtilities.isEmptyString(text)) {
-            throw new InvalidRequestException("missing field text=" + text, entity, ErrorCodes.MISSING_TEXT);
+            if (!hasBody) {
+            throw new InvalidRequestException("Blah without text line must have body" + text, entity, ErrorCodes.MISSING_TEXT_OR_BODY);
+            }
+            text = EMPTY_STRING;
+        } else {
+            text = CommonUtilities.scrapeMarkup(text);
         }
-        text = CommonUtilities.scrapeMarkup(text);
         entity.setText(text);
 
-        String body = entity.getBody();
-        if (!CommonUtilities.isEmptyString(body)) {
+        if (hasBody) {
             body = CommonUtilities.scrapeMarkup(body);
             entity.setBody(body);
         }

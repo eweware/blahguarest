@@ -32,4 +32,8 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
     public List<String> getBadgeIds();
 
     public void setBadgeIds(List<String> badgeIds);
+
+    public List<String> getImageids();
+
+    public void setImageIds(List<String> imageIds);
 }
