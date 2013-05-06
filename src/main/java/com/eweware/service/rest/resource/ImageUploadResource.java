@@ -18,9 +18,7 @@ import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager
 import main.java.com.eweware.service.mgr.MediaManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
-import org.im4java.core.ConvertCmd;
-import org.im4java.core.IMOperation;
-import org.im4java.core.Info;
+import org.im4java.core.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -37,7 +35,8 @@ import java.util.logging.Logger;
 /**
  * <p>Image upload API methods.</p>
  * <div>Note that some methods require authentication (previous login) to be accessed.</div>
- *         TODO Need to create jersey-multipart-config.properties and add the following:  bufferThreshold = 128000
+ * TODO Need to create jersey-multipart-config.properties and add the following:  bufferThreshold = 128000
+ *
  * @author rk@post.harvard.edu
  *         Date: 12/14/12 Time: 3:44 PM
  */
@@ -119,6 +118,7 @@ public class ImageUploadResource {
      * <p>Not really in use...</p>
      * <div><b>METHOD:</b> </div>
      * <div><b>URL:</b> </div>
+     *
      * @param req
      * @return
      */
@@ -221,7 +221,7 @@ public class ImageUploadResource {
         final String file = metadata.getFileName();
         final String extension = getExtension(file);
         if (!isFormatSupported(extension)) {
-            throw new InvalidRequestException("File format '"+extension+"' is not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
+            throw new InvalidRequestException("File format '" + extension + "' is not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
         final String filename = getFilename(file);
         final MediaDAO mediaDAO = makeMediaRecord(objectType);
@@ -244,7 +244,7 @@ public class ImageUploadResource {
         return (extension != null) && (supportedUploadFormats.get(extension) != null);
     }
 
-    private void saveFormats(File original, AmazonS3 s3, String mediaId, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException {
+    private void saveFormats(File original, AmazonS3 s3, String mediaId, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
 
         final String filename = original.getName();
         final String filepath = original.getAbsolutePath();
@@ -308,12 +308,14 @@ public class ImageUploadResource {
                     throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 }
             }
-
             associateWithObject(mediaId, objectType, objectId);
 
+
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception ex) {
             throw new SystemErrorException("File upload failed", ex, ErrorCodes.SERVER_RECOVERABLE_ERROR);
-        } finally {
+        }  finally {
             for (File file : filesToDelete) {
                 try {
                     file.delete();
@@ -332,6 +334,7 @@ public class ImageUploadResource {
     private void associateWithObject(String mediaId, ObjectType objectType, String objectId) throws SystemErrorException, ResourceNotFoundException {
         List<String> imageIds = new ArrayList<String>(1);
         imageIds.add(mediaId);
+        logger.info("*** uploading image media id '" + mediaId + "' object type '" + objectType + "' object id '" + objectId + "' ***");
         if (objectType == ObjectType.B) {
             final BlahDAO blah = getStoreManager().createBlah(objectId);
             if (!blah._exists()) {
@@ -387,7 +390,9 @@ public class ImageUploadResource {
         }
     }
 
-    /** Returns extension with dot (e.g., ".jpg") */
+    /**
+     * Returns extension with dot (e.g., ".jpg")
+     */
     private String getExtension(String fileName) {
         final int dot = fileName.lastIndexOf(".");
         return (dot == -1) ? null : fileName.substring(dot);
@@ -435,7 +440,9 @@ public class ImageUploadResource {
         }
     }
 
-    /** Cache bucket info */
+    /**
+     * Cache bucket info
+     */
     private void ensureBucketMetadata() throws SystemErrorException {
         if (s3BucketName == null) {
             s3BucketName = MediaManager.getInstance().getImageBucketName();
