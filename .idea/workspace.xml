@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367879527875" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367523061065" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367877239400" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367879626212" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1278,7 +1278,7 @@
       <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="313" column="10" selection-start="14566" selection-end="14566" vertical-scroll-proportion="0.14563107">
+            <state line="230" column="8" selection-start="10494" selection-end="10494" vertical-scroll-proportion="0.33300972">
               <folding />
             </state>
           </provider>
@@ -2251,7 +2251,11 @@
       <created>1367877243381</created>
       <updated>1367877243381</updated>
     </task>
-    <option name="localTasksCounter" value="123" />
+    <task id="LOCAL-00123" summary="https://eweware.atlassian.net/browse/WRS-247, https://eweware.atlassian.net/browse/WRS-287">
+      <created>1367879629670</created>
+      <updated>1367879629670</updated>
+    </task>
+    <option name="localTasksCounter" value="124" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2506,7 +2510,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="313" column="10" selection-start="14566" selection-end="14566" vertical-scroll-proportion="0.14563107">
+        <state line="230" column="8" selection-start="10494" selection-end="10494" vertical-scroll-proportion="0.33300972">
           <folding />
         </state>
       </provider>

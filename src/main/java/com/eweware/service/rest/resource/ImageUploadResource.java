@@ -213,7 +213,7 @@ public class ImageUploadResource {
                         .entity(msg).build();
     }
 
-    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException {
+    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         final long fileSize = metadata.getSize();
         if (fileSize != 0 && fileSize > 1000000) { // can be misleading or -1, but try...
             throw new InvalidRequestException("File size exceeds 1MB limit: " + fileSize);
