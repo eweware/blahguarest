@@ -245,7 +245,6 @@ public class CommentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCommentsForBlah(
             @QueryParam("blahId") String blahId,
-            @QueryParam("userId") String userId,
             @QueryParam("authorId") String authorId,
             @QueryParam("start") Integer start,
             @QueryParam("count") Integer count,
@@ -254,6 +253,7 @@ public class CommentsResource {
     ) {
         try {
             final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.getUserId(request);
             final Response response = RestUtilities.make200OkResponse(getBlahManager().getComments(LocaleId.en_us, BlahguaSession.isAuthenticated(request), blahId, userId, authorId, start, count, sortFieldName));
             getSystemManager().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
             return response;

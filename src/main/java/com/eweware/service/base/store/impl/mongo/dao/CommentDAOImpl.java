@@ -211,9 +211,4 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     public void setStats(List<CommentTrackerDAO> stats) {
         put(STATS, stats);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }
