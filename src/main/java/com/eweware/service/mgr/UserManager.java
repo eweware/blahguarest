@@ -284,14 +284,15 @@ public class UserManager implements ManagerInterface {
             throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
         }
         if (usernameExistsP(username)) {
-            throw new StateConflictException("username '"+username+"' already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
+            throw new StateConflictException("username '" + username + "' already exists", ErrorCodes.ALREADY_EXISTS_USER_WITH_USERNAME);
         }
     }
 
     /**
      * <p>Returns true if the username already exists.</p>
+     *
      * @param username The username
-     * @return  True if it exists
+     * @return True if it exists
      * @throws SystemErrorException
      */
     public boolean usernameExistsP(String username) throws SystemErrorException {
@@ -340,6 +341,7 @@ public class UserManager implements ManagerInterface {
 
     /**
      * Logs out a user. It's been established that the user is authenticated (logged in).
+     *
      * @param en_us
      * @param request
      * @param userId
@@ -631,6 +633,7 @@ public class UserManager implements ManagerInterface {
      * @param request
      * @param newUsername
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     *
      * @throws InvalidRequestException
      */
     public void updateUsername(LocaleId localeId, HttpServletRequest request, String newUsername) throws InvalidAuthorizedStateException, InvalidRequestException,
@@ -662,12 +665,10 @@ public class UserManager implements ManagerInterface {
     /**
      * <p>Updates a user's password. <i>Assumes that the user is authenticated!</i></p>
      *
-     *
      * @param en_us
      * @param request
      * @param userId
-     *@param password  @throws InvalidAuthorizedStateException
-     *
+     * @param password @throws InvalidAuthorizedStateException
      * @throws InvalidRequestException
      * @throws SystemErrorException
      */
@@ -749,10 +750,21 @@ public class UserManager implements ManagerInterface {
             throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
 
         final StringBuilder descriptor = new StringBuilder();
+        String nickname = null;
+        String userImageId = null;
 
         logger.info("*** get descriptor for user id '" + userId + "'");
 
         if (userId != null) {
+
+            final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+            if (userDAO == null) {
+                throw new ResourceNotFoundException("No such user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
+            }
+            final List<String> imageids = userDAO.getImageids();
+            if (imageids != null && imageids.size() > 0) {
+                userImageId = imageids.get(0);
+            }
 
             final UserProfileDAO profile = getUserProfileDAO(userId);
 
@@ -763,6 +775,10 @@ public class UserManager implements ManagerInterface {
                 final UserProfileSchema schema = UserProfileSchema.getSchema(localeId);
                 if (schema == null) {
                     throw new SystemErrorException("missing schema for user profile", ErrorCodes.SERVER_SEVERE_ERROR);
+                }
+
+                if (hasProfilePermission(profile.getNicknamePermissions())) {
+                    nickname = profile.getNickname();
                 }
 
                 // TODO simplify the following blocks of code into an engine
@@ -911,8 +927,16 @@ public class UserManager implements ManagerInterface {
         if (descriptor.length() == 0) {
             descriptor.append("An anonymous person.");
         }
+
+        // Create response
         final Map<String, String> map = new HashMap<String, String>(1);
         map.put("d", descriptor.toString());
+        if (nickname != null) {
+            map.put("n", nickname);
+        }
+        if (userImageId != null) {
+            map.put("m", userImageId);
+        }
         return map;
 
     }
@@ -1080,14 +1104,14 @@ public class UserManager implements ManagerInterface {
      * A, P, S -> <Deleted = Does not exist>
      *
      * @param localeId
-     * @param userId         The user id
-     * @param groupId        The group id
-     * @param newState       If AuthorizedState.P.getDescription, the user will be joined to the group in a pending state.
-     *                       If AuthorizedState.A.getDescription, the user will be activated in the group.
-     *                       If AuthorizedState.S.getDescription, the user will be suspended in the group.
-     *                       If AuthorizedState.DT.getDescription, the user/group association will be deleted from the database.
-//     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) state.
-//     *                       If not null, this is simply inserted into the DB for future reference.
+     * @param userId   The user id
+     * @param groupId  The group id
+     * @param newState If AuthorizedState.P.getDescription, the user will be joined to the group in a pending state.
+     *                 If AuthorizedState.A.getDescription, the user will be activated in the group.
+     *                 If AuthorizedState.S.getDescription, the user will be suspended in the group.
+     *                 If AuthorizedState.DT.getDescription, the user/group association will be deleted from the database.
+     *                 //     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) state.
+     *                 //     *                       If not null, this is simply inserted into the DB for future reference.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
