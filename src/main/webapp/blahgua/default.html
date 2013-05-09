@@ -2,8 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <link href='http://fonts.googleapis.com/css?family=Arimo:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
- <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height"/>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, height=device-height"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <link rel="apple-touch-icon" href="https://s3-us-west-2.amazonaws.com/blahgua-webapp/images/groups/Blahgua%2520Network.png">
+
+    <script type="text/javascript">
+    (function() {
+        if ("-ms-user-select" in document.documentElement.style && navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement("style");
+            msViewportStyle.appendChild(
+                document.createTextNode("@-ms-viewport{width:auto!important}")
+            );
+            document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+            }
+        })();
+    </script>
+    
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.js" type="text/javascript"></script>
     <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.cookie.js" type="text/javascript"></script>
     <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.animate-colors-min.js" type="text/javascript"></script>
@@ -12,9 +28,8 @@
 
 
       <link rel="stylesheet" href="http://blahgua-webapp.s3.amazonaws.com/css/blahgua.css" />
- <!--   <link rel="stylesheet" href="./aws/css/blahgua.css" />-->
 
-   <title></title>
+   <title>Blahgua</title>
          <meta http-equiv="CACHE-CONTROL" content="NO-CACHE, must-revalidate, max-age=0" />
      <meta http-equiv="expires" content="0" />
      <meta http-equiv="Pragma" content="no-cache" />
@@ -25,15 +40,9 @@
        <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.event.move.js" type="text/javascript"></script>
        <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.event.swipe.js" type="text/javascript"></script>
        <script src="http://blahgua-webapp.s3.amazonaws.com/scripts/jquery.flippy.min.js" type="text/javascript"></script>
-
        <script type="text/javascript" src="http://blahgua-webapp.s3.amazonaws.com/scripts/blahgua_restapi.js"></script>
-    <script type="text/javascript" src="http://blahgua-webapp.s3.amazonaws.com/scripts/blahgua.js"></script>
+       <script type="text/javascript" src="http://blahgua-webapp.s3.amazonaws.com/scripts/blahgua.js"></script>
 
-
-<!--
-    <script type="text/javascript" src="aws/scripts/blahgua_restapi.js"></script>
-    <script type="text/javascript" src="aws/scripts/blahgua.js"></script>
--->
 
 
    <div class="PageBody">
