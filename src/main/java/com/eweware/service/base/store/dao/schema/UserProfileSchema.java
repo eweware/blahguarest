@@ -157,12 +157,11 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
     private void createRaceSpec() {
         final String defaultValue = "-1";
         LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>(6);
-        data.put("0", "American Indian or Alaskan Native");  // TODO obtain from i18n service
-        data.put("1", "Asian");
-        data.put("2", "Black or African American");
-        data.put("3", "Native Hawaiian or Pacific Islander");
-        data.put("4", "White");
-        data.put("5", "Other");
+        data.put("0", "Asian");  // TODO obtain from i18n service
+        data.put("1", "Black");
+        data.put("2", "Hispanic");
+        data.put("3", "White");
+        data.put("4", "Other");
         data.put(defaultValue, "Unspecified");
         createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_RACE), "Race", null, null, data, true, defaultValue);
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_RACE_PERMISSIONS), "Permissions", null, null, null, true, UserProfilePermissions.PRIVATE);

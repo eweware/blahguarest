@@ -117,19 +117,9 @@ public interface DemographicsObjectDAOConstants {
      */
     public static final String COMMENT_COUNT = "_c";
 
-    /**
-     * This contains the age buckets derived from the date of birth.
-     * The value of this field is a map whose key is the age
-     * bucket name and whose value is a Long with the number of users
-     * in that age. The field names start with "0", "1", and so on.
-     * The field "-1" is for persons who have not specified their
-     * DOB in their profiles.
-     */
-    public static final String AGE_BUCKETS = "_a";
-
     public static final String[] DEMOGRAPHICS_RECORD_FIELD_NAMES =
             new String[]{DemographicsObjectDAOConstants.UP_VOTE_COUNT, DemographicsObjectDAOConstants.DOWN_VOTE_COUNT, DemographicsObjectDAOConstants.VIEW_COUNT,
-                    DemographicsObjectDAOConstants.OPEN_COUNT, DemographicsObjectDAOConstants.COMMENT_COUNT, DemographicsObjectDAOConstants.AGE_BUCKETS
+                    DemographicsObjectDAOConstants.OPEN_COUNT, DemographicsObjectDAOConstants.COMMENT_COUNT
             };
 
 
