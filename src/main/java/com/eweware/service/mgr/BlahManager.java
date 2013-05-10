@@ -684,6 +684,7 @@ public final class BlahManager implements ManagerInterface {
      * @param entity
      */
     public void updateBlahViewsOrOpensByAnonymousUser(LocaleId en_us, BlahPayload entity, String blahId) throws InvalidRequestException, SystemErrorException {
+
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
         final Integer viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0, maxViewIncrements, entity);
         final Integer openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxViewIncrements, entity);

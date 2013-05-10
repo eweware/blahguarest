@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -401,6 +402,44 @@ public class UsersResource {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+
+    /**
+     * <p>Use this method to obtain an array of descriptors for a set of user ids.</p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/descriptors</div>
+     *
+     * @param entity Expects a JSON entity containing an array of user ids in a
+     *               field named 'IDS'.
+     *
+     * @return An http status of 200 with a JSON entity consisting of a
+     *         single field named 'd' whose value is a string--the descriptor.
+     *         If the request is invalid, returns 400 (BAD REQUEST).
+     *         If the profile has not been created, returns 404 (NOT FOUND).
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @POST
+    @Path("/descriptors")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUserDescriptorStrings(
+            Map<String, List<String>> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final List<String> userIds = entity.get("IDS");
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptors(LocaleId.en_us, request, userIds));
+            getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            e.printStackTrace();
+        } catch (ResourceNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
         }
     }
 

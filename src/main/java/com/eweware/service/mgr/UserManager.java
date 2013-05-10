@@ -50,6 +50,7 @@ import proj.zoie.impl.indexing.ZoieSystem;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -745,6 +746,18 @@ public class UserManager implements ManagerInterface {
         return UserProfileSchema.getSchema(localeId);
     }
 
+
+    public List<Map<String, String>> getUserProfileDescriptors(LocaleId en_us, HttpServletRequest request, List<String> userIds) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+        final List<Map<String, String>> descriptors = new ArrayList<Map<String, String>>();
+        if (userIds == null || userIds.size() == 0) {
+            return descriptors;
+        }
+        for (String userId : userIds) {
+            descriptors.add(getUserProfileDescriptor(en_us, request, userId));
+        }
+        return descriptors;
+    }
+
     // hastily put together
     public Map<String, String> getUserProfileDescriptor(LocaleId localeId, HttpServletRequest request, String userId)
             throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
@@ -752,8 +765,6 @@ public class UserManager implements ManagerInterface {
         final StringBuilder descriptor = new StringBuilder();
         String nickname = null;
         String userImageId = null;
-
-        logger.info("*** get descriptor for user id '" + userId + "'");
 
         if (userId != null) {
 
@@ -767,8 +778,6 @@ public class UserManager implements ManagerInterface {
             }
 
             final UserProfileDAO profile = getUserProfileDAO(userId);
-
-            logger.info("*** get descriptor for user id '" + userId + "' profile=" + (profile != null ? profile.toMap() : "none") + "***");
 
             if (profile != null) {
 
@@ -937,6 +946,8 @@ public class UserManager implements ManagerInterface {
         if (userImageId != null) {
             map.put("m", userImageId);
         }
+        map.put("i", userId);
+
         return map;
 
     }
