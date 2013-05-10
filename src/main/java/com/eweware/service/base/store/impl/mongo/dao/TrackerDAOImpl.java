@@ -4,6 +4,7 @@ import com.mongodb.DBCollection;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.store.dao.TrackerDAO;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.TrackerSchema;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
@@ -20,13 +21,12 @@ import java.util.Map;
  * consume RAM workspace: ideally, we would have smaller consecutively
  * placed chunks in disc... since we might not be able to control or predict how Mongo lays it out,
  * the benefits of having smaller chunks in mongo are unclear without testing.</p>
- * @deprecated
  *
  * @author rk@post.harvard.edu
  *         Date: 9/25/12 Time: 1:07 PM
  */
 @SuppressWarnings("deprecation")
-public class TrackerDAOImpl extends BaseDAOImpl implements main.java.com.eweware.service.base.store.dao.TrackerDAO {
+public class TrackerDAOImpl extends BaseDAOImpl implements TrackerDAO {
 
     TrackerDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
         super(map, validateAndConvert);
@@ -56,12 +56,12 @@ public class TrackerDAOImpl extends BaseDAOImpl implements main.java.com.eweware
 
     @Override
     public Integer getVote() {
-        return (Integer) get(VOTE);
+        return (Integer) get(PROMOTION);
     }
 
     @Override
     public void setVote(Integer vote) {
-        put(VOTE, vote);
+        put(PROMOTION, vote);
     }
 
     @Override
@@ -122,26 +122,6 @@ public class TrackerDAOImpl extends BaseDAOImpl implements main.java.com.eweware
     @Override
     public void setUserId(String userId) {
         put(USER_ID, userId);
-    }
-
-    @Override
-    public String getBlahAuthorId() {
-        return (String) get(BLAH_AUTHOR_ID);
-    }
-
-    @Override
-    public void setBlahAuthorId(String authorId) {
-        put(BLAH_AUTHOR_ID, authorId);
-    }
-
-    @Override
-    public String getCommentAuthorId() {
-        return (String) get(COMMENT_AUTHOR_ID);
-    }
-
-    @Override
-    public void setCommentAuthorId(String authorId) {
-        put(COMMENT_AUTHOR_ID, authorId);
     }
 
     @Override
@@ -216,14 +196,13 @@ public class TrackerDAOImpl extends BaseDAOImpl implements main.java.com.eweware
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_RACE, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_INCOME_RANGE, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_DATE_OF_BIRTH, MongoFieldTypes.DATE);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(VOTE, MongoFieldTypes.NUMBER);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(PROMOTION, MongoFieldTypes.NUMBER);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_TYPE_ID, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_AUTHOR_ID, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_ID, MongoFieldTypes.STRING);
         TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENT_ID, MongoFieldTypes.STRING);
     }

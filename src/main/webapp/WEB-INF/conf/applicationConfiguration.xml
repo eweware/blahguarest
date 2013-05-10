@@ -91,7 +91,13 @@
         <constructor-arg type="java.lang.Integer" value="${blag.maximum.returned.object.limit}" />
     </bean>
 
+    <!-- Old tracking manager -->
     <bean id="trackingManager" class="main.java.com.eweware.service.mgr.TrackingManager"
+          init-method="start" destroy-method="shutdown">
+    </bean>
+
+    <!-- New tracking manager -->
+    <bean id="trackingMgr" class="main.java.com.eweware.service.mgr.TrackingManager"
           init-method="start" destroy-method="shutdown">
     </bean>
 

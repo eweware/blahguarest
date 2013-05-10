@@ -92,6 +92,7 @@ public final class BlahManager implements ManagerInterface {
     public static BlahManager singleton;
     private StoreManager storeManager;
     private TrackingManager trackingManager;
+    private TrackingMgr trackingMgr;
     private UserManager userManager;
     private GroupManager groupManager;
     private final Integer returnedObjectLimit;
@@ -154,12 +155,12 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public void start() {
-
         try {
             storeManager = MongoStoreManager.getInstance();
             trackingManager = TrackingManager.getInstance();
             userManager = UserManager.getInstance();
             groupManager = GroupManager.getInstance();
+            trackingMgr = TrackingMgr.getInstance();
 
             if (doIndex()) {
                 initializeBlahIndex();
@@ -677,34 +678,64 @@ public final class BlahManager implements ManagerInterface {
     }
 
     /**
+     * Simply logs views and opens for anonymous users.
+     *
+     * @param en_us
+     * @param entity
+     */
+    public void updateBlahViewsOrOpensByAnonymousUser(LocaleId en_us, BlahPayload entity, String blahId) throws InvalidRequestException, SystemErrorException {
+        final int maxViewIncrements = maxOpensOrViewsPerUpdate;
+        final Integer viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0, maxViewIncrements, entity);
+        final Integer openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxViewIncrements, entity);
+        if (viewCount == 0 && openCount == 0) {
+            return;
+        }
+
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId);
+        if (!blahDAO._exists()) {
+            throw new InvalidRequestException("Invalid blah '" + blahId + "'", ErrorCodes.INVALID_INPUT);
+        }
+        if (viewCount != 0) {
+            blahDAO.setViews(viewCount);
+        }
+        if (openCount != 0) {
+            blahDAO.setOpens(openCount);
+        }
+        blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+        trackingMgr.trackBlahUpdate(blahId, null, null, viewCount, openCount, null);
+    }
+
+    /**
      * Allows a user to update a blah's vote, views, and/or opens, in any combination.
      * Ignored if there is no promotion/demotion, views or opens in request.
      *
+     *
      * @param localeId
-     * @param request
+     * @param entity
+     * @param blahId
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */
-    public void updateBlahPromotionViewOrOpens(LocaleId localeId, BlahPayload request) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
-        if (!CommonUtilities.isEmptyString(request.getText()) || !CommonUtilities.isEmptyString(request.getBody())) {
-            throw new InvalidRequestException("user may not edit blah text or body", request, ErrorCodes.CANNOT_EDIT_TEXT);
+    public void updateBlahPromotionViewOrOpens(LocaleId localeId, BlahPayload entity, String blahId) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
+        if (!CommonUtilities.isEmptyString(entity.getText()) || !CommonUtilities.isEmptyString(entity.getBody())) {
+            throw new InvalidRequestException("user may not edit blah text or body", entity, ErrorCodes.CANNOT_EDIT_TEXT);
         }
-        final String blahId = request.getId();
         if (CommonUtilities.isEmptyString(blahId)) {
-            throw new InvalidRequestException("missing blah id", request, ErrorCodes.MISSING_BLAH_ID);
+            throw new InvalidRequestException("missing blah id", entity, ErrorCodes.MISSING_BLAH_ID);
         }
-        final String userId = request.getAuthorId();
+        final String userId = entity.getAuthorId();
         if (CommonUtilities.isEmptyString(userId)) {
-            throw new InvalidRequestException("missing update user id", request, ErrorCodes.MISSING_AUTHOR_ID);
+            throw new InvalidRequestException("missing update user id", entity, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer promotionOrDemotion = CommonUtilities.checkDiscreteValue(request.getUserPromotion(), request);
+        final Integer promotionOrDemotion = CommonUtilities.checkDiscreteValue(entity.getUserPromotion(), entity);
 
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
-        final Integer viewCount = CommonUtilities.checkValueRange(request.getViews(), 0, maxViewIncrements, request);
-        final Integer openCount = CommonUtilities.checkValueRange(request.getOpens(), 0, maxViewIncrements, request);
+        final Integer viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0, maxViewIncrements, entity);
+        final Integer openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxViewIncrements, entity);
         if (promotionOrDemotion == 0 && viewCount == 0 && openCount == 0) {
             return; // don't complain
         }

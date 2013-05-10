@@ -9,7 +9,6 @@ import java.util.Date;
  * consume RAM workspace: ideally, we would have smaller consecutively
  * placed chunks in disc... since we might not be able to control or predict how Mongo lays it out,
  * the benefits of having smaller chunks in mongo are unclear without testing.</p>
- * @deprecated
  *
  * @author rk@post.harvard.edu
  *         Date: 9/22/12 Time: 3:09 PM
@@ -47,14 +46,6 @@ public interface TrackerDAO extends BaseDAO, TrackerDAOConstants {
     public String getUserId();
 
     public void setUserId(String userId);
-
-    public String getBlahAuthorId();
-
-    public void setBlahAuthorId(String authorId);
-
-    public String getCommentAuthorId();
-
-    public void setCommentAuthorId(String authorId);
 
     public String getBlahId();
 

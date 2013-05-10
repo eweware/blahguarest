@@ -39,7 +39,7 @@ public class UsersResource {
     private static final String GET_ANONYMOUS_INBOX_OPERATION = "getUserInbox";
     private static final String GET_USER_PROFILE_BY_ID_OPERATION = "getUserProfileById";
     private static final String GET_USER_PROFILE_SCHEMA_OPERATION = "getUserProfileSchema";
-    private static final String UPDATE_USERNAME_OPERATION = "updateUser";
+    private static final String UPDATE_USERNAME_OPERATION = "updateUsername";
     private static final String UPDATE_PASSWORD_OPERATION = "updatePwd";
     private static final String UPDATE_USER_PROFILE_OPERATION = "updateUserProfile";
     private static final String CREATE_USER_OPERATION = "createUser";

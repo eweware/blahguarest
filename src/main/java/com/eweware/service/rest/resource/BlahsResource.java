@@ -337,10 +337,13 @@ public class BlahsResource {
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            entity.setAuthorId(userId);
-            entity.setId(blahId);
-            getBlahManager().updateBlahPromotionViewOrOpens(LocaleId.en_us, entity);
+            final String userId = BlahguaSession.getUserId(request);
+            if (userId != null) { // authenticated user
+                entity.setAuthorId(userId);
+                getBlahManager().updateBlahPromotionViewOrOpens(LocaleId.en_us, entity, blahId);
+            } else { // anonymous user
+                getBlahManager().updateBlahViewsOrOpensByAnonymousUser(LocaleId.en_us, entity, blahId);
+            }
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
@@ -350,8 +353,6 @@ public class BlahsResource {
             return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(request, e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -396,10 +397,10 @@ public class BlahsResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs/{blahId}</div>
      *
-     * @param blahId         <i>Path Parameter</i>. The blah's id
-     * @param stats          <i>Query Parameter:</i> Optional. if true, return statistics with blah
-     * @param s <i>Query Parameter:</i> Optional. If stats=true, return statistics starting with this date. Format is yymmdd (e.g., August 27, 2012 is 120827).
-     * @param e   <i>Query Parameter:</i> Optional. If stats=true, return statistics ending with this date. Format is yymmdd (e.g., August 27, 2012 is 120827).
+     * @param blahId <i>Path Parameter</i>. The blah's id
+     * @param stats  <i>Query Parameter:</i> Optional. if true, return statistics with blah
+     * @param s      <i>Query Parameter:</i> Optional. If stats=true, return statistics starting with this date. Format is yymmdd (e.g., August 27, 2012 is 120827).
+     * @param e      <i>Query Parameter:</i> Optional. If stats=true, return statistics ending with this date. Format is yymmdd (e.g., August 27, 2012 is 120827).
      * @return Returns an http status of 200 and a JSON entity containing the blah information.
      *         If the blah doesn't exist, returns status 404.
      *         If there is an error in the request, returns status 400.
@@ -440,8 +441,8 @@ public class BlahsResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> blahs</div>
      *
-     * @param start         (Optional): The starting index to fetch when paging
-     * @param count         (Optional): The max number of blahs to fetch
+     * @param start (Optional): The starting index to fetch when paging
+     * @param count (Optional): The max number of blahs to fetch
      * @return An array of blahs.
      * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
      */

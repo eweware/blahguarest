@@ -10,12 +10,16 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFi
  * consume RAM workspace: ideally, we would have smaller consecutively
  * placed chunks in disc... since we might not be able to control or predict how Mongo lays it out,
  * the benefits of having smaller chunks in mongo are unclear without testing.</p>
- * @deprecated
  *
  * @author rk@post.harvard.edu
  *         Date: 9/22/12 Time: 2:55 PM
  */
 public interface TrackerDAOConstants {
+
+    /**
+     * Date/time tracker was created.
+     */
+    static final String CREATED = "c";
 
     /** Operation values: one of the TrackerOperation enum as a String */
     static final String OPERATION = "P";
@@ -23,13 +27,19 @@ public interface TrackerDAOConstants {
     /** Was object voted on? -1 or 1 or null for down vote, up vote, or no vote, respectively.
      * If the operation is a comment creation, this is a vote for the blah.
      * If the operation is a comment update, this is a vote for the comment. **/
-    static final String VOTE = "v";
+    static final String PROMOTION = "v";
 
     /** Number of views of object: an integer or null for no views */
     static final String VIEWS = "w";
 
     /** Number of opens of object: an integer or null for no opens */
     static final String OPENS = "o";
+
+    /**
+     * If the user has voted on a poll, this is the index of the poll
+     * option on which the user voted.
+     */
+    static final String VOTED_POLL_INDEX = "i";
 
     /** A state: "A", "P", or "D" for active, pending, or removed/deleted, respectively */
     static final String STATE = "s";
@@ -40,14 +50,10 @@ public interface TrackerDAOConstants {
     /** A group id: string */
     static final String GROUP_ID = "G";
 
-    /** A user id: string */
+    /** A user id: string.
+     * If this a blah or comment creation operation, this is the user id of its author.
+     * */
     static final String USER_ID = "U";
-
-    /** An author id: string [this is the author of a blah] */
-    static final String BLAH_AUTHOR_ID = "A";
-
-    /** An author id: string [this is the author of a comment] */
-    static final String COMMENT_AUTHOR_ID = "A";
 
     /** A blah id: string */
     static final String BLAH_ID = "B";
@@ -70,8 +76,8 @@ public interface TrackerDAOConstants {
 
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{OPERATION, GROUP_TYPE_ID, GROUP_ID, USER_ID, BLAH_AUTHOR_ID, BLAH_ID, COMMENT_ID, STATE,
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{OPERATION, GROUP_TYPE_ID, GROUP_ID, USER_ID, BLAH_ID, COMMENT_ID, STATE,
                     USER_GENDER, USER_RACE,  USER_INCOME_RANGE, USER_DATE_OF_BIRTH}),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{VOTE, VIEWS, OPENS}),
+            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{PROMOTION, VIEWS, OPENS}),
     };
 }
