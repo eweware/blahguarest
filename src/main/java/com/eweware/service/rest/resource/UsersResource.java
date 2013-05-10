@@ -434,12 +434,14 @@ public class UsersResource {
             final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptors(LocaleId.en_us, request, userIds));
             getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
-        } catch (SystemErrorException e) {
-            e.printStackTrace();
         } catch (ResourceNotFoundException e) {
-            e.printStackTrace();
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {
-            e.printStackTrace();
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
 
