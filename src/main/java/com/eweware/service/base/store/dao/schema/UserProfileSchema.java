@@ -20,6 +20,8 @@ import java.util.LinkedHashMap;
  */
 public class UserProfileSchema extends BaseSchema implements SchemaConstants, UserProfileDAOConstants {
 
+    public static final String UNSPECIFIED_SELECTION_KEY = "-1";
+
     protected UserProfileSchema(LocaleId localeId) {
         super(localeId);
     }
@@ -91,9 +93,8 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
 //    }
 
     private void createCountrySpec() { // ISO 3166-1 alpha-2 code
-        final String defaultValue = "-1";
         LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>(2);
-        data.put(defaultValue, "Unspecified");
+        data.put(UNSPECIFIED_SELECTION_KEY, "Unspecified");
         data.put("AU", "Australia"); // TODO obtain from i18n service
         data.put("CA", "Canada");
         data.put("CN", "China (PRC)");
@@ -103,7 +104,7 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         data.put("US", "United States");
         final String regexp = null;
         final boolean hasDefaultValue = true;
-        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_COUNTRY), "Country", null, regexp, data, hasDefaultValue, defaultValue);
+        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_COUNTRY), "Country", null, regexp, data, hasDefaultValue, UNSPECIFIED_SELECTION_KEY);
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_COUNTRY_PERMISSIONS), "Permissions", null, regexp, null, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
@@ -137,7 +138,6 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
     }
 
     private void createIncomeRangeSpec() {
-        final String defaultValue = "-1";
         LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>(10);
         data.put("0", "Under $2,500"); // TODO obtain from i18n service
         data.put("1", "$2,500 to $9,999");
@@ -149,31 +149,31 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         data.put("7", "$150,000 to $199,999");
         data.put("8", "$200,000 to $249,999");
         data.put("9", "$250,000 and above");
-        data.put(defaultValue, "Unspecified");
-        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_INCOME_RANGE), "Income Range", null, null, data, true, defaultValue);
+        data.put(UNSPECIFIED_SELECTION_KEY, "Unspecified");
+        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_INCOME_RANGE), "Income Range", null, null, data, true, UNSPECIFIED_SELECTION_KEY);
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_INCOME_RANGE_PERMISSIONS), "Permissions", null, null, null, true, UserProfilePermissions.PRIVATE);
     }
 
+    public static final String RACE_OTHER_SELECTION_KEY = "4";
+
     private void createRaceSpec() {
-        final String defaultValue = "-1";
         LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>(6);
         data.put("0", "Asian");  // TODO obtain from i18n service
         data.put("1", "Black");
         data.put("2", "Hispanic");
         data.put("3", "White");
-        data.put("4", "Other");
-        data.put(defaultValue, "Unspecified");
-        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_RACE), "Race", null, null, data, true, defaultValue);
+        data.put(RACE_OTHER_SELECTION_KEY, "Other");
+        data.put(UNSPECIFIED_SELECTION_KEY, "Unspecified");
+        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_RACE), "Race", null, null, data, true, UNSPECIFIED_SELECTION_KEY);
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_RACE_PERMISSIONS), "Permissions", null, null, null, true, UserProfilePermissions.PRIVATE);
     }
 
     private void createGenderSpec() {
-        final String defaultValue = "-1";
         LinkedHashMap<String, Object> genderData = new LinkedHashMap<String, Object>(2);
         genderData.put("0", "Male"); // TODO obtain from i18n service
         genderData.put("1", "Female");  // TODO obtain from i18n service
-        genderData.put(defaultValue, "Unspecified");  // TODO obtain from i18n service
-        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_GENDER), "Gender", null, null, genderData, true, defaultValue);
+        genderData.put(UNSPECIFIED_SELECTION_KEY, "Unspecified");  // TODO obtain from i18n service
+        createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_GENDER), "Gender", null, null, genderData, true, UNSPECIFIED_SELECTION_KEY);
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_GENDER_PERMISSIONS), "Permissions", null, null, null, true, UserProfilePermissions.PRIVATE);
     }
 }

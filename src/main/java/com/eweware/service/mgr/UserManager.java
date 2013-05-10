@@ -807,7 +807,7 @@ public class UserManager implements ManagerInterface {
                 final Integer racePermissions = profile.getRacePermissions();
                 if (hasProfilePermission(racePermissions)) {
                     final String raceKey = profile.getRace();
-                    if (raceKey != null) {
+                    if (raceKey != null && !raceKey.equals(UserProfileSchema.RACE_OTHER_SELECTION_KEY) && !raceKey.equals(UserProfileSchema.UNSPECIFIED_SELECTION_KEY)) {
                         final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_RACE);
                         if (spec != null) {
                             switch (spec.getDataType()) {
@@ -829,7 +829,7 @@ public class UserManager implements ManagerInterface {
                 final Integer genderPermissions = profile.getGenderPermissions();
                 if (hasProfilePermission(genderPermissions)) {
                     final String genderKey = profile.getGender();
-                    if (genderKey != null) {
+                    if (genderKey != null && !genderKey.equals(UserProfileSchema.UNSPECIFIED_SELECTION_KEY)) {
                         final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_GENDER);
                         if (spec != null) {
                             switch (spec.getDataType()) {
@@ -854,7 +854,7 @@ public class UserManager implements ManagerInterface {
                 final Integer cityPermissions = profile.getCityPermissions();
                 if (hasProfilePermission(cityPermissions)) {
                     final String city = profile.getCity();
-                    if (city != null) {
+                    if (city != null && city.trim().length() != 0) {
                         final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_CITY);
                         if (spec != null) {
                             switch (spec.getDataType()) {
@@ -879,7 +879,7 @@ public class UserManager implements ManagerInterface {
                 final Integer statePermissions = profile.getStatePermissions();
                 if (hasProfilePermission(statePermissions)) {
                     final String state = profile.getState();
-                    if (state != null) {
+                    if (state != null && state.trim().length() != 0) {
                         final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_STATE);
                         if (spec != null) {
                             switch (spec.getDataType()) {
@@ -906,13 +906,13 @@ public class UserManager implements ManagerInterface {
                 final Integer countryPermissions = profile.getCountryPermissions();
                 if (hasProfilePermission(countryPermissions)) {
                     final String countryKey = profile.getCountry();
-                    if (countryKey != null) {
+                    if (countryKey != null && !countryKey.equals(UserProfileSchema.UNSPECIFIED_SELECTION_KEY)) {
                         final SchemaSpec spec = schema.getSpec(UserProfileDAO.USER_PROFILE_COUNTRY);
                         if (spec != null) {
                             switch (spec.getDataType()) {
                                 case ILS:
                                     final String country = (String) spec.getValidationMap().get(countryKey);
-                                    if (country != null) {
+                                    if (country != null && country.trim().length() != 0) {
                                         if (!(shownAge || shownRace || shownGender || shownCity || shownState)) {
                                             descriptor.append("Someone");
                                         }
