@@ -26,22 +26,6 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
 //        super(map, validateAndConvert);
 //    }
 
-    /**
-     * <p>The id is a composite of the userId + authorityId + badgeId</p>
-     * @return The id
-     */
-    @Override
-    public String getId() {
-        return (String) get(ID);
-    }
-
-    /**
-     * <p>The id is a composite of the userId + authorityId + badgeId</p>
-     */
-    @Override
-    public void setId(String id) {
-        put(ID, id);
-    }
 
 
     @Override
