@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367879527875" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368226120084" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368398645591" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368399623884" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1259,9 +1259,9 @@
       <file leaf-file-name="BadgeDAOImpl.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="0" selection-start="822" selection-end="822" vertical-scroll-proportion="0.34129694">
+            <state line="26" column="5" selection-start="662" selection-end="815" vertical-scroll-proportion="0.13651878">
               <folding>
-                <element signature="e#3092#3117#0" expanded="true" />
+                <element signature="e#3086#3111#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1289,7 +1289,10 @@
         <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/BasicDBObject.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="40" column="11" selection-start="1221" selection-end="1221" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <element signature="e#0#2858#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -2964,7 +2967,11 @@
       <created>1368398650475</created>
       <updated>1368398650475</updated>
     </task>
-    <option name="localTasksCounter" value="135" />
+    <task id="LOCAL-00135" summary="remove string id for badges">
+      <created>1368399626313</created>
+      <updated>1368399626313</updated>
+    </task>
+    <option name="localTasksCounter" value="136" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3057,7 +3064,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/WRS-311" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove string id for badges" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -3071,7 +3078,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="media file not supported message includes the media extension" />
     <MESSAGE value="when getting inboxes, if group id doesn't exist, send a resource not found." />
     <MESSAGE value="log but do not throw an exception when finding a stale group id in a session. This will be a problem when the database is cleared entirely and sessions are in progress and persist in disc even after REST server farm is rebooted." />
     <MESSAGE value="logger config" />
@@ -3096,6 +3102,7 @@
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-301" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-304, https://eweware.atlassian.net/browse/WRS-303" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-311" />
+    <MESSAGE value="remove string id for badges" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3147,7 +3154,10 @@
     <entry file="file://$PROJECT_DIR$/../../../mongo-java-driver-2.11.1-src/com/mongodb/BasicDBObject.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="11" selection-start="1221" selection-end="1221" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#0#2858#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3216,9 +3226,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="0" selection-start="822" selection-end="822" vertical-scroll-proportion="0.34129694">
+        <state line="26" column="5" selection-start="662" selection-end="815" vertical-scroll-proportion="0.13651878">
           <folding>
-            <element signature="e#3092#3117#0" expanded="true" />
+            <element signature="e#3086#3111#0" expanded="true" />
           </folding>
         </state>
       </provider>

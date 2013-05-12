@@ -22,9 +22,9 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
         super(badgeId);
     }
 
-//    public BadgeDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
-//        super(map, validateAndConvert);
-//    }
+    public BadgeDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
+        super(map, validateAndConvert);
+    }
 
 
 
