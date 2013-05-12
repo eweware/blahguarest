@@ -73,11 +73,6 @@ public class BadgeAuthorityDAOImpl extends BaseDAOImpl implements BadgeAuthority
     }
 
     @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
-
-    @Override
     protected Map<String, MongoFieldTypes> _getFieldNameToTypeMap() {
         return FIELD_TO_TYPE_MAP;
     }

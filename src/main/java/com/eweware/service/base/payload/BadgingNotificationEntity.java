@@ -20,7 +20,7 @@ public interface BadgingNotificationEntity {
     /**
      * The badge type
      */
-    public static final String BADGE_TYPE_FIELDNAME = BadgeDAOConstants.BADGE_TYPE;
+    public static final String BADGE_TYPE_ID_FIELDNAME = BadgeDAOConstants.BADGE_TYPE;
 
     /**
      * The name of this authority (domain name).

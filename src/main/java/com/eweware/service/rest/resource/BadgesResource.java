@@ -86,9 +86,10 @@ public class BadgesResource {
      *               and it must also be specified in the JSON entity in a field
      *               named 'T': if the authority manages only one kind of badge,
      *               this is unnecessary.
-     * @return If it succeeds, returns an http status 200 (OK) with a JSON
-     *         entity containing the badge id (a field in BadgeDAOConstants) and the
-     *         badge is added to the user's collection of badges.
+     * @return If it succeeds, returns an http status 200 (OK) with HTML contents
+     *         that initiate a transaction between the user and the badge authority.
+     *         If the user already has active badges for that authority, the
+     *         reponse is http status 202 (ACCEPTED) without any contents.
      *         Else, the following http status codes are possible: 400 (either
      *         the request was invalid or the user is not authorized to login),
      *         or 404 (the badge authority does not exist or is unavailable).
@@ -105,7 +106,7 @@ public class BadgesResource {
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final String authorityId = (String) entity.get("I");
             final String badgeTypeId = (String) entity.get("T");
-            final Response badgeForUser = getBadgesMgr().createBadgeForUser(response, userId, authorityId, badgeTypeId);
+            final Response badgeForUser = getBadgesMgr().createBadgeForUser(userId, authorityId, badgeTypeId);
             getSystemManager().setResponseTime(CREATE_BADGE_OPERATION, (System.currentTimeMillis() - start));
             return badgeForUser;
         } catch (InvalidAuthorizedStateException e) {
