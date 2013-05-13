@@ -109,9 +109,9 @@ public final class BadgesManager {
         if (userId == null) {
             throw new InvalidRequestException("missing user id", ErrorCodes.MISSING_USER_ID);
         }
-        if (activeBadgesForAuthorityExist(userId, authorityId, badgeTypeId)) {
-            return Response.status(Response.Status.ACCEPTED).build();
-        }
+//        if (activeBadgesForAuthorityExist(userId, authorityId, badgeTypeId)) {
+//            return Response.status(Response.Status.ACCEPTED).build();
+//        }
         authorityId = SystemManager.getInstance().isDevMode() ? "localhost:8081" : authorityId;
         final BadgeAuthorityDAO authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL);
         final String endpoint = makeBadgeAuthorityCreateBadgeEndpoint(authDAO);
@@ -192,28 +192,28 @@ public final class BadgesManager {
         }
     }
 
-    /**
-     * <p>Returns true if either (1) the user has already an unexpired badge of the
-     * specified badge type, or (2) when the badge type isn't specified, when
-     * there is at least one badge from the current authority (i.e., of any type).</p>
-     * @param userId
-     * @param authorityId
-     * @param badgeTypeId
-     * @return   <p>Returns true if there is at least one badge from the current authority.</p>
-     * @throws SystemErrorException
-     */
-    private boolean activeBadgesForAuthorityExist(String userId, String authorityId, String badgeTypeId) throws SystemErrorException {
-        final BadgeDAO badgeDAO = storeManager.createBadge();
-        // TODO create index for this at cost peril if that's the way we're eventually going to do this!
-        //  Alternately, create a composite key with user id, authority id, and blah type. But that complexity is not currently time-warranted.
-        badgeDAO.setUserId(userId);
-        badgeDAO.setAuthorityId(authorityId);
-        if (badgeTypeId != null) {
-            badgeDAO.setBadgeType(badgeTypeId);
-        }
-        // TODO check expiration date
-        return badgeDAO._exists();
-    }
+//    /**
+//     * <p>Returns true if either (1) the user has already an unexpired badge of the
+//     * specified badge type, or (2) when the badge type isn't specified, when
+//     * there is at least one badge from the current authority (i.e., of any type).</p>
+//     * @param userId
+//     * @param authorityId
+//     * @param badgeTypeId
+//     * @return   <p>Returns true if there is at least one badge from the current authority.</p>
+//     * @throws SystemErrorException
+//     */
+//    private boolean activeBadgesForAuthorityExist(String userId, String authorityId, String badgeTypeId) throws SystemErrorException {
+//        final BadgeDAO badgeDAO = storeManager.createBadge();
+//        // TODO create index for this at cost peril if that's the way we're eventually going to do this!
+//        //  Alternately, create a composite key with user id, authority id, and blah type. But that complexity is not currently time-warranted.
+//        badgeDAO.setUserId(userId);
+//        badgeDAO.setAuthorityId(authorityId);
+//        if (badgeTypeId != null) {
+//            badgeDAO.setBadgeType(badgeTypeId);
+//        }
+//        // TODO check expiration date
+//        return badgeDAO._exists();
+//    }
 
     /**
      * <p>Receives badge creation result from authority.</p>
