@@ -481,7 +481,7 @@ public class UserManager implements ManagerInterface {
      * @param localeId        The locale id
      * @param username        The username
      * @param emailAddress    The email address submitted by the user (for verification only)
-     * @param challengeAnswer The challenge answer submitted by the user (for verification)
+     * @param challengeAnswer (Optional): The challenge answer submitted by the user (for verification)
      */
     public void recoverUser(LocaleId localeId, String username, String emailAddress, String challengeAnswer)
             throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException {
@@ -509,9 +509,11 @@ public class UserManager implements ManagerInterface {
         if (!email.equals(emailAddress)) {
             throw new InvalidAuthorizedStateException("invalid email address provided by user", ErrorCodes.INVALID_EMAIL_ADDRESS);
         }
-        final String profileChallengeAnswer = userAccountDAO.getSecurityChallengeAnswer1();
-        if (profileChallengeAnswer == null || !profileChallengeAnswer.equals(challengeAnswer)) {
-            throw new InvalidAuthorizedStateException("invalid answer to challenge question", ErrorCodes.INVALID_INPUT);
+        if (challengeAnswer != null) {
+            final String profileChallengeAnswer = userAccountDAO.getSecurityChallengeAnswer1();
+            if (profileChallengeAnswer == null || !profileChallengeAnswer.equals(challengeAnswer)) {
+                throw new InvalidAuthorizedStateException("invalid answer to challenge question", ErrorCodes.INVALID_INPUT);
+            }
         }
 
         // Stash recovery code data in user account

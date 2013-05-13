@@ -166,9 +166,4 @@ public class UserAccountDAOImpl extends BaseDAOImpl implements UserAccountDAO {
     public void setRecoveryCode(String recoveryCode) {
         put(RECOVERY_CODE_STRING, recoveryCode);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

@@ -657,17 +657,15 @@ public class UsersResource {
      * <div>The user's username</div>
      * <div>The user's email address. This is just a security challenge: it is verified
      * against the email address in the user's profile.</div>
-     * <div>The answer to the one and only challenge question.</div>
+     * <div>It optionally takes the answer to the one and only challenge question.</div>
      * <p/>
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> users/recover/user</div>
      *
-     * @param entity An entity containing the following fields: 'U' whose value is a string, the username.
-     *               'A' whose value is a string, the answer to the one and only security question.
-     *               'E' whose value is a string, the user-supplied email address. Note that the latter
-     *               is only used as one more way to try to confirm that the user knows his email address
-     *               (which is not enough by itself to give us much confidence, but with the challenge
-     *               answer it might be more of a deterrent).
+     * @param entity An entity containing the following fields:
+     *               Required: 'U' whose value is a string, the username.
+     *               Required: 'E' whose value is a string, the user-supplied email address.
+     *               Optional: 'A' whose value is a string, the answer to the one and only security question.
      * @return If user has registered an email account, returns http status 204 (NO CONTENT),
      *         in which case it means that an email has been sent with a link that will log in the user.
      *         If the user doesn't have a registered email address, returns http status 404 (NOT FOUND).
