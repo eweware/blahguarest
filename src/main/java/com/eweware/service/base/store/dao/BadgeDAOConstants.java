@@ -49,7 +49,7 @@ public interface BadgeDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    AUTHORITY_BADGE_ID, AUTHORITY_ID, DISPLAY_NAME, ICON_URL, USER_ID, EXPIRATION_DATE})};
+                    AUTHORITY_BADGE_ID, AUTHORITY_ID, DISPLAY_NAME, BADGE_TYPE, ICON_URL, USER_ID, EXPIRATION_DATE})};
 
     /**
      * Badge type values
