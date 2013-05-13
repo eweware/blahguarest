@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367879527875" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368226120084" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368419510793" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368419591444" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -527,7 +527,7 @@
     <file path="/BadgesManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368398256307" ignored="false" />
     <file path="/BadgeDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367778405457" ignored="false" />
     <file path="/BadgeDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368232209753" ignored="false" />
-    <file path="/BadgeDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368396609652" ignored="false" />
+    <file path="/BadgeDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368420268349" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/stop.sh" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812887082" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368160320656" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/src/main/java/com/eweware/badging/rest/resource/BadgesResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368401682936" ignored="false" />
@@ -1262,87 +1262,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="282" column="35" selection-start="11858" selection-end="11858" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BadgeDAOImpl.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="BadgeDAOImpl.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="73" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
+            <state line="129" column="40" selection-start="3383" selection-end="3383" vertical-scroll-proportion="0.81707317">
               <folding>
                 <element signature="e#3086#3111#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="applicationConfiguration.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="46" selection-start="536" selection-end="536" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BadgesManager.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="215" column="6" selection-start="8937" selection-end="10143" vertical-scroll-proportion="0.39817974">
-              <folding>
-                <element signature="e#5149#5165#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BadgesResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="108" column="42" selection-start="4527" selection-end="4527" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BadgingNotificationEntity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgingNotificationEntity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="31" selection-start="534" selection-end="534" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StoreManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="33" selection-start="2675" selection-end="2675" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BadgeAuthorityDAOImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="13" selection-start="598" selection-end="598" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BadgeDAO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="17" selection-start="207" selection-end="207" vertical-scroll-proportion="0.0">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -1351,6 +1277,26 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAOConstants.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="11" column="17" selection-start="361" selection-end="361" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgesManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="325" column="25" selection-start="16714" selection-end="16719" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#5149#5165#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgeAuthorityDAOImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="13" selection-start="598" selection-end="598" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1393,8 +1339,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/StoreManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java" />
       </list>
     </option>
   </component>
@@ -2989,7 +2935,11 @@
       <created>1368400925883</created>
       <updated>1368400925883</updated>
     </task>
-    <option name="localTasksCounter" value="137" />
+    <task id="LOCAL-00137" summary="remove pre-emptive check on active badges">
+      <created>1368419593334</created>
+      <updated>1368419593334</updated>
+    </task>
+    <option name="localTasksCounter" value="138" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3025,7 +2975,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2835131" sideWeight="0.98077977" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2835131" sideWeight="0.98077977" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18804781" sideWeight="0.35439137" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -3082,7 +3032,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove string id for badges" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove pre-emptive check on active badges" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -3096,7 +3046,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="when getting inboxes, if group id doesn't exist, send a resource not found." />
     <MESSAGE value="log but do not throw an exception when finding a stale group id in a session. This will be a problem when the database is cleared entirely and sessions are in progress and persist in disc even after REST server farm is rebooted." />
     <MESSAGE value="logger config" />
     <MESSAGE value="invalid object id error reported by dave when getting inboxes from db" />
@@ -3121,6 +3070,7 @@
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-304, https://eweware.atlassian.net/browse/WRS-303" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-311" />
     <MESSAGE value="remove string id for badges" />
+    <MESSAGE value="remove pre-emptive check on active badges" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3165,23 +3115,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="718" column="19" selection-start="34195" selection-end="34195" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/DAOMethods.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="101" column="28" selection-start="4029" selection-end="4029" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="17" selection-start="361" selection-end="361" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -3200,22 +3136,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="17" selection-start="207" selection-end="207" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="73" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#3086#3111#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="46" selection-start="536" selection-end="536" vertical-scroll-proportion="0.0">
@@ -3230,13 +3150,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="13" selection-start="598" selection-end="598" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="108" column="42" selection-start="4527" selection-end="4527" vertical-scroll-proportion="0.0">
@@ -3244,11 +3157,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="746" column="58" selection-start="35148" selection-end="35170" vertical-scroll-proportion="-0.91071427">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="215" column="6" selection-start="8937" selection-end="10143" vertical-scroll-proportion="0.39817974">
+        <state line="325" column="25" selection-start="16714" selection-end="16719" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#5149#5165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="54" selection-start="244" selection-end="244" vertical-scroll-proportion="0.17064847">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="13" selection-start="598" selection-end="598" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="17" selection-start="361" selection-end="361" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="129" column="40" selection-start="3383" selection-end="3383" vertical-scroll-proportion="0.81707317">
+          <folding>
+            <element signature="e#3086#3111#0" expanded="true" />
           </folding>
         </state>
       </provider>

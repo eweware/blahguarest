@@ -127,6 +127,7 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
         FIELD_TO_TYPE_MAP.put(AUTHORITY_BADGE_ID, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(AUTHORITY_ID, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(BADGE_TYPE, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(ICON_URL, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
         FIELD_TO_TYPE_MAP.put(EXPIRATION_DATE, MongoFieldTypes.DATE);
