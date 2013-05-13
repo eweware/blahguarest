@@ -750,7 +750,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             }
             final MongoFieldTypes type = map.get(fieldName);
             if (type == null) {
-                throw new SystemErrorException(getClass().getSimpleName() + ": makeAtomicUpdateObject failed operation in collection '" + _getCollection() + "' due to null data type (did implementation not add the data type map for this field?) for fieldName '" + fieldName + "' in object=" + this, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException(getClass().getSimpleName() + ": makeAtomicUpdateObject failed operation in collection '" + _getCollection() + "' due to null data type (did implementation not add the data type map for this field?) for fieldName '" + fieldName + "' in object=" + this + "\ndata type field map: " + map, ErrorCodes.SERVER_SEVERE_ERROR);
             }
 
             final Object value = entry.getValue();
