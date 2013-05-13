@@ -280,6 +280,8 @@ public final class BadgesManager {
             DBObject tx = null;
             String userId = null;
             String authorityId = null;
+
+            boolean badgeUpdateKluge = false;  // TODO (jira filed) kludge because this could entail more than one badge, a subtlety we ignore for now
             final List<String> badgeIds = new ArrayList<String>(badgeEntities.size());
             for (Map<String, Object> badgeEntity : badgeEntities) {
 
@@ -322,7 +324,8 @@ public final class BadgesManager {
                     badge.setIconUrl(iconUrl);
                 }
 
-                if (existingBadgeID != null) {
+                badgeUpdateKluge = (existingBadgeID != null);
+                if (badgeUpdateKluge) {
                     badge.setId(existingBadgeID);
                     badge._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
                 } else {
@@ -337,7 +340,7 @@ public final class BadgesManager {
             if (!storeManager.createUser(userId)._exists()) {
                 logger.warning("User id '" + userId + "' for transaction id '" + txId + "' authority '" + authority + "'");
                 newState = BadgeTransactionState.GRANTED_BUT_NO_USER_ID;
-            } else {
+            } else if (!badgeUpdateKluge) {
                 user.setBadgeIds(badgeIds);
                 user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
             }
