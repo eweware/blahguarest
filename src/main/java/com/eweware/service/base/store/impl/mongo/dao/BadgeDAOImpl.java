@@ -100,7 +100,7 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
 
     @Override
     protected Map<String, MongoFieldTypes> _getFieldNameToTypeMap() {
-        return null;
+        return BadgeDAOImpl.FIELD_TO_TYPE_MAP;
     }
 
     @Override

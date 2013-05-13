@@ -21,7 +21,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     private static String collectionName;
     private static DBCollection collection;
 
-    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(4);
+    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
 
     static {  // TODO should be derived from schema
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USERNAME, MongoFieldTypes.STRING);
