@@ -120,11 +120,21 @@ public class BadgesResource {
         }
     }
 
+    /**
+     * <p>Deletes the specified badge id for the logged-in user.</p>
+     * @param badgeId   Path parameter (required): the badge id to delete
+     * @return <p>Returns a 202 (ACCEPTED) response if the badge was deleted.</p>
+     * <p>Returns 401 (UNAUTHORIZED) if there is no user logged in</p>
+     * <p>Returns 409 (CONFLICT) if the badge id does not belong to the logged in user</p>
+     * <p>Returns 404 (NOT FOUND) if the badge was not found</p>
+     * <p>Returns 500 if there was some system error</p>
+     */
     @DELETE
+    @Path("{badgeId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteBadge(@PathParam("i") String badgeId, @Context HttpServletRequest request) {
-        final long start = System.currentTimeMillis();
+    public Response deleteBadge(@PathParam("badgeId") String badgeId, @Context HttpServletRequest request) {
         try {
+            final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             getBadgesMgr().deleteBadgeForUser(userId, badgeId);
             final Response response = RestUtilities.make202AcceptedResponse();
@@ -132,12 +142,12 @@ public class BadgesResource {
             return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
-        } catch (SystemErrorException e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(request, e);
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }

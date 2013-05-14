@@ -230,6 +230,32 @@ public final class BadgesManager {
         }
     }
 
+    public BadgePayload getBadgeById(String badgeId) throws SystemErrorException, InvalidRequestException {
+        final BadgeDAO badge = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId();
+        if (badge == null) {
+            throw new InvalidRequestException("Badge id '" + badgeId + "' doesn't exist", ErrorCodes.INVALID_INPUT);
+        }
+        return new BadgePayload(badge);
+    }
+
+    public void deleteBadgeForUser(String userId, String badgeId) throws SystemErrorException, ResourceNotFoundException, StateConflictException {
+        final BadgeDAO badgeDAO = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId(BadgeDAOConstants.USER_ID);
+        if (badgeDAO == null) {
+            throw new ResourceNotFoundException("Badge id '" + badgeId + "' not found", ErrorCodes.NOT_FOUND_BADGE_ID);
+        }
+        final String uid = badgeDAO.getUserId();
+        if (uid != null) {
+            if (uid.equals(userId)) {
+                badgeDAO._deleteByPrimaryId();
+            } else {
+                throw new StateConflictException("Badge id '" + badgeId + "' is not owned by authenticated user id '" + userId + "'", ErrorCodes.BADGE_NOT_OWNED_BY_USER);
+            }
+        } else {
+            logger.warning("Badge id '" + badgeId + "' had null user id field; expected user id '" + userId + "'");
+            // fall through
+        }
+    }
+
     private Response handleRefusedBadge(String txId, String state, Map<String, Object> entity) throws SystemErrorException {
         final String authority = (String) entity.get(BadgingNotificationEntity.AUTHORITY_FIELDNAME);
         final DBCollection col = MongoStoreManager.getInstance().getCollection(MongoStoreManager.getInstance().getBadgeTransactionCollectionName());
@@ -378,48 +404,4 @@ public final class BadgesManager {
     private String makeBadgeAuthorityCreateBadgeEndpoint(BadgeAuthorityDAO authDAO) throws SystemErrorException {
         return (SystemManager.getInstance().isDevMode() ? "http://localhost:8081/v1" : authDAO.getRestEndpointUrl()) + "/badges/create";
     }
-
-    public BadgePayload getBadgeById(String badgeId) throws SystemErrorException, InvalidRequestException {
-        final BadgeDAO badge = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId();
-        if (badge == null) {
-            throw new InvalidRequestException("Badge id '" + badgeId + "' doesn't exist", ErrorCodes.INVALID_INPUT);
-        }
-        return new BadgePayload(badge);
-    }
-
-    public void deleteBadgeForUser(String userId, String badgeId) throws SystemErrorException, ResourceNotFoundException, StateConflictException {
-        final BadgeDAO badgeDAO = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId(BadgeDAOConstants.USER_ID);
-        if (badgeDAO == null) {
-            throw new ResourceNotFoundException("Badge id '" + badgeId + "' not found", ErrorCodes.NOT_FOUND_BADGE_ID);
-        }
-        final String uid = badgeDAO.getUserId();
-        if (uid != null) {
-            if (uid.equals(userId)) {
-                badgeDAO._deleteByPrimaryId();
-            } else {
-                throw new StateConflictException("Badge is not owned by user", ErrorCodes.BADGE_NOT_OWNED_BY_USER);
-            }
-        } else {
-            // fall through
-        }
-    }
 }
-
-
-
-
-//// Set up for the session cookie
-//final CookieStore store = new BasicCookieStore();
-//final HttpContext context = new BasicHttpContext();
-//context.setAttribute(ClientContext.COOKIE_STORE, store);
-//
-// Get session id from cookie
-//final Header header = response.getFirstHeader("Set-Cookie");
-//final String sessionId = (header == null) ? null : header.getValue();
-//if (sessionId != null) {
-//        resp.setHeader("Set-Cookie", sessionId);
-//} else {
-//final String msg = "<p>Failed to establish session with authority</p>";
-//logger.log(Level.SEVERE, msg);
-//return msg;
-//}
