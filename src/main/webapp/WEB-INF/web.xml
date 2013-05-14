@@ -85,6 +85,6 @@
 
 	<welcome-file-list>
         <!-- The blahgua site's starting page; most pages and resources are in S3 -->
-		<welcome-file>blahgua/default.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>
