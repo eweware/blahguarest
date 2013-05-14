@@ -1,3 +1,5 @@
 <%@ page  language="java" import="java.util.*" errorPage="" %>
-
-<%=main.java.com.eweware.service.base.getDefaultHtmlFromS3()%>
+<%
+final String msg = main.java.com.eweware.service.base.AWSUtilities.getDefaultHtmlFromS3();
+out.print(msg.substring(1));
+%>

@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -41,16 +42,13 @@ public class AWSUtilities {
 
     public static String getDefaultHtmlFromS3() {
         com.amazonaws.services.s3.model.S3ObjectInputStream in = null;
-        String defaultHtml = "";
         try {
             if ((anonymousAmazonS3Client == null)) {
                 anonymousAmazonS3Client = new AmazonS3Client(new AnonymousAWSCredentials());
             }
             final S3Object obj = anonymousAmazonS3Client.getObject("beta.blahgua.com", "default.html");
             in = obj.getObjectContent();
-            java.util.Scanner scanner = new java.util.Scanner(in).useDelimiter("\\A");
-            defaultHtml = scanner.hasNext() ? scanner.next() : "";
-            return defaultHtml;
+            return IOUtils.toString(in, "UTF-8");
         } catch (java.lang.Exception e) {
             logger.log(Level.SEVERE, "Failed to deliver default.html from s3", e);
             return ""; // TODO should have a fallback file
