@@ -1077,14 +1077,16 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // blah tracker ids are: <blahId><2-digit year><2-digit month><2-digit day of month> (e.g., 5031b25d036408e9b4160b95120820)
+        // Next two calls also parse the string to make sure we've got a real date
         Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
         Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
-        logger.info(statsStartDate+" startDate=" + new Date(startDate.getTimeInMillis()));
-        logger.info(statsEndDate+" endDate=" + new Date(endDate.getTimeInMillis()));
+//        logger.info(statsStartDate+" startDate=" + new Date(startDate.getTimeInMillis()));
+//        logger.info(statsEndDate+" endDate=" + new Date(endDate.getTimeInMillis()));
+
         // We've made sure that the dates can be parsed as expected and are available as calendar instances for comparison
         List<BlahTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
-            logger.info("Same day");
+//            logger.info("Same day");
             final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.BLAH, blahId, startDate);
             final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker(trackerId)._findByPrimaryId();
             if (blahTrackerDAO != null) {
@@ -1092,10 +1094,10 @@ public final class BlahManager implements ManagerInterface {
                 trackers.add(new BlahTrackerPayload(blahTrackerDAO.toMap()));
             }
         } else { // range search
-            final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker();
-            final String from = blahId + extractYearMonthFromTrackerDate(statsStartDate);
-            final String to = (statsEndDate == null) ? null : blahId + extractYearMonthFromTrackerDate(statsEndDate);
-            logger.info("from=" + from + "  to=" + to);
+            final BlahTrackerDAO blahTrackerDAO = getStoreManager().createBlahTracker();
+            final String from = blahId + statsStartDate;
+            final String to = (statsEndDate == null) ? null : blahId + statsEndDate;
+//            logger.info("from=" + from + "  to=" + to);
             final boolean sorted = true;
             final List<? extends BaseDAO> trackerDAOs = blahTrackerDAO._findRangeSingleField(sorted, BlahTrackerDAO.ID, from, true, to, true);
             trackers = new ArrayList<BlahTrackerPayload>(trackerDAOs.size());
@@ -1413,7 +1415,7 @@ public final class BlahManager implements ManagerInterface {
             addUserCommentInfoToPayload(entity, commentId, userId);
         }
         if (stats) {
-            fetchAndAddCommentTrackers(statsStartDate, statsEndDate, entity);
+            fetchAndAddCommentTrackers(commentId, statsStartDate, statsEndDate, entity);
         }
 
         // TODO expensive! see WRS-252
@@ -1433,7 +1435,7 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 
-    private void fetchAndAddCommentTrackers(String statsStartDate, String statsEndDate, CommentPayload comment) throws InvalidRequestException, SystemErrorException {
+    private void fetchAndAddCommentTrackers(String commentId, String statsStartDate, String statsEndDate, CommentPayload commentEntity) throws InvalidRequestException, SystemErrorException {
         if (statsStartDate == null && statsEndDate != null) {
             throw new InvalidRequestException("stats start date (s) must be provided if an end date (e) is specified", ErrorCodes.INVALID_INPUT);
         }
@@ -1441,28 +1443,28 @@ public final class BlahManager implements ManagerInterface {
         // comment tracker ids are: <commentId><2-digit year><2-digit month><2-digit day of month> (e.g., 5031b25d036408e9b4160b95120820)
         Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
         Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
+
         // We've made sure that the dates can be parsed as expected and are available as calendar instances for comparison
         List<CommentTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
-            final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.COMMENT, comment.getId(), startDate);
+            final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.COMMENT, commentId, startDate);
             final CommentTrackerDAO commentTrackerDAO = (CommentTrackerDAO) getStoreManager().createCommentTracker(trackerId)._findByPrimaryId();
             if (commentTrackerDAO != null) {
                 trackers = new ArrayList<CommentTrackerPayload>(1);
                 trackers.add(new CommentTrackerPayload(commentTrackerDAO.toMap()));
             }
         } else { // range search
-            final CommentTrackerDAO commentTrackerDAO = (CommentTrackerDAO) getStoreManager().createCommentTracker();
-            final String from = extractYearMonthFromTrackerDate(statsStartDate);
-            final String to = extractYearMonthFromTrackerDate(statsEndDate);
+            final CommentTrackerDAO commentTrackerDAO = getStoreManager().createCommentTracker();
+            final String from = commentId + statsStartDate;
+            final String to = (statsEndDate == null) ? null : commentId + statsEndDate;
             final boolean sorted = true;
-            // TODO WRS-55 check date field in this search:
             final List<? extends BaseDAO> trackerDAOs = commentTrackerDAO._findRangeSingleField(sorted, CommentTrackerDAO.ID, from, true, to, true);
             trackers = new ArrayList<CommentTrackerPayload>(trackerDAOs.size());
             for (BaseDAO dao : trackerDAOs) {
                 trackers.add(new CommentTrackerPayload(dao.toMap()));
             }
         }
-        comment.setStats(trackers == null ? new ArrayList<CommentTrackerPayload>(0) : trackers);
+        commentEntity.setStats(trackers == null ? new ArrayList<CommentTrackerPayload>(0) : trackers);
 
     }
 
