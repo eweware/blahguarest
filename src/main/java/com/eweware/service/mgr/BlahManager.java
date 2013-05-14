@@ -1077,10 +1077,10 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // blah tracker ids are: <blahId><2-digit year><2-digit month><2-digit day of month> (e.g., 5031b25d036408e9b4160b95120820)
-        Calendar startDate = (statsStartDate == null) ? null : main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
-        Calendar endDate = (statsEndDate == null) ? null : main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
-        if (startDate != null) logger.info("startDate=" + new Date(startDate.getTimeInMillis()));
-        if (endDate != null) logger.info("endDate=" + new Date(endDate.getTimeInMillis()));
+        Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
+        Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
+        logger.info(statsStartDate+" startDate=" + new Date(startDate.getTimeInMillis()));
+        logger.info(statsEndDate+" endDate=" + new Date(endDate.getTimeInMillis()));
         // We've made sure that the dates can be parsed as expected and are available as calendar instances for comparison
         List<BlahTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
