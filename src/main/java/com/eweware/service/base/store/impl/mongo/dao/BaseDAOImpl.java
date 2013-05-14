@@ -500,12 +500,12 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             throw new SystemErrorException(makeErrorMessage("_findRangeSingleField", "find", null, null, "'from' field is null"), ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
         final String op1 = fromInclusive ? "$gte" : "$gt";
-        final String op2 = toInclusive ? "$lte" : "$lt";
         final DBObject criteria = new BasicDBObject();
         final DBObject range = new BasicDBObject();
         criteria.put(fieldName, range);
         range.put(op1, from);
         if (to != null) {
+            final String op2 = toInclusive ? "$lte" : "$lt";
             range.put(op2, to);
         }
         final List<BaseDAO> matches = new ArrayList<BaseDAO>();

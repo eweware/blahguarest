@@ -1091,7 +1091,8 @@ public final class BlahManager implements ManagerInterface {
         } else { // range search
             final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker();
             final String from = blahId + extractYearMonthFromTrackerDate(statsStartDate);
-            final String to = blahId + extractYearMonthFromTrackerDate(statsEndDate);
+            final String to = (statsEndDate == null) ? null : blahId + extractYearMonthFromTrackerDate(statsEndDate);
+            logger.warning("from=" + from + "  to=" + to);
             final boolean sorted = true;
             final List<? extends BaseDAO> trackerDAOs = blahTrackerDAO._findRangeSingleField(sorted, BlahTrackerDAO.ID, from, true, to, true);
             trackers = new ArrayList<BlahTrackerPayload>(trackerDAOs.size());
