@@ -347,6 +347,10 @@ public final class MongoStoreManager implements StoreManager {
             boolean devMode = false;
             try {
                 devMode = SystemManager.getInstance().isDevMode();
+                if (devMode) {
+                    this.connectionsPerHost = 3;
+                }
+                logger.info("*** mongodb connections = " + this.connectionsPerHost + " ***");
 //                if (devMode && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
 //                    this.hostnames = new ArrayList<String>();
 //                    this.hostnames.add(devMongoDbHostname);  // same default 21191 port
@@ -445,7 +449,7 @@ public final class MongoStoreManager implements StoreManager {
     }
 
     private void setMongoDebuggingLevel() {
-        Logger logger = Logger.getLogger( "com.mongodb" );
+        Logger logger = Logger.getLogger("com.mongodb");
         if (logger != null) {
             logger.setLevel(Level.FINEST);
         } else {

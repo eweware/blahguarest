@@ -132,7 +132,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/login</div>
      *
      * @param entity A JSON entity (a UserPayload) containing a username and a password.
-     *               The rules for username and password length and structure are in
+     *               The rules for username (field 'N') and password (field 'pwd') length and structure are in
      *               the Login methods cited below.
      * @return If it succeeds, returns an http status 202 (ACCEPTED).
      *         Else, the following http status codes are possible: 400 (either
