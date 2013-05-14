@@ -10,8 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="context.xml">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/META-INF/context.xml" afterPath="$PROJECT_DIR$/src/main/webapp/META-INF/context.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -183,7 +183,7 @@
     <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
     <file path="/Session.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739367070" ignored="false" />
     <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368505382111" ignored="false" />
-    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368505817410" ignored="false" />
+    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368507123059" ignored="false" />
     <file path="/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366936742480" ignored="false" />
     <file path="/JSONProvider.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356589590232" ignored="false" />
     <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361325117523" ignored="false" />
@@ -195,7 +195,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367879527875" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368226120084" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368504318525" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368507129890" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362967506077" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1138,7 +1138,7 @@
     <file path="$PROJECT_DIR$/../badge-authority/src/main/java/com/eweware/badging/dao/TransactionDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368394679186" ignored="false" />
     <file path="/ApplicationDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368487841893" ignored="false" />
     <file path="/nibola.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368487995910" ignored="false" />
-    <file path="/context.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368504256899" ignored="false" />
+    <file path="/context.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368506347044" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1291,10 +1291,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="context.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="context.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/META-INF/context.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="29" selection-start="0" selection-end="67" vertical-scroll-proportion="0.0">
+            <state line="0" column="53" selection-start="53" selection-end="53" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1318,10 +1318,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlahManager.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1094" column="58" selection-start="51025" selection-end="51025" vertical-scroll-proportion="0.72446555">
+            <state line="1080" column="141" selection-start="49995" selection-end="49995" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1380,10 +1380,10 @@
         <option value="$PROJECT_DIR$/src/main/webapp/test/js/api.js" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java" />
-        <option value="$PROJECT_DIR$/src/main/webapp/META-INF/context.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/META-INF/context.xml" />
       </list>
     </option>
   </component>
@@ -2870,7 +2870,11 @@
       <created>1368504280466</created>
       <updated>1368504280466</updated>
     </task>
-    <option name="localTasksCounter" value="151" />
+    <task id="LOCAL-00151" summary="context.xml">
+      <created>1368505825248</created>
+      <updated>1368505825248</updated>
+    </task>
+    <option name="localTasksCounter" value="152" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3079,20 +3083,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="353" column="22" selection-start="10562" selection-end="10562" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/META-INF/context.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="29" selection-start="0" selection-end="67" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="421" column="94" selection-start="21671" selection-end="21671" vertical-scroll-proportion="0.0">
@@ -3128,9 +3118,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MongoStoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="353" column="22" selection-start="10562" selection-end="10562" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1094" column="58" selection-start="51025" selection-end="51025" vertical-scroll-proportion="0.72446555">
+        <state line="1080" column="141" selection-start="49995" selection-end="49995" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/META-INF/context.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="53" selection-start="53" selection-end="53" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>

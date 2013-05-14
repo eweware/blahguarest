@@ -1077,11 +1077,14 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // blah tracker ids are: <blahId><2-digit year><2-digit month><2-digit day of month> (e.g., 5031b25d036408e9b4160b95120820)
-        Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
-        Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
+        Calendar startDate = (statsStartDate == null) ? null : main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
+        Calendar endDate = (statsEndDate == null) ? null : main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
+        if (startDate != null) logger.info("startDate=" + new Date(startDate.getTimeInMillis()));
+        if (endDate != null) logger.info("endDate=" + new Date(endDate.getTimeInMillis()));
         // We've made sure that the dates can be parsed as expected and are available as calendar instances for comparison
         List<BlahTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
+            logger.info("Same day");
             final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.BLAH, blahId, startDate);
             final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker(trackerId)._findByPrimaryId();
             if (blahTrackerDAO != null) {
@@ -1092,7 +1095,7 @@ public final class BlahManager implements ManagerInterface {
             final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker();
             final String from = blahId + extractYearMonthFromTrackerDate(statsStartDate);
             final String to = (statsEndDate == null) ? null : blahId + extractYearMonthFromTrackerDate(statsEndDate);
-            logger.warning("from=" + from + "  to=" + to);
+            logger.info("from=" + from + "  to=" + to);
             final boolean sorted = true;
             final List<? extends BaseDAO> trackerDAOs = blahTrackerDAO._findRangeSingleField(sorted, BlahTrackerDAO.ID, from, true, to, true);
             trackers = new ArrayList<BlahTrackerPayload>(trackerDAOs.size());
