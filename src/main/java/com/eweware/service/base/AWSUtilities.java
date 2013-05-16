@@ -10,6 +10,7 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +24,12 @@ public class AWSUtilities {
 
     private static AmazonS3Client amazonS3Client = null;
     private static AmazonS3Client anonymousAmazonS3Client = null;
+
+    private static long THIRTY_MINUTES = 1000 * 60 * 30;
+    private static String defaultHtml;
+    private static volatile boolean defaultHtmlCacheValid;
+    private static long lastTimeDefaultHtmlCached = System.currentTimeMillis();
+    private static ReentrantReadWriteLock defaultHtmlLock = new ReentrantReadWriteLock();
 
     public static AmazonS3 getAmazonS3() throws SystemErrorException {
         if (amazonS3Client != null) {
@@ -40,7 +47,31 @@ public class AWSUtilities {
         }
     }
 
+    /**
+     * <p>Returns the cached default HTML page from S3.</p>
+     * <p>The cache is refreshed every few minutes from S3.</p>
+     * @return  <p>Returns the cached default HTML page from S3.</p>
+     */
     public static String getDefaultHtmlFromS3() {
+        defaultHtmlLock.readLock().lock();
+        if (System.currentTimeMillis() > (lastTimeDefaultHtmlCached + THIRTY_MINUTES) || !defaultHtmlCacheValid) {
+            // Must release read lock before acquiring write lock
+            defaultHtmlLock.readLock().unlock();
+            defaultHtmlLock.writeLock().lock();
+            // Recheck state because another thread might have acquired
+            //   write lock and changed state before we did.
+            defaultHtml = doGetDefaultHtmlFromS3();
+            defaultHtmlCacheValid = true;
+            // Downgrade by acquiring read lock before releasing write lock
+            defaultHtmlLock.readLock().lock();
+            defaultHtmlLock.writeLock().unlock(); // Unlock write, still hold read
+        }
+        final String page = defaultHtml;
+        defaultHtmlLock.readLock().unlock();
+        return page;
+    }
+
+    private static String doGetDefaultHtmlFromS3() {
         com.amazonaws.services.s3.model.S3ObjectInputStream in = null;
         try {
             if ((anonymousAmazonS3Client == null)) {
@@ -49,14 +80,14 @@ public class AWSUtilities {
             final S3Object obj = anonymousAmazonS3Client.getObject("beta.blahgua.com", "default.html");
             in = obj.getObjectContent();
             return IOUtils.toString(in, "UTF-8");
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to deliver default.html from s3", e);
             return ""; // TODO should have a fallback file
         } finally {
             if (in != null) {
                 try {
                     in.close();
-                } catch (java.lang.Exception e) {
+                } catch (Exception e) {
                     logger.log(Level.SEVERE, "Failed to deliver default.html from s3", e);
                     return "";  // TODO should have a fallback file
                 }
