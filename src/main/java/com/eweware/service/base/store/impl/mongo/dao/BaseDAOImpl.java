@@ -783,7 +783,10 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     }
                 }
             } else if (type == MongoFieldTypes.ARRAY) {
-                if (value instanceof Collection<?>) {
+                if (value == null) {  // nuke array
+                    updater.remove(operation);
+                    updater.put("$unset", new BasicDBObject(fieldName, 1));
+                } else if (value instanceof Collection<?>) {
                     operationContents.put(fieldName, new BasicDBObject("$each", value));
                 } else {
                     throw new SystemErrorException("Expected collection in field '" + fieldName + "' operation '" + operation + "'", ErrorCodes.SERVER_SEVERE_ERROR);
