@@ -759,6 +759,14 @@ public class UserManager implements ManagerInterface {
         return descriptors;
     }
 
+    private static Map<Character, String> vowelToArticle = new HashMap<Character, String>(5);
+    static {
+        vowelToArticle.put('a', "An ");
+        vowelToArticle.put('e', "An ");
+        vowelToArticle.put('i', "An ");
+        vowelToArticle.put('o', "An ");
+    }
+
     // hastily put together
     public Map<String, String> getUserProfileDescriptor(LocaleId localeId, HttpServletRequest request, String userId)
             throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
@@ -815,8 +823,13 @@ public class UserManager implements ManagerInterface {
                                 case ILS:
                                     final String race = (String) spec.getValidationMap().get(raceKey);
                                     if (race != null) {
-                                        descriptor.append(shownAge ? " " : "A ");
-                                        descriptor.append(race.toLowerCase());
+                                        if (shownAge) {
+                                            descriptor.append(" ");
+                                        } else {
+                                            final String article = vowelToArticle.get(Character.toLowerCase(race.charAt(0)));
+                                            descriptor.append((article == null) ? "A " : article);
+                                        }
+                                        descriptor.append(race);
                                         shownRace = true;
                                     } else {
                                         logger.warning("User id '" + userId + "' profile has race permissions but no race for key '" + raceKey + "'");
