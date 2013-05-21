@@ -114,7 +114,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     private static TrackingManager singleton;
 
-    private ManagerState state = ManagerState.UNINITIALIZED;
+    private ManagerState state = ManagerState.UNKNOWN;
 
     // Tracks both comments and blahs:
     private DBCollection blahTrackerCollection;
@@ -166,6 +166,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param openCount       Number of opens         @throws main.java.com.eweware.service.base.error.SystemErrorException
      */
     public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
+        ensureReady();
         if (!isBlah && subObjectId == null) {
             throw new SystemErrorException("missing subObjectId", ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
@@ -798,6 +799,12 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     private DBCollection getUserCollection() {
         return userCollection;
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
+        }
     }
 
     public void start() {

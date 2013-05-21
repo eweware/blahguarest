@@ -6,6 +6,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.*;
+import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.payload.BadgeAuthorityPayload;
 import main.java.com.eweware.service.base.payload.BadgePayload;
@@ -54,8 +55,11 @@ public final class BadgesManager {
     private static BadgesManager singleton;
     private static StoreManager storeManager;
 
+    private ManagerState state = ManagerState.UNKNOWN;
+
     public BadgesManager() {
         singleton = this;
+        state = ManagerState.INITIALIZED;
     }
 
     public static BadgesManager getInstance() {
@@ -65,6 +69,7 @@ public final class BadgesManager {
     public void start() {
         try {
             storeManager = MongoStoreManager.getInstance();
+            state = ManagerState.STARTED;
             logger.info("*** BadgesManager Started ***");
         } catch (SystemErrorException e) {
             throw new WebServiceException(e);
@@ -83,6 +88,7 @@ public final class BadgesManager {
      * @throws SystemErrorException
      */
     public List<BadgeAuthorityPayload> getAuthorities() throws SystemErrorException {
+        ensureReady();
         final BadgeAuthorityDAO auth = storeManager.createBadgeAuthority();
         final List<? extends BaseDAO> baseDAOs = auth._findMany(0, null, null);
         final List<BadgeAuthorityPayload> entity = new ArrayList<BadgeAuthorityPayload>(baseDAOs.size());
@@ -103,6 +109,7 @@ public final class BadgesManager {
      * @return A map containing the badge information.
      */
     public Response createBadgeForUser(String userId, String authorityId, String badgeTypeId) throws InvalidRequestException, SystemErrorException {
+        ensureReady();
         if (authorityId == null) {
             throw new InvalidRequestException("missing authority id", ErrorCodes.INVALID_INPUT);
         }
@@ -221,6 +228,7 @@ public final class BadgesManager {
      * @param entity
      */
     public Response addBadge(Map<String, Object> entity) throws SystemErrorException {
+        ensureReady();
         final String txId = (String) entity.get(BadgingNotificationEntity.TRANSACTION_ID_FIELDNAME);
         final String state = (String) entity.get(BadgingNotificationEntity.STATE_FIELDNAME);
         if (state.equals(BadgingNotificationEntity.STATE_GRANTED)) {
@@ -231,6 +239,7 @@ public final class BadgesManager {
     }
 
     public BadgePayload getBadgeById(String badgeId) throws SystemErrorException, InvalidRequestException {
+        ensureReady();
         final BadgeDAO badge = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId();
         if (badge == null) {
             throw new InvalidRequestException("Badge id '" + badgeId + "' doesn't exist", ErrorCodes.INVALID_INPUT);
@@ -239,6 +248,7 @@ public final class BadgesManager {
     }
 
     public void deleteBadgeForUser(String userId, String badgeId) throws SystemErrorException, ResourceNotFoundException, StateConflictException {
+        ensureReady();
         final BadgeDAO badgeDAO = (BadgeDAO) storeManager.createBadge(badgeId)._findByPrimaryId(BadgeDAOConstants.USER_ID);
         if (badgeDAO == null) {
             throw new ResourceNotFoundException("Badge id '" + badgeId + "' not found", ErrorCodes.NOT_FOUND_BADGE_ID);
@@ -384,8 +394,6 @@ public final class BadgesManager {
         }
     }
 
-
-
     public static final Map<String, Object> makeError(int errorCode, String data) {
         Map<String, Object> error = new HashMap<String, Object>(2);
         error.put("error", errorCode);
@@ -403,5 +411,12 @@ public final class BadgesManager {
 
     private String makeBadgeAuthorityCreateBadgeEndpoint(BadgeAuthorityDAO authDAO) throws SystemErrorException {
         return (SystemManager.getInstance().isDevMode() ? "http://localhost:8081/v1" : authDAO.getRestEndpointUrl()) + "/badges/create";
+    }
+
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
+        }
     }
 }

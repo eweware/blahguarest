@@ -85,7 +85,7 @@ public final class BlahManager implements ManagerInterface {
 
     private ZoieSystem<BlahguaFilterIndexReader, BlahDAO> blahIndexingSystem;
     private ZoieSystem<BlahguaFilterIndexReader, CommentDAO> commentIndexingSystem;
-    private ManagerState status;
+    private ManagerState state = ManagerState.UNKNOWN;
     public static BlahManager singleton;
     private StoreManager storeManager;
     private TrackingManager trackingManager;
@@ -118,7 +118,7 @@ public final class BlahManager implements ManagerInterface {
             throw new WebServiceException(e);
         }
         BlahManager.singleton = this;
-        this.status = ManagerState.INITIALIZED;
+        this.state = ManagerState.INITIALIZED;
 
         if (doIndex) {
             System.out.println("*** BlahManager Initializing ***");
@@ -165,7 +165,7 @@ public final class BlahManager implements ManagerInterface {
 
             refreshBlahTypesCache();
 
-            this.status = ManagerState.STARTED;
+            this.state = ManagerState.STARTED;
             System.out.println("*** BlahManager started ***");
 
         } catch (Exception e) {
@@ -178,12 +178,12 @@ public final class BlahManager implements ManagerInterface {
             blahIndexingSystem.shutdown();
             commentIndexingSystem.shutdown();
         }
-        this.status = ManagerState.SHUTDOWN;
+        this.state = ManagerState.SHUTDOWN;
         System.out.println("*** BlahManager shut down ***");
     }
 
     public ManagerState getState() {
-        return this.status;
+        return this.state;
     }
 
 
@@ -199,7 +199,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload entity) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
-
+        ensureReady();
         // Check required fields
         if (CommonUtilities.isEmptyString(authorId)) {
             throw new InvalidRequestException("missing field authorId=" + authorId, entity, ErrorCodes.MISSING_USER_ID);
@@ -425,7 +425,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public void pollVote(LocaleId localeId, String blahId, String userId, Integer pollOptionIndex) throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
-
+        ensureReady();
         if (blahId == null) {
             throw new InvalidRequestException("request missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
@@ -465,7 +465,7 @@ public final class BlahManager implements ManagerInterface {
 
     public void predictionVote(String userId, String blahId, String preOrPostExpiration, String vote)
             throws SystemErrorException, InvalidRequestException {
-
+        ensureReady();
         if (userId == null) {
             throw new SystemErrorException("context issue", ErrorCodes.SESSION_ERROR);
         }
@@ -564,6 +564,7 @@ public final class BlahManager implements ManagerInterface {
 
     public UserPayload getAuthorFromComment(LocaleId en_us, String commentId)
             throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
@@ -580,6 +581,7 @@ public final class BlahManager implements ManagerInterface {
 
     public UserPayload getAuthorFromBlah(LocaleId en_us, String blahId)
             throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
@@ -619,6 +621,7 @@ public final class BlahManager implements ManagerInterface {
      * @return The polling information for this blah and user combination
      */
     public UserBlahInfoPayload getPollVoteInfo(LocaleId localeId, String blahId, String userId) throws SystemErrorException {
+        ensureReady();
         final UserBlahInfoDAO dao = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(
                 new String[]{UserBlahInfoDAO.POLL_VOTE_INDEX, UserBlahInfoDAO.POLL_VOTE_TIMESTAMP}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao != null) {
@@ -629,12 +632,14 @@ public final class BlahManager implements ManagerInterface {
 
     /**
      * <p>Returns prediction vote information for user for specified blah.</p>
+     *
      * @param userId
      * @param blahId
      * @return
      * @throws SystemErrorException
      */
     public UserBlahInfoPayload getPredictionVoteInfo(String userId, String blahId) throws SystemErrorException {
+        ensureReady();
         final UserBlahInfoDAO dao = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(
                 new String[]{UserBlahInfoDAO.PREDICTION_RESULT_VOTE, UserBlahInfoDAO.PREDICTION_VOTE}, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao != null) {
@@ -697,7 +702,7 @@ public final class BlahManager implements ManagerInterface {
      * @param entity
      */
     public void updateBlahViewsOrOpensByAnonymousUser(LocaleId en_us, BlahPayload entity, String blahId) throws InvalidRequestException, SystemErrorException {
-
+        ensureReady();
         final int maxViewIncrements = maxOpensOrViewsPerUpdate;
         final Integer viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0, maxViewIncrements, entity);
         final Integer openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxViewIncrements, entity);
@@ -724,7 +729,6 @@ public final class BlahManager implements ManagerInterface {
      * Allows a user to update a blah's vote, views, and/or opens, in any combination.
      * Ignored if there is no promotion/demotion, views or opens in request.
      *
-     *
      * @param localeId
      * @param entity
      * @param blahId
@@ -734,6 +738,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public void updateBlahPromotionViewOrOpens(LocaleId localeId, BlahPayload entity, String blahId) throws InvalidRequestException, StateConflictException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (!CommonUtilities.isEmptyString(entity.getText()) || !CommonUtilities.isEmptyString(entity.getBody())) {
             throw new InvalidRequestException("user may not edit blah text or body", entity, ErrorCodes.CANNOT_EDIT_TEXT);
         }
@@ -880,58 +885,60 @@ public final class BlahManager implements ManagerInterface {
         return blah;
     }
 
-    /**
-     * Permanently deletes the blahs and its comments from the DB and the index.
-     * Transaction cost:
-     * 1. delete comments
-     * 2. delete blah
-     * 3. remove comments from index
-     * 4. remove blah from index
-     * <p/>
-     * TODO draconic: should archive them if needed, though old blahs should really just fade away
-     *
-     * @param localeId
-     * @param blahId
-     * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-     *
-     */
-    public void deleteBlah(LocaleId localeId, String blahId) throws InvalidRequestException, SystemErrorException {
-        if (CommonUtilities.isEmptyString(blahId)) {
-            throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
-        }
-
-        // Fetch comment ids
-        final CommentDAO searchCommentDAO = getStoreManager().createComment();
-        searchCommentDAO.setBlahId(blahId);
-
-        // Fetch comments to delete
-        final List<CommentDAO> commentDAOs = (List<CommentDAO>) searchCommentDAO._findManyByCompositeId(null, null, null, new String[]{CommentDAO.ID}, CommentDAO.BLAH_ID);
-
-        // Delete comments and blahs
-        searchCommentDAO._deleteByCompositeId(CommentDAO.BLAH_ID); // multiple deletes
-        final BlahDAO blah = getStoreManager().createBlah(blahId);
-        decrementGroupBlahCount(blah);
-        blah._deleteByPrimaryId();
-
-
-        if (doIndex()) {
-            for (CommentDAO commentDAO : commentDAOs) {
-                deleteCommentFromIndex(commentDAO);
-            }
-            deleteBlahFromIndex(blahId); // TODO when queued, this will automatically delete dependent comments
-        }
-    }
-
-    private void decrementGroupBlahCount(BlahDAO blah) throws SystemErrorException {
-        final BlahDAO blahDAO = (BlahDAO) blah._findByPrimaryId(BlahDAO.GROUP_ID);
-        final String groupId = blahDAO.getGroupId();
-        final GroupDAO group = getStoreManager().createGroup(groupId);
-        group.setBlahCount(-1);
-        group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-    }
+//    /**
+//     * Permanently deletes the blahs and its comments from the DB and the index.
+//     * Transaction cost:
+//     * 1. delete comments
+//     * 2. delete blah
+//     * 3. remove comments from index
+//     * 4. remove blah from index
+//     * <p/>
+//     * TODO draconic: should archive them if needed, though old blahs should really just fade away
+//     *
+//     * @param localeId
+//     * @param blahId
+//     * @throws InvalidRequestException
+//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     *
+//     */
+//    public void deleteBlah(LocaleId localeId, String blahId) throws InvalidRequestException, SystemErrorException {
+//        ensureReady();
+//        if (CommonUtilities.isEmptyString(blahId)) {
+//            throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
+//        }
+//
+//        // Fetch comment ids
+//        final CommentDAO searchCommentDAO = getStoreManager().createComment();
+//        searchCommentDAO.setBlahId(blahId);
+//
+//        // Fetch comments to delete
+//        final List<CommentDAO> commentDAOs = (List<CommentDAO>) searchCommentDAO._findManyByCompositeId(null, null, null, new String[]{CommentDAO.ID}, CommentDAO.BLAH_ID);
+//
+//        // Delete comments and blahs
+//        searchCommentDAO._deleteByCompositeId(CommentDAO.BLAH_ID); // multiple deletes
+//        final BlahDAO blah = getStoreManager().createBlah(blahId);
+//        decrementGroupBlahCount(blah);
+//        blah._deleteByPrimaryId();
+//
+//
+//        if (doIndex()) {
+//            for (CommentDAO commentDAO : commentDAOs) {
+//                deleteCommentFromIndex(commentDAO);
+//            }
+//            deleteBlahFromIndex(blahId); // TODO when queued, this will automatically delete dependent comments
+//        }
+//    }
+//
+//    private void decrementGroupBlahCount(BlahDAO blah) throws SystemErrorException {
+//        final BlahDAO blahDAO = (BlahDAO) blah._findByPrimaryId(BlahDAO.GROUP_ID);
+//        final String groupId = blahDAO.getGroupId();
+//        final GroupDAO group = getStoreManager().createGroup(groupId);
+//        group.setBlahCount(-1);
+//        group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//    }
 
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
+        ensureReady();
         // userId, typeId and sortFieldName ignore (set to null by client) for now
         count = ensureCount(count);
         final BlahDAO blahDAO = getStoreManager().createBlah();
@@ -971,6 +978,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public List<BlahTypePayload> getBlahTypes(LocaleId localeId) throws SystemErrorException {
+        ensureReady();
         ensureBlahTypesCached();
         return getBlahTypes();
     }
@@ -1012,6 +1020,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public List<BlahTypePayload> getBlahTypes() throws SystemErrorException {
+        ensureReady();
         synchronized (blahTypeIdToBlahTypeEntryMapLock) {
             final List<BlahTypePayload> bt = new ArrayList<BlahTypePayload>(blahTypeIdToBlahTypeEntryMap.size());
             for (BlahTypeEntry entry : blahTypeIdToBlahTypeEntryMap.values()) {
@@ -1050,7 +1059,7 @@ public final class BlahManager implements ManagerInterface {
      */
     public BlahPayload getBlahById(LocaleId localeId, String blahId, String userId, boolean stats, String statsStartDate, String statsEndDate)
             throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
-
+        ensureReady();
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
@@ -1120,9 +1129,9 @@ public final class BlahManager implements ManagerInterface {
         blahPayload.setStats(trackers == null ? new ArrayList<BlahTrackerPayload>(0) : trackers);
     }
 
-    public static String extractYearMonthFromTrackerDate(String trackerDate) {
-        return trackerDate.substring(0, 4);
-    }
+//    public static String extractYearMonthFromTrackerDate(String trackerDate) {
+//        return trackerDate.substring(0, 4);
+//    }
 
     // TODO this is a temporary add-on: data should be pre-aggregated for query
     private void addUserBlahInfoToPayload(String userId, String blahId, BlahPayload blahPayload) throws SystemErrorException {
@@ -1137,6 +1146,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public String getAuthorIdForBlah(String blahId) throws SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(blahId)) {
             throw new SystemErrorException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
@@ -1150,6 +1160,7 @@ public final class BlahManager implements ManagerInterface {
 
 
     public String getAuthorIdForComment(String commentId) throws SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new SystemErrorException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
@@ -1193,6 +1204,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public CommentPayload createComment(LocaleId localeId, String commentAuthorId, CommentPayload request) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+        ensureReady();
 
         // Check parameters
         if (request.getCommentVotes() != null) {
@@ -1285,7 +1297,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public void updateComment(LocaleId localeId, CommentPayload entity, String userId, String commentId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
-
+        ensureReady();
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", entity, ErrorCodes.MISSING_COMMENT_ID);
         }
@@ -1400,21 +1412,22 @@ public final class BlahManager implements ManagerInterface {
 //        }
 //        trackingManager.track(LocaleId.en_us, tracker);
     }
-
-    // TODO draconic: should archive them if needed, though old comments should really just fade away
-    public void deleteComment(LocaleId localeId, String commentId) throws InvalidRequestException, SystemErrorException {
-        if (CommonUtilities.isEmptyString(commentId)) {
-            throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
-        }
-        final CommentDAO commentDAO = getStoreManager().createComment(commentId);
-        commentDAO._deleteByPrimaryId();
-
-        if (doIndex()) {
-            deleteCommentFromIndex(commentDAO);
-        }
-    }
+//
+//    // TODO draconic: should archive them if needed, though old comments should really just fade away
+//    public void deleteComment(LocaleId localeId, String commentId) throws InvalidRequestException, SystemErrorException {
+//        if (CommonUtilities.isEmptyString(commentId)) {
+//            throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
+//        }
+//        final CommentDAO commentDAO = getStoreManager().createComment(commentId);
+//        commentDAO._deleteByPrimaryId();
+//
+//        if (doIndex()) {
+//            deleteCommentFromIndex(commentDAO);
+//        }
+//    }
 
     public CommentPayload getCommentById(LocaleId localeId, boolean authenticated, String commentId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(commentId)) {
             throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
         }
@@ -1481,6 +1494,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public List<CommentPayload> getComments(LocaleId localeId, boolean authenticated, String blahId, String userId, String authorId, Integer start, Integer count, String sortFieldName) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         count = ensureCount(count);
         final boolean forBlah = !CommonUtilities.isEmptyString(blahId);
         if (forBlah) {
@@ -1526,7 +1540,7 @@ public final class BlahManager implements ManagerInterface {
     public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
                                            String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
             throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException {
-
+        ensureReady();
         if (groupId == null) {
             throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
         }
@@ -1604,6 +1618,12 @@ public final class BlahManager implements ManagerInterface {
             if (!userGroupDAO._exists()) {
                 throw new InvalidAuthorizedStateException("user not authorized to access inbox for groupId=" + groupId);
             }
+        }
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
 
@@ -1769,6 +1789,7 @@ public final class BlahManager implements ManagerInterface {
      *
      */
     public List<BasePayload> getFromIndex(Integer maxResults, ZoieSystem<BlahguaFilterIndexReader, ?> indexingSystem, boolean searchBlahs) throws SystemErrorException {
+        ensureReady();
         List<ZoieIndexReader<BlahguaFilterIndexReader>> readerList = null;
         try {
             readerList = indexingSystem.getIndexReaders();
@@ -1804,7 +1825,7 @@ public final class BlahManager implements ManagerInterface {
      *
      */
     public List<BasePayload> search(LocaleId localeId, String fieldName, String query, String subset, Integer maxResults) throws SystemErrorException {
-
+        ensureReady();
         if (maxResults == null) {
             maxResults = 20; // TODO
         }

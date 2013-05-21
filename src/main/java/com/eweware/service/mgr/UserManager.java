@@ -76,7 +76,7 @@ public class UserManager implements ManagerInterface {
     private StoreManager storeManager;
     private SystemManager systemManager;
     private MailManager mailManager;
-    private ManagerState state = ManagerState.UNINITIALIZED;
+    private ManagerState state = ManagerState.UNKNOWN;
     private final File indexDir;
     private final int batchSize;
     private final long batchDelay;
@@ -169,7 +169,7 @@ public class UserManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public UserPayload registerUser(LocaleId localeId, String username, String password) throws InvalidRequestException, SystemErrorException, StateConflictException {
-
+        ensureReady();
         boolean createdAccount = false;
         UserDAO userDAO = null;
         try {
@@ -237,6 +237,7 @@ public class UserManager implements ManagerInterface {
      * @param challengeAnswer1 ditto
      */
     public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException, InvalidRequestException {
+        ensureReady();
         if (!setEmail && !setChallenge) {
             return; // nothing to do
         }
@@ -280,6 +281,7 @@ public class UserManager implements ManagerInterface {
      * @throws InvalidRequestException Thrown if the specified username is either null or an empty string
      */
     public void ensureUsernameNotExists(String username) throws SystemErrorException, StateConflictException, InvalidRequestException {
+        ensureReady();
         if (username == null || username.length() == 0) {
             throw new InvalidRequestException("username '" + username + "' is either null or empty", ErrorCodes.INVALID_INPUT);
         }
@@ -296,6 +298,7 @@ public class UserManager implements ManagerInterface {
      * @throws SystemErrorException
      */
     public boolean usernameExistsP(String username) throws SystemErrorException {
+        ensureReady();
         if (username == null) {
             return false;
         }
@@ -315,7 +318,7 @@ public class UserManager implements ManagerInterface {
      */
     public void loginUser(LocaleId locale, String username, String password, HttpServletRequest request)
             throws InvalidRequestException, SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException {
-
+        ensureReady();
         username = Login.ensureUsernameString(username);
         password = Login.ensurePasswordString(password);
 
@@ -347,6 +350,7 @@ public class UserManager implements ManagerInterface {
      * @param userId
      */
     public void logoutUser(LocaleId en_us, HttpServletRequest request, String userId) throws SystemErrorException {
+        ensureReady();
         BlahguaSession.destroySession(request, false);
     }
 
@@ -365,6 +369,7 @@ public class UserManager implements ManagerInterface {
      */
     public UserProfilePayload createOrUpdateUserProfile(LocaleId localeId, UserProfilePayload profile, String userId, boolean createOnly)
             throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException, InvalidAuthorizedStateException {
+        ensureReady();
         if (profile == null) {
             throw new InvalidRequestException("missing profile entity", profile, ErrorCodes.MISSING_INPUT_ENTITY);
         }
@@ -420,7 +425,7 @@ public class UserManager implements ManagerInterface {
      * @see UserAccountDAO
      */
     public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String inputRecoveryCode) throws SystemErrorException, InvalidAuthorizedStateException {
-
+        ensureReady();
         String userId = null;
         String canonicalUsername = null;
         if (!getSystemManager().isCryptoOn()) {
@@ -484,7 +489,7 @@ public class UserManager implements ManagerInterface {
      */
     public void recoverUser(LocaleId localeId, String username, String emailAddress, String challengeAnswer)
             throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException {
-
+        ensureReady();
         if (username == null || username.length() > 64) {
             throw new InvalidRequestException("invalid username", ErrorCodes.INVALID_USERNAME);
         }
@@ -586,6 +591,7 @@ public class UserManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public UserGroupPayload registerUserInGroup(LocaleId localeId, String userId, String validationKey, String groupId) throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException, InvalidUserValidationKey {
+        ensureReady();
         if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("groupId required to join user to a group", ErrorCodes.MISSING_GROUP_ID);
         }
@@ -640,7 +646,7 @@ public class UserManager implements ManagerInterface {
      */
     public void updateUsername(LocaleId localeId, HttpServletRequest request, String newUsername) throws InvalidAuthorizedStateException, InvalidRequestException,
             StateConflictException, SystemErrorException, ResourceNotFoundException {
-
+        ensureReady();
         if (!BlahguaSession.isAuthenticated(request)) {
             throw new InvalidAuthorizedStateException("user cannot perform this operation", ErrorCodes.UNAUTHORIZED_USER);
         }
@@ -676,7 +682,7 @@ public class UserManager implements ManagerInterface {
      */
     public void updatePassword(LocaleId en_us, HttpServletRequest request, String userId, String password) throws
             InvalidAuthorizedStateException, InvalidRequestException, SystemErrorException {
-
+        ensureReady();
         password = Login.ensurePasswordString(password);
         final String[] pwd;
         try {
@@ -706,6 +712,7 @@ public class UserManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public UserPayload getUserInfo(LocaleId localeId, String userId, Boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("invalid user id", ErrorCodes.INVALID_USER_ID);
         }
@@ -723,6 +730,7 @@ public class UserManager implements ManagerInterface {
     }
 
     public UserBlahInfoPayload getUserInfoForBlah(String userId, String blahId) throws SystemErrorException, InvalidRequestException {
+        ensureReady();
         final UserBlahInfoDAO dao = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(null, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao == null) {
             throw new InvalidRequestException("no user info for blah", ErrorCodes.INVALID_STATE_CODE);
@@ -736,6 +744,7 @@ public class UserManager implements ManagerInterface {
 
     public UserProfilePayload getUserProfileById(LocaleId localeId, String userId)
             throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         final UserProfileDAO userProfileDAO = getUserProfileDAO(userId);
         if (userProfileDAO == null) {
             throw new ResourceNotFoundException("no user profile id=" + userId, ErrorCodes.NOT_FOUND_USER_PROFILE);
@@ -743,7 +752,8 @@ public class UserManager implements ManagerInterface {
         return new UserProfilePayload(userProfileDAO.toMap());
     }
 
-    public UserProfileSchema getUserProfileSchema(LocaleId localeId) {
+    public UserProfileSchema getUserProfileSchema(LocaleId localeId) throws SystemErrorException {
+        ensureReady();
         return UserProfileSchema.getSchema(localeId);
     }
 
@@ -770,7 +780,7 @@ public class UserManager implements ManagerInterface {
     // hastily put together
     public Map<String, String> getUserProfileDescriptor(LocaleId localeId, HttpServletRequest request, String userId)
             throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
-
+        ensureReady();
         final StringBuilder descriptor = new StringBuilder();
         String nickname = null;
         String userImageId = null;
@@ -1040,6 +1050,7 @@ public class UserManager implements ManagerInterface {
      * @throws ResourceNotFoundException Thrown when the user can't be found
      */
     public void checkUserById(String userId, Object entity) throws ResourceNotFoundException, InvalidRequestException, SystemErrorException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
@@ -1049,6 +1060,7 @@ public class UserManager implements ManagerInterface {
     }
 
     public UserGroupPayload getUserGroup(LocaleId localeId, String userId, String groupId) throws InvalidRequestException, ResourceNotFoundException, SystemErrorException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
@@ -1067,7 +1079,7 @@ public class UserManager implements ManagerInterface {
     }
 
     public List<GroupPayload> getUserGroups(LocaleId localeId, String userId, String state, Integer start, Integer count, String sortFieldName) throws InvalidRequestException, SystemErrorException {
-
+        ensureReady();
         count = ensureCount(count);
 
         if (CommonUtilities.isEmptyString(userId)) {
@@ -1144,6 +1156,7 @@ public class UserManager implements ManagerInterface {
      */
     public void updateUserStatus(LocaleId localeId, String userId, String groupId, String newState)
             throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException {
+        ensureReady();
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing userId", ErrorCodes.MISSING_USER_ID);
         }
@@ -1247,6 +1260,7 @@ public class UserManager implements ManagerInterface {
      * and then hard-deletes (if necessary) the media record itself.</p>
      */
     public void deleteAllMediaForUser(String userId) throws SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
         if (userDAO == null) {
             throw new ResourceNotFoundException("no user id '" + userId + "'");
@@ -1255,8 +1269,9 @@ public class UserManager implements ManagerInterface {
     }
 
     public void deleteMediaIdsForUser(String userId, UserDAO userDAO, List<String> mediaIds) throws SystemErrorException {
+        ensureReady();
         if (mediaIds != null && mediaIds.size() > 0) {
-            for (String mediaId: mediaIds) {
+            for (String mediaId : mediaIds) {
                 final MediaDAO media = storeManager.createMedia(mediaId);
                 if (media._exists()) { // ignore missing media dao: it might have been deleted in a previous broken attempt
                     media.setDeleted(true); // soft-delete
@@ -1270,6 +1285,13 @@ public class UserManager implements ManagerInterface {
             }
             userDAO.setImageIds(null); // all successful: break the bonds
             userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        }
+    }
+
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
 

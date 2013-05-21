@@ -24,7 +24,7 @@ import java.util.List;
 public class StatisticsManager implements ManagerInterface {
 
     private static StatisticsManager singleton;
-    private ManagerState state = ManagerState.UNINITIALIZED;
+    private ManagerState state = ManagerState.UNKNOWN;
     private MongoStoreManager storeManager;
     private BlahManager blahManager;
     private DBCollection demoCollection;
@@ -61,7 +61,8 @@ public class StatisticsManager implements ManagerInterface {
         System.out.println("*** StatisticsManager shut down ***");
     }
 
-    public Object getGroupDemographics(String groupId) throws InvalidRequestException {
+    public Object getGroupDemographics(String groupId) throws InvalidRequestException, SystemErrorException {
+        ensureReady();
         if (groupId == null) {
             throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
         }
@@ -69,13 +70,15 @@ public class StatisticsManager implements ManagerInterface {
     }
 
     public Object getBlahDemographics(boolean type) throws SystemErrorException {
+        ensureReady();
         if (type) {
             return getBlahTypeDemographics();
         }
         return getDemographics(DemographicsObjectDAOConstants.BLAH_DEMOGRAPHIC_IDS);
     }
 
-    public Object getCommentDemographics() {
+    public Object getCommentDemographics() throws SystemErrorException {
+        ensureReady();
         return getDemographics(DemographicsObjectDAOConstants.COMMENT_DEMOGRAPHIC_IDS);
     }
 
@@ -104,6 +107,7 @@ public class StatisticsManager implements ManagerInterface {
     }
 
     public Object getBlahTypeDemographics() throws SystemErrorException {
+        ensureReady();
         final List<BlahTypePayload> types = blahManager.getBlahTypes(); // TODO right now, it can dynamically change so it can't be cached
         final String[] ids = new String[types.size()];
         int i = 0;
@@ -111,5 +115,11 @@ public class StatisticsManager implements ManagerInterface {
             ids[i++] = bt.getId();
         }
         return getDemographics(ids);
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
+        }
     }
 }

@@ -34,7 +34,7 @@ public class MailManager implements ManagerInterface {
         return MailManager.singleton;
     }
 
-    private main.java.com.eweware.service.base.mgr.ManagerState state = main.java.com.eweware.service.base.mgr.ManagerState.UNINITIALIZED;
+    private main.java.com.eweware.service.base.mgr.ManagerState state = main.java.com.eweware.service.base.mgr.ManagerState.UNKNOWN;
     private Properties props = new Properties();
     private Session session;
 
@@ -77,18 +77,19 @@ public class MailManager implements ManagerInterface {
         System.out.println("*** End of MailManager Properties ***");
     }
 
-    public Session getSession() {
-        return session;
-    }
+//    public Session getSession() {
+//        return session;
+//    }
 
-    public String getReplyToEmailAddress() {
+    private String getReplyToEmailAddress() {
         return replyTo;
     }
 
     /**
      * send method should really queue request to an smtp service *
      */
-    public void send(String recipient, String subject, String body) throws SendFailedException, MessagingException {
+    public void send(String recipient, String subject, String body) throws SendFailedException, MessagingException, SystemErrorException {
+        ensureReady();
         if (state != ManagerState.STARTED || recipient == null || subject == null || body == null) {
             System.out.println("WARNING: MailManager not sending");
             return;
@@ -178,5 +179,11 @@ public class MailManager implements ManagerInterface {
         session = null;
         state = ManagerState.SHUTDOWN;
         System.out.println("*** MailManager shut down ***");
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
+        }
     }
 }

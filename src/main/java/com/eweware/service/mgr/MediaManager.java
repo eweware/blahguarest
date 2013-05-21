@@ -1,6 +1,7 @@
 package main.java.com.eweware.service.mgr;
 
 import com.mongodb.gridfs.GridFS;
+import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
@@ -30,7 +31,7 @@ public final class MediaManager implements ManagerInterface {
 		return singleton;
 	}
 	
-	private ManagerState state;
+	private ManagerState state = ManagerState.UNKNOWN;
 	private GridFS gridFS;
 	
 	public MediaManager(
@@ -55,21 +56,24 @@ public final class MediaManager implements ManagerInterface {
      * @return String   The pathname to the images directory.
      * // TODO we'll need to shard these eventually
      */
-    public String getImagePathname() {
+    public String getImagePathname() throws SystemErrorException {
+        ensureReady();
         return imagePathname;
     }
 
     /**
      * @return String   The bucket name directory for images.
      */
-    public String getBucketImageDir() {
+    public String getBucketImageDir() throws SystemErrorException {
+        ensureReady();
         return bucketImageDir;
     }
 
     /**
      * @return String   The bucket directory for originally uploaded files
      */
-    public String getBucketOriginalDir() {
+    public String getBucketOriginalDir() throws SystemErrorException {
+        ensureReady();
         return bucketOriginalDir;
     }
 
@@ -88,9 +92,10 @@ public final class MediaManager implements ManagerInterface {
 //            throw new WebServiceException(e);
 //        }
 //        System.out.println("*** MediaManager starting ***");
-        System.out.println("Images Bucket=" + getImageBucketName());
-        System.out.println("Images Pathname=" + getImagePathname());
         this.state = ManagerState.STARTED;
+        System.out.println("Images Bucket=" + imageBucketName);
+        System.out.println("Formatted Images Pathname=" + imagePathname);
+        System.out.println("Original Images Pathname=" + bucketOriginalDir);
         System.out.println("*** MediaManager started ***");
     }
 
@@ -100,13 +105,20 @@ public final class MediaManager implements ManagerInterface {
     }
 
 	/** TODO add if-modified support */
-	public Response getImage(LocaleId localeId, String filename) throws ResourceNotFoundException {
+	public Response getImage(LocaleId localeId, String filename) throws ResourceNotFoundException, SystemErrorException {
 //        final GridFSDBFile file = gridFS.findOne(new BasicDBObject("filename", filename));
 //		if (file == null) {
 //			throw new ResourceNotFoundException("Image '"+filename+"' not found", filename, ErrorCodes.MEDIA_NOT_FOUND);
 //		}
 //        final InputStream in = file.getInputStream();
 //		return Response.ok(in).lastModified(file.getUploadDate()).build();
+        ensureReady();
         return Response.noContent().build();
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
+        }
     }
 }

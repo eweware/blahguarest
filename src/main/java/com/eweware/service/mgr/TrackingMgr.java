@@ -5,6 +5,7 @@ import com.mongodb.DBCollection;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerInterface;
+import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.store.dao.TrackerDAOConstants;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 
@@ -20,12 +21,14 @@ public final class TrackingMgr implements ManagerInterface {
     private static TrackingMgr singleton;
 
     private DBCollection trackerCollection;
+    private ManagerState state = ManagerState.UNKNOWN;
 
     /**
      * Empty constructor.
      */
     public TrackingMgr() {
         TrackingMgr.singleton = this;
+        state = ManagerState.INITIALIZED;
     }
 
     public static TrackingMgr getInstance() {
@@ -37,6 +40,7 @@ public final class TrackingMgr implements ManagerInterface {
         try {
             final MongoStoreManager storeManager = MongoStoreManager.getInstance();
             trackerCollection = storeManager.getCollection(storeManager.getTrackerCollectionName());
+            state = ManagerState.STARTED;
             System.out.println("*** TrackingMgr Started ***");
         } catch (Exception e) {
             throw new WebServiceException("Failed to start", e);
@@ -49,6 +53,7 @@ public final class TrackingMgr implements ManagerInterface {
     }
 
     public void trackBlahUpdate(String blahId, String userId, Integer promoted, Integer viewCount, Integer openCount, Integer pollVotedIndex) throws SystemErrorException {
+        ensureReady();
         if (userId == null) {
             userId = "a";  // anonymous
         }
@@ -71,6 +76,12 @@ public final class TrackingMgr implements ManagerInterface {
             trackerCollection.insert(tracker);
         } catch (Exception e) {
             throw new SystemErrorException("Error creating blah update tracker for blah id '" + blahId + "'", e, ErrorCodes.SERVER_DB_ERROR);
+        }
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
 }

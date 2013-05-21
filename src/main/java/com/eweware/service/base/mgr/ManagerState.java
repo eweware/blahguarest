@@ -5,6 +5,6 @@ package main.java.com.eweware.service.base.mgr;
  */
 public enum ManagerState {
 
-	UNINITIALIZED, INITIALIZED, STARTED, SHUTDOWN
+    UNKNOWN, INITIALIZED, STARTED, SHUTDOWN
 
 }

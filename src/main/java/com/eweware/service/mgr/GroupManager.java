@@ -50,7 +50,7 @@ public final class GroupManager implements ManagerInterface {
     }
 
     private StoreManager storeManager;
-    private ManagerState state = ManagerState.UNINITIALIZED;
+    private ManagerState state = ManagerState.UNKNOWN;
 
     public GroupManager(Integer returnedObjectLimit) {
         this.returnedObjectLimit = returnedObjectLimit;
@@ -102,7 +102,7 @@ public final class GroupManager implements ManagerInterface {
      *
      */
     public List<GroupTypePayload> getGroupTypes(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
-
+        ensureReady();
         if (count == null || count > returnedObjectLimit) {
             count = returnedObjectLimit;
         }
@@ -125,6 +125,7 @@ public final class GroupManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public GroupTypePayload getGroupTypeById(LocaleId localeId, String groupTypeId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (isEmptyString(groupTypeId)) {
             throw new InvalidRequestException("missing group type id", ErrorCodes.MISSING_GROUP_TYPE_ID);
         }
@@ -137,7 +138,6 @@ public final class GroupManager implements ManagerInterface {
     }
 
 
-
     /**
      * <p>Returns true if the group is open (e.g., open for
      * reading by anonymous users).</p>
@@ -145,7 +145,8 @@ public final class GroupManager implements ManagerInterface {
      * @param groupId The group id
      * @return True if the group is open
      */
-    public boolean isOpenGroup(String groupId) {
+    public boolean isOpenGroup(String groupId) throws SystemErrorException {
+        ensureReady();
         if (groupId == null) {
             return false;
         }
@@ -189,7 +190,7 @@ public final class GroupManager implements ManagerInterface {
      *
      */
     public List<GroupPayload> getGroups(LocaleId localeId, String groupTypeId, String displayName, String state, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
-
+        ensureReady();
         if (count == null) {
             count = returnedObjectLimit;
         }
@@ -229,6 +230,7 @@ public final class GroupManager implements ManagerInterface {
      * @throws SystemErrorException
      */
     public Collection<GroupPayload> getOpenGroups(LocaleId localeId, Integer start, Integer count) throws SystemErrorException {
+        ensureReady();
 //        if (count == null) {
 //            count = returnedObjectLimit;
 //        }
@@ -260,6 +262,7 @@ public final class GroupManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      */
     public GroupPayload getGroupById(LocaleId localeId, String groupId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         if (groupId == null || groupId.length() == 0) {
             throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
         }
@@ -277,6 +280,7 @@ public final class GroupManager implements ManagerInterface {
      * @param added   If true, add one to the count, else subtract one
      */
     public void updateViewerCountInDB(String groupId, Boolean added) throws SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         final GroupDAO group = getStoreManager().createGroup(groupId);
         if (!group._exists()) {
             throw new ResourceNotFoundException("No such group id '" + groupId + "'", ErrorCodes.NOT_FOUND_GROUP_ID);
@@ -291,6 +295,7 @@ public final class GroupManager implements ManagerInterface {
      * @return A group payload with the current viewer count
      */
     public GroupPayload getViewerCount(String groupId) throws SystemErrorException {
+        ensureReady();
         final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.CURRENT_VIEWER_COUNT);
         if (groupDAO == null) {
             throw new SystemErrorException("Group id '" + groupId + "' not found", ErrorCodes.SERVER_SEVERE_ERROR);
@@ -315,6 +320,12 @@ public final class GroupManager implements ManagerInterface {
 
     private StoreManager getStoreManager() {
         return storeManager;
+    }
+
+    private void ensureReady() throws SystemErrorException {
+        if (state != ManagerState.STARTED) {
+            throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
+        }
     }
 }
 

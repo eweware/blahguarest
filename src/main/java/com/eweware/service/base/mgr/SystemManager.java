@@ -36,7 +36,7 @@ public final class SystemManager implements ManagerInterface {
 
     private static SystemManager singleton;
 
-    private ManagerState state = ManagerState.UNINITIALIZED;
+    private ManagerState state = ManagerState.UNKNOWN;
     private boolean devMode;
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;

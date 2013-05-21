@@ -41,7 +41,7 @@ public final class MongoStoreManager implements StoreManager {
         return MongoStoreManager.singleton;
     }
 
-    private ManagerState status = ManagerState.UNINITIALIZED;
+    private ManagerState status = ManagerState.UNKNOWN;
     private int mongoDbPort;
     private Integer connectionsPerHost = 10; // default
     private MongoClient mongo;
