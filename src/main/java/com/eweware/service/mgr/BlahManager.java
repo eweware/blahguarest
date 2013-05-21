@@ -58,9 +58,6 @@ import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
- *         <p/>
- *         TODO add monitors for mutating variables or lists with mutating elements
- *         TODO add transaction-level management (rollbacks)
  */
 public final class BlahManager implements ManagerInterface {
 
@@ -82,7 +79,7 @@ public final class BlahManager implements ManagerInterface {
     /**
      * Maps an existing blah type id to its data
      */
-    private Map<String, BlahTypeEntry> blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>();
+    private Map<String, BlahTypeEntry> blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>(10);
     private Object blahTypeIdToBlahTypeEntryMapLock = new Object(); // locks blahTypeIdToBlahTypeEntryMap
     private long lastTimeBlahTypesCached = System.currentTimeMillis() - TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS - 1;
 
@@ -208,32 +205,24 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing field authorId=" + authorId, entity, ErrorCodes.MISSING_USER_ID);
         }
 
+        final String typeId = entity.getTypeId();
+        if (!isTypeIdValid(typeId)) {
+            throw new InvalidRequestException("invalid blah type id '" + typeId + "'", ErrorCodes.MISSING_BLAH_TYPE_ID);
+        }
+        final boolean isPoll = isBlahTypeCategory(typeId, BlahTypeCategoryType.POLL);
+        final boolean isPrediction = (!isPoll && isBlahTypeCategory(typeId, BlahTypeCategoryType.PREDICTION));
         String text = entity.getText();
-        String body = entity.getBody();
-        final boolean hasBody = !CommonUtilities.isEmptyString(body);
-        if (CommonUtilities.isEmptyString(text)) {
-            if (!hasBody) {
-            throw new InvalidRequestException("Blah without text line must have body" + text, entity, ErrorCodes.MISSING_TEXT_OR_BODY);
-            }
-            text = EMPTY_STRING;
-        } else {
-            text = CommonUtilities.scrapeMarkup(text);
+        if ((isPoll || isPrediction) && CommonUtilities.isEmptyString(text)) {
+            throw new InvalidRequestException("Blah text line required for polls and predictions", ErrorCodes.MISSING_TEXT);
         }
-        entity.setText(text);
 
-        if (hasBody) {
-            body = CommonUtilities.scrapeMarkup(body);
-            entity.setBody(body);
-        }
+        text = cleanupBlahTextString(text);
+        entity.setText(text);
+        entity.setBody(cleanupBlahTextString(entity.getBody()));
 
         final String groupId = entity.getGroupId();
         if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("missing field groupId=" + groupId, ErrorCodes.MISSING_GROUP_ID);
-        }
-
-        final String typeId = entity.getTypeId();
-        if (!isTypeIdValid(typeId)) {
-            throw new InvalidRequestException("invalid blah type id '" + typeId + "'", ErrorCodes.MISSING_BLAH_TYPE_ID);
         }
 
         // Ensure user is active in group  // TODO authorized groups could be cached in session obj
@@ -247,11 +236,12 @@ public final class BlahManager implements ManagerInterface {
         blahDAO.addFromMap(entity, true); // removes fields not in schema
         // TODO maybe set fields explicitly instead of trusting request payload's data
         blahDAO.setAuthorId(authorId);
-
-        if (isCategory(typeId, BlahTypeCategoryType.POLL)) {
+        if (isPoll) {
             addPollData(text, blahDAO);
-        } else if (isCategory(typeId, BlahTypeCategoryType.PREDICTION)) {
-            addPredictionData(blahDAO, entity.getExpirationDate());
+        } else {
+            if (isPrediction) {
+                addPredictionData(blahDAO, entity.getExpirationDate());
+            }
         }
         blahDAO._insert();
 
@@ -275,6 +265,22 @@ public final class BlahManager implements ManagerInterface {
         }
 
         return new BlahPayload(blahDAO);
+    }
+
+    /**
+     * <p>If there is no text, it returns an empty string; else it cleans up
+     * the text by scraping off any possible HTML markup</p>
+     * @param text
+     * @return   <p>A valid blah text string (suitable for text line or body)</p>
+     * @throws SystemErrorException
+     */
+    private String cleanupBlahTextString(String text) throws SystemErrorException {
+        if (CommonUtilities.isEmptyString(text)) {
+            text = EMPTY_STRING;
+        } else {
+            text = CommonUtilities.scrapeMarkup(text);
+        }
+        return text;
     }
 
     private void verifyBadges(BlahPayload entity) throws SystemErrorException, InvalidRequestException {
@@ -316,6 +322,13 @@ public final class BlahManager implements ManagerInterface {
     }
 
 
+    /**
+     * Adds the poll options to the poll blah.
+     * @param text  The first line of text
+     * @param blahDAO The blah
+     * @throws InvalidRequestException
+     * @throws SystemErrorException
+     */
     private void addPollData(String text, BlahDAO blahDAO) throws InvalidRequestException, SystemErrorException {
         final List<PollOptionTextDAO> pollOptionsText = blahDAO.getPollOptionsText();
         if (pollOptionsText != null && !pollOptionsText.isEmpty()) {
@@ -423,7 +436,7 @@ public final class BlahManager implements ManagerInterface {
         if (blahDAO == null) {
             throw new InvalidRequestException("blahId '" + blahId + "' doesn't exist", ErrorCodes.NOT_FOUND_BLAH_ID);
         }
-        if (!isCategory(blahDAO.getTypeId(), BlahTypeCategoryType.POLL)) {
+        if (!isBlahTypeCategory(blahDAO.getTypeId(), BlahTypeCategoryType.POLL)) {
             throw new InvalidRequestException("Blah id '" + blahId + "' is not a poll category blah", ErrorCodes.INVALID_UPDATE);
         }
 
@@ -473,7 +486,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("cannot vote on own prediction", ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
         }
 
-        if (!isCategory(blahDAO.getTypeId(), BlahTypeCategoryType.PREDICTION)) {
+        if (!isBlahTypeCategory(blahDAO.getTypeId(), BlahTypeCategoryType.PREDICTION)) {
             throw new InvalidRequestException("not a prediction blah", ErrorCodes.INVALID_INPUT);
         }
 
@@ -589,7 +602,7 @@ public final class BlahManager implements ManagerInterface {
      * @param categoryType The category type
      * @return True if this blah is of the specified category type
      */
-    private boolean isCategory(String blahTypeId, BlahTypeCategoryType categoryType) {
+    private boolean isBlahTypeCategory(String blahTypeId, BlahTypeCategoryType categoryType) {
         BlahTypeEntry entry = null;
         synchronized (blahTypeIdToBlahTypeEntryMapLock) {
             entry = blahTypeIdToBlahTypeEntryMap.get(blahTypeId);
@@ -957,7 +970,6 @@ public final class BlahManager implements ManagerInterface {
         return payload;
     }
 
-    // TODO cache with hourly TTL candidate
     public List<BlahTypePayload> getBlahTypes(LocaleId localeId) throws SystemErrorException {
         ensureBlahTypesCached();
         return getBlahTypes();
