@@ -50,7 +50,6 @@ import proj.zoie.impl.indexing.ZoieSystem;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -1226,6 +1225,38 @@ public class UserManager implements ManagerInterface {
             } else {
                 throw new StateConflictException("requested action=" + newState + ", but user id=" + userId + " is not joined to groupId=" + groupId, ErrorCodes.USER_MUST_INITIALLY_JOIN_GROUP_IN_STATE_P);
             }
+        }
+    }
+
+    /**
+     * <p>Deletes all images for the user. This is done through a soft-delete marker on the affected media daos.</p>
+     * <p>A batch job looks for soft-deleted media records, deletes the corresponding image(s) from S3,
+     * and then hard-deletes (if necessary) the media record itself.</p>
+     */
+    public void deleteAllMediaForUser(String userId) throws SystemErrorException, ResourceNotFoundException {
+        final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+        if (userDAO == null) {
+            throw new ResourceNotFoundException("no user id '" + userId + "'");
+        }
+        deleteMediaIdsForUser(userId, userDAO, userDAO.getImageids());
+    }
+
+    public void deleteMediaIdsForUser(String userId, UserDAO userDAO, List<String> mediaIds) throws SystemErrorException {
+        if (mediaIds != null && mediaIds.size() > 0) {
+            for (String mediaId: mediaIds) {
+                final MediaDAO media = storeManager.createMedia(mediaId);
+                if (media._exists()) { // ignore missing media dao: it might have been deleted in a previous broken attempt
+                    media.setDeleted(true); // soft-delete
+                    try {
+                        media._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+                    } catch (Exception e) {
+                        // reference to media id will remain in user dao, so we can consistently recover
+                        throw new SystemErrorException("Failed to delete media id '" + mediaId + "' for user id '" + userId + "'", e, ErrorCodes.FAILED_TO_DELETE_IMAGE);
+                    }
+                }
+            }
+            userDAO.setImageIds(null); // all successful: break the bonds
+            userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         }
     }
 

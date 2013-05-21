@@ -367,9 +367,4 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     public void setPredictionResultUnclearCount(Integer count) {
         put(PREDICTION_RESULT_UNCLEAR_COUNT, count);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

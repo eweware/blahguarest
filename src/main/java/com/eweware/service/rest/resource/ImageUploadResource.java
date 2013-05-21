@@ -14,11 +14,15 @@ import main.java.com.eweware.service.base.store.dao.CommentDAO;
 import main.java.com.eweware.service.base.store.dao.MediaDAO;
 import main.java.com.eweware.service.base.store.dao.UserDAO;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.MediaManager;
+import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
-import org.im4java.core.*;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IMOperation;
+import org.im4java.core.Info;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -51,12 +55,12 @@ public class ImageUploadResource {
     private static final String localOriginalImagePath = "/app/blahguarest/images/original/";   // TODO add to config
     private static final String localFormattedImagePath = "/app/blahguarest/images/image/";     // TODO add to config
     private static final String UPLOAD_IMAGE_OPERATION = "uploadImage";
-    private static String s3BucketName;
-    private static String s3OriginalImageDirname;
-    private static String s3FormattedImageDirname;
 
     private StoreManager storeManager;
     private SystemManager systemManager;
+    private MediaManager mediaManager;
+    private UserManager userManager;
+
 
     public static final String canonicalImageFileFormat = ".jpg";
 
@@ -76,6 +80,7 @@ public class ImageUploadResource {
         supportedUploadFormats.put(".tif", 1);
         supportedUploadFormats.put(".tiff", 1);
     }
+
 
     /**
      * We create a set of versions of the uploaded file
@@ -102,16 +107,6 @@ public class ImageUploadResource {
         FIXED, // Scale so that width and height are preserved
         WIDTH_DOMINANT, // Scale to preserve width
         HEIGHT_DOMINANT // Scale to preserve height
-    }
-
-    /**
-     * Parameter objectType is used to refer to a blah or comment type.
-     * See imageUpload method.
-     */
-    private enum ObjectType {
-        B, // A blah
-        C, // A comment
-        U; // A user
     }
 
     /**
@@ -175,17 +170,18 @@ public class ImageUploadResource {
     }
 
     private Response doUpload(String objType, String objectId, InputStream in, FormDataContentDisposition metadata, HttpServletRequest request) {
-        final ObjectType objectType;
+        final MediaReferendType referendType;
         try {
             BlahguaSession.ensureAuthenticated(request);
             if (objectId == null) {
                 return Response.status(400).entity("error=missing object id").build();
             }
-            objectType = ObjectType.valueOf(objType);
+            referendType = MediaReferendType.valueOf(objType);
         } catch (IllegalArgumentException e) {
-            logger.warning("error=missing or invalid objectType. INFO:\n" + RestUtilities.getRequestInfo(request));
-            return Response.status(500).entity("error=missing or invalid objectType").build();
+            logger.log(Level.WARNING, "error=missing or invalid referendType. INFO:\n" + RestUtilities.getRequestInfo(request), e);
+            return Response.status(500).entity("error=missing or invalid referendType").build();
         } catch (InvalidAuthorizedStateException e) {
+            logger.log(Level.SEVERE, "Unauthorized access attempt", e);
             return Response.status(401).entity("error=unauthorized").build();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'\nINFO:\n" + RestUtilities.getRequestInfo(request), e);
@@ -202,7 +198,7 @@ public class ImageUploadResource {
 
         final String msg;
         try {
-            msg = processFile(in, metadata, s3, objectType, objectId);
+            msg = processFile(in, metadata, s3, referendType, objectId);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Failed to process file. INFO:\n" + RestUtilities.getRequestInfo(request), e);
             return Response.status(400).entity("error=Failed to process file: " + e.getMessage()).build();
@@ -213,7 +209,7 @@ public class ImageUploadResource {
                         .entity(msg).build();
     }
 
-    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3, MediaReferendType referendType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         final long fileSize = metadata.getSize();
         if (fileSize != 0 && fileSize > 1000000) { // can be misleading or -1, but try...
             throw new InvalidRequestException("File size exceeds 1MB limit: " + fileSize);
@@ -224,18 +220,19 @@ public class ImageUploadResource {
             throw new InvalidRequestException("File format '" + extension + "' is not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
         final String filename = getFilename(file);
-        final MediaDAO mediaDAO = makeMediaRecord(objectType);
+        final MediaDAO mediaDAO = makeMediaRecord(referendType);
         final String filepath = localOriginalImagePath + mediaDAO.getId() + extension;
         final File infile = new File(filepath);
         saveFile(in, infile, s3);
-        saveFormats(infile, s3, mediaDAO.getId(), objectType, objectId);
+        saveFormats(infile, s3, mediaDAO.getId(), referendType, objectId);
 
         return mediaDAO.getId();
     }
 
-    private MediaDAO makeMediaRecord(ObjectType objectType) throws SystemErrorException {
+    private MediaDAO makeMediaRecord(MediaReferendType referendType) throws SystemErrorException {
         final MediaDAO media = getStoreManager().createMedia();
-        media.setType(objectType.toString());
+        media.setReferendType(referendType.toString());
+        media.setType(main.java.com.eweware.service.base.store.dao.type.MediaType.I.toString());
         media._insert();
         return media;
     }
@@ -244,7 +241,7 @@ public class ImageUploadResource {
         return (extension != null) && (supportedUploadFormats.get(extension) != null);
     }
 
-    private void saveFormats(File original, AmazonS3 s3, String mediaId, ObjectType objectType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    private void saveFormats(File original, AmazonS3 s3, String mediaId, MediaReferendType referendType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
 
         final String filename = original.getName();
         final String filepath = original.getAbsolutePath();
@@ -296,9 +293,8 @@ public class ImageUploadResource {
                 filesToDelete.add(newFile);
                 // Upload converted file to s3
                 try {
-                    ensureBucketMetadata();
                     final long start = System.currentTimeMillis();
-                    s3.putObject(new PutObjectRequest(s3BucketName, s3FormattedImageDirname + newFilename, newFile));
+                    s3.putObject(new PutObjectRequest(getMediaManager().getImageBucketName(), getMediaManager().getBucketImageDir() + newFilename, newFile));
                     System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
                 } catch (com.amazonaws.AmazonServiceException e) {
                     throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
@@ -308,7 +304,7 @@ public class ImageUploadResource {
                     throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 }
             }
-            associateWithObject(mediaId, objectType, objectId);
+            associateWithObject(mediaId, referendType, objectId);
 
 
         } catch (ResourceNotFoundException e) {
@@ -331,33 +327,38 @@ public class ImageUploadResource {
         }
     }
 
-    private void associateWithObject(String mediaId, ObjectType objectType, String objectId) throws SystemErrorException, ResourceNotFoundException {
+    private void associateWithObject(String mediaId, MediaReferendType referendType, String objectId) throws SystemErrorException, ResourceNotFoundException {
         List<String> imageIds = new ArrayList<String>(1);
         imageIds.add(mediaId);
-        logger.info("*** uploading image media id '" + mediaId + "' object type '" + objectType + "' object id '" + objectId + "' ***");
-        if (objectType == ObjectType.B) {
+//        logger.info("*** uploading image media id '" + mediaId + "' object type '" + referendType + "' object id '" + objectId + "' ***");
+        if (referendType == MediaReferendType.B) {
             final BlahDAO blah = getStoreManager().createBlah(objectId);
             if (!blah._exists()) {
                 throw new ResourceNotFoundException("No blahId '" + objectId + "' exists", ErrorCodes.NOT_FOUND_BLAH_ID);
             }
             blah.setImageIds(imageIds);
             blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-        } else if (objectType == ObjectType.C) {
+        } else if (referendType == MediaReferendType.C) {
             final CommentDAO comment = getStoreManager().createComment(objectId);
             if (!comment._exists()) {
                 throw new ResourceNotFoundException("No commentId '" + objectId + "' exists", ErrorCodes.NOT_FOUND_COMMENT_ID);
             }
             comment.setImageIds(imageIds);
             comment._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-        } else if (objectType == ObjectType.U) {
-            final UserDAO user = getStoreManager().createUser(objectId);
-            if (!user._exists()) {
+        } else if (referendType == MediaReferendType.U) {
+            final UserDAO user = (UserDAO) getStoreManager().createUser(objectId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+            if (user == null) {
                 throw new ResourceNotFoundException("No user id '" + objectId + "'", ErrorCodes.NOT_FOUND_USER_ID);
             }
+            final List<String> existingImageIds = user.getImageids();
+            // TODO Calling following method updates the user dao, which makes it two updates on the same record
+            // TODO  would be nice to have a "replacement" capability for arrays, perhaps through a different DAOUpdateType called REPLACEMENT_INCREMENTAL
+            // TODO  though DAOUpdateType has outworn its welcome: better to have an update mode (e.g., replace) that can be associated with each field
+            getUserManager().deleteMediaIdsForUser(objectId, user, existingImageIds);
             user.setImageIds(imageIds);
             user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
-            throw new SystemErrorException("Object type '" + objectType + "' not supported", ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Media referend type '" + referendType + "' not supported", ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
@@ -379,8 +380,7 @@ public class ImageUploadResource {
 
         saveLocalFile(in, infile);
         try {
-            ensureBucketMetadata();
-            s3.putObject(new PutObjectRequest(s3BucketName, s3OriginalImageDirname + infile.getName(), infile));
+            s3.putObject(new PutObjectRequest(getMediaManager().getImageBucketName(), getMediaManager().getBucketOriginalDir() + infile.getName(), infile));
         } catch (com.amazonaws.AmazonServiceException e) {
             throw new SystemErrorException("AWS service exception when putting " + infile.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
         } catch (com.amazonaws.AmazonClientException e) {
@@ -440,19 +440,19 @@ public class ImageUploadResource {
         }
     }
 
-    /**
-     * Cache bucket info
-     */
-    private void ensureBucketMetadata() throws SystemErrorException {
-        if (s3BucketName == null) {
-            s3BucketName = MediaManager.getInstance().getImageBucketName();
+    private UserManager getUserManager() throws SystemErrorException {
+        if (userManager == null) {
+            userManager = UserManager.getInstance();
         }
-        if (s3OriginalImageDirname == null) {
-            s3OriginalImageDirname = MediaManager.getInstance().getBucketOriginalDir();
+        return userManager;
+    }
+
+
+    private MediaManager getMediaManager() throws SystemErrorException {
+        if (mediaManager == null) {
+            mediaManager = MediaManager.getInstance();
         }
-        if (s3FormattedImageDirname == null) {
-            s3FormattedImageDirname = MediaManager.getInstance().getBucketImageDir();
-        }
+        return mediaManager;
     }
 
     private StoreManager getStoreManager() throws SystemErrorException {

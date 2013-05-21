@@ -71,9 +71,4 @@ public class InboxStateDAOImpl extends BaseDAOImpl implements InboxStateDAO {
         }
         return InboxStateDAOImpl.collection;
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

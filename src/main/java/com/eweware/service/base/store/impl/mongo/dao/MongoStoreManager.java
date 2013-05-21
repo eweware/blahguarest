@@ -614,6 +614,11 @@ public final class MongoStoreManager implements StoreManager {
     }
 
     @Override
+    public MediaDAO createMedia(String mediaId) throws SystemErrorException {
+        return new MediaDAOImpl(mediaId);
+    }
+
+    @Override
     public BlahDAO createBlah() {
         return new BlahDAOImpl();
     }

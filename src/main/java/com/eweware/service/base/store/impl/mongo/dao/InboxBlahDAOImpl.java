@@ -235,9 +235,4 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     public void setAuthorNickname(String nickname) {
         put(AUTHOR_NICKNAME, nickname);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

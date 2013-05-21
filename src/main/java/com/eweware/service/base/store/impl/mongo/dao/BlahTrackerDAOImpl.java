@@ -81,9 +81,4 @@ public class BlahTrackerDAOImpl extends BaseDAOImpl implements BlahTrackerDAO {
     public static BaseSchema getSchema(LocaleId localeId) throws SystemErrorException {
         return null; // TODO
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

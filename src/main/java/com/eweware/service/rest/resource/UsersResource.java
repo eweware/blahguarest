@@ -52,6 +52,7 @@ public class UsersResource {
     private static final String LOGOUT_USER_OPERATION = "logoutUser";
     private static final String SET_ACCOUNT_INFO_OPERATION = "setAccountInfo";
     private static final String UPDATE_ACCOUNT_OPERATION = "updateAccount";
+    private static final String DELETE_USER_IMAGES = "deleteUserImages";
 
     private UserManager userManager;
     private SystemManager systemManager;
@@ -844,6 +845,36 @@ public class UsersResource {
         }
     }
 
+    /**
+     * <p>Deletes all existing user images</p>
+     * <div><b>Method:</b> DELETE</div>
+     * <div><b>URL:</b> users/images</div>
+     * @return  <p>Returns http status 202 (ACCEPTED).</p>
+     *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
+     *         If the user is not authorized to access this method, returns 401.
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @DELETE
+    @Path("images")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUserImages(@Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            getUserManager().deleteAllMediaForUser(userId);
+            final Response response = RestUtilities.make202AcceptedResponse();
+            getSystemManager().setResponseTime(DELETE_USER_IMAGES, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
 
     private UserManager getUserManager() throws SystemErrorException {
         if (userManager == null) {

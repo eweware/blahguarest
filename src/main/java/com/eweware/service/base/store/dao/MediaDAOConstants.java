@@ -13,14 +13,20 @@ public interface MediaDAOConstants {
     /* All media assumed for now to be in blahguaimages bucket */
 
     /**
-     * <p>The media's type. A string. </p>
-     * <p>T</p>
+     * <p>The media's type. A string representation of a MediaReferendType </p>
+     * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
      */
-    static final String TYPE = "T"; // {i|v} image, video
+    static final String REFEREND_TYPE = "T";
+
+    /**
+     * <p>The media's type (e.g., image, video, etc.)</p>
+     * @see main.java.com.eweware.service.base.store.dao.type.MediaType
+     */
+    static final String TYPE = "M";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    TYPE,
+                    REFEREND_TYPE,
             })
     };
 }

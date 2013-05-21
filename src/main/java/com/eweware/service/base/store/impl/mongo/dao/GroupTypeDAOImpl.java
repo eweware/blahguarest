@@ -83,9 +83,4 @@ public class GroupTypeDAOImpl extends BaseDAOImpl implements GroupTypeDAO {
     public void setGroupCount(Integer groupCount) {
         put(GROUP_COUNT, groupCount);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

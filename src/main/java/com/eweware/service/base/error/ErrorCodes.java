@@ -455,4 +455,10 @@ public final class ErrorCodes {
      * MISSING_TEXT_OR_BODY = 89
      */
     public static final Integer MISSING_TEXT_OR_BODY = 89;
+
+    /**
+     * <p>Failed to delete an image (with a media referend of user, blah, or comment.</p>
+     * FAILED_TO_DELETE_IMAGE = 90
+     */
+    public static final Integer FAILED_TO_DELETE_IMAGE = 90;
 }

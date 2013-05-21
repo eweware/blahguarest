@@ -22,6 +22,7 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
     private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
 
     static {  // TODO should be derived from schema
+        MediaDAOImpl.FIELD_TO_TYPE_MAP.put(REFEREND_TYPE, MongoFieldTypes.STRING);
         MediaDAOImpl.FIELD_TO_TYPE_MAP.put(TYPE, MongoFieldTypes.STRING);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
@@ -64,6 +65,16 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
     }
 
     @Override
+    public String getReferendType() {
+        return (String) get(REFEREND_TYPE);
+    }
+
+    @Override
+    public void setReferendType(String referendType) {
+        put(REFEREND_TYPE, referendType);
+    }
+
+    @Override
     public String getType() {
         return (String) get(TYPE);
     }
@@ -71,10 +82,5 @@ public class MediaDAOImpl extends BaseDAOImpl implements MediaDAO {
     @Override
     public void setType(String type) {
         put(TYPE, type);
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
     }
 }

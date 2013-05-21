@@ -85,9 +85,4 @@ public class BlahTypeDAOImpl extends BaseDAOImpl implements BlahTypeDAO {
     public void setCategoryId(Integer categoryId) {
         put(CATEGORY_ID, categoryId);
     }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return super.toMap();
-    }
 }

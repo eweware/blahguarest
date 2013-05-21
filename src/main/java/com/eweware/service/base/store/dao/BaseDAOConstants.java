@@ -13,9 +13,10 @@ public interface BaseDAOConstants {
     static final String ID = "_id";
 
     /**
-     * <p>Used as a soft delete. Currently used only be
-     * search to delete a record from the index.
-     * This is currently only used for dynamic index deletes.</p>
+     * <p>Used as a soft delete marker. The semantics of the
+     * deletion will vary from dao type to dao type (e.g.,
+     * for media daos, associated images may also need to
+     * be deleted from s3 buckets)</p>
      */
     static final String IS_DELETED = "d";
 
