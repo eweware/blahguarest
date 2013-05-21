@@ -279,7 +279,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         try {
             return new ObjectId(id);
         } catch (Exception e) {
-            throw new SystemErrorException(getClass().getSimpleName() + ": makeMongoId could not generate id because id is not an appropriate UUID string", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+            throw new SystemErrorException(getClass().getSimpleName() + ": makeMongoId could not generate id '"+id+"' because id is not an appropriate UUID string", e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
     }
 

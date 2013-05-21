@@ -337,7 +337,7 @@ public final class MongoStoreManager implements StoreManager {
         try {
             return new ObjectId(id);
         } catch (IllegalArgumentException e) {
-            throw new SystemErrorException("the id is not valid (it must be an UUID string); id=" + id, e, ErrorCodes.SERVER_DB_ERROR);
+            throw new SystemErrorException("the id is not valid (it must be an UUID string); id '" + id + "'", e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 

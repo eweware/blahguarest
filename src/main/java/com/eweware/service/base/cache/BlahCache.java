@@ -384,8 +384,12 @@ public final class BlahCache {
             final List<ObjectId> oids = new ArrayList<ObjectId>(keyCount);
             final boolean memcachedKeyName = (keyCount > 0) && keys.get(0).startsWith(inboxItemNamespace);
             for (String key : keys) {
-                final ObjectId oid = new ObjectId(memcachedKeyName ? getInboxItemIdFromItemKey(key) : key);
-                oids.add(oid);
+                final String id = memcachedKeyName ? getInboxItemIdFromItemKey(key) : key;
+                try {
+                    oids.add(new ObjectId(id));
+                } catch (Exception e) {
+                    throw new SystemErrorException("Failed to get inbox from DB due to an invalid object id '" + id + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                }
             }
 
             final DBObject query = new BasicDBObject(BaseDAOConstants.ID, new BasicDBObject("$in", oids));
