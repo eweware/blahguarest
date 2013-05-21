@@ -39,6 +39,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     protected static void addInheritedFieldToTypeMapItems(Map<String, MongoFieldTypes> map) {
         map.put(CREATED, MongoFieldTypes.DATE);
         map.put(UPDATED, MongoFieldTypes.DATE);
+        map.put(IS_DELETED, MongoFieldTypes.BOOLEAN);
     }
 
     /**

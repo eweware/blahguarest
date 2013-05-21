@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs.zip" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369097707857" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368226120084" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369098114104" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369098171673" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -408,7 +408,7 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/store/dao/GroupDAOConstants.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361844869760" ignored="false" />
     <file path="/BaseSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366512465930" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/lib/blahgua-base.jar!/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.class" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361929340947" ignored="false" />
-    <file path="/BaseDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368422363312" ignored="false" />
+    <file path="/BaseDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369098927512" ignored="false" />
     <file path="/SchemaConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363032192146" ignored="false" />
     <file path="/SchemaSpec.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366512387074" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/scala/com/eweware/stats/InboxBuilder.scala" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366681082202" ignored="false" />
@@ -1257,14 +1257,50 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="234" column="94" selection-start="10957" selection-end="10957" vertical-scroll-proportion="0.5194064">
+            <state line="234" column="94" selection-start="10957" selection-end="10957" vertical-scroll-proportion="-17.5">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2783#2800#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserDAOConstants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAOConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="17" selection-start="439" selection-end="439" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseDAOImpl.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="227" column="19" selection-start="10137" selection-end="10137" vertical-scroll-proportion="0.3468576">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseDAO.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="17" selection-start="295" selection-end="295" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseDAOConstants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="17" selection-start="211" selection-end="211" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1301,7 +1337,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahTypeDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/CommentTrackerDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/GroupTypeDAOImpl.java" />
@@ -1317,6 +1352,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/MediaDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/MediaDAO.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
       </list>
     </option>
   </component>
@@ -2861,7 +2897,11 @@
       <created>1369098125559</created>
       <updated>1369098125559</updated>
     </task>
-    <option name="localTasksCounter" value="164" />
+    <task id="LOCAL-00164" summary="https://eweware.atlassian.net/browse/BWC-883; new docs">
+      <created>1369098173787</created>
+      <updated>1369098173787</updated>
+    </task>
+    <option name="localTasksCounter" value="165" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2897,7 +2937,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2835131" sideWeight="0.98077977" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2835131" sideWeight="0.98077977" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18804781" sideWeight="0.35439137" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2954,7 +2994,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/BWC-883" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/BWC-883; new docs" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2968,7 +3008,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="https://eweware.atlassian.net/browse/WRS-298" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-297" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-299" />
     <MESSAGE value="https://eweware.atlassian.net/browse/WRS-301" />
@@ -2993,6 +3032,7 @@
     <MESSAGE value="refresh documentation" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-726" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-883" />
+    <MESSAGE value="https://eweware.atlassian.net/browse/BWC-883; new docs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3006,34 +3046,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahTrackerDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="5" selection-start="3056" selection-end="3056" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahTypeDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="5" selection-start="2743" selection-end="2743" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BlahDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="368" column="5" selection-start="11157" selection-end="11157" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/CommentTrackerDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="5" selection-start="3197" selection-end="3197" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/GroupTypeDAOImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="84" column="5" selection-start="2798" selection-end="2798" vertical-scroll-proportion="0.0">
@@ -3113,11 +3125,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="234" column="94" selection-start="10957" selection-end="10957" vertical-scroll-proportion="0.5194064">
+        <state line="234" column="94" selection-start="10957" selection-end="10957" vertical-scroll-proportion="-17.5">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2783#2800#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="17" selection-start="439" selection-end="439" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="17" selection-start="211" selection-end="211" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BaseDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="17" selection-start="295" selection-end="295" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="227" column="19" selection-start="10137" selection-end="10137" vertical-scroll-proportion="0.3468576">
+          <folding />
         </state>
       </provider>
     </entry>
