@@ -785,6 +785,13 @@ public class UserManager implements ManagerInterface {
         String nickname = null;
         String userImageId = null;
 
+        boolean shownAge = false;
+        boolean shownRace = false;
+        boolean shownGender = false;
+        boolean shownCity = false;
+        boolean shownState = false;
+        int count = 0;
+
         if (userId != null) {
 
             final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
@@ -798,6 +805,7 @@ public class UserManager implements ManagerInterface {
 
             final UserProfileDAO profile = getUserProfileDAO(userId);
 
+
             if (profile != null) {
 
                 final UserProfileSchema schema = UserProfileSchema.getSchema(localeId);
@@ -809,8 +817,8 @@ public class UserManager implements ManagerInterface {
                     nickname = profile.getNickname();
                 }
 
+
                 // TODO simplify the following blocks of code into an engine
-                boolean shownAge = false;
                 final Integer dobPermissions = profile.getDateOfBirthPermissions();
                 if (hasProfilePermission(dobPermissions)) {
                     final Date dob = profile.getDateOfBirth(); // no need to look up data type
@@ -819,10 +827,10 @@ public class UserManager implements ManagerInterface {
                         descriptor.append(CommonUtilities.getAgeInYears(dob));
                         descriptor.append(" year old");
                         shownAge = true;
+                        count++;
                     }
                 }
 
-                boolean shownRace = false;
                 final Integer racePermissions = profile.getRacePermissions();
                 if (hasProfilePermission(racePermissions)) {
                     final String raceKey = profile.getRace();
@@ -841,6 +849,7 @@ public class UserManager implements ManagerInterface {
                                         }
                                         descriptor.append(race);
                                         shownRace = true;
+                                        count++;
                                     } else {
                                         logger.warning("User id '" + userId + "' profile has race permissions but no race for key '" + raceKey + "'");
                                     }
@@ -849,7 +858,6 @@ public class UserManager implements ManagerInterface {
                     }
                 }
 
-                boolean shownGender = false;
                 final Integer genderPermissions = profile.getGenderPermissions();
                 if (hasProfilePermission(genderPermissions)) {
                     final String genderKey = profile.getGender();
@@ -863,6 +871,7 @@ public class UserManager implements ManagerInterface {
                                         descriptor.append(shownAge || shownRace ? " " : "A ");
                                         descriptor.append(gender.toLowerCase());
                                         shownGender = true;
+                                        count++;
                                     } else {
                                         logger.warning("User id '" + userId + "' profile has gender permissions but no gender for key '" + genderKey + "'");
                                     }
@@ -874,7 +883,6 @@ public class UserManager implements ManagerInterface {
                     }
                 }
 
-                boolean shownCity = false;
                 final Integer cityPermissions = profile.getCityPermissions();
                 if (hasProfilePermission(cityPermissions)) {
                     final String city = profile.getCity();
@@ -889,6 +897,7 @@ public class UserManager implements ManagerInterface {
                                     descriptor.append(" from ");
                                     descriptor.append(city);
                                     shownCity = true;
+                                    count++;
                                     break;
                                 default:
                                     throw new SystemErrorException("city data type has changed (expected String) and I don't know how to handle it");
@@ -899,7 +908,6 @@ public class UserManager implements ManagerInterface {
                     }
                 }
 
-                boolean shownState = false;
                 final Integer statePermissions = profile.getStatePermissions();
                 if (hasProfilePermission(statePermissions)) {
                     final String state = profile.getState();
@@ -919,6 +927,7 @@ public class UserManager implements ManagerInterface {
                                     descriptor.append(' ');
                                     descriptor.append(state);
                                     shownState = true;
+                                    count++;
                                     break;
                                 default:
                                     throw new SystemErrorException("state data type has changed (expected String) and I don't know how to handle it");
@@ -947,6 +956,7 @@ public class UserManager implements ManagerInterface {
                                         }
                                         descriptor.append(' ');
                                         descriptor.append(country);
+                                        count++;
                                     }
                                     break;
                                 default:
@@ -959,6 +969,8 @@ public class UserManager implements ManagerInterface {
         }
         if (descriptor.length() == 0) {
             descriptor.append("An anonymous person.");
+        } else if (shownRace && count == 1) {
+            descriptor.append(" person");
         }
 
         // Create response
