@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public final class MongoStoreManager implements StoreManager {
 
-    private static final Logger logger = Logger.getLogger("MongoStoreManager2");
+    private static final Logger logger = Logger.getLogger(MongoStoreManager.class.getName());
 
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
@@ -451,7 +451,7 @@ public final class MongoStoreManager implements StoreManager {
     private void setMongoDebuggingLevel() {
         Logger logger = Logger.getLogger("com.mongodb");
         if (logger != null) {
-            logger.setLevel(Level.FINEST);
+            logger.setLevel(Level.FINEST); // TODO make configurable
         } else {
             logger.log(Level.WARNING, "Didn't find mongo logger at com.mongodb");
         }

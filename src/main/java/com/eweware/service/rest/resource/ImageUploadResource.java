@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 @Path("/images")
 public class ImageUploadResource {
 
-    private static final Logger logger = Logger.getLogger("ImageUploadResource");
+    private static final Logger logger = Logger.getLogger(ImageUploadResource.class.getName());
 
     /**
      * These paths should be part of the config

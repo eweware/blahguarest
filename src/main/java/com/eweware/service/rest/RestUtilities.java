@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public final class RestUtilities {
 
-    private static final Logger logger = Logger.getLogger("RestUtilities");
+    private static final Logger logger = Logger.getLogger(RestUtilities.class.getName());
 
     private static final String SYSTEM_ERROR = "System error";
     private static final String APPLICATION_ERROR = "Application error";

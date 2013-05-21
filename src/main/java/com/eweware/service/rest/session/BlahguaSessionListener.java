@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public class BlahguaSessionListener implements HttpSessionListener {
 
-    private static Logger logger = Logger.getLogger("BlahguaSessionListener");
+    private static Logger logger = Logger.getLogger(BlahguaSessionListener.class.getName());
 
     /**
      * <p>A new session is created in the anonymous user state.</p>

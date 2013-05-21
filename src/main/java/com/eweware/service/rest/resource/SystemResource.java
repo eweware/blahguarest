@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 @Path("/sys")
 public class SystemResource {
 
-    private static final Logger logger = Logger.getLogger("SystemResource");
+    private static final Logger logger = Logger.getLogger(SystemResource.class.getName());
 
     /**
      * <p>Sheep stuff</p>

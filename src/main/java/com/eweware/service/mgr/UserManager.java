@@ -65,7 +65,7 @@ import java.util.logging.Logger;
  */
 public class UserManager implements ManagerInterface {
 
-    private static final Logger logger = Logger.getLogger("UserManager");
+    private static final Logger logger = Logger.getLogger(UserManager.class.getName());
 
     private static UserManager singleton;
 

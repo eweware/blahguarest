@@ -52,7 +52,7 @@ import java.util.logging.Logger;
  */
 public class InboxHandler extends Thread {
 
-    private static final Logger logger = Logger.getLogger("InboxHandler");
+    private static final Logger logger = Logger.getLogger(InboxHandler.class.getName());
 
     private MongoStoreManager storeManager;
 

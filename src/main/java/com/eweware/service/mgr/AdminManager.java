@@ -23,7 +23,8 @@ import java.util.logging.Logger;
  */
 public class AdminManager {
 
-    private static final Logger logger = Logger.getLogger("AdminManager");
+    private static final Logger logger = Logger.getLogger(AdminManager.class.getName());
+
     private static AdminManager singleton;
     private  MongoStoreManager storeManager;
 

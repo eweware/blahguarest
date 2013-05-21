@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 @Path("/users")
 public class UsersResource {
 
-    private static final Logger logger = Logger.getLogger("UsersResource");
+    private static final Logger logger = Logger.getLogger(UsersResource.class.getName());
 
     private static final String GET_USER_INFO_OPERATION = "getUserInfo";
     private static final String GET_USER_INFO_FOR_BLAH_OPERATION = "getUserInfo4Blah";

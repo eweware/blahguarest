@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
-    private static final Logger logger = Logger.getLogger("BaseDAOImpl");
+    private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
 
     // MongoException error code for duplicate keys
     private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;

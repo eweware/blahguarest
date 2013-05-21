@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 @Path("badges")
 public class BadgesResource {
 
-    private static final Logger logger = Logger.getLogger("BadgesResource");
+    private static final Logger logger = Logger.getLogger(BadgesResource.class.getName());
 
     private static final String CREATE_BADGE_OPERATION = "createBadge";
     private static final String GET_BADGE_BY_ID_OPERATION = "getBadgeById";

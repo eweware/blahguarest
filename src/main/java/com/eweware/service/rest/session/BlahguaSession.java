@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public final class BlahguaSession {
 
 
-    private static final Logger logger = Logger.getLogger("BlahguaSession");
+    private static final Logger logger = Logger.getLogger(BlahguaSession.class.getName());
 
     /**
      * <p>Marks whether the account is authenticated or not.</p>

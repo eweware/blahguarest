@@ -61,7 +61,7 @@ import java.util.logging.Logger;
  */
 public final class BlahManager implements ManagerInterface {
 
-    private static final Logger logger = Logger.getLogger("BlahManager");
+    private static final Logger logger = Logger.getLogger(BlahManager.class.getName());
 
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;

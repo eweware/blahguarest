@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public final class CommonUtilities {
 
 
-    private static final Logger logger = Logger.getLogger("CommonUtilities");
+    private static final Logger logger = Logger.getLogger(CommonUtilities.class.getName());
 
     public static final Double getValueAsDouble(Object val) throws SystemErrorException {
         if (val == null) return 0.0d;

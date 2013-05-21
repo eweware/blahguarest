@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public final class SystemManager implements ManagerInterface {
 
-    private static final Logger logger = Logger.getLogger("SystemManager");
+    private static final Logger logger = Logger.getLogger(SystemManager.class.getName());
 
     private static SystemManager singleton;
 

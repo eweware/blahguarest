@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  */
 public final class BadgesManager {
 
-    private static final Logger logger = Logger.getLogger("BadgesManager");
+    private static final Logger logger = Logger.getLogger(BadgesManager.class.getName());
 
     private static final long YEAR_IN_MILLIS = (1000l * 60 * 60 * 24 * 365);
 
