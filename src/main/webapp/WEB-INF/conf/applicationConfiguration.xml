@@ -97,7 +97,7 @@
     </bean>
 
     <!-- New tracking manager -->
-    <bean id="trackingMgr" class="main.java.com.eweware.service.mgr.TrackingManager"
+    <bean id="trackingMgr" class="main.java.com.eweware.service.mgr.TrackingMgr"
           init-method="start" destroy-method="shutdown">
     </bean>
 
