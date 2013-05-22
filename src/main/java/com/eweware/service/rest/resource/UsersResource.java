@@ -2,6 +2,7 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.payload.UserAccountPayload;
 import main.java.com.eweware.service.base.payload.UserPayload;
 import main.java.com.eweware.service.base.payload.UserProfilePayload;
 import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
@@ -51,6 +52,7 @@ public class UsersResource {
     private static final String CHECK_LOGIN_OPERATION = "checkLogin";
     private static final String LOGOUT_USER_OPERATION = "logoutUser";
     private static final String SET_ACCOUNT_INFO_OPERATION = "setAccountInfo";
+    private static final String GET_ACCOUNT_INFO_OPERATION = "getAccountInfo";
     private static final String UPDATE_ACCOUNT_OPERATION = "updateAccount";
     private static final String DELETE_USER_IMAGES = "deleteUserImages";
 
@@ -294,6 +296,9 @@ public class UsersResource {
      * or challenge question from his account.</p>
      * <p>Note that the email address is no longer set in the profile: it is set in the user's account.</p>
      * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> users/account</div>
      *
      * @param entity A JSON entity containing the following fields:
      *               <div>'E' := the value is an email address string. If set to null,
@@ -329,6 +334,40 @@ public class UsersResource {
             return RestUtilities.make409StateConflictResponse(request, e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    /**
+     * <p>Returns sensitive user account information. For now, it only returns the email address
+     * if it exists.</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/account</div>
+     *
+     * @return Returns an http status 200 (OK) with a JSON entity containing the
+     * email address if the user has entered it.
+     *         If there is a security problem, returns status of 401.
+     *         If there is no account for the current user, returns status of 409 (CONFLICT)
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @GET
+    @Path("/account")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAccountInfo(@Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserAccountData(userId));
+            getSystemManager().setResponseTime(GET_ACCOUNT_INFO_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

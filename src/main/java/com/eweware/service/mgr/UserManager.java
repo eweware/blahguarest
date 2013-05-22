@@ -264,6 +264,27 @@ public class UserManager implements ManagerInterface {
         }
     }
 
+    /**
+     * <p>Returns email address only, if any.</p>
+     * @param userId
+     * @return
+     * @throws SystemErrorException
+     * @throws StateConflictException
+     */
+    public UserAccountPayload getUserAccountData(String userId) throws SystemErrorException, StateConflictException {
+        ensureReady();
+        final UserAccountDAO accountDAO = (UserAccountDAO) getStoreManager().createUserAccount(userId)._findByPrimaryId(UserAccountDAO.EMAIL_ADDRESS);
+        if (accountDAO == null) {
+            throw new StateConflictException("No account for user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
+        }
+        final UserAccountPayload payload = new UserAccountPayload();
+        final String emailAddress = accountDAO.getEmailAddress();
+        if (emailAddress != null) {
+            payload.setEmailAddress(emailAddress);
+        }
+        return payload;
+    }
+
     private void checkUserAccountFieldLengths(String emailAddress, String challengeAnswer1) throws InvalidRequestException {
         if ((emailAddress != null && emailAddress.length() > 64) ||
                 (challengeAnswer1 != null && challengeAnswer1.length() > 64)) {
