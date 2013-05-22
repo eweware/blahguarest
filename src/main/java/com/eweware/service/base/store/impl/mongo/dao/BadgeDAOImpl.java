@@ -15,6 +15,22 @@ import java.util.Map;
  */
 public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
 
+    private static String collectionName;
+    private static DBCollection collection;
+    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(4);
+
+    static {
+        FIELD_TO_TYPE_MAP.put(AUTHORITY_BADGE_ID, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(AUTHORITY_ID, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(AUTHORITY_DISPLAY_NAME, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(BADGE_TYPE, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(ICON_URL, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(EXPIRATION_DATE, MongoFieldTypes.DATE);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
+    }
+
     public BadgeDAOImpl() {
     }
 
@@ -46,6 +62,16 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
     @Override
     public void setAuthorityId(String authorityId) {
         put(AUTHORITY_ID, authorityId);
+    }
+
+    @Override
+    public String getAuthorityDisplayName() {
+        return (String) get(AUTHORITY_DISPLAY_NAME);
+    }
+
+    @Override
+    public void setAuthorityDisplayName(String displayName) {
+        put(AUTHORITY_DISPLAY_NAME, displayName);
     }
 
     @Override
@@ -117,20 +143,5 @@ public class BadgeDAOImpl extends BaseDAOImpl implements BadgeDAO {
             collection = MongoStoreManager.getInstance().getCollection(_getCollectionName());
         }
         return collection;
-    }
-
-    private static String collectionName;
-    private static DBCollection collection;
-    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(4);
-
-    static {
-        FIELD_TO_TYPE_MAP.put(AUTHORITY_BADGE_ID, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(AUTHORITY_ID, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(BADGE_TYPE, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(ICON_URL, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(EXPIRATION_DATE, MongoFieldTypes.DATE);
-        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 }

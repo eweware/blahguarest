@@ -28,6 +28,48 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class TrackerDAOImpl extends BaseDAOImpl implements TrackerDAO {
 
+    private static String collectionName;
+    private static DBCollection collection;
+
+    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
+
+    static {  // TODO should be derived from schema
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(OPERATION, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_GENDER, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_RACE, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_INCOME_RANGE, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_DATE_OF_BIRTH, MongoFieldTypes.DATE);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(PROMOTION, MongoFieldTypes.NUMBER);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_TYPE_ID, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_ID, MongoFieldTypes.STRING);
+        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENT_ID, MongoFieldTypes.STRING);
+    }
+
+    @Override
+    protected Map<String, MongoFieldTypes> _getFieldNameToTypeMap() {
+        return TrackerDAOImpl.FIELD_TO_TYPE_MAP;
+    }
+
+    @Override
+    protected String _getCollectionName() throws SystemErrorException {
+        if (TrackerDAOImpl.collectionName == null) {
+            TrackerDAOImpl.collectionName = MongoStoreManager.getInstance().getTrackerCollectionName();
+        }
+        return TrackerDAOImpl.collectionName;
+    }
+
+    @Override
+    protected DBCollection _getCollection() throws SystemErrorException {
+        if (TrackerDAOImpl.collection == null) {
+            TrackerDAOImpl.collection = MongoStoreManager.getInstance().getCollection(_getCollectionName());
+        }
+        return TrackerDAOImpl.collection;
+    }
     TrackerDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
         super(map, validateAndConvert);
     }
@@ -182,49 +224,5 @@ public class TrackerDAOImpl extends BaseDAOImpl implements TrackerDAO {
     @Override
     public void setUserDateOfBirth(Date dob) {
         put(USER_DATE_OF_BIRTH, dob);
-    }
-
-
-    private static String collectionName;
-    private static DBCollection collection;
-
-    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
-
-    static {  // TODO should be derived from schema
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(OPERATION, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_GENDER, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_RACE, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_INCOME_RANGE, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_DATE_OF_BIRTH, MongoFieldTypes.DATE);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(PROMOTION, MongoFieldTypes.NUMBER);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_TYPE_ID, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_ID, MongoFieldTypes.STRING);
-        TrackerDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENT_ID, MongoFieldTypes.STRING);
-    }
-
-    @Override
-    protected Map<String, MongoFieldTypes> _getFieldNameToTypeMap() {
-        return TrackerDAOImpl.FIELD_TO_TYPE_MAP;
-    }
-
-    @Override
-    protected String _getCollectionName() throws SystemErrorException {
-        if (TrackerDAOImpl.collectionName == null) {
-            TrackerDAOImpl.collectionName = MongoStoreManager.getInstance().getTrackerCollectionName();
-        }
-        return TrackerDAOImpl.collectionName;
-    }
-
-    @Override
-    protected DBCollection _getCollection() throws SystemErrorException {
-        if (TrackerDAOImpl.collection == null) {
-            TrackerDAOImpl.collection = MongoStoreManager.getInstance().getCollection(_getCollectionName());
-        }
-        return TrackerDAOImpl.collection;
     }
 }

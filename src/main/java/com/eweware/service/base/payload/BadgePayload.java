@@ -44,17 +44,23 @@ public class BadgePayload extends BasePayload implements BadgeDAOConstants {
         return (String) get(AUTHORITY_ID);
     }
 
-   
     public void setAuthorityId(String authorityId) {
         put(AUTHORITY_ID, authorityId);
     }
 
-   
+    public String getAuthorityDisplayName() {
+        return (String) get(AUTHORITY_DISPLAY_NAME);
+    }
+
+    public void setAuthorityDisplayName(String displayName) {
+        put(AUTHORITY_DISPLAY_NAME, displayName);
+    }
+
     public String getDisplayName() {
         return (String) get(DISPLAY_NAME);
     }
 
-   
+
     public void setDisplayName(String displayName) {
         put(DISPLAY_NAME, displayName);
     }

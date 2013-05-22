@@ -17,9 +17,15 @@ public interface BadgeDAOConstants {
     static final String AUTHORITY_BADGE_ID = "I";
 
     /**
-     * <p>This is the id of the badging authority record in the Blahgua database.</p>
+     * <p>This is the id of the badging authority record in the Blahgua database.
+     * This is the badge authority's major endpoint.</p>
      */
     static final String AUTHORITY_ID = "A";
+
+    /**
+     * <p>This is the badge authority's displayable name.</p>
+     */
+    static final String AUTHORITY_DISPLAY_NAME = "D";
 
     /**
      * <p>The badge's display name.</p>

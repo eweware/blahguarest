@@ -120,7 +120,10 @@ public final class BadgesManager {
 //            return Response.status(Response.Status.ACCEPTED).build();
 //        }
         authorityId = SystemManager.getInstance().isDevMode() ? "localhost:8081" : authorityId;
-        final BadgeAuthorityDAO authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL);
+        final BadgeAuthorityDAO authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL, BadgeAuthorityDAO.DESCRIPTION);
+        if (authDAO == null) {
+            throw new InvalidRequestException("Invalid authority id '" + authorityId + "'", ErrorCodes.INVALID_INPUT);
+        }
         final String endpoint = makeBadgeAuthorityCreateBadgeEndpoint(authDAO);
 
         HttpEntity entity = null;
@@ -158,6 +161,7 @@ public final class BadgesManager {
 
             final DBObject transaction = new BasicDBObject(BadgeTransactionDAOConstants.ID, makeTransactionId(authorityId, txToken));
             transaction.put(BadgeTransactionDAOConstants.AUTHORITY_ID, authorityId);
+            transaction.put(BadgeTransactionDAOConstants.AUTHORITY_DISPLAY_NAME, authDAO.getDisplayName());
             transaction.put(BadgeTransactionDAOConstants.STATE, BadgeTransactionState.PENDING.getCode());
             transaction.put(BadgeTransactionDAOConstants.USER_ID, userId);
             transaction.put(BadgeTransactionDAOConstants.CREATED, new Date());
@@ -316,6 +320,7 @@ public final class BadgesManager {
             DBObject tx = null;
             String userId = null;
             String authorityId = null;
+            String authorityDisplayName = null;
 
             boolean badgeUpdateKluge = false;  // TODO (jira filed) kludge because this could entail more than one badge, a subtlety we ignore for now
             final List<String> badgeIds = new ArrayList<String>(badgeEntities.size());
@@ -328,6 +333,7 @@ public final class BadgesManager {
                     }
                     userId = (String) tx.get(BadgeTransactionDAOConstants.USER_ID);
                     authorityId = (String) tx.get(BadgeTransactionDAOConstants.AUTHORITY_ID);
+                    authorityDisplayName = (String) tx.get(BadgeTransactionDAOConstants.AUTHORITY_DISPLAY_NAME);
                 }
 
                 final String authorityBadgeId = (String) badgeEntity.get(BadgingNotificationEntity.BADGE_ID_FIELDNAME);
@@ -340,6 +346,7 @@ public final class BadgesManager {
                 final BadgeDAO badge = storeManager.createBadge();
                 badge.setUserId(userId);
                 badge.setAuthorityId(authorityId);
+                badge.setAuthorityDisplayName(authorityDisplayName);
                 badge.setBadgeType(badgeTypeId);
                 final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.USER_ID, BadgeDAO.AUTHORITY_ID, BadgeDAO.BADGE_TYPE);
                 final String existingBadgeID = (existingBadgeDAO == null) ? null : existingBadgeDAO.getId();

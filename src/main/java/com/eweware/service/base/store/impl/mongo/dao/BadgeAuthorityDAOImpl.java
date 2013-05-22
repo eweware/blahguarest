@@ -16,6 +16,17 @@ import java.util.Map;
  */
 public class BadgeAuthorityDAOImpl extends BaseDAOImpl implements BadgeAuthorityDAO {
 
+    private static String collectionName;
+    private static DBCollection collection;
+
+    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
+
+    static {
+        FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(DESCRIPTION, MongoFieldTypes.STRING);
+        FIELD_TO_TYPE_MAP.put(ENDPOINT_URL, MongoFieldTypes.STRING);
+    }
+
     public BadgeAuthorityDAOImpl() {
     }
 
@@ -91,17 +102,6 @@ public class BadgeAuthorityDAOImpl extends BaseDAOImpl implements BadgeAuthority
             collection = MongoStoreManager.getInstance().getCollection(_getCollectionName());
         }
         return collection;
-    }
-
-    private static String collectionName;
-    private static DBCollection collection;
-
-    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
-
-    static {
-        FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(DESCRIPTION, MongoFieldTypes.STRING);
-        FIELD_TO_TYPE_MAP.put(ENDPOINT_URL, MongoFieldTypes.STRING);
     }
 
 }

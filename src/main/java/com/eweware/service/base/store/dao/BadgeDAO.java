@@ -18,6 +18,10 @@ public interface BadgeDAO extends BaseDAO, BadgeDAOConstants {
 
     public void setAuthorityId(String authorityId);
 
+    public String getAuthorityDisplayName();
+
+    public void setAuthorityDisplayName(String displayName);
+
     public String getDisplayName();
 
     public void setDisplayName(String displayName);

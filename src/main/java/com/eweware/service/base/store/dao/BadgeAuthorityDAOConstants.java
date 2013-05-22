@@ -11,7 +11,7 @@ import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFi
 public interface BadgeAuthorityDAOConstants {
 
     /**
-     * <p> The name of the authority.</p>
+     * <p> The display name of the authority.</p>
      */
     static final String DISPLAY_NAME = "N";
 

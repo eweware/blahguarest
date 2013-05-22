@@ -16,6 +16,17 @@ import java.util.Map;
  */
 public class InboxStateDAOImpl extends BaseDAOImpl implements InboxStateDAO {
 
+    private static String collectionName;
+    private static DBCollection collection;
+
+    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(10);
+
+    static {   // TODO should be derived from schema
+        InboxStateDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_ITEM_IDS, MongoFieldTypes.ARRAY);
+        InboxStateDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_NUMBER_TOP, MongoFieldTypes.NUMBER);
+        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
+    }
+
     @Override
     public List<ObjectId> getInboxItemIds() {
         return (List<ObjectId>) get(INBOX_ITEM_IDS);
@@ -34,17 +45,6 @@ public class InboxStateDAOImpl extends BaseDAOImpl implements InboxStateDAO {
     @Override
     public void setHighestInboxNumber(Integer highMark) {
         put(INBOX_NUMBER_TOP, highMark);
-    }
-
-    private static String collectionName;
-    private static DBCollection collection;
-
-    private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>(10);
-
-    static {   // TODO should be derived from schema
-        InboxStateDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_ITEM_IDS, MongoFieldTypes.ARRAY);
-        InboxStateDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_NUMBER_TOP, MongoFieldTypes.NUMBER);
-        addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
     @Override

@@ -23,6 +23,11 @@ public interface BadgeTransactionDAOConstants {
     static final String AUTHORITY_ID = "A";
 
     /**
+     * <p>The display name of the authority</p>
+     */
+    static final String AUTHORITY_DISPLAY_NAME = "D";
+
+    /**
      * The transaction's current state.
      * @see main.java.com.eweware.service.base.store.dao.type.BadgeTransactionState
      */
