@@ -120,7 +120,7 @@ public final class BadgesManager {
 //            return Response.status(Response.Status.ACCEPTED).build();
 //        }
         authorityId = SystemManager.getInstance().isDevMode() ? "localhost:8081" : authorityId;
-        final BadgeAuthorityDAO authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL, BadgeAuthorityDAO.DESCRIPTION);
+        final BadgeAuthorityDAO authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL, BadgeAuthorityDAO.DISPLAY_NAME);
         if (authDAO == null) {
             throw new InvalidRequestException("Invalid authority id '" + authorityId + "'", ErrorCodes.INVALID_INPUT);
         }
