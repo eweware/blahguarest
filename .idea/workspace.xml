@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163064325" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368226120084" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369182791759" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369183105531" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1297,9 +1297,9 @@
       <file leaf-file-name="UserManager.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="603" column="21" selection-start="30026" selection-end="30026" vertical-scroll-proportion="0.48778194">
+            <state line="603" column="26" selection-start="30031" selection-end="30031" vertical-scroll-proportion="0.48778194">
               <folding>
-                <element signature="e#38132#38151#0" expanded="true" />
+                <element signature="e#38137#38156#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2448,7 +2448,11 @@
       <created>1369182794541</created>
       <updated>1369182794541</updated>
     </task>
-    <option name="localTasksCounter" value="176" />
+    <task id="LOCAL-00176" summary="committing to test python deployer">
+      <created>1369183108167</created>
+      <updated>1369183108167</updated>
+    </task>
+    <option name="localTasksCounter" value="177" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2704,9 +2708,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="603" column="21" selection-start="30026" selection-end="30026" vertical-scroll-proportion="0.48778194">
+        <state line="603" column="26" selection-start="30031" selection-end="30031" vertical-scroll-proportion="0.48778194">
           <folding>
-            <element signature="e#38132#38151#0" expanded="true" />
+            <element signature="e#38137#38156#0" expanded="true" />
           </folding>
         </state>
       </provider>
