@@ -601,7 +601,7 @@ public class UserManager implements ManagerInterface {
         if (!getStoreManager().createUser(userId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " does not exist", ErrorCodes.NOT_FOUND_USER_ID);
         }
-        logger.info("Registering user id '" + userId + "' in group id '" + groupId + "'");
+        logger.info("*+* Registering user id '" + userId + "' in group id '" + groupId + "'");
         final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.USER_VALIDATION_METHOD, GroupDAO.USER_VALIDATION_PARAMETERS);
         if (groupDAO == null) {
             throw new ResourceNotFoundException("no group exists with groupId=" + groupId, ErrorCodes.NOT_FOUND_GROUP_ID);
