@@ -353,6 +353,7 @@ public class UsersResource {
      *         If there is a security problem, returns status of 401.
      *         If there is no account for the current user, returns status of 409 (CONFLICT)
      *         On error conditions, a JSON object is returned with details.
+     * @see UserAccountPayload
      */
     @GET
     @Path("/account")
