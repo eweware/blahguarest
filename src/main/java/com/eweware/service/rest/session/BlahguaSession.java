@@ -292,6 +292,19 @@ public final class BlahguaSession {
         return b.toString();
     }
 
+    public static void setSessionInfo(HttpServletRequest request, Map<String, Object> info) {
+        final HttpSession s = request.getSession();
+        if (s != null) {
+            final long lastAccessedTime = s.getLastAccessedTime();
+            long elapsed = (System.currentTimeMillis() - lastAccessedTime) / 1000;
+            long timeLeft = s.getMaxInactiveInterval() - elapsed;
+            long minutesLeft = (timeLeft / 60);
+            long secondsLeft = (timeLeft % 60);
+            info.put("M", minutesLeft);
+            info.put("S", secondsLeft);
+        }
+    }
+
 
     /**
      * Holds inbox state information.

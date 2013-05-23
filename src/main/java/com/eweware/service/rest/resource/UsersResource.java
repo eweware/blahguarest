@@ -114,7 +114,8 @@ public class UsersResource {
     public Response checkLogin(@Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final Map<String, String> entity = new HashMap<String, String>(1);
+            final Map<String, Object> entity = new HashMap<String, Object>(5);
+            BlahguaSession.setSessionInfo(request, entity);
             if (BlahguaSession.isAuthenticated(request)) {
                 entity.put("loggedIn", "Y");
             } else {
