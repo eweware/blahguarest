@@ -344,15 +344,20 @@ public final class BadgesManager {
 
                 // Create or update badge
                 final BadgeDAO badge = storeManager.createBadge();
-                badge.setAuthorityBadgeId(makeBadgeAuthorityBadgeId(authorityId, authorityBadgeId));
+                final String blahguaAuthorityBadgeId = makeBadgeAuthorityBadgeId(authorityId, authorityBadgeId);
+                badge.setAuthorityBadgeId(blahguaAuthorityBadgeId);
                 final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.AUTHORITY_BADGE_ID);
+                final String existingBadgeID = (existingBadgeDAO == null) ? null : existingBadgeDAO.getId();
+                if (existingBadgeDAO == null) {
+                    logger.info("New badge '" + badgeName + "' for user id '" + userId + "' for id '" + blahguaAuthorityBadgeId + "'");
+                } else {
+                    logger.info("Updating badge '" + badgeName + "' for user id '" + userId + "' for id '" + blahguaAuthorityBadgeId + "'");
+                }
 
                 badge.setUserId(userId);
                 badge.setAuthorityId(authorityId);
                 badge.setAuthorityDisplayName(authorityDisplayName);
                 badge.setBadgeType(badgeTypeId);
-                final String existingBadgeID = (existingBadgeDAO == null) ? null : existingBadgeDAO.getId();
-                // Following may be different, so update them
                 badge.setDisplayName(badgeName);
                 if (expires != null) {
                     try {
