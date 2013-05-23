@@ -322,13 +322,13 @@ public final class BadgesManager {
             String authorityId = null;
             String authorityDisplayName = null;
 
-            boolean badgeUpdateKluge = false;  // TODO (jira filed) kludge because this could entail more than one badge, a subtlety we ignore for now
             final List<String> badgeIds = new ArrayList<String>(badgeEntities.size());
             for (Map<String, Object> badgeEntity : badgeEntities) {
 
                 if (tx == null) {
                     tx = txCollection.findOne(txQuery);
                     if (tx == null) {
+                        logger.log(Level.SEVERE, "Unknown tx id '" + txId + "' entity=" + entity);
                         return Response.status(HttpStatus.SC_CONFLICT).entity(makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_UNKNOWN, txId)).build();
                     }
                     userId = (String) tx.get(BadgeTransactionDAOConstants.USER_ID);
@@ -344,14 +344,15 @@ public final class BadgesManager {
 
                 // Create or update badge
                 final BadgeDAO badge = storeManager.createBadge();
+                badge.setAuthorityBadgeId(makeBadgeAuthorityBadgeId(authorityId, authorityBadgeId));
+                final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.AUTHORITY_BADGE_ID);
+
                 badge.setUserId(userId);
                 badge.setAuthorityId(authorityId);
                 badge.setAuthorityDisplayName(authorityDisplayName);
                 badge.setBadgeType(badgeTypeId);
-                final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.USER_ID, BadgeDAO.AUTHORITY_ID, BadgeDAO.BADGE_TYPE);
                 final String existingBadgeID = (existingBadgeDAO == null) ? null : existingBadgeDAO.getId();
                 // Following may be different, so update them
-                badge.setAuthorityBadgeId(authorityBadgeId);
                 badge.setDisplayName(badgeName);
                 if (expires != null) {
                     try {
@@ -367,27 +368,27 @@ public final class BadgesManager {
                     badge.setIconUrl(iconUrl);
                 }
 
-                badgeUpdateKluge = (existingBadgeID != null);
-                if (badgeUpdateKluge) {
+                if (existingBadgeID != null) {
                     badge.setId(existingBadgeID);
                     badge._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
                 } else {
                     badge._insert();
+                    badgeIds.add(badge.getId());  // Add only new badges
                 }
-                badgeIds.add(badge.getId());
             }
 
             // Assign badge(s) to user record
             BadgeTransactionState newState = BadgeTransactionState.GRANTED;
             final UserDAO user = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.BADGE_IDS);
             if (!storeManager.createUser(userId)._exists()) {
-                logger.warning("User id '" + userId + "' for transaction id '" + txId + "' authority '" + authority + "'");
+                logger.severe("User id '" + userId + "' for transaction id '" + txId + "' authority '" + authority + "'");
                 newState = BadgeTransactionState.GRANTED_BUT_NO_USER_ID;
-            } else if (!badgeUpdateKluge) {
+            } else  {
                 user.setBadgeIds(badgeIds);
                 user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
             }
 
+            // Update transaction
             final BasicDBObject update = new BasicDBObject("$set", new BasicDBObject(BadgeTransactionDAOConstants.STATE, newState.getCode()));
             final WriteResult result = txCollection.update(txQuery, update);
             if (result.getError() != null) {
@@ -396,10 +397,123 @@ public final class BadgesManager {
             }
 
             return Response.status(Response.Status.ACCEPTED).build();
+
         } else { // no badges actually received in payload
             return Response.status(HttpStatus.SC_CONFLICT).entity(makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_MISSING_BADGES, txId)).build();
         }
     }
+
+    /**
+     * <p>Given the original badge authority's badge id, it creates a blahgua-unique id for it
+     * by suffixing the original badge id with the authority's id.</p>
+     */
+    private String makeBadgeAuthorityBadgeId(String authorityId, String originalBadgeAuthorityBadgeId) {
+        final StringBuilder b = new StringBuilder(authorityId);
+        b.append("|");
+        b.append(originalBadgeAuthorityBadgeId);
+        return b.toString();
+    }
+
+//    /**
+//     * <p>Called by badge authority when new badges have been granted for a user.</p>
+//     * @param txId   The transaction id. Transaction record contains history of transaction and current state.
+//     * @param entity The entity posted by the badging authority containing badges, etc.
+//     * @return
+//     * @throws SystemErrorException
+//     */
+//    private Response handleGrantedBadge(String txId, Map<String, Object> entity) throws SystemErrorException {
+//
+//        final String authority = (String) entity.get(BadgingNotificationEntity.AUTHORITY_FIELDNAME);
+//        final List<Map<String, Object>> badgeEntities = (List<Map<String, Object>>) entity.get("badges");
+//        logger.info("RECEIVED BADGES:\n" + entity);
+//
+//        if (badgeEntities != null) {
+//            final DBCollection txCollection = MongoStoreManager.getInstance().getCollection(MongoStoreManager.getInstance().getBadgeTransactionCollectionName());
+//            final BasicDBObject txQuery = new BasicDBObject(BadgeTransactionDAOConstants.ID, makeTransactionId(authority, txId));
+//            DBObject tx = null;
+//            String userId = null;
+//            String authorityId = null;
+//            String authorityDisplayName = null;
+//
+//            boolean badgeUpdateKluge = false;  // TODO (jira filed) kludge because this could entail more than one badge, a subtlety we ignore for now
+//            final List<String> badgeIds = new ArrayList<String>(badgeEntities.size());
+//            for (Map<String, Object> badgeEntity : badgeEntities) {
+//
+//                if (tx == null) {
+//                    tx = txCollection.findOne(txQuery);
+//                    if (tx == null) {
+//                        logger.log(Level.SEVERE, "Unknown tx id '" + txId + "' entity=" + entity);
+//                        return Response.status(HttpStatus.SC_CONFLICT).entity(makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_UNKNOWN, txId)).build();
+//                    }
+//                    userId = (String) tx.get(BadgeTransactionDAOConstants.USER_ID);
+//                    authorityId = (String) tx.get(BadgeTransactionDAOConstants.AUTHORITY_ID);
+//                    authorityDisplayName = (String) tx.get(BadgeTransactionDAOConstants.AUTHORITY_DISPLAY_NAME);
+//                }
+//
+//                final String authorityBadgeId = (String) badgeEntity.get(BadgingNotificationEntity.BADGE_ID_FIELDNAME);
+//                final String badgeName = (String) badgeEntity.get(BadgingNotificationEntity.BADGE_NAME_FIELDNAME);
+//                final String badgeTypeId = (String) badgeEntity.get(BadgingNotificationEntity.BADGE_TYPE_ID_FIELDNAME);
+//                final String expires = (String) badgeEntity.get(BadgingNotificationEntity.EXPIRATION_DATETIME_FIELDNAME);
+//                final String iconUrl = (String) badgeEntity.get(BadgingNotificationEntity.ICON_URL_FIELDNAME);
+//
+//                // Create or update badge
+//                final BadgeDAO badge = storeManager.createBadge();
+//                badge.setUserId(userId);
+//                badge.setAuthorityId(authorityId);
+//                badge.setAuthorityDisplayName(authorityDisplayName);
+//                badge.setBadgeType(badgeTypeId);
+//                final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.USER_ID, BadgeDAO.AUTHORITY_ID, BadgeDAO.BADGE_TYPE);
+//                final String existingBadgeID = (existingBadgeDAO == null) ? null : existingBadgeDAO.getId();
+//                // Following may be different, so update them
+//                badge.setAuthorityBadgeId(authorityBadgeId);
+//                badge.setDisplayName(badgeName);
+//                if (expires != null) {
+//                    try {
+//                        badge.setExpirationDate(DateUtils.fromISODateTimeToUTC(expires));
+//                    } catch (ParseException e) {
+//                        logger.log(Level.SEVERE, "Parse error on expiration date '" + expires + "'", e);
+//                        badge.setExpirationDate(new Date(System.currentTimeMillis() + YEAR_IN_MILLIS));
+//                    }
+//                } else {
+//                    badge.setExpirationDate(new Date(System.currentTimeMillis() + YEAR_IN_MILLIS));
+//                }
+//                if (iconUrl != null) {
+//                    badge.setIconUrl(iconUrl);
+//                }
+//
+//                badgeUpdateKluge = (existingBadgeID != null);
+//                if (badgeUpdateKluge) {
+//                    badge.setId(existingBadgeID);
+//                    badge._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//                } else {
+//                    badge._insert();
+//                }
+//                badgeIds.add(badge.getId());
+//            }
+//
+//            // Assign badge(s) to user record
+//            BadgeTransactionState newState = BadgeTransactionState.GRANTED;
+//            final UserDAO user = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.BADGE_IDS);
+//            if (!storeManager.createUser(userId)._exists()) {
+//                logger.warning("User id '" + userId + "' for transaction id '" + txId + "' authority '" + authority + "'");
+//                newState = BadgeTransactionState.GRANTED_BUT_NO_USER_ID;
+//            } else if (!badgeUpdateKluge) {
+//                user.setBadgeIds(badgeIds);
+//                user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+//            }
+//
+//            final BasicDBObject update = new BasicDBObject("$set", new BasicDBObject(BadgeTransactionDAOConstants.STATE, newState.getCode()));
+//            final WriteResult result = txCollection.update(txQuery, update);
+//            if (result.getError() != null) {
+//                logger.warning("Failed to update tx state for txId '" + makeTransactionId(authorityId, txId) + "'. DB error: " + result.getError());
+//                // fall through anyway  TODO some background cleanup might be appropriate here
+//            }
+//
+//            return Response.status(Response.Status.ACCEPTED).build();
+//        } else { // no badges actually received in payload
+//            return Response.status(HttpStatus.SC_CONFLICT).entity(makeError(BadgingNotificationEntity.ERROR_CODE_TRANSACTION_MISSING_BADGES, txId)).build();
+//        }
+//    }
 
     public static final Map<String, Object> makeError(int errorCode, String data) {
         Map<String, Object> error = new HashMap<String, Object>(2);
