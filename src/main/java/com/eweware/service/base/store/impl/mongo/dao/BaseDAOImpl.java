@@ -29,7 +29,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
 
     // MongoException error code for duplicate keys
-    private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;
+//    private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;
 
     /**
      * Provides Mongo field types for BaseDAOImpl fields to subclasses.
@@ -745,6 +745,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
             if (fieldName.equals(ID)) {
                 continue; // skip!
             }
+            // Get map and NEVER transverse it
             final Map<String, MongoFieldTypes> map = _getFieldNameToTypeMap();
             if (map == null) {
                 throw new SystemErrorException(getClass().getSimpleName() + ": missing field name type map", ErrorCodes.SERVER_SEVERE_ERROR);

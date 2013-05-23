@@ -238,13 +238,13 @@ public final class BlahCache {
 
     private InboxState getInboxStateFromDB(String groupId, Integer inbox) throws SystemErrorException {
         try {
-            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox state from DB...");
+//            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox state from DB...");
             final String stateId = makeInboxStateKey(groupId, inbox);
             final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
             final DBObject state = getInboxStateCollection().findOne(query);
-            if (state != null) {
-                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Successfully obtained inbox state from DB");
-            }
+//            if (state != null) {
+//                logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Successfully obtained inbox state from DB");
+//            }
             return (state == null) ? null : toInboxState(state);
         } catch (SystemErrorException e1) {
             throw new SystemErrorException("DB error while trying to get inbox #" + inbox + " for group id '" + groupId + "'", e1, ErrorCodes.SERVER_CACHE_ERROR);
@@ -379,7 +379,7 @@ public final class BlahCache {
     private Map<String, Object> doGetInboxItemsFromDB(List<String> keys, String groupId, Integer inbox) throws SystemErrorException {
         final int keyCount = keys.size();
         try {
-            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for " + keyCount + " keys" + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""));
+//            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': Trying to get inbox from DB for " + keyCount + " keys" + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""));
             // now retrieve the data from the database
             final List<ObjectId> oids = new ArrayList<ObjectId>(keyCount);
             final boolean memcachedKeyName = (keyCount > 0) && keys.get(0).startsWith(inboxItemNamespace);
@@ -398,7 +398,7 @@ public final class BlahCache {
             for (DBObject obj : cursor) {
                 result.put(obj.get(BaseDAOConstants.ID).toString(), obj);
             }
-            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': successfully retrieved " + result.size() + " inbox items for " + keyCount + " keys");
+//            logger.info("Inbox #" + inbox + ", group id '" + groupId + "': successfully retrieved " + result.size() + " inbox items for " + keyCount + " keys");
             return result;
         } catch (Exception e1) {
             throw new SystemErrorException("Failed to get inbox from DB for " + keyCount + " inbox item keys " + (keyCount > 0 ? (", starting with key " + keys.get(0)) : ""), e1, ErrorCodes.SERVER_CACHE_ERROR);
