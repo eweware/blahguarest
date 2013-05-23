@@ -154,7 +154,7 @@ public final class BlahguaSession {
      */
     public static void ensureAuthenticated(HttpServletRequest request) throws InvalidAuthorizedStateException, SystemErrorException {
         if (!isAuthenticated(request)) {
-            throw new InvalidAuthorizedStateException("operation not supported", ErrorCodes.UNAUTHORIZED_USER);
+            throw new InvalidAuthorizedStateException("access not authorized", ErrorCodes.UNAUTHORIZED_USER);
         }
     }
 

@@ -1,22 +1,5 @@
 package main.java.com.eweware.service.mgr;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import main.java.com.eweware.service.base.AWSConstants;
-import main.java.com.eweware.service.base.AWSUtilities;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.rest.resource.ImageUploadResource;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author rk@post.harvard.edu
  *         Date: 4/8/13 Time: 12:44 PM

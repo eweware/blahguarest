@@ -461,4 +461,16 @@ public final class ErrorCodes {
      * FAILED_TO_DELETE_IMAGE = 90
      */
     public static final Integer FAILED_TO_DELETE_IMAGE = 90;
+
+    /**
+     * <p>Answer to challenge question was incorrect.</p>
+     * INVALID_CHALLENGE_ANSWER = 91
+     */
+    public static final Integer INVALID_CHALLENGE_ANSWER = 91;
+
+    /**
+     * <p>User failed to log in</p>
+     * USER_LOGIN_FAILED = 92
+     */
+    public static final Integer USER_LOGIN_FAILED = 92;
 }

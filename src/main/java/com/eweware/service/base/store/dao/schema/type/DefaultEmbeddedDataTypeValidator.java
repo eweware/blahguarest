@@ -2,11 +2,6 @@ package main.java.com.eweware.service.base.store.dao.schema.type;
 
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.PollOptionTextImpl;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>Default validator for embedded data types.</p>

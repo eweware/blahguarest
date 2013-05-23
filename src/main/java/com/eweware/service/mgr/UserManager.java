@@ -236,15 +236,11 @@ public class UserManager implements ManagerInterface {
      * @param setChallenge     ditto
      * @param challengeAnswer1 ditto
      */
-    public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidAuthorizedStateException, InvalidRequestException {
+    public void setUserAccountData(String userId, boolean setEmail, String emailAddress, boolean setChallenge, String challengeAnswer1) throws SystemErrorException, StateConflictException, InvalidRequestException {
         ensureReady();
         if (!setEmail && !setChallenge) {
             return; // nothing to do
         }
-        if (userId == null) {
-            throw new InvalidAuthorizedStateException("no session", ErrorCodes.UNAUTHORIZED_USER);
-        }
-
         checkUserAccountFieldLengths(emailAddress, challengeAnswer1);
 
         final UserAccountDAO userAccountDAO = getStoreManager().createUserAccount(userId);
@@ -358,7 +354,7 @@ public class UserManager implements ManagerInterface {
             BlahguaSession.markAuthenticated(request, accountDAO.getId(), accountDAO.getAccountType(), canonicalUsername);
         } else {
             BlahguaSession.markAnonymous(request);
-            throw new InvalidAuthorizedStateException("User not authorized", ErrorCodes.UNAUTHORIZED_USER);
+            throw new InvalidAuthorizedStateException("User not authorized to log in", ErrorCodes.USER_LOGIN_FAILED);
         }
     }
 
@@ -393,9 +389,6 @@ public class UserManager implements ManagerInterface {
         ensureReady();
         if (profile == null) {
             throw new InvalidRequestException("missing profile entity", profile, ErrorCodes.MISSING_INPUT_ENTITY);
-        }
-        if (userId == null) {
-            throw new InvalidAuthorizedStateException("user id not available", ErrorCodes.INVALID_STATE_CODE);
         }
         checkUserProfileFieldLengths(profile);
 
@@ -445,7 +438,7 @@ public class UserManager implements ManagerInterface {
      * @see RecoveryCodeComponents
      * @see UserAccountDAO
      */
-    public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String inputRecoveryCode) throws SystemErrorException, InvalidAuthorizedStateException {
+    public boolean recoverUserAndRedirectToMainPage(LocaleId en_us, HttpServletRequest request, String inputRecoveryCode) throws SystemErrorException, StateConflictException {
         ensureReady();
         String userId = null;
         String canonicalUsername = null;
@@ -473,23 +466,23 @@ public class UserManager implements ManagerInterface {
                         ._findByPrimaryId(UserAccountDAO.CANONICAL_USERNAME, UserAccountDAO.USER_ACCOUNT_TYPE,
                                 UserAccountDAO.RECOVERY_CODE_STRING, UserAccountDAO.RECOVERY_CODE_EXPIRATION_DATE);
         if (userAccountDAO == null) {
-            throw new InvalidAuthorizedStateException("Illegal attempt to access system - no ac", ErrorCodes.NOT_FOUND_USER_ACCOUNT);
+            throw new StateConflictException("Conflict: no user account for user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ACCOUNT);
         }
         if (!userAccountDAO.getCanonicalUsername().equals(canonicalUsername)) {
-            throw new InvalidAuthorizedStateException("Illegal access username '" + canonicalUsername + "'", ErrorCodes.INVALID_USERNAME);
+            throw new StateConflictException("Conflict: invalid canonical username '" + canonicalUsername + "'", ErrorCodes.INVALID_USERNAME);
         }
 
         // Check expiration
         final Date expiration = userAccountDAO.getRecoveryCodeExpiration();
         if (expiration == null || new Date().after(expiration)) {
             // TODO leave it in the system and let an overnight job delete the date.. maybe not worth even deleting it
-            throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.RECOVERY_CODE_EXPIRED);
+            throw new StateConflictException("Conflict: recovery code expired", ErrorCodes.RECOVERY_CODE_EXPIRED);
         }
 
         // Check code
         final String recoveryCode = userAccountDAO.getRecoveryCode();
         if (recoveryCode == null || !recoveryCode.equals(inputRecoveryCode)) {
-            throw new InvalidAuthorizedStateException("Illegal access", ErrorCodes.RECOVERY_CODE_INVALID);
+            throw new StateConflictException("Conflict: invalid recovery code", ErrorCodes.RECOVERY_CODE_INVALID);
         }
 
         // Enable session!
@@ -509,7 +502,7 @@ public class UserManager implements ManagerInterface {
      * @param challengeAnswer (Optional): The challenge answer submitted by the user (for verification)
      */
     public void recoverUser(LocaleId localeId, String username, String emailAddress, String challengeAnswer)
-            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException, StateConflictException {
+            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
         ensureReady();
         if (username == null || username.length() > 64) {
             throw new InvalidRequestException("invalid username", ErrorCodes.INVALID_USERNAME);
@@ -537,7 +530,7 @@ public class UserManager implements ManagerInterface {
         if (challengeAnswer != null) {
             final String profileChallengeAnswer = userAccountDAO.getSecurityChallengeAnswer1();
             if (profileChallengeAnswer == null || !profileChallengeAnswer.equals(challengeAnswer)) {
-                throw new InvalidAuthorizedStateException("invalid answer to challenge question", ErrorCodes.INVALID_INPUT);
+                throw new StateConflictException("invalid answer to challenge question", ErrorCodes.INVALID_CHALLENGE_ANSWER);
             }
         }
 
@@ -582,7 +575,7 @@ public class UserManager implements ManagerInterface {
         msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
         msg.append("<p>If you do want to reset your password, ");
         final String endpoint = getSystemManager().isDevMode() ? getSystemManager().getDevRestEndpoint() : getSystemManager().getClientServiceEndpoint();
-        msg.append("<a href='http://");
+        msg.append("<a href='https://");
         msg.append(endpoint);
         msg.append("/recover?n=");
         if (!getSystemManager().isCryptoOn()) {
@@ -666,13 +659,9 @@ public class UserManager implements ManagerInterface {
      *
      * @throws InvalidRequestException
      */
-    public void updateUsername(LocaleId localeId, HttpServletRequest request, String newUsername) throws InvalidAuthorizedStateException, InvalidRequestException,
+    public void updateUsername(LocaleId localeId, HttpServletRequest request, String userId, String newUsername) throws InvalidRequestException,
             StateConflictException, SystemErrorException, ResourceNotFoundException {
         ensureReady();
-        if (!BlahguaSession.isAuthenticated(request)) {
-            throw new InvalidAuthorizedStateException("user cannot perform this operation", ErrorCodes.UNAUTHORIZED_USER);
-        }
-        final String userId = BlahguaSession.getUserId(request);
 
         newUsername = Login.ensureUsernameString(newUsername);
 
@@ -1545,7 +1534,7 @@ public class UserManager implements ManagerInterface {
 //        b.append("CODE: " + recoveryCode);
 //        b.append("\n\nYou can recover your account by following these methods:\n");
 //        b.append("\nMethod 1: click on the following URL to recover your account in this machine: ");
-//        b.append("http://app.blahgua.com/recovery.aspx?code=");
+//        b.append("https://beta.blahgua.com/recovery.aspx?code=");
 //        b.append(recoveryCode);
 //        b.append("\n\nMethod 2: Follow these steps:\n\n1. Open Blahgua in any device or browser.");
 //        b.append("\n2. Go to the Account Info section.");

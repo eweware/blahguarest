@@ -1,11 +1,8 @@
 package main.java.com.eweware.service.base.payload;
 
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.BadgeDAO;
-import main.java.com.eweware.service.base.store.dao.UserDAO;
 import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
 import main.java.com.eweware.service.base.store.dao.schema.UserSchema;
 
 import java.util.List;

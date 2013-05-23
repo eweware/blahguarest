@@ -1539,7 +1539,7 @@ public final class BlahManager implements ManagerInterface {
     // TODO 2. require the group id
     public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
                                            String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
-            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException {
+            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
         ensureReady();
         if (groupId == null) {
             throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
@@ -1594,7 +1594,7 @@ public final class BlahManager implements ManagerInterface {
      *                              is not open and the user does not have access to it because
      *                              either he's not logged in and/or has not joined the group.
      */
-    private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException {
+    private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException, StateConflictException {
 
         if (!storeManager.createGroup(groupId)._exists()) {
             throw new ResourceNotFoundException("Group id '" + groupId + "' does not exist");
@@ -1616,7 +1616,7 @@ public final class BlahManager implements ManagerInterface {
             userGroupDAO.setGroupId(groupId);
             userGroupDAO.setState(AuthorizedState.A.toString());
             if (!userGroupDAO._exists()) {
-                throw new InvalidAuthorizedStateException("user not authorized to access inbox for groupId=" + groupId);
+                throw new StateConflictException("user id '" + userId + "' not registered in group. Not authorized to access inbox for groupId=" + groupId, ErrorCodes.USER_HAS_NOT_JOINED_GROUP);
             }
         }
     }

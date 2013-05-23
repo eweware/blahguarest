@@ -15,7 +15,7 @@ function rest(method, path, dataHandler, successFunction) {
 		alert("Missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");
 		return;
 	}
-	var fullUrl = 'http://' + endpoint + '/v2/' + path;
+	var fullUrl = 'https://' + endpoint + '/v2/' + path;
 	$("#results").html("");
 	$("#resultstatus").html("");
 	$("#callmeth").css({'color': 'blue'}).attr("value", method);
@@ -380,7 +380,7 @@ function setBlahData2(blahinfo) {
 	var obj = jQuery.parseJSON(blahinfo);
 	var img = obj.img;
 	if (img && img.length > 0) {
-		var url = "http://blahguaimages.s3-website-us-west-2.amazonaws.com/image/";
+		var url = "https://blahguaimages.s3-website-us-west-2.amazonaws.com/image/";
 		//$("#imgs").css({"visibility", "visible"});
 		for (var i = 0; i < img.length; i++) {
 			var im = img[i];
@@ -487,7 +487,7 @@ function configure() {
 		alert("Config Error: missing the hostname and optional port for the endpoint (e.g., 'localhost:8080'");
 		return;
 	}// Get blah types for drop down menu
-	var getBlahTypesUrl = "http://" + endpoint + "/v2/blahs/types";
+	var getBlahTypesUrl = "https://" + endpoint + "/v2/blahs/types";
 	$.ajax({
 		type : "GET",
 		url : getBlahTypesUrl,

@@ -2,12 +2,12 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.payload.UserAccountPayload;
 import main.java.com.eweware.service.base.payload.UserPayload;
 import main.java.com.eweware.service.base.payload.UserProfilePayload;
 import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
 import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
@@ -628,9 +628,9 @@ public class UsersResource {
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final String username = entity.get("U");
-            getUserManager().updateUsername(LocaleId.en_us, request, username);
+            getUserManager().updateUsername(LocaleId.en_us, request, userId, username);
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_USERNAME_OPERATION, (System.currentTimeMillis() - s));
             return response;
@@ -736,8 +736,6 @@ public class UsersResource {
             return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(request, e);
         } catch (SystemErrorException e) {

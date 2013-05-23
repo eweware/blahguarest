@@ -24,7 +24,7 @@ public class UserSessionRecoveryServlet extends HttpServlet {
         try { // TODO if any is null, redirect to error page
             final boolean doRedirect = UserManager.getInstance().recoverUserAndRedirectToMainPage(LocaleId.en_us, req, recoveryCode);
             if (doRedirect) {
-                resp.sendRedirect("http://" + SystemManager.getInstance().getClientServiceEndpoint());
+                resp.sendRedirect("https://" + SystemManager.getInstance().getClientServiceEndpoint());
             } else {
                 resp.sendError(401, "NOT ALLOWED");
             }

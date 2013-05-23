@@ -1,8 +1,5 @@
 package main.java.com.eweware.service.base.store.dao.schema.type;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author rk@post.harvard.edu
  *         Date: 9/18/12 Time: 1:43 PM

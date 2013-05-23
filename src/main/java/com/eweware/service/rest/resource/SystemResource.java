@@ -2,8 +2,8 @@ package main.java.com.eweware.service.rest.resource;
 
 import main.java.com.eweware.service.base.error.ResourceNotFoundException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.base.mgr.SystemManager;
+import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
@@ -13,8 +13,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**

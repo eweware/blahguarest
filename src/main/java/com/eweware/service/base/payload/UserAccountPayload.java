@@ -1,6 +1,5 @@
 package main.java.com.eweware.service.base.payload;
 
-import main.java.com.eweware.service.base.store.dao.UserAccountDAO;
 import main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants;
 
 import java.util.Date;

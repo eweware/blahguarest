@@ -1,10 +1,5 @@
 package main.java.com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
-import main.java.com.eweware.service.base.store.dao.schema.type.PollOptionTextValidator;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
-
 /**
  * <p>The user profile entity contains settings for the user.</p>
  * <p>This entity is i18n-ready. It is therefore essential to

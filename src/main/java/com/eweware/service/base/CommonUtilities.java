@@ -5,23 +5,12 @@ import main.java.com.eweware.service.base.error.InvalidRequestException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.payload.CommentPayload;
 import main.java.com.eweware.service.base.store.StoreManager;
-import main.java.com.eweware.service.base.store.dao.CommentDAO;
 import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
 import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
 
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  * @author rk@post.harvard.edu

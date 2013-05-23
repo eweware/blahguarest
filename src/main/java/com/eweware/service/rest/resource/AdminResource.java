@@ -1,17 +1,6 @@
 package main.java.com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.mgr.AdminManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 
 /**
  * @author rk@post.harvard.edu

@@ -5,7 +5,6 @@ import main.java.com.eweware.service.base.payload.ErrorResponsePayload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-import java.lang.String;
 import java.net.URI;
 import java.util.Enumeration;
 import java.util.logging.Level;

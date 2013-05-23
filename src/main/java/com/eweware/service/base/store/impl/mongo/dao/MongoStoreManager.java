@@ -4,9 +4,9 @@ import com.mongodb.*;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerState;
+import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.base.mgr.SystemManager;
 import org.bson.types.ObjectId;
 
 import javax.xml.ws.WebServiceException;
