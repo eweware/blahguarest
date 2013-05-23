@@ -84,23 +84,19 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_NICKNAME_PERMISSIONS), "Permissions", null, regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
     }
 
-//    private void createEmailAddressSpec() {
-//        final String regexp = null;
-//        final LinkedHashMap<String, Object> data = null;
-//        final boolean hasDefaultValue = true;
-//        createSpec(SchemaDataType.S, USER_PROFILE_EMAIL_ADDRESS, "Email Address", regexp, data, hasDefaultValue, null);
-//        createSpec(SchemaDataType.I, USER_PROFILE_EMAIL_ADDRESS_PERMISSIONS, "Permissions", regexp, data, hasDefaultValue, UserProfilePermissions.PRIVATE);
-//    }
-
     private void createCountrySpec() { // ISO 3166-1 alpha-2 code
         LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>(2);
         data.put(UNSPECIFIED_SELECTION_KEY, "Unspecified");
         data.put("AU", "Australia"); // TODO obtain from i18n service
+        data.put("BR", "Brazil");
         data.put("CA", "Canada");
         data.put("CN", "China (PRC)");
-        data.put("GB", "United Kingdom");
+        data.put("JP", "Japan");
         data.put("SG", "Singapore");
+        data.put("KR", "South Korea");
         data.put("TW", "Taiwan");
+        data.put("TH", "Thailand");
+        data.put("GB", "United Kingdom");
         data.put("US", "United States");
         final String regexp = null;
         final boolean hasDefaultValue = true;
