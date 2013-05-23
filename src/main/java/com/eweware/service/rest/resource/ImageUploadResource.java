@@ -295,7 +295,7 @@ public class ImageUploadResource {
                 try {
                     final long start = System.currentTimeMillis();
                     s3.putObject(new PutObjectRequest(getMediaManager().getImageBucketName(), getMediaManager().getBucketImageDir() + newFilename, newFile));
-                    System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
+//                    System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
                 } catch (com.amazonaws.AmazonServiceException e) {
                     throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 } catch (com.amazonaws.AmazonClientException e) {
