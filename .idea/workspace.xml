@@ -10,6 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs.zip" afterPath="$PROJECT_DIR$/docs.zip" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -187,13 +189,13 @@
     <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361325117523" ignored="false" />
     <file path="/RestUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163310757" ignored="false" />
     <file path="/index.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365715185676" ignored="false" />
-    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369284832785" ignored="false" />
+    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369285000042" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368513779456" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368488001544" ignored="false" />
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163064325" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368226120084" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369284863573" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369284868136" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366678245809" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -607,7 +609,6 @@
     <file path="/AmazonAccessException.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365546915673" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/BlahDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610723" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/BaseDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
-    <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/UserDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/BadgeDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/MediaDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
     <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/GroupDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365558610724" ignored="false" />
@@ -1141,6 +1142,11 @@
     <file path="$PROJECT_DIR$/../../../ahocorasick_java-1.1/src/org/arabidopsis/ahocorasick/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369165302394" ignored="false" />
     <file path="/ping.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369246224230" ignored="false" />
     <file path="/UserAccountPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369261306396" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/index-all.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369285371891" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/rest/session/BlahguaSession.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369285371891" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/payload/UserPayload.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369285371891" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/dao/UserDAO.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369285371892" ignored="false" />
+    <file path="$PROJECT_DIR$/docs/main/java/com/eweware/service/base/store/impl/mongo/dao/UserDAOImpl.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369285371892" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1235,9 +1241,9 @@
       <file leaf-file-name="UsersResource.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="117" column="57" selection-start="5504" selection-end="5504" vertical-scroll-proportion="0.52572346">
+            <state line="97" column="74" selection-start="4575" selection-end="4575" vertical-scroll-proportion="0.28456593">
               <folding>
-                <element signature="e#5426#5442#0" expanded="true" />
+                <element signature="e#5635#5651#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2415,7 +2421,11 @@
       <created>1369284863992</created>
       <updated>1369284863992</updated>
     </task>
-    <option name="localTasksCounter" value="187" />
+    <task id="LOCAL-00187" summary="https://eweware.atlassian.net/browse/BWC-954">
+      <created>1369284869773</created>
+      <updated>1369284869773</updated>
+    </task>
+    <option name="localTasksCounter" value="188" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2659,9 +2669,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="57" selection-start="5504" selection-end="5504" vertical-scroll-proportion="0.52572346">
+        <state line="97" column="74" selection-start="4575" selection-end="4575" vertical-scroll-proportion="0.28456593">
           <folding>
-            <element signature="e#5426#5442#0" expanded="true" />
+            <element signature="e#5635#5651#0" expanded="true" />
           </folding>
         </state>
       </provider>

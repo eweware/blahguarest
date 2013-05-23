@@ -104,7 +104,9 @@ public class UsersResource {
      *
      * @return Returns http status 200 with a JSON payload containing a field
      *         named 'loggedIn' which is set to 'Y' if the user is logged in and
-     *         to 'N' if the user is not logged in.
+     *         to 'N' if the user is not logged in. In addition, the field named 'M'
+     *         contains the number of minutes left in the session and the field named 'S'
+     *         contains the number of seconds (plus the minutes) left in the session.
      * @see UserDAOConstants
      */
     @GET
