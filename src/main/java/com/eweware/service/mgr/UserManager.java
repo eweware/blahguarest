@@ -509,7 +509,7 @@ public class UserManager implements ManagerInterface {
      * @param challengeAnswer (Optional): The challenge answer submitted by the user (for verification)
      */
     public void recoverUser(LocaleId localeId, String username, String emailAddress, String challengeAnswer)
-            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException {
+            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, InvalidAuthorizedStateException, StateConflictException {
         ensureReady();
         if (username == null || username.length() > 64) {
             throw new InvalidRequestException("invalid username", ErrorCodes.INVALID_USERNAME);
@@ -532,7 +532,7 @@ public class UserManager implements ManagerInterface {
             throw new ResourceNotFoundException("no way to recover account: missing email", ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
         if (!email.equals(emailAddress)) {
-            throw new InvalidAuthorizedStateException("invalid email address provided by user", ErrorCodes.INVALID_EMAIL_ADDRESS);
+            throw new StateConflictException("invalid email address '" + emailAddress + "' provided by user; expected '" + email + "'", ErrorCodes.INVALID_EMAIL_ADDRESS);
         }
         if (challengeAnswer != null) {
             final String profileChallengeAnswer = userAccountDAO.getSecurityChallengeAnswer1();

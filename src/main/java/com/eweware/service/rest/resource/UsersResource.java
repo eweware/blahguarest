@@ -713,6 +713,8 @@ public class UsersResource {
      * @return If user has registered an email account, returns http status 204 (NO CONTENT),
      *         in which case it means that an email has been sent with a link that will log in the user.
      *         If the user doesn't have a registered email address, returns http status 404 (NOT FOUND).
+     *         If the email address entered by the user is not the same as the one registered in his
+     *         user account record, returns http status 409 (CONFLICT).
      *         Never returns a payload.
      * @see UserDAOConstants
      * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
@@ -736,6 +738,8 @@ public class UsersResource {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
