@@ -522,10 +522,12 @@ public class UserManager implements ManagerInterface {
         // User eligible only if there's an email address and the one he input is the same
         final String email = userAccountDAO.getEmailAddress();
         if (email == null) {
-            throw new ResourceNotFoundException("no way to recover account: missing email", ErrorCodes.NOT_FOUND_USER_PROFILE);
+            logger.warning("Attempt to recover account by username '" + username + "' using email address '" + emailAddress + "': no email address registered in user's account");
+            return;
         }
         if (!email.equals(emailAddress)) {
-            throw new StateConflictException("invalid email address '" + emailAddress + "' provided by user; expected '" + email + "'", ErrorCodes.INVALID_EMAIL_ADDRESS);
+            logger.warning("Invalid email address '" + emailAddress + "' provided by username '" + username + "'. Expected '" + email + "'");
+            return;
         }
         if (challengeAnswer != null) {
             final String profileChallengeAnswer = userAccountDAO.getSecurityChallengeAnswer1();

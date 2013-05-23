@@ -240,6 +240,9 @@ public final class SystemManager implements ManagerInterface {
         return client;
     }
 
+    /**
+     * This client talks to the badge authority.
+     */
     private void startHttpClient() {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
