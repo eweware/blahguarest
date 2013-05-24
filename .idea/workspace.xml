@@ -10,7 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/ErrorResponsePayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/ErrorResponsePayload.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -171,7 +172,7 @@
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876976769" ignored="false" />
     <file path="/UserDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876932279" ignored="false" />
     <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876900384" ignored="false" />
-    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369347078165" ignored="false" />
+    <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369423385831" ignored="false" />
     <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916650152" ignored="false" />
     <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369335082022" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
@@ -181,20 +182,20 @@
     <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369331911810" ignored="false" />
     <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
     <file path="/Session.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739367070" ignored="false" />
-    <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1368505382111" ignored="false" />
+    <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369422827045" ignored="false" />
     <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369331652521" ignored="false" />
     <file path="/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163072302" ignored="false" />
     <file path="/JSONProvider.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356589590232" ignored="false" />
     <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361325117523" ignored="false" />
     <file path="/RestUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163310757" ignored="false" />
     <file path="/index.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365715185676" ignored="false" />
-    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369332345492" ignored="false" />
+    <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369423728750" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369361805264" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369330928757" ignored="false" />
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163064325" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369341883317" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364330145141" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369416363398" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369417809022" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369361627007" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1199,19 +1200,55 @@
       <file leaf-file-name="UsersResource.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="106" column="50" selection-start="5071" selection-end="5071" vertical-scroll-proportion="0.0">
+            <state line="915" column="93" selection-start="47200" selection-end="47200" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ErrorResponsePayload.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="UserManager.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1291" column="77" selection-start="66292" selection-end="66292" vertical-scroll-proportion="0.41045415">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlahsResource.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="37" column="76" selection-start="1584" selection-end="1584" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="581" column="23" selection-start="26641" selection-end="26641" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ErrorResponsePayload.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/ErrorResponsePayload.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="6" selection-start="125" selection-end="125" vertical-scroll-proportion="0.07450331">
+            <state line="6" column="6" selection-start="125" selection-end="125" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgesResource.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="191" column="46" selection-start="8795" selection-end="8814" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1220,42 +1257,6 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BasePayload.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="26" column="71" selection-start="1044" selection-end="1073" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GroupTypesResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/GroupTypesResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="13" selection-start="884" selection-end="884" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="13" selection-start="1987" selection-end="1987" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MediaResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/MediaResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="13" selection-start="727" selection-end="727" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SearchResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SearchResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="13" selection-start="1194" selection-end="1194" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1311,10 +1312,8 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BaseDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/cache/BlahCache.java" />
         <option value="$PROJECT_DIR$/.ebextensions/01server-xml.config" />
@@ -1325,8 +1324,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/SystemResource.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/ErrorResponsePayload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
       </list>
     </option>
   </component>
@@ -1338,8 +1339,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="611" />
-    <option name="y" value="53" />
+    <option name="x" value="591" />
+    <option name="y" value="22" />
     <option name="width" value="1674" />
     <option name="height" value="1377" />
   </component>
@@ -1459,6 +1460,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="rest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mgr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2772,7 +2799,11 @@
       <created>1369374547596</created>
       <updated>1369374547596</updated>
     </task>
-    <option name="localTasksCounter" value="211" />
+    <task id="LOCAL-00211" summary="https://eweware.atlassian.net/browse/BWC-981">
+      <created>1369417812480</created>
+      <updated>1369417812480</updated>
+    </task>
+    <option name="localTasksCounter" value="212" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -2796,7 +2827,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="611" y="53" width="1674" height="1377" extended-state="0" />
+    <frame x="591" y="22" width="1674" height="1377" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2807,6 +2838,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28241846" sideWeight="0.98077977" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1876494" sideWeight="0.38135594" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2817,7 +2849,6 @@
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38106602" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28241846" sideWeight="0.98077977" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21115538" sideWeight="0.7172573" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39981097" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2865,7 +2896,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/BWC-981 (ensure produces clause)" />
+    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/BWC-981" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -2902,8 +2933,8 @@
     <MESSAGE value="remove broken rule" />
     <MESSAGE value="another rule" />
     <MESSAGE value="working rule" />
-    <MESSAGE value="https://eweware.atlassian.net/browse/BWC-981" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-981 (ensure produces clause)" />
+    <MESSAGE value="https://eweware.atlassian.net/browse/BWC-981" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2917,26 +2948,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/BaseException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="15" selection-start="1549" selection-end="1549" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/AdminResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="185" selection-end="185" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="41" selection-start="5861" selection-end="5861" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="13" selection-start="1136" selection-end="1136" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="230" column="28" selection-start="11817" selection-end="11817" vertical-scroll-proportion="0.0">
@@ -2993,13 +3004,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="106" column="50" selection-start="5071" selection-end="5071" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UserGroupsResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="13" selection-start="1009" selection-end="1009" vertical-scroll-proportion="0.0">
@@ -3016,10 +3020,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/ErrorResponsePayload.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="6" selection-start="125" selection-end="125" vertical-scroll-proportion="0.07450331">
+        <state line="6" column="6" selection-start="125" selection-end="125" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BadgesResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="191" column="46" selection-start="8795" selection-end="8814" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="581" column="23" selection-start="26641" selection-end="26641" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="76" selection-start="1584" selection-end="1584" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="915" column="93" selection-start="47200" selection-end="47200" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1291" column="77" selection-start="66292" selection-end="66292" vertical-scroll-proportion="0.41045415">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -1279,6 +1279,25 @@ public class UserManager implements ManagerInterface {
     }
 
     /**
+     * <p>Returns all image ids for a user</p>
+     * @param userId The user
+     * @return A UserPayload including only the images if any.
+     */
+    public UserPayload getUserImages(String userId) throws SystemErrorException, ResourceNotFoundException {
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+        if (userDAO == null) {
+            throw new ResourceNotFoundException("User id '" + userId + "' not found", ErrorCodes.MISSING_USER_ID);
+        }
+        final UserPayload entity = new UserPayload();
+        final List<String> imageids = userDAO.getImageids();
+        if (imageids != null && imageids.size() > 0) {
+            entity.setImageIds(imageids);
+        }
+        return entity;
+    }
+
+
+    /**
      * <p>Deletes all images for the user. This is done through a soft-delete marker on the affected media daos.</p>
      * <p>A batch job looks for soft-deleted media records, deletes the corresponding image(s) from S3,
      * and then hard-deletes (if necessary) the media record itself.</p>

@@ -55,6 +55,7 @@ public class UsersResource {
     private static final String GET_ACCOUNT_INFO_OPERATION = "getAccountInfo";
     private static final String UPDATE_ACCOUNT_OPERATION = "updateAccount";
     private static final String DELETE_USER_IMAGES = "deleteUserImages";
+    private static final String GET_USER_IMAGES_OPERATION = "getUserImages";
 
     private UserManager userManager;
     private SystemManager systemManager;
@@ -353,7 +354,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/account</div>
      *
      * @return Returns an http status 200 (OK) with a JSON entity containing the
-     * email address if the user has entered it.
+     *         email address if the user has entered it.
      *         If there is a security problem, returns status of 401.
      *         If there is no account for the current user, returns status of 409 (CONFLICT)
      *         On error conditions, a JSON object is returned with details.
@@ -458,7 +459,6 @@ public class UsersResource {
      *
      * @param entity Expects a JSON entity containing an array of user ids in a
      *               field named 'IDS'.
-     *
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
      *         If the request is invalid, returns 400 (BAD REQUEST).
@@ -500,7 +500,6 @@ public class UsersResource {
      *               the user id is assumed to be that of the logged in user;
      *               and, if there is no logged in user, then the user
      *               is assumed to be anonymous.
-     *
      * @return An http status of 200 with a JSON entity consisting of a
      *         single field named 'd' whose value is a string--the descriptor.
      *         If the request is invalid, returns 400 (BAD REQUEST).
@@ -892,10 +891,47 @@ public class UsersResource {
     }
 
     /**
+     * <p>Returns a JSON entity with the specified user's image ids, if any, in
+     * the usual images field of the UserPayload entity.</p>
+     *
+     * <div><b>METHOD: </b>GET</div>
+     * <div><b>URL: </b>users/images/{userId}</div>
+     *
+     * @param userId The user's id
+     * @return Returns a JSON entity with http status 200 (OK) with the UserPayload. Only the user images
+     * field will be populated, or it will be absent if there are no images associated with the user.
+     * Returns 404 (NOT FOUND) if the user id record doesn't exist.
+     * On error conditions, a JSON object is returned with details.
+     * @see UserPayload
+     */
+    @GET
+    @Path("/images/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserImageIds(
+            @PathParam("userId") String userId,
+            @Context HttpServletRequest request
+    ) {
+        try {
+            final long start = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserImages(userId));
+            getSystemManager().setResponseTime(GET_USER_IMAGES_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+
+    }
+
+    /**
      * <p>Deletes all existing user images</p>
      * <div><b>Method:</b> DELETE</div>
      * <div><b>URL:</b> users/images</div>
-     * @return  <p>Returns http status 202 (ACCEPTED).</p>
+     *
+     * @return <p>Returns http status 202 (ACCEPTED).</p>
      *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
      *         If the user is not authorized to access this method, returns 401.
      *         On error conditions, a JSON object is returned with details.
