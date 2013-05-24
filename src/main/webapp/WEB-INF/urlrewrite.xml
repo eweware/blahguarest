@@ -10,12 +10,12 @@
 -->
 <urlrewrite>
 
-    <rule>
-        <name>Domain Name Check</name>
-        <condition name="host" operator="notequal">https://beta.blahgua.com</condition>
-        <from>^(.*)$</from>
-        <to type="redirect">https://beta.blahgua.com/$1</to>
-    </rule>
+    <!--<rule>-->
+        <!--<name>Domain Name Check</name>-->
+        <!--<condition name="host" operator="notequal">https://beta.blahgua.com</condition>-->
+        <!--<from>^(.*)$</from>-->
+        <!--<to type="redirect">https://beta.blahgua.com/$1</to>-->
+    <!--</rule>-->
 
     <!--<rule>-->
         <!--<note>-->
