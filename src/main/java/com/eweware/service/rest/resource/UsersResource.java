@@ -153,6 +153,7 @@ public class UsersResource {
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response loginUser(UserPayload entity,
                               @Context HttpServletRequest request) {
         try {

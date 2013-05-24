@@ -228,8 +228,6 @@ public class CommentsResource {
      * <div><b>URL:</b> comments</div>
      *
      * @param blahId        <i>Path Parameter:</i> The blah id
-     * @param userId        <i>Query Parameter:</i> Optional. If provided, it will return view/open/vote information
-     *                      on this comment for the specified user id. TODO make it implicit
      * @param authorId      <i>Query Parameter:</i> Optional. If provided, the returned comments will be
      *                      filtered by the specified author's id.
      * @param start         <i>Query Parameter:</i> Optional.   The start index of the comments to return.
