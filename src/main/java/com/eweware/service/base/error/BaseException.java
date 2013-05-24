@@ -6,7 +6,9 @@ package main.java.com.eweware.service.base.error;
  */
 public abstract class BaseException extends Exception {
 
-    private Object entity;
+    private static final String EMPTY_STRING = "";
+
+    private Object entity = EMPTY_STRING;
     private Integer errorCode = ErrorCodes.SERVER_SEVERE_ERROR;
 
     public BaseException() {
