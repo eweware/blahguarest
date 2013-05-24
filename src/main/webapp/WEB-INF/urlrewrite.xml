@@ -14,26 +14,9 @@
         <condition type="scheme" operator="notequal">https</condition>
         <condition name="host" operator="equal">beta.blahgua.com</condition>
         <!--<condition name="port" operator="equal">(80|443)</condition>-->
-        <condition name="port" operator="equal">(8080|80)</condition>
         <from>^/(.*)</from>
         <to type="permanent-redirect">https://beta.blahgua.com/$1</to>
     </rule>
-
-    <!--<rule>-->
-        <!--<name>Domain Name Check</name>-->
-        <!--<condition name="host" operator="notequal">https://beta.blahgua.com</condition>-->
-        <!--<from>^(.*)$</from>-->
-        <!--<to type="redirect">https://beta.blahgua.com/$1</to>-->
-    <!--</rule>-->
-
-    <!--<rule>-->
-        <!--<note>-->
-            <!--The rule means that requests to /test/status/ will be redirected to /rewrite-status-->
-            <!--the url will be rewritten.-->
-        <!--</note>-->
-        <!--<from>/test/status/</from>-->
-        <!--<to type="redirect">%{context-path}/rewrite-status</to>-->
-    <!--</rule>-->
 
 
     <!--<outbound-rule>-->
