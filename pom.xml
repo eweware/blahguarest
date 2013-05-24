@@ -24,11 +24,11 @@
                 <directory> ${basedir}/src/main/resources</directory>
                 <includes><include>**/AwsCredentials.properties</include></includes>
             </resource>
-            <!--<resource>-->
-                <!--<targetPath>main/java/com/eweware/service/mgr</targetPath>-->
-                <!--<directory> ${basedir}/src/main/resources</directory>-->
-                <!--<includes><include>**/AwsCredentials.properties</include></includes>-->
-            <!--</resource>-->
+            <resource>
+                <targetPath>${project.build.directory}/${project.build.finalName}/.ebextensions</targetPath>
+                <directory> ${basedir}/.ebextensions</directory>
+                <includes><include>**/01server-xml.config</include></includes>
+            </resource>
             <resource>
                 <targetPath>.</targetPath>
                 <directory>${basedir}/src/main/resources</directory>
