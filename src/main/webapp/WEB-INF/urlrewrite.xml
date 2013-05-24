@@ -10,6 +10,15 @@
 -->
 <urlrewrite>
 
+    <rule>
+        <condition type="scheme" operator="notequal">https</condition>
+        <condition name="host" operator="equal">beta.blahgua.com</condition>
+        <!--<condition name="port" operator="equal">(80|443)</condition>-->
+        <condition name="port" operator="equal">(80)</condition>
+        <from>^/(.*)</from>
+        <to type="permanent-redirect">https://beta.blahgua.com:443/$1</to>
+    </rule>
+
     <!--<rule>-->
         <!--<name>Domain Name Check</name>-->
         <!--<condition name="host" operator="notequal">https://beta.blahgua.com</condition>-->
