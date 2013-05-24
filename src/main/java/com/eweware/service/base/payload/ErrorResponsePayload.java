@@ -1,15 +1,17 @@
 package main.java.com.eweware.service.base.payload;
 
-/**
- * @author rk@post.harvard.edu
- * 
- * Used to communicate an error to a client.
- */
-public final class ErrorResponsePayload {
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 
-	private Integer errorCode;
-    private String message;
-    private Object entity;
+/**
+ * <p>Used to communicate an error to a client.</p>
+ * @author rk@post.harvard.edu
+ */
+public final class ErrorResponsePayload extends LinkedHashMap<String, Object> implements Serializable {
+
+	private static final String ERROR_CODE_FIELDNAME = "errorCode";
+    private static final String MESSAGE_FIELDNAME = "message";
+    private static final String ENTITY_FIELDNAME = "entity";
 
 	public ErrorResponsePayload() {
 		super();
@@ -26,25 +28,25 @@ public final class ErrorResponsePayload {
         this.setMessage(message);
 	}
 	public Integer getErrorCode() {
-		return errorCode;
+		return (Integer) get(ERROR_CODE_FIELDNAME);
 	}
 	public void setErrorCode(Integer errorCode) {
-		this.errorCode = errorCode;
-	}
+        put(ERROR_CODE_FIELDNAME, errorCode);
+    }
 
     public Object getEntity() {
-        return entity;
+        return get(ENTITY_FIELDNAME);
     }
 
     public void setEntity(Object entity) {
-        this.entity = entity;
+        put(ENTITY_FIELDNAME, entity);
     }
 
 	public String getMessage() {
-		return message;
+		return (String) get(MESSAGE_FIELDNAME);
 	}
 
 	public void setMessage(String message) {
-		this.message = message;
-	}
+        put(MESSAGE_FIELDNAME, message);
+    }
 }
