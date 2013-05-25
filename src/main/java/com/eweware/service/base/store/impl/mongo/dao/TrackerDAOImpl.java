@@ -97,32 +97,32 @@ public class TrackerDAOImpl extends BaseDAOImpl implements TrackerDAO {
     }
 
     @Override
-    public Integer getVote() {
-        return (Integer) get(PROMOTION);
+    public Long getVote() {
+        return (Long) get(PROMOTION);
     }
 
     @Override
-    public void setVote(Integer vote) {
+    public void setVote(Long vote) {
         put(PROMOTION, vote);
     }
 
     @Override
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
     @Override
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 
     @Override
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
     @Override
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 

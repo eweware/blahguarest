@@ -7,38 +7,38 @@ package main.java.com.eweware.service.base.store.dao;
 public interface UserBlahSummaryDAO extends BaseDAO, UserBlahSummaryDAOConstants {
 
     /**
-     * @return Integer Returns the number of unique persons who viewed this blah.
+     * @return Long Returns the number of unique persons who viewed this blah.
      */
-    public Integer getPersonViewCount();
+    public Long getPersonViewCount();
 
     /**
      * Sets the number of unique persons who have viewed this blah.
      * @param count  Number of unique persons who have viewed this blah.
      */
-    public void setPersonViewCount(Integer count);
+    public void setPersonViewCount(Long count);
 
     /**
-     * @return Integer Returns the number of unique persons who
+     * @return Long Returns the number of unique persons who
      * have opened this blah.
      */
-    public Integer getPersonOpenCount();
+    public Long getPersonOpenCount();
 
     /**
      * Sets the number of unique persons who have opened this blah.
      * @param count  Number of unique persons who have opened this blah
      */
-    public void setPersonOpenCount(Integer count);
+    public void setPersonOpenCount(Long count);
 
     /**
-     * @return Integer  Returns the number of unique persons
+     * @return Long  Returns the number of unique persons
      * who have commented on this blah.
      */
-    public Integer getPersonCommented();
+    public Long getPersonCommented();
 
     /**
      * Sets the number of unique persons who have commented on this blah.
      * @param comments Number of persons who have commented on this blah.
      */
-    public void setPersonCommented(Integer comments);
+    public void setPersonCommented(Long comments);
 
 }

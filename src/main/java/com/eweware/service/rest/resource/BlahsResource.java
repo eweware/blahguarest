@@ -153,7 +153,7 @@ public class BlahsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response pollVote(@PathParam("blahId") String blahId,
-                             @PathParam("pollOptionIndex") Integer index,
+                             @PathParam("pollOptionIndex") Long index,
                              @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();

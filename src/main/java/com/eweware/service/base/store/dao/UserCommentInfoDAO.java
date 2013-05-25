@@ -14,15 +14,15 @@ public interface UserCommentInfoDAO extends BaseDAO, UserCommentInfoDAOConstants
 
     public void setCommentId(String id);
 
-    public Integer getVote();
+    public Long getVote();
 
-    public void setVote(Integer count);
+    public void setVote(Long count);
 
-    public Integer getViews();
+    public Long getViews();
 
-    public void setViews(Integer count);
+    public void setViews(Long count);
 
-    public Integer getOpens();
+    public Long getOpens();
 
-    public void setOpens(Integer count);
+    public void setOpens(Long count);
 }

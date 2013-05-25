@@ -129,32 +129,32 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     }
 
     @Override
-    public Integer getUserCount() {
-        return (Integer) get(USER_COUNT);
+    public Long getUserCount() {
+        return (Long) get(USER_COUNT);
     }
 
     @Override
-    public void setUserCount(Integer userCount) {
+    public void setUserCount(Long userCount) {
         put(USER_COUNT, userCount);
     }
 
     @Override
-    public Integer getBlahCount() {
-        return (Integer) get(BLAH_COUNT);
+    public Long getBlahCount() {
+        return (Long) get(BLAH_COUNT);
     }
 
     @Override
-    public void setBlahCount(Integer blahCount) {
+    public void setBlahCount(Long blahCount) {
         put(BLAH_COUNT, blahCount);
     }
 
     @Override
-    public Integer getCurrentViewerCount() {
-        return (Integer) get(CURRENT_VIEWER_COUNT);
+    public Long getCurrentViewerCount() {
+        return (Long) get(CURRENT_VIEWER_COUNT);
     }
 
     @Override
-    public void setCurrentViewerCount(Integer currentViewerCount) {
+    public void setCurrentViewerCount(Long currentViewerCount) {
         put(CURRENT_VIEWER_COUNT, currentViewerCount);
     }
 

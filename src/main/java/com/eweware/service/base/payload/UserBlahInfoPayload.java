@@ -70,11 +70,11 @@ public class UserBlahInfoPayload extends BasePayload implements UserBlahInfoDAOC
      * @return  The index of the poll vote option or
      * null if the user has not voted on any poll options.
      */
-    public Integer getPollVoteIndex() {
-        return (Integer) get(POLL_VOTE_INDEX);
+    public Long getPollVoteIndex() {
+        return (Long) get(POLL_VOTE_INDEX);
     }
 
-    public void setPollVoteIndex(Integer pollVoteIndex) {
+    public void setPollVoteIndex(Long pollVoteIndex) {
         put(POLL_VOTE_INDEX, pollVoteIndex);
     }
 

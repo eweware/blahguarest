@@ -203,7 +203,7 @@ public interface BlahDAOConstants {
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                     TYPE_ID, TEXT, BODY, GROUP_ID, AUTHOR_ID}),
 
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
+            new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{
                     PREDICTION_RESULT_CORRECT_COUNT, PREDICTION_RESULT_INCORRECT_COUNT, PREDICTION_RESULT_UNCLEAR_COUNT,
                     PREDICTION_USER_AGREE_COUNT, PREDICTION_USER_DISAGREE_COUNT, PREDICTION_USER_UNCLEAR_COUNT,
                     PROMOTED_COUNT, DEMOTED_COUNT,

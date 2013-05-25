@@ -117,22 +117,22 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     }
 
     @Override
-    public Integer getPromotedOrDemoted() {
-        return (Integer) get(PROMOTION);
+    public Long getPromotedOrDemoted() {
+        return (Long) get(PROMOTION);
     }
 
     @Override
-    public void setPromotedOrDemoted(Integer promotedOrDemoted) {
+    public void setPromotedOrDemoted(Long promotedOrDemoted) {
         put(PROMOTION, promotedOrDemoted);
     }
 
     @Override
-    public Integer getPollVoteIndex() {
-        return (Integer) get(POLL_VOTE_INDEX);
+    public Long getPollVoteIndex() {
+        return (Long) get(POLL_VOTE_INDEX);
     }
 
     @Override
-    public void setPollVoteIndex(Integer pollIndex) {
+    public void setPollVoteIndex(Long pollIndex) {
         put(POLL_VOTE_INDEX, pollIndex);
     }
 
@@ -167,32 +167,32 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     }
 
     @Override
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
     @Override
-    public void setViews(Integer count) {
+    public void setViews(Long count) {
         put(VIEWS, count);
     }
 
     @Override
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
     @Override
-    public void setOpens(Integer count) {
+    public void setOpens(Long count) {
         put(OPENS, count);
     }
 
     @Override
-    public Integer getComments() {
-        return (Integer) get(COMMENTS_ON_THIS_BLAH);
+    public Long getComments() {
+        return (Long) get(COMMENTS_ON_THIS_BLAH);
     }
 
     @Override
-    public void setComments(Integer comments) {
+    public void setComments(Long comments) {
         put(COMMENTS_ON_THIS_BLAH, comments);
     }
 }

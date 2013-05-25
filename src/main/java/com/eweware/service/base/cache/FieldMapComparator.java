@@ -43,6 +43,12 @@ public class FieldMapComparator implements Comparator<BasePayload> {
                 final Integer bInt = (Integer) obj2;
                 return aInt > bInt ? sortDirection * 1 : (aInt == bInt) ? 0 : sortDirection * -1;
             }
+        } else if (dataType == SchemaDataType.L) {
+            if (obj1 instanceof Float && obj2 instanceof Float) {
+                final Float aFloat = (Float) obj1;
+                final Float bFloat = (Float) obj2;
+                return aFloat > bFloat ? sortDirection * 1 : (aFloat == bFloat) ? 0 : sortDirection * -1;
+            }
         } else if (dataType == SchemaDataType.B) {
             if (obj1 instanceof Boolean && obj2 instanceof Boolean) {
                 final Boolean aBool = (Boolean) obj1;

@@ -12,9 +12,9 @@ public interface GroupTypeDAO extends BaseDAO, GroupTypeDAOConstants {
 
     public void setDisplayName(String displayName);
 
-    public Integer getGroupCount();
+    public Long getGroupCount();
 
-    public void setGroupCount(Integer groupCount);
+    public void setGroupCount(Long groupCount);
 
     public Date getCreated();
 

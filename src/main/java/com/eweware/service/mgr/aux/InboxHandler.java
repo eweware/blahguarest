@@ -134,7 +134,7 @@ public class InboxHandler extends Thread {
         dao.setType(blahDAO.getTypeId());
         dao.setGroupId(groupId);
         dao.setAuthorId(blahDAO.getAuthorId());
-        Integer tmp = blahDAO.getPromotedCount();
+        Long tmp = blahDAO.getPromotedCount();
         if (tmp != null) {dao.setUpVotes(tmp);}
         tmp = blahDAO.getDemotedCount();
         if (tmp != null) {dao.setDownVotes(tmp);}

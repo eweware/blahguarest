@@ -121,22 +121,22 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     }
 
     @Override
-    public Integer getBlahVote() {
-        return (Integer) get(BLAH_VOTE);
+    public Long getBlahVote() {
+        return (Long) get(BLAH_VOTE);
     }
 
     @Override
-    public void setBlahVote(Integer vote) {
+    public void setBlahVote(Long vote) {
         put(BLAH_VOTE, vote);
     }
 
     @Override
-    public Integer getCommentUpVotes() {
-        return (Integer) get(COMMENT_UP_VOTES);
+    public Long getCommentUpVotes() {
+        return (Long) get(COMMENT_UP_VOTES);
     }
 
     @Override
-    public void setCommentUpVotes(Integer votes) {
+    public void setCommentUpVotes(Long votes) {
         if (votes != null) {
             put(COMMENT_UP_VOTES, votes);
         } else {
@@ -145,12 +145,12 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     }
 
     @Override
-    public Integer getCommentDownVotes() {
-        return (Integer) get(COMMENT_DOWN_VOTES);
+    public Long getCommentDownVotes() {
+        return (Long) get(COMMENT_DOWN_VOTES);
     }
 
     @Override
-    public void setCommentDownVotes(Integer votes) {
+    public void setCommentDownVotes(Long votes) {
         if (votes != null) {
             put(COMMENT_DOWN_VOTES, votes);
         } else {
@@ -159,12 +159,12 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     }
 
     @Override
-    public Integer getCommentVotes() {
-        return (Integer) get(COMMENT_VOTES);
+    public Long getCommentVotes() {
+        return (Long) get(COMMENT_VOTES);
     }
 
     @Override
-    public void setCommentVotes(Integer votes) {
+    public void setCommentVotes(Long votes) {
         put(COMMENT_VOTES, votes);
     }
 
@@ -183,22 +183,22 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     }
 
     @Override
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
     @Override
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 
     @Override
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
     @Override
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 

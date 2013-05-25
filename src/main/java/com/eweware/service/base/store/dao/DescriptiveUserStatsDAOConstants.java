@@ -111,6 +111,8 @@ public interface DescriptiveUserStatsDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
+                    NUMBER_OF_DAYS_IN_SUMMARY,}),
+            new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{
                     NUMBER_OF_DAYS_IN_SUMMARY,
                     BLAHS_CREATED,
                     BLAH_UP_VOTES,

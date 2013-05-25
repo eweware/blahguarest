@@ -102,7 +102,7 @@ public final class SchemaSpec extends HashMap<String, Object> implements SchemaC
     }
 
     public boolean isNumeric() {
-        return isInteger() || isReal();
+        return isInteger() || isLong() || isReal();
     }
 
     public boolean isReal() {
@@ -111,6 +111,10 @@ public final class SchemaSpec extends HashMap<String, Object> implements SchemaC
 
     public boolean isInteger() {
         return (getDataType() == SchemaDataType.I);
+    }
+
+    public boolean isLong() {
+        return (getDataType() == SchemaDataType.L);
     }
 
     public boolean isCalendar() {

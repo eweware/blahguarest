@@ -84,19 +84,19 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
         put(USER_VALIDATION_PARAMETERS, params);
     }
 
-    public Integer getUserCount() {
-        return (Integer) get(USER_COUNT);
+    public Long getUserCount() {
+        return (Long) get(USER_COUNT);
     }
 
-    public void setUserCount(Integer userCount) {
+    public void setUserCount(Long userCount) {
         put(USER_COUNT, userCount);
     }
 
-    public Integer getCurrentViewerCount() {
-        return (Integer) get(CURRENT_VIEWER_COUNT);
+    public Long getCurrentViewerCount() {
+        return (Long) get(CURRENT_VIEWER_COUNT);
     }
 
-    public void setCurrentViewerCount(Integer count) {
+    public void setCurrentViewerCount(Long count) {
         put(CURRENT_VIEWER_COUNT, count);
     }
 }

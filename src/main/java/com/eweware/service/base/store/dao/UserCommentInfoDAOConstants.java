@@ -43,6 +43,6 @@ public interface UserCommentInfoDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, COMMENT_ID}),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{VOTE, VIEWS, OPENS})
+            new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{VOTE, VIEWS, OPENS})
     };
 }

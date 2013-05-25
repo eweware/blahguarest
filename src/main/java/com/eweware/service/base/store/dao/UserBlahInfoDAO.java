@@ -24,13 +24,13 @@ public interface UserBlahInfoDAO extends BaseDAO, UserBlahInfoDAOConstants {
 
     public void setBlahTypeId(String blahTypeId);
 
-    public Integer getPromotedOrDemoted();
+    public Long getPromotedOrDemoted();
 
-    public void setPromotedOrDemoted(Integer promotedOrDemoted);
+    public void setPromotedOrDemoted(Long promotedOrDemoted);
 
-    public Integer getPollVoteIndex();
+    public Long getPollVoteIndex();
 
-    public void setPollVoteIndex(Integer pollIndex);
+    public void setPollVoteIndex(Long pollIndex);
 
     public Date getPollVoteTimestamp();
 
@@ -44,15 +44,15 @@ public interface UserBlahInfoDAO extends BaseDAO, UserBlahInfoDAOConstants {
 
     public void setPredictionResultVote(String vote);
 
-    public Integer getViews();
+    public Long getViews();
 
-    public void setViews(Integer count);
+    public void setViews(Long count);
 
-    public Integer getOpens();
+    public Long getOpens();
 
-    public void setOpens(Integer count);
+    public void setOpens(Long count);
 
-    public Integer getComments();
+    public Long getComments();
 
-    public void setComments(Integer comment);
+    public void setComments(Long comment);
 }

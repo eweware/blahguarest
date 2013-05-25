@@ -14,7 +14,7 @@ public interface InboxStateDAO extends BaseDAO, InboxStateDAOConstants {
 
     public void setInboxItemIds(List<ObjectId> ids);
 
-    public Integer getHighestInboxNumber();
+    public Long getHighestInboxNumber();
 
-    public void setHighestInboxNumber(Integer highMark);
+    public void setHighestInboxNumber(Long highMark);
 }

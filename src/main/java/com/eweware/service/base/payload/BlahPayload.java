@@ -161,32 +161,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
         put(AUTHOR_ID, authorId);
     }
 
-//    /**
-//     * <p>When the client user id is available (e.g., user is logged in),
-//     * returns the value indicating whether the user has promoted or demoted
-//     * this blah.</p>
-//     * <p>A value of +1 means the user has promoted it. A value of -1
-//     * means the user has demoted it. If it is null or 0, then the user
-//     * has neither promoted not demoted this blah.</p>
-//     * @return  The demotion value or null if the user has not promoted/demoted this blah.
-//     */
-//    public Integer getUserPromotesOrDemotes() {
-//        return (Integer) get(USER_PROMOTES_OR_DEMOTES);
-//    }
-//
-//    public void setUserPromotesOrDemotes(Integer promotesOrDemotes) {
-//        put(USER_PROMOTES_OR_DEMOTES, promotesOrDemotes);
-//    }
-
     /**
      * <p>Returns the count of users who have promoted this blah.</p>
      * @return  count of users who have promoted this blah
      */
-    public Integer getPromotedCount() {
-        return (Integer) get(PROMOTED_COUNT);
+    public Long getPromotedCount() {
+        return (Long) get(PROMOTED_COUNT);
     }
 
-    public void setPromotedCount(Integer promotions) {
+    public void setPromotedCount(Long promotions) {
         put(PROMOTED_COUNT, promotions);
     }
 
@@ -194,11 +177,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns the count of users who have demoted this blah.</p>
      * @return count of users who have demoted this blah
      */
-    public Integer getDemotedCount() {
-        return (Integer) get(DEMOTED_COUNT);
+    public Long getDemotedCount() {
+        return (Long) get(DEMOTED_COUNT);
     }
 
-    public void setDemotedCount(Integer demotions) {
+    public void setDemotedCount(Long demotions) {
         put(DEMOTED_COUNT, demotions);
     }
 
@@ -206,11 +189,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns the number of views of this blah.</p>
      * @return  number of blah views
      */
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 
@@ -218,11 +201,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns the number of times users have opened this blah</p>
      * @return  number of blah opens
      */
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 
@@ -230,11 +213,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns the number of comments on this blah.</p>
      * @return  Number of comments
      */
-    public Integer getComments() {
-        return (Integer) get(COMMENTS);
+    public Long getComments() {
+        return (Long) get(COMMENTS);
     }
 
-    public void setComments(Integer comments) {
+    public void setComments(Long comments) {
 
         put(COMMENTS, comments);
     }
@@ -257,11 +240,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * demoted the blah. +1 means promoted, -1 means demoted, </p>
      * @return   The user promotion/demotion flag
      */
-    public Integer getUserPromotion() {
-        return (Integer) get(USER_PROMOTION);
+    public Long getUserPromotion() {
+        return (Long) get(USER_PROMOTION);
     }
 
-    public void setUserPromotion(Integer promotion) {
+    public void setUserPromotion(Long promotion) {
         put(USER_PROMOTION, promotion);
     }
 
@@ -269,11 +252,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns the number of times the blah has been viewed.</p>
      * @return the number of times the blah has been viewed
      */
-    public Integer getUserViews() {
-        return (Integer) get(USER_VIEWS);
+    public Long getUserViews() {
+        return (Long) get(USER_VIEWS);
     }
 
-    public void setUserViews(Integer userViews) {
+    public void setUserViews(Long userViews) {
         put(USER_VIEWS, userViews);
     }
 
@@ -281,11 +264,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns the number of times the blah has been opened.</p>
      * @return the number of times the blah has been opened
      */
-    public Integer getUserOpens() {
-        return (Integer) get(USER_OPENS);
+    public Long getUserOpens() {
+        return (Long) get(USER_OPENS);
     }
 
-    public void setUserOpens(Integer userOpens) {
+    public void setUserOpens(Long userOpens) {
         put(USER_OPENS, userOpens);
     }
 
@@ -326,15 +309,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * entries in poll options array.</p>
      * @return  The number of poll options
      */
-    public Integer getPollOptionCount() {
-        return (Integer) get(POLL_OPTION_COUNT);
+    public Long getPollOptionCount() {
+        return (Long) get(POLL_OPTION_COUNT);
     }
 
     /**
      * <p>Sets the number of poll options</p>
      * @param pollOptionCount   The number of poll options
      */
-    public void setPollOptionCount(Integer pollOptionCount) {
+    public void setPollOptionCount(Long pollOptionCount) {
         put(POLL_OPTION_COUNT, pollOptionCount);
     }
 
@@ -360,11 +343,11 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * order of poll options.</p>
      * @return votes on poll options
      */
-    public List<Integer> getPollOptionVotes() {
-        return (List<Integer>) get(POLL_OPTION_VOTES);
+    public List<Long> getPollOptionVotes() {
+        return (List<Long>) get(POLL_OPTION_VOTES);
     }
 
-    public void setPollOptionVotes(List<Integer> pollOptionVotes) {
+    public void setPollOptionVotes(List<Long> pollOptionVotes) {
         put(POLL_OPTION_VOTES, pollOptionVotes);
     }
 
@@ -401,15 +384,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns number of times users have agreed with this prediction blah</p>
      * @return  Number of times users have agreed with this prediction blah
      */
-    public Integer getPredictionAgreeCount() {
-        return (Integer) get(PREDICTION_USER_AGREE_COUNT);
+    public Long getPredictionAgreeCount() {
+        return (Long) get(PREDICTION_USER_AGREE_COUNT);
     }
 
     /**
      * <p>Sets number of times users have agreed with this prediction blah</p>
      * @param count The count
      */
-    public void setPredictionAgreeCount(Integer count) {
+    public void setPredictionAgreeCount(Long count) {
         put(PREDICTION_USER_AGREE_COUNT, count);
     }
 
@@ -417,15 +400,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns number of times users have disagreed with this prediction blah</p>
      * @return  Number of times users have agreed with this prediction blah
      */
-    public Integer getPredictionDisagreeCount() {
-        return (Integer) get(PREDICTION_USER_DISAGREE_COUNT);
+    public Long getPredictionDisagreeCount() {
+        return (Long) get(PREDICTION_USER_DISAGREE_COUNT);
     }
 
     /**
      * <p>Sets number of times users have disgreed with this prediction blah</p>
      * @param count The count
      */
-    public void setPredictionDisagreeCount(Integer count) {
+    public void setPredictionDisagreeCount(Long count) {
         put(PREDICTION_USER_DISAGREE_COUNT, count);
     }
 
@@ -433,15 +416,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns number of times users have thought this prediction blah was unclear</p>
      * @return  the count
      */
-    public Integer getPredictionUnclearCount() {
-        return (Integer) get(PREDICTION_USER_UNCLEAR_COUNT);
+    public Long getPredictionUnclearCount() {
+        return (Long) get(PREDICTION_USER_UNCLEAR_COUNT);
     }
 
     /**
      * <p>Sets number of times users have thought that this prediction blah was unclear.</p>
      * @param count The count
      */
-    public void setPredictionUnclearCount(Integer count) {
+    public void setPredictionUnclearCount(Long count) {
         put(PREDICTION_USER_UNCLEAR_COUNT, count);
     }
 
@@ -449,15 +432,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns number of times users have indicated that this prediction was correct</p>
      * @return  the count
      */
-    public Integer getPredictionResultCorrectCount() {
-        return (Integer) get(PREDICTION_RESULT_CORRECT_COUNT);
+    public Long getPredictionResultCorrectCount() {
+        return (Long) get(PREDICTION_RESULT_CORRECT_COUNT);
     }
 
     /**
      * <p>Sets number of times users have indicated that this prediction was correct.</p>
      * @param count The count
      */
-    public void setPredictionResultCorrectCount(Integer count) {
+    public void setPredictionResultCorrectCount(Long count) {
         put(PREDICTION_RESULT_CORRECT_COUNT, count);
     }
 
@@ -465,15 +448,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns number of times users have indicated that this prediction blah was incorrect</p>
      * @return  the count
      */
-    public Integer getPredictionResultIncorrectCount() {
-        return (Integer) get(PREDICTION_RESULT_INCORRECT_COUNT);
+    public Long getPredictionResultIncorrectCount() {
+        return (Long) get(PREDICTION_RESULT_INCORRECT_COUNT);
     }
 
     /**
      * <p>Sets number of times users have indicated that this prediction was incorrect.</p>
      * @param count The count
      */
-    public void setPredictionResultIncorrectCount(Integer count) {
+    public void setPredictionResultIncorrectCount(Long count) {
         put(PREDICTION_RESULT_INCORRECT_COUNT, count);
     }
 
@@ -481,15 +464,15 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * <p>Returns number of times users have indicated that this prediction's result was unclear</p>
      * @return  the count
      */
-    public Integer getPredictionResultUnclearCount() {
-        return (Integer) get(PREDICTION_RESULT_UNCLEAR_COUNT);
+    public Long getPredictionResultUnclearCount() {
+        return (Long) get(PREDICTION_RESULT_UNCLEAR_COUNT);
     }
 
     /**
      * <p>Sets number of times users have indicated that this prediction's result was unclear.</p>
      * @param count The count
      */
-    public void setPredictionResultUnclearCount(Integer count) {
+    public void setPredictionResultUnclearCount(Long count) {
         put(PREDICTION_RESULT_UNCLEAR_COUNT, count);
     }
 

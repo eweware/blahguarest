@@ -78,6 +78,6 @@ public interface TrackerDAOConstants {
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{OPERATION, GROUP_TYPE_ID, GROUP_ID, USER_ID, BLAH_ID, COMMENT_ID, STATE,
                     USER_GENDER, USER_RACE,  USER_INCOME_RANGE, USER_DATE_OF_BIRTH}),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{PROMOTION, VIEWS, OPENS}),
+            new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{PROMOTION, VIEWS, OPENS}),
     };
 }

@@ -19,17 +19,17 @@ public interface TrackerDAO extends BaseDAO, TrackerDAOConstants {
 
     public void setOperation(String operation);
 
-    public Integer getVote();
+    public Long getVote();
 
-    public void setVote(Integer vote);
+    public void setVote(Long vote);
 
-    public Integer getViews();
+    public Long getViews();
 
-    public void setViews(Integer views);
+    public void setViews(Long views);
 
-    public Integer getOpens();
+    public Long getOpens();
 
-    public void setOpens(Integer opens);
+    public void setOpens(Long opens);
 
     public String getState();
 

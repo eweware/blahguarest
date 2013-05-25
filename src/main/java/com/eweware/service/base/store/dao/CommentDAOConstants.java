@@ -82,7 +82,7 @@ public interface CommentDAOConstants {
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                     BLAH_ID, TEXT, AUTHOR_ID
             }),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
+            new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{
                     BLAH_VOTE, COMMENT_VOTES, COMMENT_UP_VOTES, COMMENT_DOWN_VOTES, VIEWS, OPENS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{

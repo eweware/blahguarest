@@ -148,12 +148,12 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public Integer getPollOptionCount() {
-        return (Integer) get(POLL_OPTION_COUNT);
+    public Long getPollOptionCount() {
+        return (Long) get(POLL_OPTION_COUNT);
     }
 
     @Override
-    public void setPollOptionCount(Integer pollOptionCount) {
+    public void setPollOptionCount(Long pollOptionCount) {
         put(POLL_OPTION_COUNT, pollOptionCount);
     }
 
@@ -168,12 +168,12 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public List<Integer> getPollOptionVotes() {
-        return (List<Integer>) get(POLL_OPTION_VOTES);
+    public List<Long> getPollOptionVotes() {
+        return (List<Long>) get(POLL_OPTION_VOTES);
     }
 
     @Override
-    public void setPollOptionVotes(List<Integer> pollOptionVotes) {
+    public void setPollOptionVotes(List<Long> pollOptionVotes) {
         put(POLL_OPTION_VOTES, pollOptionVotes);
     }
 
@@ -184,7 +184,7 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
      * option index.
      * @param pollOptionIndex The option index
      */
-    public void addPollOptionVote_immediate(Integer pollOptionIndex) throws SystemErrorException {
+    public void addPollOptionVote_immediate(Long pollOptionIndex) throws SystemErrorException {
         final StringBuilder b = new StringBuilder(POLL_OPTION_VOTES);
         b.append('.');
         b.append(pollOptionIndex);
@@ -219,32 +219,32 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
     @Override
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 
     @Override
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
     @Override
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 
     @Override
-    public Integer getComments() {
-        return (Integer) get(COMMENTS);
+    public Long getComments() {
+        return (Long) get(COMMENTS);
     }
 
     @Override
-    public void setComments(Integer comments) {
+    public void setComments(Long comments) {
         put(COMMENTS, comments);
     }
 
@@ -279,22 +279,22 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public Integer getPromotedCount() {
-        return (Integer) get(PROMOTED_COUNT);
+    public Long getPromotedCount() {
+        return (Long) get(PROMOTED_COUNT);
     }
 
     @Override
-    public void setPromotedCount(Integer promotions) {
+    public void setPromotedCount(Long promotions) {
         put(PROMOTED_COUNT, promotions);
     }
 
     @Override
-    public Integer getDemotedCount() {
-        return (Integer) get(DEMOTED_COUNT);
+    public Long getDemotedCount() {
+        return (Long) get(DEMOTED_COUNT);
     }
 
     @Override
-    public void setDemotedCount(Integer demotions) {
+    public void setDemotedCount(Long demotions) {
         put(DEMOTED_COUNT, demotions);
     }
 
@@ -309,62 +309,62 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public Integer getPredictionAgreeCount() {
-        return (Integer) get(PREDICTION_USER_AGREE_COUNT);
+    public Long getPredictionAgreeCount() {
+        return (Long) get(PREDICTION_USER_AGREE_COUNT);
     }
 
     @Override
-    public void setPredictionAgreeCount(Integer count) {
+    public void setPredictionAgreeCount(Long count) {
         put(PREDICTION_USER_AGREE_COUNT, count);
     }
 
     @Override
-    public Integer getPredictionDisagreeCount() {
-        return (Integer) get(PREDICTION_USER_DISAGREE_COUNT);
+    public Long getPredictionDisagreeCount() {
+        return (Long) get(PREDICTION_USER_DISAGREE_COUNT);
     }
 
     @Override
-    public void setPredictionDisagreeCount(Integer count) {
+    public void setPredictionDisagreeCount(Long count) {
         put(PREDICTION_USER_DISAGREE_COUNT, count);
     }
 
     @Override
-    public Integer getPredictionUnclearCount() {
-        return (Integer) get(PREDICTION_USER_UNCLEAR_COUNT);
+    public Long getPredictionUnclearCount() {
+        return (Long) get(PREDICTION_USER_UNCLEAR_COUNT);
     }
 
     @Override
-    public void setPredictionUnclearCount(Integer count) {
+    public void setPredictionUnclearCount(Long count) {
         put(PREDICTION_USER_UNCLEAR_COUNT, count);
     }
 
     @Override
-    public Integer getPredictionResultCorrectCount() {
-        return (Integer) get(PREDICTION_RESULT_CORRECT_COUNT);
+    public Long getPredictionResultCorrectCount() {
+        return (Long) get(PREDICTION_RESULT_CORRECT_COUNT);
     }
 
     @Override
-    public void setPredictionResultCorrectCount(Integer count) {
+    public void setPredictionResultCorrectCount(Long count) {
         put(PREDICTION_RESULT_CORRECT_COUNT, count);
     }
 
     @Override
-    public Integer getPredictionResultIncorrectCount() {
-        return (Integer) get(PREDICTION_RESULT_INCORRECT_COUNT);
+    public Long getPredictionResultIncorrectCount() {
+        return (Long) get(PREDICTION_RESULT_INCORRECT_COUNT);
     }
 
     @Override
-    public void setPredictionResultIncorrectCount(Integer count) {
+    public void setPredictionResultIncorrectCount(Long count) {
         put(PREDICTION_RESULT_INCORRECT_COUNT, count);
     }
 
     @Override
-    public Integer getPredictionResultUnclearCount() {
-        return (Integer) get(PREDICTION_RESULT_UNCLEAR_COUNT);
+    public Long getPredictionResultUnclearCount() {
+        return (Long) get(PREDICTION_RESULT_UNCLEAR_COUNT);
     }
 
     @Override
-    public void setPredictionResultUnclearCount(Integer count) {
+    public void setPredictionResultUnclearCount(Long count) {
         put(PREDICTION_RESULT_UNCLEAR_COUNT, count);
     }
 }

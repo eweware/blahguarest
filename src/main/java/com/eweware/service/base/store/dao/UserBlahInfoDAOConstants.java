@@ -105,7 +105,7 @@ public interface UserBlahInfoDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, BLAH_ID, ORIGINAL_GROUP_ID, PREDICTION_VOTE, PREDICTION_RESULT_VOTE}),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{PROMOTION, POLL_VOTE_INDEX, VIEWS, OPENS, COMMENTS_ON_THIS_BLAH}),
+            new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{PROMOTION, POLL_VOTE_INDEX, VIEWS, OPENS, COMMENTS_ON_THIS_BLAH}),
             new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{POLL_VOTE_TIMESTAMP})
     };
 }

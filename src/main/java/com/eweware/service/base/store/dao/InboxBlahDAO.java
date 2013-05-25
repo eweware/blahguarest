@@ -48,21 +48,21 @@ public interface InboxBlahDAO extends BaseDAO, InboxBlahDAOConstants {
 
     public void setRecentStrength(Double strength);
 
-    public Integer getUpVotes();
+    public Long getUpVotes();
 
-    public void setUpVotes(Integer upVotes);
+    public void setUpVotes(Long upVotes);
 
-    public Integer getDownVotes();
+    public Long getDownVotes();
 
-    public void setDownVotes(Integer downVotes);
+    public void setDownVotes(Long downVotes);
 
-    public Integer getOpens();
+    public Long getOpens();
 
-    public void setOpens(Integer opens);
+    public void setOpens(Long opens);
 
-    public Integer getViews();
+    public Long getViews();
 
-    public void setViews(Integer views);
+    public void setViews(Long views);
 
     public String getBadgeIndicator();
 

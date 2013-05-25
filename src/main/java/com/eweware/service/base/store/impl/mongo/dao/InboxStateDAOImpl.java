@@ -38,12 +38,12 @@ public class InboxStateDAOImpl extends BaseDAOImpl implements InboxStateDAO {
     }
 
     @Override
-    public Integer getHighestInboxNumber() {
-        return (Integer) get(INBOX_NUMBER_TOP);
+    public Long getHighestInboxNumber() {
+        return (Long) get(INBOX_NUMBER_TOP);
     }
 
     @Override
-    public void setHighestInboxNumber(Integer highMark) {
+    public void setHighestInboxNumber(Long highMark) {
         put(INBOX_NUMBER_TOP, highMark);
     }
 

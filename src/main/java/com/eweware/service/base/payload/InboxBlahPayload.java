@@ -65,7 +65,7 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
         return (Integer) get(INBOX_NUMBER);
     }
 
-    public void setInboxNUmber(Integer inboxNumber) {
+    public void setInboxNumber(Integer inboxNumber) {
         put(INBOX_NUMBER, inboxNumber);
     }
 
@@ -85,35 +85,35 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
         put(RECENT_BLAH_STRENGTH, strength);
     }
 
-    public Integer getUpVotes() {
-        return (Integer) get(UP_VOTES);
+    public Long getUpVotes() {
+        return (Long) get(UP_VOTES);
     }
 
-    public void setUpVotes(Integer upVotes) {
+    public void setUpVotes(Long upVotes) {
         put(UP_VOTES, upVotes);
     }
 
-    public Integer getDownVotes() {
-        return (Integer) get(DOWN_VOTES);
+    public Long getDownVotes() {
+        return (Long) get(DOWN_VOTES);
     }
 
-    public void setDownVotes(Integer downVotes) {
+    public void setDownVotes(Long downVotes) {
         put(DOWN_VOTES, downVotes);
     }
 
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 

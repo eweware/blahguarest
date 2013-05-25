@@ -22,6 +22,6 @@ public interface GroupTypeDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
           new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{DISPLAY_NAME}),
-          new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{GROUP_COUNT})
+          new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{GROUP_COUNT})
     };
 }

@@ -59,51 +59,51 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
         put(AUTHOR_ID, authorId);
     }
 
-    public Integer getBlahVote() {
-        return (Integer) get(BLAH_VOTE);
+    public Long getBlahVote() {
+        return (Long) get(BLAH_VOTE);
     }
 
-    public void setBlahVote(Integer vote) {
+    public void setBlahVote(Long vote) {
         put(BLAH_VOTE, vote);
     }
 
-    public Integer getCommentVotes() {
-        return (Integer) get(COMMENT_VOTES);
+    public Long getCommentVotes() {
+        return (Long) get(COMMENT_VOTES);
     }
 
-    public void setCommentVotes(Integer votes) {
+    public void setCommentVotes(Long votes) {
         put(COMMENT_VOTES, votes);
     }
 
-    public Integer getCommentUpVotes() {
-        return (Integer) get(COMMENT_UP_VOTES);
+    public Long getCommentUpVotes() {
+        return (Long) get(COMMENT_UP_VOTES);
     }
 
-    public void setCommentUpVotes(Integer votes) {
+    public void setCommentUpVotes(Long votes) {
         put(COMMENT_UP_VOTES, votes);
     }
 
-    public Integer getCommentDownVotes() {
-        return (Integer) get(COMMENT_DOWN_VOTES);
+    public Long getCommentDownVotes() {
+        return (Long) get(COMMENT_DOWN_VOTES);
     }
 
-    public void setCommentDownVotes(Integer votes) {
+    public void setCommentDownVotes(Long votes) {
         put(COMMENT_DOWN_VOTES, votes);
     }
 
-    public Integer getViews() {
-       return (Integer) get(VIEWS);
+    public Long getViews() {
+       return (Long) get(VIEWS);
     }
 
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 
@@ -123,27 +123,27 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
         put(STATS, stats);
     }
 
-    public Integer getUserVote() {
-        return (Integer) get(USER_VOTE);
+    public Long getUserVote() {
+        return (Long) get(USER_VOTE);
     }
 
-    public void setUserVote(Integer vote) {
+    public void setUserVote(Long vote) {
         put(USER_VOTE, vote);
     }
 
-    public Integer getUserViews() {
-        return (Integer) get(USER_VIEWS);
+    public Long getUserViews() {
+        return (Long) get(USER_VIEWS);
     }
 
-    public void setUserViews(Integer views) {
+    public void setUserViews(Long views) {
         put(USER_VIEWS, views);
     }
 
-    public Integer getUserOpens() {
-        return (Integer) get(USER_OPENS);
+    public Long getUserOpens() {
+        return (Long) get(USER_OPENS);
     }
 
-    public void setUserOpens(Integer opens) {
+    public void setUserOpens(Long opens) {
         put(USER_OPENS, opens);
     }
 

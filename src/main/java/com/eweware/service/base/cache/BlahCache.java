@@ -437,7 +437,7 @@ public final class BlahCache {
      * @return String The id of the record in the inbox status collection
      *         that contains the inbox item ids in the inbox
      */
-    public final String makeInboxStateKey(String groupId, Integer inbox) {
+    public static final String makeInboxStateKey(String groupId, Integer inbox) {
         final StringBuilder b = new StringBuilder(inboxStateNamespace);
         b.append(groupId);
         b.append("-");
@@ -445,11 +445,11 @@ public final class BlahCache {
         return b.toString();
     }
 
-    public final String makeInboxItemKey(String itemId) {
+    public static final String makeInboxItemKey(String itemId) {
         return inboxItemNamespace + itemId;
     }
 
-    private final String getInboxItemIdFromItemKey(String key) throws SystemErrorException {
+    private static final String getInboxItemIdFromItemKey(String key) throws SystemErrorException {
         if (key == null || key.length() < 3) {
             throw new SystemErrorException("Inbox item key length is incorrect; key: '" + key + "'", ErrorCodes.INVALID_INBOX_ITEM_KEY);
         }

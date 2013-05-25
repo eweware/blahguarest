@@ -177,42 +177,42 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     }
 
     @Override
-    public Integer getUpVotes() {
-        return (Integer) get(UP_VOTES);
+    public Long getUpVotes() {
+        return (Long) get(UP_VOTES);
     }
 
     @Override
-    public void setUpVotes(Integer upVotes) {
+    public void setUpVotes(Long upVotes) {
         put(UP_VOTES, upVotes);
     }
 
     @Override
-    public Integer getDownVotes() {
-        return (Integer) get(DOWN_VOTES);
+    public Long getDownVotes() {
+        return (Long) get(DOWN_VOTES);
     }
 
     @Override
-    public void setDownVotes(Integer downVotes) {
+    public void setDownVotes(Long downVotes) {
         put(DOWN_VOTES, downVotes);
     }
 
     @Override
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
     @Override
-    public void setOpens(Integer opens) {
+    public void setOpens(Long opens) {
         put(OPENS, opens);
     }
 
     @Override
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
     @Override
-    public void setViews(Integer views) {
+    public void setViews(Long views) {
         put(VIEWS, views);
     }
 

@@ -75,12 +75,12 @@ public class GroupTypeDAOImpl extends BaseDAOImpl implements GroupTypeDAO {
     }
 
     @Override
-    public Integer getGroupCount() {
-        return (Integer) get(GROUP_COUNT);
+    public Long getGroupCount() {
+        return (Long) get(GROUP_COUNT);
     }
 
     @Override
-    public void setGroupCount(Integer groupCount) {
+    public void setGroupCount(Long groupCount) {
         put(GROUP_COUNT, groupCount);
     }
 }

@@ -28,17 +28,17 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setState(String state);
 
-    public Integer getUserCount();
+    public Long getUserCount();
 
-    public void setUserCount(Integer userCount);
+    public void setUserCount(Long userCount);
 
-    public Integer getBlahCount();
+    public Long getBlahCount();
 
-    public void setBlahCount(Integer blahCount);
+    public void setBlahCount(Long blahCount);
 
-    public Integer getCurrentViewerCount();
+    public Long getCurrentViewerCount();
 
-    public void setCurrentViewerCount(Integer activeViewerCount);
+    public void setCurrentViewerCount(Long activeViewerCount);
 
     public String getValidationMethod();
 

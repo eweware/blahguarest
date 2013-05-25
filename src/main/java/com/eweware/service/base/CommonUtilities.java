@@ -183,6 +183,17 @@ public final class CommonUtilities {
             return 0;
         }
 	}
+    public static Long checkDiscreteValue(Long value, Object entity) throws InvalidRequestException {
+        if (value != null) {
+            final long val = value.longValue();
+            if (val != 1L && val != -1L && val != 0L) {
+                throw new InvalidRequestException("value="+value+" must be either -1, 0 or 1", entity, ErrorCodes.INVALID_INPUT);
+            }
+            return value;
+        } else {
+            return 0L;
+        }
+    }
 
     /**
 	 * Ensures that integer value is within a range.
@@ -206,6 +217,17 @@ public final class CommonUtilities {
             return 0;
         }
     }
+    public static Long checkValueRange(Long value, long min, long max, Object entity) throws InvalidRequestException {
+        if (value != null) {
+            final long val = value.longValue();
+            if ((val < min) || (val > max)) {
+                throw new InvalidRequestException("value " + value + " out of range: must be between " + min + " and " + max, entity, ErrorCodes.INVALID_INPUT);
+            }
+            return value;
+        } else {
+            return 0L;
+        }
+    }
 
     /**
      * Returns the integer value if it is not null or else the default value
@@ -215,6 +237,16 @@ public final class CommonUtilities {
      */
     public static Integer safeGetInteger(Integer integer, Integer defaultValue) {
         return (integer != null) ? integer : defaultValue;
+    }
+
+    /**
+     * Returns the long value if it is not null or else the default value
+     * @param longVal   The long value
+     * @param defaultValue  The default value
+     * @return  An long value (either the long or the defaultValue)
+     */
+    public static Long safeGetLong(Long longVal, Long defaultValue) {
+        return (longVal != null) ? longVal : defaultValue;
     }
 
 //    public static void main(String[] s) throws SystemErrorException {

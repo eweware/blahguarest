@@ -288,7 +288,7 @@ public final class GroupManager implements ManagerInterface {
         if (!group._exists()) {
             throw new ResourceNotFoundException("No such group id '" + groupId + "'", ErrorCodes.NOT_FOUND_GROUP_ID);
         }
-        group.setCurrentViewerCount(added ? 1 : -1);
+        group.setCurrentViewerCount(added ? 1L : -1L);
         group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
@@ -305,7 +305,7 @@ public final class GroupManager implements ManagerInterface {
         }
         final GroupPayload groupPayload = new GroupPayload(groupId);
         if (groupDAO.getCurrentViewerCount() == null) {
-            groupPayload.setCurrentViewerCount(0);
+            groupPayload.setCurrentViewerCount(0L);
         }
         groupPayload.setCurrentViewerCount(groupDAO.getCurrentViewerCount());
         return groupPayload;

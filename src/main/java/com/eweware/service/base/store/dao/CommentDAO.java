@@ -25,33 +25,33 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
 
     public void setImageIds(List<String> imageIds);
 
-    public Integer getBlahVote();
+    public Long getBlahVote();
 
-    public void setBlahVote(Integer vote);
+    public void setBlahVote(Long vote);
 
-    public Integer getCommentUpVotes();
+    public Long getCommentUpVotes();
 
-    public void setCommentUpVotes(Integer votes);
+    public void setCommentUpVotes(Long votes);
 
-    public Integer getCommentDownVotes();
+    public Long getCommentDownVotes();
 
-    public void setCommentDownVotes(Integer votes);
+    public void setCommentDownVotes(Long votes);
 
-    public Integer getCommentVotes();
+    public Long getCommentVotes();
 
-    public void setCommentVotes(Integer votes);
+    public void setCommentVotes(Long votes);
 
     public Double getStrength();
 
     public void setStrength(Double strength);
 
-    public Integer getViews();
+    public Long getViews();
 
-    public void setViews(Integer views);
+    public void setViews(Long views);
 
-    public Integer getOpens();
+    public Long getOpens();
 
-    public void setOpens(Integer opens);
+    public void setOpens(Long opens);
 
     public List<CommentTrackerDAO> getStats();
 

@@ -52,7 +52,7 @@ public final class TrackingMgr implements ManagerInterface {
         System.out.println("*** TrackingMgr Shutdown ***");
     }
 
-    public void trackBlahUpdate(String blahId, String userId, Integer promoted, Integer viewCount, Integer openCount, Integer pollVotedIndex) throws SystemErrorException {
+    public void trackBlahUpdate(String blahId, String userId, Long promoted, Long viewCount, Long openCount, Long pollVotedIndex) throws SystemErrorException {
         ensureReady();
         if (userId == null) {
             userId = "a";  // anonymous

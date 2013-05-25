@@ -75,9 +75,9 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         private final String userId;
         private final boolean voteUp;
         private final boolean voteDown;
-        private final Integer pollOptionIndex;
-        private final Integer viewCount;
-        private final Integer openCount;
+        private final Long pollOptionIndex;
+        private final Long viewCount;
+        private final Long openCount;
 
         /**
          * Constructor for a tracker queue item.
@@ -96,7 +96,9 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
          * @param viewCount       Number of added views
          * @param openCount       Number of added opens
          */
-        TrackerQueueItem(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) {
+        TrackerQueueItem(TrackerOperation operation, String userId, String authorId, boolean isBlah,
+                         boolean isNewObject, String objectId, String subObjectId, boolean voteUp,
+                         boolean voteDown, Long pollOptionIndex, Long viewCount, Long openCount) {
             this.operation = operation;
             this.authorId = authorId;
             this.isBlah = isBlah;
@@ -165,7 +167,9 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param viewCount       Number of views
      * @param openCount       Number of opens         @throws main.java.com.eweware.service.base.error.SystemErrorException
      */
-    public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject, String objectId, String subObjectId, boolean voteUp, boolean voteDown, Integer pollOptionIndex, Integer viewCount, Integer openCount) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
+    public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject,
+                            String objectId, String subObjectId, boolean voteUp, boolean voteDown, Long pollOptionIndex,
+                            Long viewCount, Long openCount) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
         ensureReady();
         if (!isBlah && subObjectId == null) {
             throw new SystemErrorException("missing subObjectId", ErrorCodes.SERVER_RECOVERABLE_ERROR);

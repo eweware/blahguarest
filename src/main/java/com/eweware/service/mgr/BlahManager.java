@@ -73,7 +73,7 @@ public final class BlahManager implements ManagerInterface {
     private final File commentIndexDir;
     private final int batchSize;
     private final long batchDelay;
-    private final int maxOpensOrViewsPerUpdate;
+    private final long maxOpensOrViewsPerUpdate;
     private final InboxHandler inboxHandler;
 
     /**
@@ -289,7 +289,7 @@ public final class BlahManager implements ManagerInterface {
             final BadgeDAO badge = storeManager.createBadge();
             for (String badgeId : badgeIds) {
                 badge.setId(badgeId);
-                if (badge._count() == 0) {
+                if (badge._count() == 0L) {
                     throw new InvalidRequestException("badge id '" + badgeId + "' is invalid", ErrorCodes.INVALID_INPUT);
                 }
             }
@@ -344,11 +344,11 @@ public final class BlahManager implements ManagerInterface {
                     potdao.put(PollOptionTextDAO.TEXT, CommonUtilities.scrapeMarkup(pollText));
                 }
             }
-            int count = pollOptionsText.size();
+            long count = pollOptionsText.size();
             blahDAO.setPollOptionCount(count);
-            final List<Integer> vcs = new ArrayList<Integer>(count);
+            final List<Long> vcs = new ArrayList<Long>();
             while (count-- > 0) {
-                vcs.add(0);
+                vcs.add(0L);
             }
             blahDAO.setPollOptionVotes(vcs);
         }
@@ -363,7 +363,7 @@ public final class BlahManager implements ManagerInterface {
      */
     private void updateGroupBlahCount(String groupId, boolean increment) throws SystemErrorException {
         final GroupDAO groupDAO = getStoreManager().createGroup(groupId);
-        groupDAO.setBlahCount(increment ? 1 : -1);
+        groupDAO.setBlahCount(increment ? 1L : -1L);
         groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
@@ -383,8 +383,8 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = null;
         final boolean voteUp = false;
         final boolean voteDown = false;
-        final Integer viewCount = null;
-        final Integer openCount = null;
+        final Long viewCount = null;
+        final Long openCount = null;
         getTrackingManager().trackObject(TrackerOperation.CREATE_BLAH, authorId, authorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, viewCount, openCount);
     }
 
@@ -424,12 +424,12 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 
-    public void pollVote(LocaleId localeId, String blahId, String userId, Integer pollOptionIndex) throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
+    public void pollVote(LocaleId localeId, String blahId, String userId, Long pollOptionIndex) throws InvalidRequestException, SystemErrorException, StateConflictException, ResourceNotFoundException {
         ensureReady();
         if (blahId == null) {
             throw new InvalidRequestException("request missing blah id", ErrorCodes.MISSING_BLAH_ID);
         }
-        if (pollOptionIndex == null || pollOptionIndex < 0 || pollOptionIndex > PollOptionDAOConstants.MAX_POLL_OPTIONS) {
+        if (pollOptionIndex == null || pollOptionIndex < 0L || pollOptionIndex > PollOptionDAOConstants.MAX_POLL_OPTIONS) {
             throw new InvalidRequestException("invalid poll index; maximum is " + PollOptionDAOConstants.MAX_POLL_OPTIONS + " but was=" + pollOptionIndex, ErrorCodes.INVALID_INPUT);
         }
         final BlahDAO blahDAO = getBlahById_unsafe(blahId, BlahDAO.POLL_OPTION_COUNT, BlahDAO.TYPE_ID);
@@ -442,8 +442,8 @@ public final class BlahManager implements ManagerInterface {
 
         final UserBlahInfoData userBlahInfoData = ensureUserDidNotVoteOnPoll(blahId, userId);
 
-        final Integer noPollCount = -1;
-        final Integer pollCount = CommonUtilities.safeGetInteger(blahDAO.getPollOptionCount(), noPollCount);
+        final Long noPollCount = -1L;
+        final Long pollCount = CommonUtilities.safeGetLong(blahDAO.getPollOptionCount(), noPollCount);
         if (pollCount == noPollCount) {
             throw new InvalidRequestException("There are no poll options in this blah", ErrorCodes.SERVER_RECOVERABLE_ERROR);
         }
@@ -499,23 +499,23 @@ public final class BlahManager implements ManagerInterface {
         switch (predictionVote) {
             case YES:
                 if (preExpirationVote) {
-                    updateBlahDAO.setPredictionAgreeCount(1);
+                    updateBlahDAO.setPredictionAgreeCount(1L);
                 } else {
-                    updateBlahDAO.setPredictionResultCorrectCount(1);
+                    updateBlahDAO.setPredictionResultCorrectCount(1L);
                 }
                 break;
             case NO:
                 if (preExpirationVote) {
-                    updateBlahDAO.setPredictionDisagreeCount(1);
+                    updateBlahDAO.setPredictionDisagreeCount(1L);
                 } else {
-                    updateBlahDAO.setPredictionResultIncorrectCount(1);
+                    updateBlahDAO.setPredictionResultIncorrectCount(1L);
                 }
                 break;
             case UNCLEAR:
                 if (preExpirationVote) {
-                    updateBlahDAO.setPredictionUnclearCount(1);
+                    updateBlahDAO.setPredictionUnclearCount(1L);
                 } else {
-                    updateBlahDAO.setPredictionResultUnclearCount(1);
+                    updateBlahDAO.setPredictionResultUnclearCount(1L);
                 }
                 break;
             default:
@@ -703,10 +703,10 @@ public final class BlahManager implements ManagerInterface {
      */
     public void updateBlahViewsOrOpensByAnonymousUser(LocaleId en_us, BlahPayload entity, String blahId) throws InvalidRequestException, SystemErrorException {
         ensureReady();
-        final int maxViewIncrements = maxOpensOrViewsPerUpdate;
-        final Integer viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0, maxViewIncrements, entity);
-        final Integer openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxViewIncrements, entity);
-        if (viewCount == 0 && openCount == 0) {
+        final long maxViewIncrements = maxOpensOrViewsPerUpdate;
+        final Long viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0L, maxViewIncrements, entity);
+        final Long openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0L, maxViewIncrements, entity);
+        if (viewCount == 0L && openCount == 0L) {
             return;
         }
 
@@ -714,10 +714,10 @@ public final class BlahManager implements ManagerInterface {
         if (!blahDAO._exists()) {
             throw new InvalidRequestException("Invalid blah '" + blahId + "'", ErrorCodes.INVALID_INPUT);
         }
-        if (viewCount != 0) {
+        if (viewCount != 0L) {
             blahDAO.setViews(viewCount);
         }
-        if (openCount != 0) {
+        if (openCount != 0L) {
             blahDAO.setOpens(openCount);
         }
         blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
@@ -750,12 +750,12 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing update user id", entity, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
-        final Integer promotionOrDemotion = CommonUtilities.checkDiscreteValue(entity.getUserPromotion(), entity);
+        final Long promotionOrDemotion = CommonUtilities.checkDiscreteValue(entity.getUserPromotion(), entity);
 
-        final int maxViewIncrements = maxOpensOrViewsPerUpdate;
-        final Integer viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0, maxViewIncrements, entity);
-        final Integer openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxViewIncrements, entity);
-        if (promotionOrDemotion == 0 && viewCount == 0 && openCount == 0) {
+        final long maxViewIncrements = maxOpensOrViewsPerUpdate;
+        final Long viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0L, maxViewIncrements, entity);
+        final Long openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0L, maxViewIncrements, entity);
+        if (promotionOrDemotion == 0L && viewCount == 0L && openCount == 0L) {
             return; // don't complain
         }
 
@@ -771,28 +771,13 @@ public final class BlahManager implements ManagerInterface {
         final boolean isNewObject = false;
         final String objectId = blahId;
         final String subObjectId = null;
-        final boolean promoted = (promotionOrDemotion.intValue() > 0);
-        final boolean demoted = (promotionOrDemotion.intValue() < 0);
+        final boolean promoted = (promotionOrDemotion.intValue() > 0L);
+        final boolean demoted = (promotionOrDemotion.intValue() < 0L);
         getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, promoted, demoted, null, viewCount, openCount);
 
         if (doIndex()) {
             indexBlah(updateBlahDAO);
         }
-
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.UPDATE_BLAH);
-//        tracker.setBlahId(blahId);
-//        tracker.setUserId(userId);
-//        tracker.setBlahAuthorId(authorId);
-//        if (vote != 0) {
-//            tracker.setVote(vote);
-//        }
-//        if (viewCount != 0) {
-//            tracker.setViews(viewCount);
-//        }
-//        if (openCount != 0) {
-//            tracker.setOpens(openCount);
-//        }
-//        trackingManager.track(LocaleId.en_us, tracker);
     }
 
     /**
@@ -812,7 +797,9 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      * @throws InvalidRequestException
      */
-    private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Integer promotionOrDemotion, Integer viewCount, Integer openCount, boolean creatingComment) throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
+    private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Long promotionOrDemotion,
+                                       Long viewCount, Long openCount, boolean creatingComment)
+            throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
         BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         blahDAO = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
         if (blahDAO == null) {
@@ -837,20 +824,20 @@ public final class BlahManager implements ManagerInterface {
         } else {
             userBlahInfoDAO.setId(userBlahHistory.getId());
         }
-        if (promotionOrDemotion != 0) {
-            if (!insert && userBlahHistory.getPromotedOrDemoted() != null && userBlahHistory.getPromotedOrDemoted() != 0) {
+        if (promotionOrDemotion != 0L) {
+            if (!insert && userBlahHistory.getPromotedOrDemoted() != null && userBlahHistory.getPromotedOrDemoted() != 0L) {
                 throw new InvalidRequestException("userId=" + userId + " has already voted on blahId=" + blahId, ErrorCodes.USER_ALREADY_VOTED_ON_BLAH_ID);
             }
-            userBlahInfoDAO.setPromotedOrDemoted(promotionOrDemotion > 0 ? 1 : -1);
+            userBlahInfoDAO.setPromotedOrDemoted(promotionOrDemotion > 0 ? 1L : -1L);
         }
-        if (viewCount != 0) {
+        if (viewCount != 0L) {
             userBlahInfoDAO.setViews(viewCount);
         }
-        if (openCount != 0) {
+        if (openCount != 0L) {
             userBlahInfoDAO.setOpens(openCount);
         }
         if (creatingComment) {
-            userBlahInfoDAO.setComments(1);
+            userBlahInfoDAO.setComments(1L);
         }
 
         if (insert) {
@@ -864,19 +851,19 @@ public final class BlahManager implements ManagerInterface {
         }
 
         final BlahDAO blah = getStoreManager().createBlah(blahId);
-        if (promotionOrDemotion > 0) {
-            blah.setPromotedCount(1);
-        } else if (promotionOrDemotion < 0) {
-            blah.setDemotedCount(1);
+        if (promotionOrDemotion > 0L) {
+            blah.setPromotedCount(1L);
+        } else if (promotionOrDemotion < 0L) {
+            blah.setDemotedCount(1L);
         }
-        if (viewCount != 0) {
+        if (viewCount != 0L) {
             blah.setViews(viewCount);
         }  // incremental
-        if (openCount != 0) {
+        if (openCount != 0L) {
             blah.setOpens(openCount);
         }  // incremental
         if (creatingComment) {
-            blah.setComments(1);
+            blah.setComments(1L);
         }  // incremental
         blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
@@ -1224,8 +1211,8 @@ public final class BlahManager implements ManagerInterface {
         text = CommonUtilities.scrapeMarkup(text);
 
         getUserManager().checkUserById(commentAuthorId, request);
-        final Integer blahVote = CommonUtilities.checkDiscreteValue(request.getBlahVote(), request);
-        boolean votedForBlah = (blahVote != 0);
+        final Long blahVote = CommonUtilities.checkDiscreteValue(request.getBlahVote(), request);
+        boolean votedForBlah = (blahVote != 0L);
 
         // Check that blah exists and if this comment includes a vote that the comment author is not the blah's author
         final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
@@ -1250,8 +1237,8 @@ public final class BlahManager implements ManagerInterface {
         commentDAO.setCreated(new Date());
         commentDAO._insert();
 
-        final int viewCount = 0;
-        final int openCount = 0;
+        final long viewCount = 0L;
+        final long openCount = 0L;
         final boolean createdComment = true;
         updateBlahInternal(LocaleId.en_us, blahId, commentAuthorId, blahVote, viewCount, openCount, createdComment);
 
@@ -1259,8 +1246,8 @@ public final class BlahManager implements ManagerInterface {
         final boolean isNewObject = true;
         final String objectId = commentDAO.getId();
         final String subObjectId = blahId;
-        final boolean voteUp = (blahVote > 0);
-        final boolean voteDown = (blahVote < 0);
+        final boolean voteUp = (blahVote > 0L);
+        final boolean voteDown = (blahVote < 0L);
         getTrackingManager().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, request.getViews(), request.getOpens());
 
 //        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_COMMENT);
@@ -1312,13 +1299,13 @@ public final class BlahManager implements ManagerInterface {
                     userId + " commentId=" + entity.getId() + "blahId=" + entity.getBlahId(), ErrorCodes.CANNOT_VOTE_ON_BLAH_WHEN_UPDATING_COMMENT);
         }
 
-        final Integer voteForComment = CommonUtilities.checkDiscreteValue(entity.getCommentVotes(), entity);
-        final boolean didVoteForComment = (voteForComment != 0);
-        final Integer views = CommonUtilities.checkValueRange(entity.getViews(), 0, maxOpensOrViewsPerUpdate, entity);
-        final Integer opens = CommonUtilities.checkValueRange(entity.getOpens(), 0, maxOpensOrViewsPerUpdate, entity);
+        final Long voteForComment = CommonUtilities.checkDiscreteValue(entity.getCommentVotes(), entity);
+        final boolean didVoteForComment = (voteForComment != 0L);
+        final Long views = CommonUtilities.checkValueRange(entity.getViews(), 0L, maxOpensOrViewsPerUpdate, entity);
+        final Long opens = CommonUtilities.checkValueRange(entity.getOpens(), 0L, maxOpensOrViewsPerUpdate, entity);
         if (!didVoteForComment &&
-                (views == 0) &&
-                (opens == 0)) {
+                (views == 0L) &&
+                (opens == 0L)) {
             return; // nothing to update
         }
 
@@ -1342,7 +1329,7 @@ public final class BlahManager implements ManagerInterface {
         }
         final UserCommentInfoDAO userCommentInfoDAO = getStoreManager().createUserCommentInfo(userId, commentId);
         final UserCommentInfoDAO foundUserCommentInfo = (UserCommentInfoDAO) userCommentInfoDAO._findByCompositeId(new String[]{UserCommentInfoDAO.VOTE}, UserCommentInfoDAO.USER_ID, UserCommentInfoDAO.COMMENT_ID);
-        if (didVoteForComment && foundUserCommentInfo != null && foundUserCommentInfo.getVote() != null && foundUserCommentInfo.getVote() != 0) {
+        if (didVoteForComment && foundUserCommentInfo != null && foundUserCommentInfo.getVote() != null && foundUserCommentInfo.getVote() != 0L) {
             throw new InvalidRequestException("authorId=" + userId + " already voted for this comment; commentId=" + commentId, ErrorCodes.USER_ALREADY_VOTED_FOR_COMMENT);
         }
         if (didVoteForComment && commentAuthorId.equals(userId)) {
@@ -1351,13 +1338,13 @@ public final class BlahManager implements ManagerInterface {
         if (foundUserCommentInfo == null) {
             userCommentInfoDAO.initToDefaultValues(localeId);
         }
-        if (voteForComment != 0) {
+        if (voteForComment != 0L) {
             userCommentInfoDAO.setVote(voteForComment);
         }
-        if (views != 0) {
+        if (views != 0L) {
             userCommentInfoDAO.setViews(views);
         }
-        if (opens != 0) {
+        if (opens != 0L) {
             userCommentInfoDAO.setOpens(opens);
         }
         if (foundUserCommentInfo == null) {
@@ -1369,18 +1356,18 @@ public final class BlahManager implements ManagerInterface {
 
         // Update comment
         final CommentDAO commentUpdateDAO = getStoreManager().createComment(commentId);
-        if (voteForComment != 0) {
+        if (voteForComment != 0L) {
             commentUpdateDAO.setCommentVotes(voteForComment);
-            if (voteForComment > 0) {
-                commentUpdateDAO.setCommentUpVotes(1);
+            if (voteForComment > 0L) {
+                commentUpdateDAO.setCommentUpVotes(1L);
             } else {
-                commentUpdateDAO.setCommentDownVotes(1);
+                commentUpdateDAO.setCommentDownVotes(1L);
             }
         }
-        if (views != 0) {
+        if (views != 0L) {
             commentUpdateDAO.setViews(views);
         }
-        if (opens != 0) {
+        if (opens != 0L) {
             commentUpdateDAO.setOpens(opens);
         }
         commentUpdateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
@@ -1389,42 +1376,14 @@ public final class BlahManager implements ManagerInterface {
         final boolean isNewObject = false;
         final String objectId = commentId;
         final String subObjectId = blahId;
-        final boolean voteUp = (voteForComment == 1);
-        final boolean voteDown = (voteForComment == -1);
+        final boolean voteUp = (voteForComment == 1L);
+        final boolean voteDown = (voteForComment == -1L);
         getTrackingManager().trackObject(TrackerOperation.UPDATE_COMMENT, userId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, views, opens);
 
         if (doIndex()) {
             indexComment(commentUpdateDAO);
         }
-
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.UPDATE_COMMENT);
-//        tracker.setUserId(userId);
-//        tracker.setCommentAuthorId(commentAuthorId);
-//        tracker.setBlahAuthorId(blahAuthorId);
-//        if (voteForComment != 0) {
-//            tracker.setVote(voteForComment);
-//        }
-//        if (views != 0) {
-//            tracker.setViews(views);
-//        }
-//        if (opens != 0) {
-//            tracker.setOpens(opens);
-//        }
-//        trackingManager.track(LocaleId.en_us, tracker);
     }
-//
-//    // TODO draconic: should archive them if needed, though old comments should really just fade away
-//    public void deleteComment(LocaleId localeId, String commentId) throws InvalidRequestException, SystemErrorException {
-//        if (CommonUtilities.isEmptyString(commentId)) {
-//            throw new InvalidRequestException("missing comment id", ErrorCodes.MISSING_COMMENT_ID);
-//        }
-//        final CommentDAO commentDAO = getStoreManager().createComment(commentId);
-//        commentDAO._deleteByPrimaryId();
-//
-//        if (doIndex()) {
-//            deleteCommentFromIndex(commentDAO);
-//        }
-//    }
 
     public CommentPayload getCommentById(LocaleId localeId, boolean authenticated, String commentId, String userId, boolean stats, String statsStartDate, String statsEndDate) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         ensureReady();

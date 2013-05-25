@@ -11,6 +11,7 @@ public enum SchemaDataType {
     ILN("indexed list of numbers", new IndexedListValidator()),
     B("boolean", new BooleanDataTypeValidator()),
     I("integer", new IntegerDataTypeValidator()),
+    L("long", new LongDataTypeValidator()),
     R("real", new RealDataTypeValidator()),
     S("string", new StringDataTypeValidator()),
     DT("datetime", new DateTimeDataTypeValidator()),

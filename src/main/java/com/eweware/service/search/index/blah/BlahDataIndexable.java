@@ -144,19 +144,19 @@ public class BlahDataIndexable implements ZoieIndexable {
         }
         field = doc.getFieldable(BlahDAO.PROMOTED_COUNT);
         if (field != null) {
-            blah.setPromotedCount(new Integer(field.stringValue()));
+            blah.setPromotedCount(new Long(field.stringValue()));
         }
         field = doc.getFieldable(BlahDAO.DEMOTED_COUNT);
         if (field != null) {
-            blah.setDemotedCount(new Integer(field.stringValue()));
+            blah.setDemotedCount(new Long(field.stringValue()));
         }
         field = doc.getFieldable(BlahDAO.VIEWS);
         if (field != null) {
-            blah.setViews(new Integer(field.stringValue()));
+            blah.setViews(new Long(field.stringValue()));
         }
         field = doc.getFieldable(BlahDAO.OPENS);
         if (field != null) {
-            blah.setOpens(new Integer(field.stringValue()));
+            blah.setOpens(new Long(field.stringValue()));
         }
         field = doc.getFieldable(BlahDAO.TYPE_ID);
         if (field != null) {

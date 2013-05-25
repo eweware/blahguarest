@@ -102,14 +102,14 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      *
      * @return The number of poll options
      */
-    public Integer getPollOptionCount();
+    public Long getPollOptionCount();
 
     /**
      * Sets the number of poll options
      *
      * @param pollOptionCount The number of poll options
      */
-    public void setPollOptionCount(Integer pollOptionCount);
+    public void setPollOptionCount(Long pollOptionCount);
 
     /**
      * Returns the poll option items' text
@@ -131,14 +131,14 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      *
      * @return The votes for the poll options
      */
-    public List<Integer> getPollOptionVotes();
+    public List<Long> getPollOptionVotes();
 
     /**
      * Sets the votes for the poll options
      *
      * @param pollOptionVotes The votes for the poll options
      */
-    public void setPollOptionVotes(List<Integer> pollOptionVotes);
+    public void setPollOptionVotes(List<Long> pollOptionVotes);
 
     /**
      * Adds one vote to this blah's poll for the specified
@@ -146,7 +146,7 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      *
      * @param pollOptionIndex The option index
      */
-    public void addPollOptionVote_immediate(Integer pollOptionIndex) throws SystemErrorException;
+    public void addPollOptionVote_immediate(Long pollOptionIndex) throws SystemErrorException;
 
     /**
      * @return String Returns the blah's injected group id
@@ -163,30 +163,30 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     /**
      * <p>Returns the number of promotions for this blah.</p>
      *
-     * @return Integer Count of users who have promoted this blah.
+     * @return Long Count of users who have promoted this blah.
      */
-    public Integer getPromotedCount();
+    public Long getPromotedCount();
 
     /**
      * Sets the times this blah has been promoted.
      *
      * @param promotions The number of promotions
      */
-    public void setPromotedCount(Integer promotions);
+    public void setPromotedCount(Long promotions);
 
     /**
      * <p>Returns the number of demotions for this blah.</p>
      *
-     * @return Integer Returns the number of demotions
+     * @return Long Returns the number of demotions
      */
-    public Integer getDemotedCount();
+    public Long getDemotedCount();
 
     /**
      * <p> Sets the number of demotions for this blah.</p>
      *
      * @param demotions The number of demotions
      */
-    public void setDemotedCount(Integer demotions);
+    public void setDemotedCount(Long demotions);
 
     /**
      * <p>Returns the expiration date, if any, of this blah. Used, e.g.,
@@ -208,120 +208,120 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      *
      * @return Number of times users have agreed with this prediction blah
      */
-    public Integer getPredictionAgreeCount();
+    public Long getPredictionAgreeCount();
 
     /**
      * <p>Sets number of times users have agreed with this prediction blah</p>
      *
      * @param count The count
      */
-    public void setPredictionAgreeCount(Integer count);
+    public void setPredictionAgreeCount(Long count);
 
     /**
      * <p>Returns number of times users have disagreed with this prediction blah</p>
      *
      * @return Number of times users have agreed with this prediction blah
      */
-    public Integer getPredictionDisagreeCount();
+    public Long getPredictionDisagreeCount();
 
     /**
      * <p>Sets number of times users have disgreed with this prediction blah</p>
      *
      * @param count The count
      */
-    public void setPredictionDisagreeCount(Integer count);
+    public void setPredictionDisagreeCount(Long count);
 
     /**
      * <p>Returns number of times users have thought this prediction blah was unclear</p>
      *
      * @return the count
      */
-    public Integer getPredictionUnclearCount();
+    public Long getPredictionUnclearCount();
 
     /**
      * <p>Sets number of times users have thought that this prediction blah was unclear.</p>
      *
      * @param count The count
      */
-    public void setPredictionUnclearCount(Integer count);
+    public void setPredictionUnclearCount(Long count);
 
     /**
      * <p>Returns number of times users have indicated that this prediction was correct</p>
      *
      * @return the count
      */
-    public Integer getPredictionResultCorrectCount();
+    public Long getPredictionResultCorrectCount();
 
     /**
      * <p>Sets number of times users have indicated that this prediction was correct.</p>
      *
      * @param count The count
      */
-    public void setPredictionResultCorrectCount(Integer count);
+    public void setPredictionResultCorrectCount(Long count);
 
     /**
      * <p>Returns number of times users have indicated that this prediction blah was incorrect</p>
      *
      * @return the count
      */
-    public Integer getPredictionResultIncorrectCount();
+    public Long getPredictionResultIncorrectCount();
 
     /**
      * <p>Sets number of times users have indicated that this prediction was incorrect.</p>
      *
      * @param count The count
      */
-    public void setPredictionResultIncorrectCount(Integer count);
+    public void setPredictionResultIncorrectCount(Long count);
 
     /**
      * <p>Returns number of times users have indicated that this prediction's result was unclear</p>
      *
      * @return the count
      */
-    public Integer getPredictionResultUnclearCount();
+    public Long getPredictionResultUnclearCount();
 
     /**
      * <p>Sets number of times users have indicated that this prediction's result was unclear.</p>
      *
      * @param count The count
      */
-    public void setPredictionResultUnclearCount(Integer count);
+    public void setPredictionResultUnclearCount(Long count);
 
     /**
-     * @return Integer  Returns the number of views of this blah to this moment.
+     * @return Long  Returns the number of views of this blah to this moment.
      */
-    public Integer getViews();
+    public Long getViews();
 
     /**
      * Sets the views for this blah to this moment.
      *
      * @param views The number of views.
      */
-    public void setViews(Integer views);
+    public void setViews(Long views);
 
     /**
-     * @return Integer Returns the number of times the blah has been opened to this moment.
+     * @return Long Returns the number of times the blah has been opened to this moment.
      */
-    public Integer getOpens();
+    public Long getOpens();
 
     /**
      * Sets the number of times the blah has been opened.
      *
      * @param opens The number of times the blah has been opened.
      */
-    public void setOpens(Integer opens);
+    public void setOpens(Long opens);
 
     /**
-     * @return Integer  Returns the number of comments for this blah.
+     * @return Long  Returns the number of comments for this blah.
      */
-    public Integer getComments();
+    public Long getComments();
 
     /**
      * Sets the number of comments for this blah.
      *
      * @param comments Number of comments for this blah.
      */
-    public void setComments(Integer comments);
+    public void setComments(Long comments);
 
     /**
      * @return List<BlabTrackerDAO> Returns the possibly empty list of statistics for this blah.

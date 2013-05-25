@@ -81,7 +81,7 @@ public interface GroupDAOConstants {
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                 DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, USER_VALIDATION_METHOD, USER_VALIDATION_PARAMETERS, STATE
         }),
-        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT}),
+        new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT}),
     };
 
 

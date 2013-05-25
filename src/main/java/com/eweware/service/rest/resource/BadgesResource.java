@@ -189,15 +189,12 @@ public class BadgesResource {
                                  @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            BlahguaSession.ensureAuthenticated(request);
             final BadgePayload entity = getBadgesMgr().getBadgeById(badgeId);
             final Response response = RestUtilities.make200OkResponse(entity);
             getSystemManager().setResponseTime(GET_BADGE_BY_ID_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
-        } catch (InvalidAuthorizedStateException e) {
-            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

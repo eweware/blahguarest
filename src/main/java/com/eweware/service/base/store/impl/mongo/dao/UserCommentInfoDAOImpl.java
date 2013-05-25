@@ -89,32 +89,32 @@ public class UserCommentInfoDAOImpl extends BaseDAOImpl implements UserCommentIn
     }
 
     @Override
-    public Integer getVote() {
-        return (Integer) get(VOTE);
+    public Long getVote() {
+        return (Long) get(VOTE);
     }
 
     @Override
-    public void setVote(Integer count) {
+    public void setVote(Long count) {
         put(VOTE, count);
     }
 
     @Override
-    public Integer getViews() {
-        return (Integer) get(VIEWS);
+    public Long getViews() {
+        return (Long) get(VIEWS);
     }
 
     @Override
-    public void setViews(Integer count) {
+    public void setViews(Long count) {
         put(VIEWS, count);
     }
 
     @Override
-    public Integer getOpens() {
-        return (Integer) get(OPENS);
+    public Long getOpens() {
+        return (Long) get(OPENS);
     }
 
     @Override
-    public void setOpens(Integer count) {
+    public void setOpens(Long count) {
         put(OPENS, count);
     }
 }

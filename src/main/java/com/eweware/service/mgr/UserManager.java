@@ -1269,7 +1269,7 @@ public class UserManager implements ManagerInterface {
                 userGroup._insert();
 
                 if (activate) {
-                    groupDAO.setUserCount(1);
+                    groupDAO.setUserCount(1L);
                     groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
                 }
             } else {
