@@ -1290,9 +1290,6 @@ public class UserManager implements ManagerInterface {
         }
         final UserPayload entity = new UserPayload();
         final List<String> imageids = userDAO.getImageids();
-        if (imageids != null) {
-            logger.info("*** userDAO=" + userDAO + " ***");
-        }
         if (imageids != null && imageids.size() > 0) {
             entity.setImageIds(imageids);
         }

@@ -75,7 +75,7 @@ public final class UserPayload extends BasePayload implements UserDAOConstants {
     }
 
     public void setImageIds(List<String> imageIds) {
-        put(IMAGE_IDS, IMAGE_IDS);
+        put(IMAGE_IDS, imageIds);
     }
 
     public List<UserTrackerPayload> getStats() {
