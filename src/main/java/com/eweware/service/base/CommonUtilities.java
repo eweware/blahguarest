@@ -8,8 +8,10 @@ import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
 import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -26,16 +28,43 @@ public final class CommonUtilities {
         if (val instanceof Double) {
             return (Double)val;
         }
-        if (val instanceof Integer) {
-            return new Double(((Integer) val).intValue());
-        }
-        if (val instanceof Long) {
-            return new Double(((Long) val).doubleValue());
-        }
-        if (val instanceof String) {
-            return Double.parseDouble((String) val);
+        try {
+            if (val instanceof Integer) {
+                return new Double(((Integer) val).intValue());
+            }
+            if (val instanceof Long) {
+                return new Double(((Long) val).doubleValue());
+            }
+            if (val instanceof String) {
+                return Double.parseDouble((String) val);
+            }
+        } catch (NumberFormatException e) {
+            // fall through
         }
         throw new SystemErrorException("getValueAsDouble: Can't handle value=" + val);
+    }
+
+    public static Double getValueAsDouble(Object val, Double defaultValue) {
+        if (val == null) {
+            return defaultValue;
+        }
+        if (val instanceof Double) {
+            return (Double) val;
+        }
+        try {
+            if (val instanceof Integer) {
+                return ((double)((Integer)val).intValue());
+            }
+            if (val instanceof Long) {
+                return ((double) ((Long) val).longValue());
+            }
+            if (val instanceof String) {
+                return Double.parseDouble((String) val);
+            }
+        } catch (Exception e) {
+            // fall through
+        }
+        return defaultValue;
     }
 
     public static final Long getValueAsLong(Object val) throws SystemErrorException {
@@ -43,16 +72,56 @@ public final class CommonUtilities {
         if (val instanceof Long) {
             return (Long) val;
         }
-        if (val instanceof Double) {
-            return new Long(Math.round((Double) val));
-        }
-        if (val instanceof Integer) {
-            return new Long(((Integer) val).intValue());
-        }
-        if (val instanceof String) {
-            return Long.parseLong((String) val);
+        try {
+            if (val instanceof Double) {
+                return new Long(Math.round((Double) val));
+            }
+            if (val instanceof Integer) {
+                return new Long(((Integer) val).intValue());
+            }
+            if (val instanceof String) {
+                return Long.parseLong((String) val);
+            }
+        } catch (NumberFormatException e) {
+            // fall through
         }
         throw new SystemErrorException("getValueAsLong: Can't handle value=" + val);
+    }
+
+    public static final Long getValueAsLong(Object val, Long defaultValue) {
+        if (val instanceof Long) {
+            return (Long) val;
+        }
+        try {
+            if (val instanceof Double) {
+                return new Long(Math.round((Double) val));
+            }
+            if (val instanceof Integer) {
+                return new Long(((Integer) val).intValue());
+            }
+            if (val instanceof String) {
+                return Long.parseLong((String) val);
+            }
+        } catch (Exception e) {
+            // fall through
+        }
+        return defaultValue;
+    }
+
+    public static List<Long> getListAsLongs(Object obj, List<Long> defaultList) {
+        if (obj == null) {return defaultList;}
+        if (!(obj instanceof List<?>)) {
+            return defaultList;
+        }
+        final List<?> list = (List<?>) obj;
+        if (list.size() == 0) {
+            return new ArrayList<Long>(0);
+        }
+        final List<Long> result = new ArrayList<Long>(list.size());
+        for (Object item : list) {
+            result.add(getValueAsLong(item, 0L));
+        }
+        return result;
     }
 
     public static final Integer getValueAsInteger(Object val) throws SystemErrorException {
@@ -60,16 +129,43 @@ public final class CommonUtilities {
         if (val instanceof Integer) {
             return (Integer) val;
         }
-        if (val instanceof Double) {
-            return new Integer(((Double) val).intValue());
-        }
-        if (val instanceof Long) {
-            return new Integer(((Long)val).intValue());
-        }
-        if (val instanceof String) {
-            return Integer.parseInt((String)val);
+        try {
+            if (val instanceof Double) {
+                return new Integer(((Double) val).intValue());
+            }
+            if (val instanceof Long) {
+                return new Integer(((Long)val).intValue());
+            }
+            if (val instanceof String) {
+                return Integer.parseInt((String)val);
+            }
+        } catch (NumberFormatException e) {
+            // fall through
         }
         throw new SystemErrorException("getValueAsInteger: Can't handle value=" + val);
+    }
+
+    public static final Integer getValueAsInteger(Object val, Integer defaultValue) {
+        if (val == null) {
+            return defaultValue;
+        }
+        if (val instanceof Integer) {
+            return (Integer) val;
+        }
+        try {
+            if (val instanceof Long) {
+                return ((Long) val).intValue();
+            }
+            if (val instanceof Double) {
+                return new Long(Math.round((Double) val)).intValue();
+            }
+            if (val instanceof String) {
+                return Integer.parseInt((String) val);
+            }
+        } catch (Exception e) {
+            // fall through
+        }
+        return defaultValue;
     }
 
     public static boolean isEmptyString(String string) {

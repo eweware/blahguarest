@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.InboxBlahDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
@@ -86,7 +87,7 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
     }
 
     public Long getUpVotes() {
-        return (Long) get(UP_VOTES);
+        return CommonUtilities.getValueAsLong(get(UP_VOTES), null);
     }
 
     public void setUpVotes(Long upVotes) {
@@ -94,7 +95,7 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
     }
 
     public Long getDownVotes() {
-        return (Long) get(DOWN_VOTES);
+        return CommonUtilities.getValueAsLong(get(DOWN_VOTES), null);
     }
 
     public void setDownVotes(Long downVotes) {
@@ -102,7 +103,7 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
     }
 
     public Long getOpens() {
-        return (Long) get(OPENS);
+        return CommonUtilities.getValueAsLong(get(OPENS), null);
     }
 
     public void setOpens(Long opens) {
@@ -110,7 +111,7 @@ public class InboxBlahPayload extends BasePayload implements InboxBlahDAOConstan
     }
 
     public Long getViews() {
-        return (Long) get(VIEWS);
+        return CommonUtilities.getValueAsLong(get(VIEWS), null);
     }
 
     public void setViews(Long views) {

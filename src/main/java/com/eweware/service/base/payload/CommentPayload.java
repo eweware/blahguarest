@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.CommentDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
@@ -60,7 +61,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getBlahVote() {
-        return (Long) get(BLAH_VOTE);
+        return CommonUtilities.getValueAsLong(get(BLAH_VOTE), null);
     }
 
     public void setBlahVote(Long vote) {
@@ -68,7 +69,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getCommentVotes() {
-        return (Long) get(COMMENT_VOTES);
+        return CommonUtilities.getValueAsLong(get(COMMENT_VOTES), null);
     }
 
     public void setCommentVotes(Long votes) {
@@ -76,7 +77,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getCommentUpVotes() {
-        return (Long) get(COMMENT_UP_VOTES);
+        return CommonUtilities.getValueAsLong(get(COMMENT_UP_VOTES), null);
     }
 
     public void setCommentUpVotes(Long votes) {
@@ -84,7 +85,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getCommentDownVotes() {
-        return (Long) get(COMMENT_DOWN_VOTES);
+        return CommonUtilities.getValueAsLong(get(COMMENT_DOWN_VOTES), null);
     }
 
     public void setCommentDownVotes(Long votes) {
@@ -92,7 +93,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getViews() {
-       return (Long) get(VIEWS);
+       return CommonUtilities.getValueAsLong(get(VIEWS), null);
     }
 
     public void setViews(Long views) {
@@ -100,7 +101,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getOpens() {
-        return (Long) get(OPENS);
+        return CommonUtilities.getValueAsLong(get(OPENS), null);
     }
 
     public void setOpens(Long opens) {
@@ -108,7 +109,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Double getStrength() {
-        return (Double) get(COMMENT_STRENGTH);
+        return CommonUtilities.getValueAsDouble(get(COMMENT_STRENGTH), null);
     }
 
     public void setStrength(Double strength) {
@@ -124,7 +125,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getUserVote() {
-        return (Long) get(USER_VOTE);
+        return CommonUtilities.getValueAsLong(get(USER_VOTE), null);
     }
 
     public void setUserVote(Long vote) {
@@ -132,7 +133,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getUserViews() {
-        return (Long) get(USER_VIEWS);
+        return CommonUtilities.getValueAsLong(get(USER_VIEWS), null);
     }
 
     public void setUserViews(Long views) {
@@ -140,7 +141,7 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     }
 
     public Long getUserOpens() {
-        return (Long) get(USER_OPENS);
+        return CommonUtilities.getValueAsLong(get(USER_OPENS), null);
     }
 
     public void setUserOpens(Long opens) {

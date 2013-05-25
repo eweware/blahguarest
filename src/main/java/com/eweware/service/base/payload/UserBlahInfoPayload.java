@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
@@ -71,7 +72,7 @@ public class UserBlahInfoPayload extends BasePayload implements UserBlahInfoDAOC
      * null if the user has not voted on any poll options.
      */
     public Long getPollVoteIndex() {
-        return (Long) get(POLL_VOTE_INDEX);
+        return CommonUtilities.getValueAsLong(get(POLL_VOTE_INDEX), null);
     }
 
     public void setPollVoteIndex(Long pollVoteIndex) {

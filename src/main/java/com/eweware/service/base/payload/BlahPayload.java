@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.base.payload;
 
+import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.store.dao.BlahDAOConstants;
 import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
@@ -166,7 +167,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  count of users who have promoted this blah
      */
     public Long getPromotedCount() {
-        return (Long) get(PROMOTED_COUNT);
+        return CommonUtilities.getValueAsLong(get(PROMOTED_COUNT), null);
     }
 
     public void setPromotedCount(Long promotions) {
@@ -178,7 +179,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return count of users who have demoted this blah
      */
     public Long getDemotedCount() {
-        return (Long) get(DEMOTED_COUNT);
+        return CommonUtilities.getValueAsLong(get(DEMOTED_COUNT), null);
     }
 
     public void setDemotedCount(Long demotions) {
@@ -190,8 +191,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  number of blah views
      */
     public Long getViews() {
-        System.out.println("***/nBlahPayload.getViews()=" + get(VIEWS) + "\nBlahPayload entity=" + this + "\n***");
-        return (Long) get(VIEWS);
+        return CommonUtilities.getValueAsLong(get(VIEWS), null);
     }
 
     public void setViews(Long views) {
@@ -203,7 +203,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  number of blah opens
      */
     public Long getOpens() {
-        return (Long) get(OPENS);
+        return CommonUtilities.getValueAsLong(get(OPENS), null);
     }
 
     public void setOpens(Long opens) {
@@ -215,11 +215,10 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  Number of comments
      */
     public Long getComments() {
-        return (Long) get(COMMENTS);
+        return CommonUtilities.getValueAsLong(get(COMMENTS), null);
     }
 
     public void setComments(Long comments) {
-
         put(COMMENTS, comments);
     }
 
@@ -242,7 +241,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return   The user promotion/demotion flag
      */
     public Long getUserPromotion() {
-        return (Long) get(USER_PROMOTION);
+        return CommonUtilities.getValueAsLong(get(USER_PROMOTION), null);
     }
 
     public void setUserPromotion(Long promotion) {
@@ -254,7 +253,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return the number of times the blah has been viewed
      */
     public Long getUserViews() {
-        return (Long) get(USER_VIEWS);
+        return CommonUtilities.getValueAsLong(get(USER_VIEWS), null);
     }
 
     public void setUserViews(Long userViews) {
@@ -266,7 +265,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return the number of times the blah has been opened
      */
     public Long getUserOpens() {
-        return (Long) get(USER_OPENS);
+        return CommonUtilities.getValueAsLong(get(USER_OPENS), null);
     }
 
     public void setUserOpens(Long userOpens) {
@@ -311,7 +310,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  The number of poll options
      */
     public Long getPollOptionCount() {
-        return (Long) get(POLL_OPTION_COUNT);
+        return CommonUtilities.getValueAsLong(get(POLL_OPTION_COUNT), null);
     }
 
     /**
@@ -345,7 +344,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return votes on poll options
      */
     public List<Long> getPollOptionVotes() {
-        return (List<Long>) get(POLL_OPTION_VOTES);
+        return CommonUtilities.getListAsLongs(get(POLL_OPTION_VOTES), null);
     }
 
     public void setPollOptionVotes(List<Long> pollOptionVotes) {
@@ -386,7 +385,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  Number of times users have agreed with this prediction blah
      */
     public Long getPredictionAgreeCount() {
-        return (Long) get(PREDICTION_USER_AGREE_COUNT);
+        return CommonUtilities.getValueAsLong(get(PREDICTION_USER_AGREE_COUNT), null);
     }
 
     /**
@@ -402,7 +401,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  Number of times users have agreed with this prediction blah
      */
     public Long getPredictionDisagreeCount() {
-        return (Long) get(PREDICTION_USER_DISAGREE_COUNT);
+        return CommonUtilities.getValueAsLong(get(PREDICTION_USER_DISAGREE_COUNT), null);
     }
 
     /**
@@ -418,7 +417,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  the count
      */
     public Long getPredictionUnclearCount() {
-        return (Long) get(PREDICTION_USER_UNCLEAR_COUNT);
+        return CommonUtilities.getValueAsLong(get(PREDICTION_USER_UNCLEAR_COUNT), null);
     }
 
     /**
@@ -434,7 +433,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  the count
      */
     public Long getPredictionResultCorrectCount() {
-        return (Long) get(PREDICTION_RESULT_CORRECT_COUNT);
+        return CommonUtilities.getValueAsLong(get(PREDICTION_RESULT_CORRECT_COUNT), null);
     }
 
     /**
@@ -450,7 +449,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  the count
      */
     public Long getPredictionResultIncorrectCount() {
-        return (Long) get(PREDICTION_RESULT_INCORRECT_COUNT);
+        return CommonUtilities.getValueAsLong(get(PREDICTION_RESULT_INCORRECT_COUNT), null);
     }
 
     /**
@@ -466,7 +465,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  the count
      */
     public Long getPredictionResultUnclearCount() {
-        return (Long) get(PREDICTION_RESULT_UNCLEAR_COUNT);
+        return CommonUtilities.getValueAsLong(get(PREDICTION_RESULT_UNCLEAR_COUNT), null);
     }
 
     /**
