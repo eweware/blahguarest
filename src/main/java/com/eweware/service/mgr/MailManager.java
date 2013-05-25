@@ -107,7 +107,7 @@ public class MailManager implements ManagerInterface {
         Transport.send(message);
     }
 
-    private void test() throws SystemErrorException {
+    private void notifyStartup() throws SystemErrorException {
         try {
             final boolean devMode = SystemManager.getInstance().isDevMode();
             final String host = InetAddress.getLocalHost().getHostName();
@@ -167,11 +167,11 @@ public class MailManager implements ManagerInterface {
         state = ManagerState.STARTED;
         System.out.println("*** MailManager started ***");
 
-        try {
-            test();
-        } catch (SystemErrorException e) {
-            throw new WebServiceException(e);
-        }
+//        try {
+//            notifyStartup();
+//        } catch (SystemErrorException e) {
+//            throw new WebServiceException(e);
+//        }
     }
 
     @Override
