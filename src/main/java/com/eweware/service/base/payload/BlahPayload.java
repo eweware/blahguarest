@@ -190,6 +190,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  number of blah views
      */
     public Long getViews() {
+        System.out.println("***/nBlahPayload.getViews()=" + get(VIEWS) + "\nBlahPayload entity=" + this + "\n***");
         return (Long) get(VIEWS);
     }
 
