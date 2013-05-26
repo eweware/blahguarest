@@ -32,30 +32,15 @@ public class SystemResource {
 
     private static final Logger logger = Logger.getLogger(SystemResource.class.getName());
 
-    public static class Foo extends LinkedHashMap<String, Object> implements Serializable {
-
-        public Long getBar() {
-            return (Long) get("4");
-        }
-
-        @JsonSetter("4")
-        public void setBar(Long x) {
-            System.out.println("=== setBar " + x + ((x instanceof Long) ? " a long" : " not a long"));
-            put("4", x);
-        }
-
-        public void set4(Long x) {
-            System.out.println("=== set4 " + x + ((x instanceof Long) ? " a long" : " not a long"));
-            put("4", x);
-        }
-    }
-
     @POST
     @Path("test")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response test(Foo entity) {
         Object obj = entity.getBar();
+        if (obj == null) {
+            Response.ok("getBar is null");
+        }
         StringBuilder b = new StringBuilder("Value ");
         b.append(obj);
         b.append(" is ");
