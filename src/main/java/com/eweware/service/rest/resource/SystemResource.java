@@ -7,12 +7,15 @@ import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.GroupManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
+import org.codehaus.jackson.annotate.JsonSetter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -28,6 +31,37 @@ import java.util.logging.Logger;
 public class SystemResource {
 
     private static final Logger logger = Logger.getLogger(SystemResource.class.getName());
+
+    public static class Foo extends LinkedHashMap<String, Object> implements Serializable {
+
+        public Long getBar() {
+            return (Long) get("4");
+        }
+
+        @JsonSetter("4")
+        public void setBar(Long x) {
+            System.out.println("=== setBar " + x + ((x instanceof Long) ? " a long" : " not a long"));
+            put("4", x);
+        }
+
+        public void set4(Long x) {
+            System.out.println("=== set4 " + x + ((x instanceof Long) ? " a long" : " not a long"));
+            put("4", x);
+        }
+    }
+
+    @POST
+    @Path("test")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response test(Foo entity) {
+        Object obj = entity.getBar();
+        StringBuilder b = new StringBuilder("Value ");
+        b.append(obj);
+        b.append(" is ");
+        b.append(obj.getClass());
+        return Response.ok(b.toString()).build();
+    }
 
     /**
      * <p>Sheep stuff</p>

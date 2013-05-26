@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public final class BlahPayload extends BasePayload implements BlahDAOConstants {
 
+
+
     /**
      * <p>This is the id of the group into which this blah
      * was originally injected.</p>
@@ -312,6 +314,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     public Long getPollOptionCount() {
         return CommonUtilities.getValueAsLong(get(POLL_OPTION_COUNT), null);
     }
+
 
     /**
      * <p>Sets the number of poll options</p>
