@@ -14,6 +14,8 @@ public interface BlahTrackerDAOConstants {
     public static final String BT_OBJECT_ID = "I"; // blah id TODO used by unit tests to delete related trackers
     public static final String BT_AUTHOR_ID = "A";   // blah author id
 
+//    public static final String BT_USER_ID = "S";
+
     public static final String BT_COMMENTS = "C";
     public static final String BT_UP_VOTES = "U";
     public static final String BT_DOWN_VOTES = "D";

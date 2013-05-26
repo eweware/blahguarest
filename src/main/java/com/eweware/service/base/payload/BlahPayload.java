@@ -175,8 +175,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  number of blah views
      */
     public Long getViews() {
-        return (Long) get(VIEWS);
-//        return CommonUtilities.getValueAsLong(get(VIEWS), null);
+        return CommonUtilities.getValueAsLong(get(VIEWS), null);
     }
 
     public void setViews(Long views) {
