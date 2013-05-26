@@ -90,7 +90,7 @@
         <session-timeout>5</session-timeout>
         <cookie-config>
             <name>BSID</name>
-            <http-only>true</http-only>
+            <!--<http-only>true</http-only>-->
         </cookie-config>
     </session-config>
 

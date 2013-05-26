@@ -27,14 +27,6 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     static final String ORIGINAL_GROUP_ID = "G";
 
     /**
-     * <p>Indicates the user promotion/demotion for this blag.</p>
-     * <p> This is used between the client and the service, but
-     * is not stored in the db.</p>
-     * TODO get rid of this https://eweware.atlassian.net/browse/WRS-234
-     */
-//    static final String USER_PROMOTES_OR_DEMOTES = "v";
-
-    /**
      * <p>Records whether the user promoted this blah up or down.</p>
      * <p> This is used between the client and the service, but
      * is not stored in the db.</p>
@@ -63,16 +55,6 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * to vote for the poll option with the specified index.</p>
      */
     static final String POLL_OPTION_VOTE_INDEX = "povi";
-
-//    /**
-//     * <p>Returns the schema for the payload's DAO representation.</p>
-//     * <p><i>Called through reflection in BaseDAOImple.</i></p>
-//     * @return  the dao-equivalent schema
-//     * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#getDAOSchema(main.java.com.eweware.service.base.i18n.LocaleId)
-//     */
-//    protected static final BaseSchema getSchema() {
-//        return BlahSchema.getSchema(LocaleId.en_us);
-//    }
 
     protected static final BaseSchema getSchema() {
         return BlahSchema.getSchema(LocaleId.en_us);
@@ -193,7 +175,8 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
      * @return  number of blah views
      */
     public Long getViews() {
-        return CommonUtilities.getValueAsLong(get(VIEWS), null);
+        return (Long) get(VIEWS);
+//        return CommonUtilities.getValueAsLong(get(VIEWS), null);
     }
 
     public void setViews(Long views) {
