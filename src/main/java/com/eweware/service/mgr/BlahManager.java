@@ -816,6 +816,7 @@ public final class BlahManager implements ManagerInterface {
 
         final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.PROMOTION};
         final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        logger.info("=== updateBlahInternal userId=" + userId + " blahId=" + blahId + " returned=" + userBlahHistory);
         final boolean insert = (userBlahHistory == null);
 
         final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo();
