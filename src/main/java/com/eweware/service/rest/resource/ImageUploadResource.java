@@ -330,7 +330,7 @@ public class ImageUploadResource {
     private void associateWithObject(String mediaId, MediaReferendType referendType, String objectId) throws SystemErrorException, ResourceNotFoundException {
         List<String> imageIds = new ArrayList<String>(1);
         imageIds.add(mediaId);
-//        logger.info("*** uploading image media id '" + mediaId + "' object type '" + referendType + "' object id '" + objectId + "' ***");
+//        logger.finer("*** uploading image media id '" + mediaId + "' object type '" + referendType + "' object id '" + objectId + "' ***");
         if (referendType == MediaReferendType.B) {
             final BlahDAO blah = getStoreManager().createBlah(objectId);
             if (!blah._exists()) {

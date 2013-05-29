@@ -86,7 +86,7 @@ public final class BlahguaSession {
         b.append(userId);
         b.append(". INFO:\n");
         b.append(RestUtilities.getRequestInfo(request));
-        logger.info(b.toString());
+        logger.finer(b.toString());
     }
 
     /**
@@ -399,12 +399,12 @@ public final class BlahguaSession {
 
     public static void incrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
         GroupManager.getInstance().updateViewerCountInDB(groupId, true);
-        logger.info("Incremented viewer count for group id '" + groupId + "'");
+        logger.finer("Incremented viewer count for group id '" + groupId + "'");
     }
 
     public static void decrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
         GroupManager.getInstance().updateViewerCountInDB(groupId, false);
-        logger.info("Decremented viewer count for group id '" + groupId + "'");
+        logger.finer("Decremented viewer count for group id '" + groupId + "'");
     }
 
     /**
@@ -453,7 +453,7 @@ public final class BlahguaSession {
                         }
                         b.append(". INFO:\n");
                         b.append(RestUtilities.getRequestInfo(request));
-                        logger.info(b.toString());
+                        logger.finer(b.toString());
                     }
 
                 }

@@ -816,7 +816,6 @@ public final class BlahManager implements ManagerInterface {
 
         final String[] fieldsToReturnHint = new String[]{UserBlahInfoDAO.PROMOTION};
         final UserBlahInfoDAO userBlahHistory = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
-        logger.info("=== updateBlahInternal userId=" + userId + " blahId=" + blahId + " returned=" + userBlahHistory);
         final boolean insert = (userBlahHistory == null);
 
         final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo();
@@ -1089,13 +1088,13 @@ public final class BlahManager implements ManagerInterface {
         // Next two calls also parse the string to make sure we've got a real date
         Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
         Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
-//        logger.info(statsStartDate+" startDate=" + new Date(startDate.getTimeInMillis()));
-//        logger.info(statsEndDate+" endDate=" + new Date(endDate.getTimeInMillis()));
+//        logger.finer(statsStartDate+" startDate=" + new Date(startDate.getTimeInMillis()));
+//        logger.finer(statsEndDate+" endDate=" + new Date(endDate.getTimeInMillis()));
 
         // We've made sure that the dates can be parsed as expected and are available as calendar instances for comparison
         List<BlahTrackerPayload> trackers = null;
         if (DateUtils.isSameDay(startDate, endDate)) { // fetch single
-//            logger.info("Same day");
+//            logger.finer("Same day");
             final String trackerId = TrackingManager.makeTrackerIdExternal(TrackerType.BLAH, blahId, startDate);
             final BlahTrackerDAO blahTrackerDAO = (BlahTrackerDAO) getStoreManager().createBlahTracker(trackerId)._findByPrimaryId();
             if (blahTrackerDAO != null) {
@@ -1106,7 +1105,7 @@ public final class BlahManager implements ManagerInterface {
             final BlahTrackerDAO blahTrackerDAO = getStoreManager().createBlahTracker();
             final String from = blahId + statsStartDate;
             final String to = (statsEndDate == null) ? null : blahId + statsEndDate;
-//            logger.info("from=" + from + "  to=" + to);
+//            logger.finer("from=" + from + "  to=" + to);
             final boolean sorted = true;
             final List<? extends BaseDAO> trackerDAOs = blahTrackerDAO._findRangeSingleField(sorted, BlahTrackerDAO.ID, from, true, to, true);
             trackers = new ArrayList<BlahTrackerPayload>(trackerDAOs.size());

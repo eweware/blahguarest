@@ -24,7 +24,7 @@ public class BlahguaSessionListener implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent se) {
         final HttpSession session = se.getSession();
         try {
-            logger.info("Started anonymous session id '" + session.getId() + "'");
+            logger.finer("Started anonymous session id '" + session.getId() + "'");
             BlahguaSession.markAnonymous(session);
         } catch (SystemErrorException e) {
             logger.log(Level.SEVERE, "Failed to make a created session id '" + session.getId() + "' anonymous", e);

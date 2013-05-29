@@ -81,7 +81,7 @@ public final class SystemManager implements ManagerInterface {
 //                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
 //                    memcachedHostname = devMemcachedHostname; // same port 21191
 //                }
-//                logger.info("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
+//                logger.finer("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
                 restEndpoint = "localhost:" + devRestPort;
                 cryptoOn = true;
             }

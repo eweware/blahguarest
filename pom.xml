@@ -30,7 +30,7 @@
                 <!--<includes><include>**/01server-xml.config</include></includes>-->
             <!--</resource>-->
             <resource>
-                <targetPath>.</targetPath>
+                <targetPath>./main/resources</targetPath>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes><include>**/logging.properties</include></includes>
             </resource>
