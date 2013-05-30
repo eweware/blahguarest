@@ -312,7 +312,8 @@ public final class BadgesManager {
 
         final String authority = (String) entity.get(BadgingNotificationEntity.AUTHORITY_FIELDNAME);
         final List<Map<String, Object>> badgeEntities = (List<Map<String, Object>>) entity.get("badges");
-        logger.finer("RECEIVED BADGES:\n" + entity);
+        logger.finer("finer RECEIVED BADGES:\n" + entity);
+        logger.info("info RECEIVED BADGES:\n" + entity);
 
         if (badgeEntities != null) {
             final DBCollection txCollection = MongoStoreManager.getInstance().getCollection(MongoStoreManager.getInstance().getBadgeTransactionCollectionName());
@@ -346,7 +347,8 @@ public final class BadgesManager {
                 final BadgeDAO badge = storeManager.createBadge();
                 final String blahguaAuthorityBadgeId = makeBadgeAuthorityBadgeId(authorityId, authorityBadgeId);
                 badge.setAuthorityBadgeId(blahguaAuthorityBadgeId);
-                final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.AUTHORITY_BADGE_ID);
+                badge.setUserId(userId);
+                final BadgeDAO existingBadgeDAO = (BadgeDAO) badge._findByCompositeId(new String[]{BadgeDAO.ID}, BadgeDAO.AUTHORITY_BADGE_ID, BadgeDAO.USER_ID);
                 final String existingBadgeID = (existingBadgeDAO == null) ? null : existingBadgeDAO.getId();
                 if (existingBadgeDAO == null) {
                     logger.finer("New badge '" + badgeName + "' for user id '" + userId + "' for id '" + blahguaAuthorityBadgeId + "'");
