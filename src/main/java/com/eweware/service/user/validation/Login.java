@@ -121,7 +121,7 @@ public final class Login {
      * @throws InvalidRequestException Thrown if the username is unacceptable
      */
     public static String ensureUsernameString(String username) throws InvalidRequestException {
-        if (!CommonUtilities.checkString(username, 3, 32)) {
+        if (!CommonUtilities.checkString(username, 2, 32)) {
             throw new InvalidRequestException("Invalid username '" + username + "'. Length must be less than 33 and more than 2 characters.", ErrorCodes.INVALID_USERNAME);
         }
         if (username.indexOf(RecoveryCode.ENCRYPTED_RECOVERY_CODE_SEGMENT_DELIMITER) != -1) {

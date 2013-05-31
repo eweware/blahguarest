@@ -379,7 +379,7 @@ public final class BlahguaSession {
                         } catch (SystemErrorException e) {
                             throw e;
                         } catch (ResourceNotFoundException e) {
-                            logger.log(Level.WARNING, "Failed to decrement viewer count for a group that did not exist", e);
+                            logger.log(Level.WARNING, "Failed to decrement viewer count for a channel that did not exist", e);
                             // fall through to allow increment
                         }
                         // increment count in DB for new
@@ -392,19 +392,19 @@ public final class BlahguaSession {
                     incrementViewerCount(groupId);
                 }
             } catch (IllegalStateException e) {
-                throw new SystemErrorException("Failed to set group id '" + groupId + "' viewer count (and possibly decrement an old group) because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+                throw new SystemErrorException("Failed to set channel id '" + groupId + "' viewer count (and possibly decrement an old channel) because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
             }
         }
     }
 
     public static void incrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
         GroupManager.getInstance().updateViewerCountInDB(groupId, true);
-        logger.finer("Incremented viewer count for group id '" + groupId + "'");
+        logger.finer("Incremented viewer count for channel id '" + groupId + "'");
     }
 
     public static void decrementViewerCount(String groupId) throws SystemErrorException, ResourceNotFoundException {
         GroupManager.getInstance().updateViewerCountInDB(groupId, false);
-        logger.finer("Decremented viewer count for group id '" + groupId + "'");
+        logger.finer("Decremented viewer count for channel id '" + groupId + "'");
     }
 
     /**
@@ -432,7 +432,7 @@ public final class BlahguaSession {
                     } catch (SystemErrorException e) {
                         throw e;
                     } catch (ResourceNotFoundException e) {
-                        logger.log(Level.WARNING, "Tried to decrement view count for a non-existent group", e);
+                        logger.log(Level.WARNING, "Tried to decrement view count for a non-existent channel", e);
                         // fall through
                     }
                 }
@@ -459,9 +459,9 @@ public final class BlahguaSession {
                 }
 
             } catch (IllegalStateException e) {
-                throw new SystemErrorException("Failed to decrement current viewer count for a group because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("Failed to decrement current viewer count for a channel because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.SERVER_SEVERE_ERROR);
             } catch (Exception e) {
-                throw new SystemErrorException("Failed to decrement current viewer count for group id '" + groupId + "' because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.SERVER_SEVERE_ERROR);
+                throw new SystemErrorException("Failed to decrement current viewer count for channel id '" + groupId + "' because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.SERVER_SEVERE_ERROR);
             } finally {
                 try {
                     removeAllAttributes(session);
@@ -498,10 +498,10 @@ public final class BlahguaSession {
         } catch (IllegalStateException e) {
             throw new SystemErrorException("Failed to decrement current viewer count because session was already invalidated for some groupId", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } catch (ResourceNotFoundException e) {
-            logger.log(Level.WARNING, "Did not decrement group id '" + groupId + "' because it does not exist", e);
+            logger.log(Level.WARNING, "Did not decrement channel id '" + groupId + "' because it does not exist", e);
             // fall through
         } catch (Exception e) {
-            throw new SystemErrorException("Failed to decrement current viewer count for groupId '" + groupId + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
+            throw new SystemErrorException("Failed to decrement current viewer count for channel id '" + groupId + "'", e, ErrorCodes.SERVER_SEVERE_ERROR);
         } finally {
             try {
                 removeAllAttributes(session);
@@ -526,13 +526,13 @@ public final class BlahguaSession {
                 b.append("'");
             }
             if (groupId != null) {
-                b.append(" viewing group id '");
+                b.append(" viewing channel id '");
                 b.append(groupId);
                 b.append("'");
             } else {
-                b.append(" not viewing any group");
+                b.append(" not viewing any channels");
             }
-            logger.log((groupId == null ? Level.WARNING : Level.INFO), b.toString());
+            logger.finer(b.toString());
         }
     }
 
@@ -558,7 +558,7 @@ public final class BlahguaSession {
         try {
             session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber));
         } catch (IllegalStateException e) {
-            throw new SystemErrorException("Failed to set inbox info for group id '" + groupId + "' because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+            throw new SystemErrorException("Failed to set inbox info for channel id '" + groupId + "' because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
         }
     }
 
