@@ -64,6 +64,16 @@ public class BadgeAuthorityDAOImpl extends BaseDAOImpl implements BadgeAuthority
     }
 
     @Override
+    public String getBadgeTypeDescription() {
+        return (String) get(BADGE_TYPE_DESCRIPTION);
+    }
+
+    @Override
+    public void setBadgeTypeDescription(String description) {
+        put(BADGE_TYPE_DESCRIPTION, description);
+    }
+
+    @Override
     public String getEndpointUrl() {
         return (String) get(ENDPOINT_URL);
     }

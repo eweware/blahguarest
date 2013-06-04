@@ -10,7 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAO.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAOConstants.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAOConstants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -194,7 +197,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369163064325" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370034180903" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370281716051" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370329104022" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369859034318" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -518,8 +521,8 @@
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/BuildSocialGraph.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363237801639" ignored="false" />
     <file path="/BuildSocialGraph.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363237801639" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/README.md" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365812887082" ignored="false" />
-    <file path="/BadgeAuthorityDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363894108754" ignored="false" />
-    <file path="/BadgeAuthorityDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1364240038655" ignored="false" />
+    <file path="/BadgeAuthorityDAO.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370328970247" ignored="false" />
+    <file path="/BadgeAuthorityDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370329040422" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365534864885" ignored="false" />
     <file path="/InitializeDatabase.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365536509155" ignored="false" />
     <file path="/BadgesResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369343071972" ignored="false" />
@@ -533,7 +536,7 @@
     <file path="$PROJECT_DIR$/../badge-authority/src/main/java/com/eweware/badging/rest/resource/BadgesResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369343894965" ignored="false" />
     <file path="/BadgeAuthoritySchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366589509059" ignored="false" />
     <file path="/BadgeSchema.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363732163785" ignored="false" />
-    <file path="/BadgeAuthorityPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363894197956" ignored="false" />
+    <file path="/BadgeAuthorityPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370329003170" ignored="false" />
     <file path="/BadgePayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369249409870" ignored="false" />
     <file path="$PROJECT_DIR$/../badge-authority/src/main/webapp/js/ba_api.js" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370284700090" ignored="false" />
     <file path="/ba_api.js" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370284700090" ignored="false" />
@@ -1178,6 +1181,23 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" line="215" class="main.java.com.eweware.service.rest.session.BlahguaSession" package="main.java.com.eweware.service.rest.session">
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -1214,23 +1234,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" line="215" class="main.java.com.eweware.service.rest.session.BlahguaSession" package="main.java.com.eweware.service.rest.session">
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-    </line_breakpoints>
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
@@ -1241,51 +1244,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BlahManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1416" column="25" selection-start="67580" selection-end="67580" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommentsResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/CommentsResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="254" column="70" selection-start="13317" selection-end="13317" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserCommentInfoDAO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserCommentInfoDAO.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="28" selection-start="339" selection-end="351" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommentPayload.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/CommentPayload.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="86" column="38" selection-start="2196" selection-end="2196" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UsersResource.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="235" column="63" selection-start="11193" selection-end="11193" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="UserManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -1304,10 +1262,55 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserProfileSchema.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="UserProfileSchema.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="31" selection-start="7378" selection-end="7378" vertical-scroll-proportion="0.4677835">
+            <state line="146" column="31" selection-start="7378" selection-end="7378" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgeAuthorityDAOConstants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAOConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="33" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgeAuthorityDAO.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="28" selection-start="518" selection-end="518" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgeAuthorityPayload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="26" selection-start="470" selection-end="470" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgesManager.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="95" column="27" selection-start="3539" selection-end="3539" vertical-scroll-proportion="0.33376288">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BadgeAuthorityDAOImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="72" column="49" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1354,10 +1357,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSessionListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
@@ -1370,6 +1369,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/user/validation/Login.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAOConstants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java" />
       </list>
     </option>
   </component>
@@ -1422,6 +1425,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1563,6 +1568,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="mgr" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blahguarest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dao" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1764,27 +1795,25 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="185" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="202" />
-    <property name="OverrideImplement.combined" value="false" />
     <property name="project.structure.proportion" value="0.15000002" />
+    <property name="OverrideImplement.combined" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="202" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="196" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="true" />
-    <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="true" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="196" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="205" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="989" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="993" />
@@ -1796,26 +1825,26 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao" />
+    <property name="Downloaded.Files.Path" value="$PROJECT_DIR$/lib" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.lastSelected" value="preferences.pluginManager" />
-    <property name="project.structure.side.proportion" value="0.2653534" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="false" />
+    <property name="project.structure.side.proportion" value="0.2653534" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="GenerateAntBuildDialog.backupFiles" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -1958,19 +1987,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1996,6 +2012,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3051,7 +3080,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="22" width="2556" height="1418" extended-state="6" />
+    <frame x="4" y="22" width="2556" height="1418" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -3172,41 +3201,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="17" selection-start="609" selection-end="609" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/RestUtilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="78" selection-start="570" selection-end="570" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/session/BlahguaSession.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="503" column="99" selection-start="22919" selection-end="22919" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/error/ErrorCodes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="375" column="106" selection-start="8700" selection-end="8700" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/CommentDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="43" selection-start="806" selection-end="806" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BlahPayload.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="18" column="19" selection-start="618" selection-end="618" vertical-scroll-proportion="-0.14173229">
@@ -3249,13 +3243,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="421" column="93" selection-start="21667" selection-end="21667" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="32" column="47" selection-start="1013" selection-end="1013" vertical-scroll-proportion="0.0">
@@ -3277,9 +3264,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="421" column="93" selection-start="21667" selection-end="21667" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="31" selection-start="7378" selection-end="7378" vertical-scroll-proportion="0.4677835">
+        <state line="146" column="31" selection-start="7378" selection-end="7378" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAOConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="33" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BadgeAuthorityDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="28" selection-start="518" selection-end="518" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/BadgeAuthorityDAOImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="49" selection-start="2203" selection-end="2203" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/payload/BadgeAuthorityPayload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="26" selection-start="470" selection-end="470" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="27" selection-start="3539" selection-end="3539" vertical-scroll-proportion="0.33376288">
           <folding />
         </state>
       </provider>

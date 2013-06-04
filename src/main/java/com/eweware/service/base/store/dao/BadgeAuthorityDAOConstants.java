@@ -21,6 +21,11 @@ public interface BadgeAuthorityDAOConstants {
     static final String DESCRIPTION = "D";
 
     /**
+     * <p>Describes the types of badges provided by this authority.</p>
+     */
+    static final String BADGE_TYPE_DESCRIPTION = "T";
+
+    /**
      * <p>The endpoint url for the authority. The format of the string is hostname[:port].</p>
      */
     static final String ENDPOINT_URL = "E";

@@ -39,14 +39,24 @@ public class BadgeAuthorityPayload extends BasePayload implements BadgeAuthority
         put(DISPLAY_NAME, displayName);
     }
 
-   
+
     public String getDescription() {
         return (String) get(DESCRIPTION);
     }
 
-   
+
     public void setDescription(String description) {
         put(DESCRIPTION, description);
+    }
+
+
+    public String getBadgeTypeDescription() {
+        return (String) get(BADGE_TYPE_DESCRIPTION);
+    }
+
+
+    public void setBadgeTypeDescription(String description) {
+        put(BADGE_TYPE_DESCRIPTION, description);
     }
 
    
