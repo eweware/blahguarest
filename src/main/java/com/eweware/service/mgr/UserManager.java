@@ -263,6 +263,7 @@ public class UserManager implements ManagerInterface {
 
     /**
      * <p>Returns email address only, if any.</p>
+     *
      * @param userId
      * @return
      * @throws SystemErrorException
@@ -399,7 +400,8 @@ public class UserManager implements ManagerInterface {
         if (profileExists && createOnly) {
             throw new StateConflictException("profile already exists for userId=" + userId, profile, ErrorCodes.ALREADY_EXISTS_USER_PROFILE);
         } else if (!profileExists && !createOnly) {
-            throw new ResourceNotFoundException("profile for userId=" + userId + " doesn't exist", profile, ErrorCodes.NOT_FOUND_USER_PROFILE);
+//            throw new ResourceNotFoundException("profile for userId=" + userId + " doesn't exist", profile, ErrorCodes.NOT_FOUND_USER_PROFILE);
+            createOnly = true;
         }
         if (createOnly) {
             userProfileDAO.initToDefaultValues(LocaleId.en_us); // userId will not be overwritten
@@ -783,6 +785,7 @@ public class UserManager implements ManagerInterface {
     }
 
     private static Map<Character, String> vowelToArticle = new HashMap<Character, String>(5);
+
     static {
         vowelToArticle.put('a', "An ");
         vowelToArticle.put('e', "An ");
@@ -1292,6 +1295,7 @@ public class UserManager implements ManagerInterface {
 
     /**
      * <p>Returns all image ids for a user</p>
+     *
      * @param userId The user
      * @return A UserPayload including only the images if any.
      */
@@ -1312,8 +1316,9 @@ public class UserManager implements ManagerInterface {
     /**
      * <p>Associates the image with the user.</p>
      * <p>Deletes any existing images for the user.</p>
-     * @param userId  The user id
-     * @param mediaId The media id
+     *
+     * @param userId                  The user id
+     * @param mediaId                 The media id
      * @param updateMediaReferendType If true, then the media record's existence is checked
      *                                and it is updated with the referend type for a user
      * @throws SystemErrorException
