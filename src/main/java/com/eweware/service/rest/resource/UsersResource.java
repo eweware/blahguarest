@@ -56,6 +56,7 @@ public class UsersResource {
     private static final String UPDATE_ACCOUNT_OPERATION = "updateAccount";
     private static final String DELETE_USER_IMAGES = "deleteUserImages";
     private static final String GET_USER_IMAGES_OPERATION = "getUserImages";
+    private static final String SET_USER_IMAGE_OPERATION = "setUserImage";
 
     private UserManager userManager;
     private SystemManager systemManager;
@@ -924,6 +925,43 @@ public class UsersResource {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
 
+    }
+
+    /**
+     * <p>Associates the specified media id as a user's image.</p>
+     * <p>Previous images are deleted.</p>
+     *
+     * <div><b>METHOD: </b>POST</div>
+     * <div><b>URL: </b>users/image/{mediaId}</div>
+     *
+     * @param mediaId  The media id (this is returned by the image uploader)
+     * @return  Returns a response with http status 202 (ACCEPTED) when it succeeds.
+     * Returns 404 (NOT FOUND) if the user or media object are not found.
+     * Returns 401 (UNAUTHORIZED) if the user is not authorized (not logged in).
+     * On error conditions, a JSON object is returned with details.
+     */
+    @POST
+    @Path("/image/{mediaId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setUserImage(
+            @PathParam("mediaId") String mediaId,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            getUserManager().setUserImage(userId, mediaId);
+            final Response response = RestUtilities.make202AcceptedResponse();
+            getSystemManager().setResponseTime(SET_USER_IMAGE_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
     }
 
     /**

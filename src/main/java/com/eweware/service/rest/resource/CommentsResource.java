@@ -4,6 +4,8 @@ import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.payload.CommentPayload;
+import main.java.com.eweware.service.base.store.dao.CommentDAO;
+import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.rest.RestUtilities;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +35,7 @@ public class CommentsResource {
     private static final String GET_COMMENTS_OPERATION = "getComments";
     private static final String UPDATE_COMMENT_OPERATION = "updateComment";
     private static final String GET_COMMENT_AUTHOR_OPERATION = "getCommentAuthor";
+    private static final String SET_COMMENT_IMAGE_OPERATION = "setCommentImage";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;

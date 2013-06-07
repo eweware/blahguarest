@@ -14,6 +14,7 @@ import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
 import main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema;
 import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
@@ -1278,11 +1279,23 @@ public class UserManager implements ManagerInterface {
     }
 
     /**
+     * <p>Associates the image with the user and deletes all previous images.</p>
+     *
+     * @param userId  The user id
+     * @param mediaId The media id of the image
+     */
+    public void setUserImage(String userId, String mediaId) throws ResourceNotFoundException, SystemErrorException {
+        ensureReady();
+        associateImageWithUser(userId, mediaId, true);
+    }
+
+    /**
      * <p>Returns all image ids for a user</p>
      * @param userId The user
      * @return A UserPayload including only the images if any.
      */
     public UserPayload getUserImages(String userId) throws SystemErrorException, ResourceNotFoundException {
+        ensureReady();
         final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
         if (userDAO == null) {
             throw new ResourceNotFoundException("User id '" + userId + "' not found", ErrorCodes.MISSING_USER_ID);
@@ -1293,6 +1306,40 @@ public class UserManager implements ManagerInterface {
             entity.setImageIds(imageids);
         }
         return entity;
+    }
+
+    /**
+     * <p>Associates the image with the user.</p>
+     * <p>Deletes any existing images for the user.</p>
+     * @param userId  The user id
+     * @param mediaId The media id
+     * @param updateMediaReferendType If true, then the media record's existence is checked
+     *                                and it is updated with the referend type for a user
+     * @throws SystemErrorException
+     * @throws ResourceNotFoundException
+     * @see MediaReferendType
+     */
+    public void associateImageWithUser(String userId, String mediaId, boolean updateMediaReferendType) throws SystemErrorException, ResourceNotFoundException {
+        ensureReady();
+        final UserDAO user = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+        if (user == null) {
+            throw new ResourceNotFoundException("No user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
+        }
+        if (updateMediaReferendType) { // prevent it from being garbage collected
+            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+            if (!mediaDAO._exists()) {
+                throw new ResourceNotFoundException("No media id '" + mediaId + "'", ErrorCodes.MEDIA_NOT_FOUND);
+            }
+            mediaDAO.setReferendType(MediaReferendType.U.toString());
+            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        }
+        final List<String> existingImageIds = user.getImageids();
+        // TODO Calling following method updates the user dao, which makes it two updates on the same record because the update will do a push--not replacement
+        // TODO  should really support a "replacement" capability for arrays, perhaps through a different DAOUpdateType called REPLACEMENT_INCREMENTAL
+        // TODO  though DAOUpdateType has outworn its welcome: better to have an update mode (e.g., replace) that can be associated with each field, with useful defaults
+        deleteMediaIdsForUser(userId, user, existingImageIds);
+        user.setImageIds(Arrays.asList(new String[]{mediaId}));
+        user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
     }
 
 

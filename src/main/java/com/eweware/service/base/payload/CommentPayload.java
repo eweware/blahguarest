@@ -155,4 +155,12 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     public void setUserNickname(String nickname) {
         put(USER_NICKNAME, nickname);
     }
+
+    public List<String> getImageIds() {
+        return (List<String>) get(IMAGE_IDS);
+    }
+
+    public void setImageIds(List<String> imageIds) {
+        put(IMAGE_IDS, imageIds);
+    }
 }

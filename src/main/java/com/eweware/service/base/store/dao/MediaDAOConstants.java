@@ -26,7 +26,7 @@ public interface MediaDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    REFEREND_TYPE,
+                    REFEREND_TYPE, TYPE,
             })
     };
 }

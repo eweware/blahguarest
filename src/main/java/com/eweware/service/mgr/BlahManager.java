@@ -16,6 +16,7 @@ import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
 import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
+import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.base.type.TrackerType;
 import main.java.com.eweware.service.mgr.aux.InboxHandler;
@@ -216,6 +217,18 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("Blah text line required for polls and predictions", ErrorCodes.MISSING_TEXT);
         }
 
+        final List<String> mediaIds = entity.getImageIds();
+        final boolean hasMedia = (mediaIds != null && mediaIds.size() > 0);
+        if (hasMedia) {
+            final String mediaId = mediaIds.get(0);
+            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+            if (!mediaDAO._exists()) {
+                throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+            }
+            mediaDAO.setReferendType(MediaReferendType.B.toString());
+            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        }
+
         text = cleanupBlahTextString(text);
         entity.setText(text);
         entity.setBody(cleanupBlahTextString(entity.getBody()));
@@ -236,6 +249,9 @@ public final class BlahManager implements ManagerInterface {
         blahDAO.addFromMap(entity, true); // removes fields not in schema
         // TODO maybe set fields explicitly instead of trusting request payload's data
         blahDAO.setAuthorId(authorId);
+        if (hasMedia) {
+            blahDAO.setImageIds(mediaIds);
+        }
         if (isPoll) {
             addPollData(text, blahDAO);
         } else {
@@ -1183,45 +1199,57 @@ public final class BlahManager implements ManagerInterface {
      *
      * @param localeId
      * @param commentAuthorId
-     * @param request         @return
+     * @param entity         @return
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
-    public CommentPayload createComment(LocaleId localeId, String commentAuthorId, CommentPayload request) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    public CommentPayload createComment(LocaleId localeId, String commentAuthorId, CommentPayload entity) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
         ensureReady();
 
         // Check parameters
-        if (request.getCommentVotes() != null) {
-            throw new InvalidRequestException("cannot vote for comment when creating it", request, ErrorCodes.CANNOT_VOTE_ON_COMMENT_WHEN_CREATING_IT);
+        if (entity.getCommentVotes() != null) {
+            throw new InvalidRequestException("cannot vote for comment when creating it", entity, ErrorCodes.CANNOT_VOTE_ON_COMMENT_WHEN_CREATING_IT);
         }
-        final String blahId = request.getBlahId();
+        final String blahId = entity.getBlahId();
         if (CommonUtilities.isEmptyString(blahId)) {
-            throw new InvalidRequestException("missing blah id", request, ErrorCodes.MISSING_BLAH_ID);
+            throw new InvalidRequestException("missing blah id", entity, ErrorCodes.MISSING_BLAH_ID);
         }
         if (CommonUtilities.isEmptyString(commentAuthorId)) {
-            throw new InvalidRequestException("missing authorId", request, ErrorCodes.MISSING_AUTHOR_ID);
+            throw new InvalidRequestException("missing authorId", entity, ErrorCodes.MISSING_AUTHOR_ID);
         }
-        String text = request.getText();
+        String text = entity.getText();
         if (CommonUtilities.isEmptyString(text)) {
-            throw new InvalidRequestException("missing text", request, ErrorCodes.MISSING_TEXT);
+            throw new InvalidRequestException("missing text", entity, ErrorCodes.MISSING_TEXT);
         }
         text = CommonUtilities.scrapeMarkup(text);
 
-        getUserManager().checkUserById(commentAuthorId, request);
-        final Long blahVote = CommonUtilities.checkDiscreteValue(request.getBlahVote(), request);
+        final List<String> mediaIds = entity.getImageIds();
+        final boolean hasMedia = (mediaIds != null && mediaIds.size() > 0);
+        if (hasMedia) {
+            final String mediaId = mediaIds.get(0); // assumption: should only have one
+            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+            if (!mediaDAO._exists()) {
+                throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+            }
+            mediaDAO.setReferendType(MediaReferendType.C.toString());
+            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        }
+
+        getUserManager().checkUserById(commentAuthorId, entity);
+        final Long blahVote = CommonUtilities.checkDiscreteValue(entity.getBlahVote(), entity);
         boolean votedForBlah = (blahVote != 0L);
 
         // Check that blah exists and if this comment includes a vote that the comment author is not the blah's author
         final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
         final BlahDAO blah = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID);
         if (blah == null) {
-            throw new InvalidRequestException("no blahId=" + blahId + " exists", request, ErrorCodes.INVALID_INPUT);
+            throw new InvalidRequestException("no blahId=" + blahId + " exists", entity, ErrorCodes.INVALID_INPUT);
         }
         if (votedForBlah && blah.getAuthorId().equals(commentAuthorId)) { // Check if comment author is also blah author: voting not allowed
-            throw new InvalidRequestException("authorId=" + commentAuthorId + " (author of the blahId=" + blahId + ") cannot vote on own blah", request, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
+            throw new InvalidRequestException("authorId=" + commentAuthorId + " (author of the blahId=" + blahId + ") cannot vote on own blah", entity, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
         }
 
         // Create comment
@@ -1230,6 +1258,9 @@ public final class BlahManager implements ManagerInterface {
         commentDAO.setBlahId(blahId);
         commentDAO.setText(text);
         commentDAO.setAuthorId(commentAuthorId);
+        if (hasMedia) {
+            commentDAO.setImageIds(mediaIds);
+        }
         if (votedForBlah) {
             commentDAO.setBlahVote(blahVote);
         }
@@ -1248,17 +1279,7 @@ public final class BlahManager implements ManagerInterface {
         final String subObjectId = blahId;
         final boolean voteUp = (blahVote > 0L);
         final boolean voteDown = (blahVote < 0L);
-        getTrackingManager().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, request.getViews(), request.getOpens());
-
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_COMMENT);
-//        tracker.setBlahAuthorId(blahAuthorId);
-//        tracker.setCommentAuthorId(commentAuthorId);
-//        tracker.setUserId(commentAuthorId);
-//        tracker.setBlahId(blahId);
-//        if (blahVote != 0) {
-//            tracker.setVote(blahVote);
-//        }
-//        trackingManager.track(LocaleId.en_us, tracker);
+        getTrackingManager().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, entity.getViews(), entity.getOpens());
 
         if (doIndex()) {
             indexComment(commentDAO); // index new comment
@@ -1538,6 +1559,25 @@ public final class BlahManager implements ManagerInterface {
 
         return inbox.getItems();
     }
+
+    /**
+     * <p>Associates an image with a comment.</p>
+     * <p>This method does NOT delete any existing images for the comment.</p>
+     * @param commentId  The comment id
+     * @param mediaId The media id
+     * @throws SystemErrorException
+     * @throws ResourceNotFoundException
+     * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
+     */
+    public void associateImageWithComment(String commentId, String mediaId) throws SystemErrorException, ResourceNotFoundException {
+        final CommentDAO comment = getStoreManager().createComment(commentId);
+        if (!comment._exists()) {
+            throw new ResourceNotFoundException("No comment id '" + commentId + "' exists", ErrorCodes.NOT_FOUND_COMMENT_ID);
+        }
+        comment.setImageIds(Arrays.asList(new String[]{mediaId}));
+        comment._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+    }
+
 
     /**
      * <p>Checks whether the group may be accessed in this session.</p>

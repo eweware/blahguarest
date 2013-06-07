@@ -10,12 +10,11 @@ import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.BlahDAO;
-import main.java.com.eweware.service.base.store.dao.CommentDAO;
 import main.java.com.eweware.service.base.store.dao.MediaDAO;
-import main.java.com.eweware.service.base.store.dao.UserDAO;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import main.java.com.eweware.service.mgr.BlahManager;
 import main.java.com.eweware.service.mgr.MediaManager;
 import main.java.com.eweware.service.mgr.UserManager;
 import main.java.com.eweware.service.rest.RestUtilities;
@@ -55,17 +54,9 @@ public class ImageUploadResource {
     private static final String localOriginalImagePath = "/app/blahguarest/images/original/";   // TODO add to config
     private static final String localFormattedImagePath = "/app/blahguarest/images/image/";     // TODO add to config
     private static final String UPLOAD_IMAGE_OPERATION = "uploadImage";
-
-    private StoreManager storeManager;
-    private SystemManager systemManager;
-    private MediaManager mediaManager;
-    private UserManager userManager;
-
-
     public static final String canonicalImageFileFormat = ".jpg";
 
     private static final java.util.Map<String, Integer> supportedUploadFormats = new HashMap<String, Integer>();
-
     static {
         supportedUploadFormats.put(".jpg", 1);
         supportedUploadFormats.put(".JPG", 1);
@@ -81,7 +72,6 @@ public class ImageUploadResource {
         supportedUploadFormats.put(".tiff", 1);
     }
 
-
     /**
      * We create a set of versions of the uploaded file
      * in JPG format, each version has a different spec.
@@ -91,6 +81,8 @@ public class ImageUploadResource {
         B(256, 256, TypeSpecMode.FIXED), // scale & crop to 256x256
         C(512, 512, TypeSpecMode.FIXED), // scale & crop to 512x512
         D(768, null, TypeSpecMode.WIDTH_DOMINANT); // scale to 768x?
+
+
 
         private final Integer width;
         private final Integer height;
@@ -108,6 +100,12 @@ public class ImageUploadResource {
         WIDTH_DOMINANT, // Scale to preserve width
         HEIGHT_DOMINANT // Scale to preserve height
     }
+
+    private StoreManager storeManager;
+    private SystemManager systemManager;
+    private MediaManager mediaManager;
+    private UserManager userManager;
+    private BlahManager blahManager;
 
     /**
      * <p>Not really in use...</p>
@@ -131,35 +129,44 @@ public class ImageUploadResource {
     }
 
     /**
-     * <p>Use this method to upload an image to be related to an object. Currently, only
-     * blah and comment images are supported. Each object can hold multiple images, but
-     * the semantics for their use are currently not well-defined.</p>
+     * <p>Use this method to upload an image to be related to an object, such as
+     * a blah, comment, etc. Returns the media id of the object.</p>
+     * <p></p>One may also upload an image that is not yet associated
+     * with an object.</p>
+     *
      * <div><b>METHOD:</b> POST</div>
      * <div><b>URL:</b> images/upload</div>
      *
-     * @param objType   The object type. 'B' means a Blah image, 'C' means a comment image.
-     * @param objectId  The object id (e.g., the blah id if the object type is 'B').
-     * @param isPrimary Designates whether the image is "primary". A crude way to get at
+     * @param objectType   Required. The object type. This specifies whether the image is associated
+     *                  with a specific type of object. 'B' means a Blah image, 'C' means a comment image,
+     *                  'U' means a user image, and 'X' means that the image is not yet
+     *                  associated with anything. If the objectType is other than 'X',
+     *                  then the id of the object is required.
+     * @param objectId  Required only if the objectType is not 'X'.
+     *                  This is the object id (e.g., the blah id if the object type is 'B').
+     * @param isPrimary Not required nor expected (reserved for later use).
+     *                  Designates whether the image is "primary". A crude way to get at
      *                  the semantics, which are still to be defined.
-     * @param in        The input stream with the image data. TIF, PNG, JPG and GIF images
+     * @param in        Required. The input stream with the image data. TIF, PNG, JPG and GIF images
      *                  are acceptable.
-     * @param metadata  Input metadata.
+     * @param metadata  Required. Input metadata.
      * @return Http status of 200.
      *         If there is an error in the request, returns status 400.
+     * @see MediaReferendType
      */
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
     public Response imageUpload(
-            @FormDataParam("objectType") String objType,
+            @FormDataParam("objectType") String objectType,
             @FormDataParam("objectId") String objectId,
-            @FormDataParam("primary") Boolean isPrimary, // ignored TODO there's only one image for now
+            @FormDataParam("primary") Boolean isPrimary, // indicates whether this image should be considered to be primary (not used)
             @FormDataParam("file") InputStream in,
             @FormDataParam("file") FormDataContentDisposition metadata,
             @Context HttpServletRequest request) {
         final long s = System.currentTimeMillis();
-        final Response response = doUpload(objType, objectId, in, metadata, request);
+        final Response response = doUpload(objectType, objectId, in, metadata, request);
         try {
             getSystemManager().setResponseTime(UPLOAD_IMAGE_OPERATION, (System.currentTimeMillis() - s));
         } catch (SystemErrorException e) {
@@ -169,14 +176,19 @@ public class ImageUploadResource {
         return response;
     }
 
-    private Response doUpload(String objType, String objectId, InputStream in, FormDataContentDisposition metadata, HttpServletRequest request) {
+    private Response doUpload(String objectType, String objectId, InputStream in, FormDataContentDisposition metadata, HttpServletRequest request) {
         final MediaReferendType referendType;
         try {
             BlahguaSession.ensureAuthenticated(request);
-            if (objectId == null) {
+            try {
+                referendType = MediaReferendType.valueOf(objectType);
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "invalid object type '" + objectType + "'", e);
+                return Response.status(400).entity("error=invalid object type").build();
+            }
+            if ((referendType != MediaReferendType.X) && (objectId == null)) {
                 return Response.status(400).entity("error=missing object id").build();
             }
-            referendType = MediaReferendType.valueOf(objType);
         } catch (IllegalArgumentException e) {
             logger.log(Level.WARNING, "error=missing or invalid referendType. INFO:\n" + RestUtilities.getRequestInfo(request), e);
             return Response.status(500).entity("error=missing or invalid referendType").build();
@@ -184,7 +196,7 @@ public class ImageUploadResource {
             logger.log(Level.SEVERE, "Unauthorized access attempt", e);
             return Response.status(401).entity("error=unauthorized").build();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'\nINFO:\n" + RestUtilities.getRequestInfo(request), e);
+            logger.log(Level.SEVERE, "Failed to upload file to obj type '" + objectType + "' obj id '" + objectId + "'\nINFO:\n" + RestUtilities.getRequestInfo(request), e);
             return Response.status(500).entity("error=" + e.getMessage()).build();
         }
 
@@ -192,7 +204,7 @@ public class ImageUploadResource {
         try {
             s3 = AWSUtilities.getAmazonS3();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objType + "' obj id '" + objectId + "'\nINFO:\n" + RestUtilities.getRequestInfo(request), e);
+            logger.log(Level.SEVERE, "Failed to read AWSCredentials.properties file for resource stream. Failed to upload file to obj type '" + objectType + "' obj id '" + objectId + "'\nINFO:\n" + RestUtilities.getRequestInfo(request), e);
             return Response.status(400).entity("error=credentials error" + ((e.getMessage() == null) ? e.getClass() : e.getMessage())).build();
         }
 
@@ -220,6 +232,7 @@ public class ImageUploadResource {
             throw new InvalidRequestException("File format '" + extension + "' is not supported: " + file, ErrorCodes.UNSUPPORTED_MEDIA_TYPE);
         }
         final String filename = getFilename(file);
+
         final MediaDAO mediaDAO = makeMediaRecord(referendType);
         final String filepath = localOriginalImagePath + mediaDAO.getId() + extension;
         final File infile = new File(filepath);
@@ -304,14 +317,14 @@ public class ImageUploadResource {
                     throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 }
             }
-            associateWithObject(mediaId, referendType, objectId);
+            associateImageWithObject(mediaId, referendType, objectId);
 
 
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception ex) {
             throw new SystemErrorException("File upload failed", ex, ErrorCodes.SERVER_RECOVERABLE_ERROR);
-        }  finally {
+        } finally {
             for (File file : filesToDelete) {
                 try {
                     file.delete();
@@ -327,7 +340,7 @@ public class ImageUploadResource {
         }
     }
 
-    private void associateWithObject(String mediaId, MediaReferendType referendType, String objectId) throws SystemErrorException, ResourceNotFoundException {
+    private void associateImageWithObject(String mediaId, MediaReferendType referendType, String objectId) throws SystemErrorException, ResourceNotFoundException {
         List<String> imageIds = new ArrayList<String>(1);
         imageIds.add(mediaId);
 //        logger.finer("*** uploading image media id '" + mediaId + "' object type '" + referendType + "' object id '" + objectId + "' ***");
@@ -339,24 +352,11 @@ public class ImageUploadResource {
             blah.setImageIds(imageIds);
             blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else if (referendType == MediaReferendType.C) {
-            final CommentDAO comment = getStoreManager().createComment(objectId);
-            if (!comment._exists()) {
-                throw new ResourceNotFoundException("No commentId '" + objectId + "' exists", ErrorCodes.NOT_FOUND_COMMENT_ID);
-            }
-            comment.setImageIds(imageIds);
-            comment._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+            getBlahManager().associateImageWithComment(objectId, mediaId);
         } else if (referendType == MediaReferendType.U) {
-            final UserDAO user = (UserDAO) getStoreManager().createUser(objectId)._findByPrimaryId(UserDAO.IMAGE_IDS);
-            if (user == null) {
-                throw new ResourceNotFoundException("No user id '" + objectId + "'", ErrorCodes.NOT_FOUND_USER_ID);
-            }
-            final List<String> existingImageIds = user.getImageids();
-            // TODO Calling following method updates the user dao, which makes it two updates on the same record
-            // TODO  would be nice to have a "replacement" capability for arrays, perhaps through a different DAOUpdateType called REPLACEMENT_INCREMENTAL
-            // TODO  though DAOUpdateType has outworn its welcome: better to have an update mode (e.g., replace) that can be associated with each field
-            getUserManager().deleteMediaIdsForUser(objectId, user, existingImageIds);
-            user.setImageIds(imageIds);
-            user._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+            getUserManager().associateImageWithUser(objectId, mediaId, false);
+        } else if (referendType == MediaReferendType.X) {
+            // do nothing: the image may be associated with an object later on
         } else {
             throw new SystemErrorException("Media referend type '" + referendType + "' not supported", ErrorCodes.SERVER_SEVERE_ERROR);
         }
@@ -445,6 +445,13 @@ public class ImageUploadResource {
             userManager = UserManager.getInstance();
         }
         return userManager;
+    }
+
+    private BlahManager getBlahManager() throws SystemErrorException {
+        if (blahManager == null) {
+            blahManager = BlahManager.getInstance();
+        }
+        return blahManager;
     }
 
 
