@@ -590,8 +590,6 @@ public class UsersResource {
             final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileById(LocaleId.en_us, (userId == null) ? userId : userId));
             getSystemManager().setResponseTime(GET_USER_PROFILE_BY_ID_OPERATION, (System.currentTimeMillis() - s));
             return response;
-        } catch (ResourceNotFoundException e) {
-            return RestUtilities.make404ResourceNotFoundResponse(request, e);
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {

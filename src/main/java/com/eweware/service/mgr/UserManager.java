@@ -755,11 +755,12 @@ public class UserManager implements ManagerInterface {
     }
 
     public UserProfilePayload getUserProfileById(LocaleId localeId, String userId)
-            throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+            throws InvalidRequestException, SystemErrorException {
         ensureReady();
         final UserProfileDAO userProfileDAO = getUserProfileDAO(userId);
         if (userProfileDAO == null) {
-            throw new ResourceNotFoundException("no user profile id=" + userId, ErrorCodes.NOT_FOUND_USER_PROFILE);
+            return new UserProfilePayload();
+//            throw new ResourceNotFoundException("no user profile id=" + userId, ErrorCodes.NOT_FOUND_USER_PROFILE);
         }
         return new UserProfilePayload(userProfileDAO.toMap());
     }
@@ -1006,7 +1007,7 @@ public class UserManager implements ManagerInterface {
                         (permissions.equals(UserProfilePermissions.MEMBERS.getCode()))));
     }
 
-    private UserProfileDAO getUserProfileDAO(String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+    private UserProfileDAO getUserProfileDAO(String userId) throws InvalidRequestException, SystemErrorException {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("missing user id", userId, ErrorCodes.MISSING_USER_ID);
         }
