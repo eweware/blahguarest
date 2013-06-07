@@ -298,7 +298,7 @@ public class UsersResource {
     }
 
     /**
-     * <p>Use this method to set, update or delete either the user's email address
+     * <p>This method may be used to set, update or delete either the user's email address
      * or challenge question from his account.</p>
      * <p>Note that the email address is no longer set in the profile: it is set in the user's account.</p>
      * <p><i>User must be logged in to use this method.</i></p>
@@ -407,7 +407,7 @@ public class UsersResource {
     }
 
     /**
-     * <p>Use this method to update profile fields.</p>
+     * <p>Use this method to either create or update profile fields.</p>
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> PUT</div>
@@ -416,7 +416,6 @@ public class UsersResource {
      * @param entity A JSON entity (a UserProfilePayload) containing the profile fields to change.
      * @return If successful, returns http code 204 (OK NO CONTENT).
      *         If the request is invalid, returns 400 (BAD REQUEST).
-     *         If the profile has not been created, returns 404 (NOT FOUND).
      *         If the user may not access this method, returns 401 (UNAUTHORIZED).
      *         On error conditions, a JSON object is returned with details.
      * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
@@ -572,8 +571,7 @@ public class UsersResource {
      * <div><b>URL:</b> users/profile/info</div>
      *
      * @return If successful, returns an http code of 200 (OK) with a JSON entity (a UserProfilePayload)
-     *         containing the user profile settings.
-     *         If there is no profile for this user (or if user doesn't exist), returns 404 (NOT FOUND).
+     *         containing the user profile settings. This entity might be an empty map.
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         On error conditions, a JSON object is returned with details.
      * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
