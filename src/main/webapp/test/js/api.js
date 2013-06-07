@@ -103,6 +103,12 @@ function createUser() {
 	rest("POST", "users", '{"N": "' + username + '", "pwd": "' + password + '"}', setUserData);
 }
 
+function updateUserWithMediaId() {
+    var mediaId = document.getElementById('mediaid');
+    if (!mediaId) { alert('Missing Media Id');}
+    rest("POST", "users/image/"+mediaId.value);
+}
+
 function checkUsername() {
 	var username = getUsername();
 	if (!username) {
@@ -249,15 +255,20 @@ function createBlah() {
 }
 
 function createSimpleBlah(typeId) {
-	var channelId = getChannelId();
-	var text = getBlahOrCommentText();
-	if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
-		alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
-		return;
-	}
-	var data = '{"G": "' + channelId + '", "Y": "' + typeId + '", "T": "' + text + '"}';
-	rest("POST", "blahs", data, setBlahData1);
+        var channelId = getChannelId();
+        var text = getBlahOrCommentText();
+        if (typeId.length == 0 || channelId.length == 0 || text.length == 0) {
+                alert("Missing Blah Type Id, and/or Channel Id and/or Blah Text");
+                return;
+        }
+        var data = {"G": channelId, "Y": typeId, "T": text};
+        var mediaId = document.getElementById('mediaid');
+        if (mediaId) {
+            data = {"G": channelId, "Y": typeId, "T": text, "M": [mediaId.value]};
+        }
+        rest("POST", "blahs", JSON.stringify(data), setBlahData1);
 }
+
 
 function createPollBlah(typeId) {
 	var channelId = getChannelId();
@@ -293,8 +304,12 @@ function createAComment() {
 	var blahId = getBlahId();
 	var text = getBlahOrCommentText();
 	if (!blahId || !text || text.length == 0) {alert('Missing Blah Id and/or Comment Text'); return;}
-	var data = JSON.stringify({"B": blahId, "T": text});
-	rest('POST', 'comments', data);
+	var mediaId = document.getElementById('mediaid');
+	var data = {"B": blahId, "T": text};
+	if (mediaId) {
+	  data["M"] = [mediaId.value];
+	}
+	rest('POST', 'comments', JSON.stringify(data));
 }
 
 function getBlahComments() {
