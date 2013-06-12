@@ -268,7 +268,6 @@ public class ImageUploadResource {
             final Info imageInfo = new Info(filepath, true);
             final int imageWidth = imageInfo.getImageWidth();
             final int imageHeight = imageInfo.getImageHeight();
-            final int imageDepth = imageInfo.getImageDepth();
 
             for (FileTypeSpec spec : FileTypeSpec.values()) {
 
@@ -298,7 +297,7 @@ public class ImageUploadResource {
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
-                op.density(DEFAULT_IMAGE_DENSITY);
+                op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
 
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
