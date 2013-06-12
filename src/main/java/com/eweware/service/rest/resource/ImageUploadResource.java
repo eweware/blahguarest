@@ -73,6 +73,11 @@ public class ImageUploadResource {
     }
 
     /**
+     * Depth for stored images
+     */
+    private static final int DEFAULT_IMAGE_DENSITY = 92;
+
+    /**
      * We create a set of versions of the uploaded file
      * in JPG format, each version has a different spec.
      */
@@ -265,6 +270,7 @@ public class ImageUploadResource {
             final Info imageInfo = new Info(filepath, true);
             final int imageWidth = imageInfo.getImageWidth();
             final int imageHeight = imageInfo.getImageHeight();
+            final int imageDepth = imageInfo.getImageDepth();
 
             for (FileTypeSpec spec : FileTypeSpec.values()) {
 
@@ -294,6 +300,8 @@ public class ImageUploadResource {
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
+                op.density(DEFAULT_IMAGE_DENSITY);
+
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
 
