@@ -828,12 +828,13 @@ public final class BlahManager implements ManagerInterface {
                 blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
             }
             if (userId != null) {
-                final UserBlahInfoDAO userBlahInfoDAO = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByPrimaryId(UserBlahInfoDAO.ID);
-                userBlahInfoDAO.put(userBlahInfoFieldname, count);
-                if (userBlahInfoDAO == null) {
-                    userBlahInfoDAO._insert();
-                } else {
+                final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo(userId, blahId);
+                if (userBlahInfoDAO._exists()) {
+                    userBlahInfoDAO.put(userBlahInfoFieldname, count);
                     userBlahInfoDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+                } else {
+                    userBlahInfoDAO.put(userBlahInfoFieldname, count);
+                    userBlahInfoDAO._insert();
                 }
             }
         }
