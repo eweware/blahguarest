@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -359,6 +360,49 @@ public class BlahsResource {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
+
+    /**
+     * <p>Updates view and/or open counts for a set of blahs.</p>
+     *
+     * <div><b>METHOD: </b>PUT</div>
+     * <div><b>URL: </b>blahs/counts</div>
+     *
+     * @param entity A JSON entity containing a map. The following key values
+     *               are accepted: 'V' and 'O' (letter O). The value of either
+     *               key must be a map from a blah id to an integer with the
+     *               corresponding count increment. For example, {'V': {{'someBlahId': 1},
+     *               {'someOtherBlahId': 2}}, 'O': {{'aBlahId': 2}}}
+     * @return Returns http status 202 (ACCEPTED) on success.
+     * Returns http 404 (NOT FOUND) if a user is in session and for some reason the user doesn't exist
+     * Returns http 400 if the request is invalid (e.g., there are no view or open updates.
+     */
+    @PUT
+    @Path("/counts")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setBlahCounts(
+            Map<String, Map<String, Long>> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.getUserId(request);
+            final Map<String, Long> viewsArray = entity.get(BlahPayload.VIEWS);
+            final Map<String, Long> opensArray = entity.get(BlahPayload.OPENS);
+            getBlahManager().updateBlahCounts(LocaleId.en_us, userId, viewsArray, opensArray);
+            final Response response = RestUtilities.make202AcceptedResponse();
+            getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }  catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
 
     /**
      * <p>Returns an array of blah type docs: all the blah types available.</p>

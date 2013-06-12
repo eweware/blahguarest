@@ -679,7 +679,6 @@ public final class BlahManager implements ManagerInterface {
         return userManager;
     }
 
-
     private class UserBlahInfoData {
         private final UserBlahInfoDAO dao;
         private final boolean exists;
@@ -795,6 +794,51 @@ public final class BlahManager implements ManagerInterface {
             indexBlah(updateBlahDAO);
         }
     }
+
+    /**
+     * <p>Updates multiple blah view and open counts</p>
+     * @param localeId
+     * @param userId  The user id who is viewing/opening the blahs, or null if the user is anonymous.
+     * @param viewsMap Map: key is a blah id and value is the number of views of that blah
+     * @param opensMap Map: key is a blah id and value is the number of opens of that blah
+     */
+    public void updateBlahCounts(LocaleId localeId, String userId, Map<String, Long> viewsMap, Map<String, Long> opensMap) throws ResourceNotFoundException, SystemErrorException, InvalidRequestException {
+        if (userId != null) {
+            if (!getStoreManager().createUser(userId)._exists()) {
+                throw new ResourceNotFoundException("No user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
+            }
+        }
+        if (((viewsMap == null || viewsMap.size() == 0) && (opensMap == null || opensMap.size() == 0))) {
+            throw new InvalidRequestException("No view or open count updates requested", ErrorCodes.INVALID_INPUT);
+        }
+        maybeAddCount(BlahDAOConstants.VIEWS, UserBlahInfoDAOConstants.VIEWS, viewsMap, userId);
+        maybeAddCount(BlahDAOConstants.OPENS, UserBlahInfoDAOConstants.OPENS, opensMap, userId);
+    }
+
+    private void maybeAddCount(String blahFieldName, String userBlahInfoFieldname, Map<String, Long> map, String userId) throws SystemErrorException {
+        if (map == null || map.size() == 0) {
+            return;
+        }
+        for (Map.Entry<String, Long> entry : map.entrySet()) {
+            final String blahId = entry.getKey();
+            final Long count = entry.getValue();
+            final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId();
+            if (blahDAO != null) { // ignore bad references
+                blahDAO.put(blahFieldName, count);
+                blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+            }
+            if (userId != null) {
+                final UserBlahInfoDAO userBlahInfoDAO = (UserBlahInfoDAO) getStoreManager().createUserBlahInfo(userId, blahId)._findByPrimaryId(UserBlahInfoDAO.ID);
+                userBlahInfoDAO.put(userBlahInfoFieldname, count);
+                if (userBlahInfoDAO == null) {
+                    userBlahInfoDAO._insert();
+                } else {
+                    userBlahInfoDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+                }
+            }
+        }
+    }
+
 
     /**
      * Called when updating a blah's votes|opens|views or when creating a comment.

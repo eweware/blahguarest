@@ -73,9 +73,9 @@ public class ImageUploadResource {
     }
 
     /**
-     * Depth for stored images
+     * Resolution for stored images
      */
-    private static final int DEFAULT_IMAGE_DENSITY = 92;
+    private static final int DEFAULT_IMAGE_DENSITY = 96;
 
     /**
      * We create a set of versions of the uploaded file
@@ -297,7 +297,7 @@ public class ImageUploadResource {
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
-                op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
+//                op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
 
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
