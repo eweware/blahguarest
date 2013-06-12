@@ -282,20 +282,19 @@ public class ImageUploadResource {
                 if (spec.mode == TypeSpecMode.FIXED) {
                     if (imageWidth == imageHeight) {    // square image
                         if (imageWidth != spec.width) {
-                            op.scale(spec.width, spec.height);
                             op.resample(DEFAULT_IMAGE_DENSITY);
+                            op.scale(spec.width, spec.height);
                         } else {
                             // do nothing: it's what we want
                         }
                     } else { // non-square image
-                        double factor = 0d;
+                        op.resample(DEFAULT_IMAGE_DENSITY);
                         if (imageWidth > imageHeight) {
                             op.scale(null, spec.height);
                         } else if (imageWidth < imageHeight) {
                             op.scale(spec.width, null);
                         }
                         op.crop(spec.width, spec.height, 0, 0);
-                        op.resample(DEFAULT_IMAGE_DENSITY);
                     }
                 } else if (spec.mode == TypeSpecMode.WIDTH_DOMINANT) {
                     int width = imageWidth;
@@ -304,13 +303,13 @@ public class ImageUploadResource {
                     }
                     int scale = imageWidth / width;
                     int height = (imageHeight / (scale == 0 ? 1 : scale));
-                    op.resize(width, height);
                     op.resample(DEFAULT_IMAGE_DENSITY);
+                    op.resize(width, height);
 //                    op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
                     logger.info("Saving " + width + "x" + height);
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
-                    op.scale(null, spec.height); // TODO not used, left to complete
                     op.resample(DEFAULT_IMAGE_DENSITY);
+                    op.scale(null, spec.height); // TODO not used, left to complete
                 }
 
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
