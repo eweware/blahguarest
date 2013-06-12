@@ -283,6 +283,7 @@ public class ImageUploadResource {
                     if (imageWidth == imageHeight) {    // square image
                         if (imageWidth != spec.width) {
                             op.scale(spec.width, spec.height);
+                            op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
                         } else {
                             // do nothing: it's what we want
                         }
@@ -293,6 +294,7 @@ public class ImageUploadResource {
                         } else if (imageWidth < imageHeight) {
                             op.scale(spec.width, null);
                         }
+                        op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
                         op.crop(spec.width, spec.height, 0, 0);
                     }
                 } else if (spec.mode == TypeSpecMode.WIDTH_DOMINANT) {

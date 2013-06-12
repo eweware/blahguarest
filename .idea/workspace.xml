@@ -9,7 +9,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="BWC-1102">
+    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371068675502" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370564926203" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371068608127" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371068702347" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370911752114" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1270,7 +1270,7 @@
       <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="306" column="66" selection-start="14457" selection-end="14457" vertical-scroll-proportion="0.75147927">
+            <state line="296" column="81" selection-start="13994" selection-end="13994" vertical-scroll-proportion="0.46745563">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -2912,7 +2912,11 @@
       <created>1371014994607</created>
       <updated>1371014994608</updated>
     </task>
-    <option name="localTasksCounter" value="242" />
+    <task id="LOCAL-00242" summary="BWC-1102">
+      <created>1371068704787</created>
+      <updated>1371068704787</updated>
+    </task>
+    <option name="localTasksCounter" value="243" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3005,7 +3009,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="https://eweware.atlassian.net/browse/BWC-1105" />
+    <option name="LAST_COMMIT_MESSAGE" value="BWC-1102" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -3019,7 +3023,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="remove broken rule" />
     <MESSAGE value="another rule" />
     <MESSAGE value="working rule" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-981 (ensure produces clause)" />
@@ -3044,6 +3047,7 @@
     <MESSAGE value="update docs" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-1195" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-1105" />
+    <MESSAGE value="BWC-1102" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3156,7 +3160,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="306" column="66" selection-start="14457" selection-end="14457" vertical-scroll-proportion="0.75147927">
+        <state line="296" column="81" selection-start="13994" selection-end="13994" vertical-scroll-proportion="0.46745563">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
