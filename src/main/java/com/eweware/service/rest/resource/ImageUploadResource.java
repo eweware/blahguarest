@@ -87,8 +87,6 @@ public class ImageUploadResource {
         C(512, 512, TypeSpecMode.FIXED), // scale & crop to 512x512
         D(768, null, TypeSpecMode.WIDTH_DOMINANT); // scale to 768x?
 
-
-
         private final Integer width;
         private final Integer height;
         private final TypeSpecMode mode;
@@ -300,10 +298,10 @@ public class ImageUploadResource {
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
-                op.density(DEFAULT_IMAGE_DENSITY);
 
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
+                op.density(DEFAULT_IMAGE_DENSITY);
 
                 cmd.run(op, filepath, newImagePathname);
 
