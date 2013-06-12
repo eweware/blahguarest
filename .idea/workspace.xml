@@ -182,7 +182,7 @@
     <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
     <file path="/Session.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356739367070" ignored="false" />
     <file path="/BlahsResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371012376515" ignored="false" />
-    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371014148091" ignored="false" />
+    <file path="/BlahManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371014971337" ignored="false" />
     <file path="/InboxHandler.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369428191176" ignored="false" />
     <file path="/JSONProvider.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356589590232" ignored="false" />
     <file path="/SessionState.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361325117523" ignored="false" />
@@ -194,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371008515648" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370564926203" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371013298777" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371014223126" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370911752114" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1270,7 +1270,7 @@
       <file leaf-file-name="BlahManager.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="836" column="70" selection-start="38708" selection-end="38708" vertical-scroll-proportion="0.63093925">
+            <state line="830" column="16" selection-start="38151" selection-end="38151" vertical-scroll-proportion="0.5314917">
               <folding />
             </state>
           </provider>
@@ -2927,7 +2927,11 @@
       <created>1371013300360</created>
       <updated>1371013300360</updated>
     </task>
-    <option name="localTasksCounter" value="240" />
+    <task id="LOCAL-00240" summary="https://eweware.atlassian.net/browse/BWC-1105">
+      <created>1371014225267</created>
+      <updated>1371014225267</updated>
+    </task>
+    <option name="localTasksCounter" value="241" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3131,13 +3135,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="62" selection-start="218" selection-end="218" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/BlahsResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="337" column="65" selection-start="17286" selection-end="17286" vertical-scroll-proportion="0.0">
@@ -3152,6 +3149,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="49" selection-start="671" selection-end="671" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAOConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="17" selection-start="609" selection-end="609" vertical-scroll-proportion="0.0">
@@ -3159,9 +3163,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/BlahDAO.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserBlahInfoDAO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="49" selection-start="671" selection-end="671" vertical-scroll-proportion="0.0">
+        <state line="8" column="62" selection-start="218" selection-end="218" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -3175,7 +3179,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="836" column="70" selection-start="38708" selection-end="38708" vertical-scroll-proportion="0.63093925">
+        <state line="830" column="16" selection-start="38151" selection-end="38151" vertical-scroll-proportion="0.5314917">
           <folding />
         </state>
       </provider>

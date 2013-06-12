@@ -822,10 +822,12 @@ public final class BlahManager implements ManagerInterface {
         for (Map.Entry<String, Long> entry : map.entrySet()) {
             final String blahId = entry.getKey();
             final Long count = entry.getValue();
-            final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId();
-            if (blahDAO != null) { // ignore bad references
+            final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
+            if (blahDAO._exists()) {
                 blahDAO.put(blahFieldName, count);
                 blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+            } else {
+                continue;
             }
             if (userId != null) {
                 final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo(userId, blahId);
