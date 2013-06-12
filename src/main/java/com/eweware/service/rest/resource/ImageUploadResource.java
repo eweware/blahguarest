@@ -85,7 +85,7 @@ public class ImageUploadResource {
         A(128, 128, TypeSpecMode.FIXED), // scale & crop to 128x128
         B(256, 256, TypeSpecMode.FIXED), // scale & crop to 256x256
         C(512, 512, TypeSpecMode.FIXED), // scale & crop to 512x512
-        D(768, null, TypeSpecMode.WIDTH_DOMINANT); // scale to 768x?
+        D(640, null, TypeSpecMode.WIDTH_DOMINANT); // scale to 768x?
 
         private final Integer width;
         private final Integer height;
@@ -257,6 +257,9 @@ public class ImageUploadResource {
         return (extension != null) && (supportedUploadFormats.get(extension) != null);
     }
 
+    public static void main(String[] a) {
+        System.out.println(1000 / 10000000);
+    }
     private void saveFormats(File original, AmazonS3 s3, String mediaId, MediaReferendType referendType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
 
         final String filename = original.getName();
@@ -293,11 +296,18 @@ public class ImageUploadResource {
                         op.crop(spec.width, spec.height, 0, 0);
                     }
                 } else if (spec.mode == TypeSpecMode.WIDTH_DOMINANT) {
-                    op.scale(spec.width, null);
+                    int width = imageWidth;
+                    if (width > spec.width) {
+                        width = spec.width;
+                    }
+                    int scale = imageWidth / width;
+                    int height = (imageHeight / (scale == 0 ? 1 : scale));
+                    op.resize(width, height);
+                    op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
+                    logger.info("Saving " + width + "x" + height);
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
-                    op.scale(null, spec.height);
+                    op.scale(null, spec.height); // TODO not used, left to complete
                 }
-//                op.density(DEFAULT_IMAGE_DENSITY, DEFAULT_IMAGE_DENSITY);
 
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
