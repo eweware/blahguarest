@@ -298,10 +298,10 @@ public class ImageUploadResource {
                 } else if (spec.mode == TypeSpecMode.HEIGHT_DOMINANT) {
                     op.scale(null, spec.height);
                 }
+                op.density(DEFAULT_IMAGE_DENSITY);
 
                 final String newImagePathname = localFormattedImagePath + "/" + newFilename;
                 op.addImage();
-                op.density(DEFAULT_IMAGE_DENSITY);
 
                 cmd.run(op, filepath, newImagePathname);
 
