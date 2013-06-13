@@ -31,9 +31,6 @@ public final class MongoStoreManager implements StoreManager {
     private String qaMongoDbHostname;
     private List<String> hostnames;
 
-    // Whether we are using a replica or not
-    private boolean usingReplica;
-
     public static MongoStoreManager getInstance() throws SystemErrorException {
         if (MongoStoreManager.singleton == null) {
             throw new SystemErrorException("mongo store manager not initialized");
@@ -281,14 +278,6 @@ public final class MongoStoreManager implements StoreManager {
         demographicsCollectionName = name;
     }
 
-    public boolean getUsingReplica() {
-        return usingReplica;
-    }
-
-    public void setUsingReplica(boolean usingReplica) {
-        this.usingReplica = usingReplica;
-    }
-
 
     /**
      * Initializes the store manager. This method is public to allow
@@ -370,12 +359,12 @@ public final class MongoStoreManager implements StoreManager {
                 }
             }
             if (serverAddresses.size() == 1) {
-                logger.info("*** Connecting as a standalone hostname " + hostnames.get(0) + " at port " + mongoDbPort + " ***");
-            } else if (usingReplica) {
+                logger.info("*** Connecting as a standalone hostname " + serverAddresses.get(0) + " at port " + mongoDbPort + " ***");
+            } else if (serverAddresses.size() > 0) {
                 builder
                         .readPreference(ReadPreference.primaryPreferred()) // tries to read from primary
                         .writeConcern(WriteConcern.MAJORITY);      // Writes to secondaries before returning
-                logger.info("*** Connecting to hostnames in replica set: " + hostnames + " at port " + mongoDbPort + " ***");
+                logger.info("*** Connecting to hostnames in replica set: " + serverAddresses + " at port " + mongoDbPort + " ***");
             } else {
                 throw new WebServiceException("Neither using replica nor using standalone DB");
             }
@@ -431,20 +420,17 @@ public final class MongoStoreManager implements StoreManager {
 
             collectionNameToCollectionMap.put(userCommentInfoCollectionName, getUserDb().getCollection(userCommentInfoCollectionName));
 
-            // TODO this collection could be a capped collection for production, but there are many restrictions (e.g., not shardable):
             collectionNameToCollectionMap.put(trackBlahCollectionName, getTrackerDb().getCollection(trackBlahCollectionName));
 
-            // TODO this collection could be a capped collection for production, but there are many restrictions (e.g., not shardable):
             collectionNameToCollectionMap.put(trackCommentCollectionName, getTrackerDb().getCollection(trackCommentCollectionName));
 
-            // TODO this collection could be a capped collection for production, but there are many restrictions (e.g., not shardable):
             collectionNameToCollectionMap.put(trackUserCollectionName, getTrackerDb().getCollection(trackUserCollectionName));
 
             collectionNameToCollectionMap.put(trackerCollectionName, getTrackerDb().getCollection(trackerCollectionName));
 
             this.status = ManagerState.STARTED;
 
-            System.out.println("*** MongoStoreManager started *** (connected to MongoDB using hostnames " + hostnames + ":" + mongoDbPort +
+            System.out.println("*** MongoStoreManager started *** (connected to MongoDB using hostnames " + serverAddresses + ":" + mongoDbPort +
                     " for dbs: " + dbNameToDbMap + ") # pooled connections=" + connectionsPerHost);
 
         } catch (Exception e) {
