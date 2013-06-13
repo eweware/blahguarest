@@ -33,6 +33,7 @@
 
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.hostnames}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.qa.mongo.hostname}" />
+        <constructor-arg  type="java.lang.String" value="${blahgua.dev.mongo.hostname}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.port}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.userDBName}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.blahDBName}" />

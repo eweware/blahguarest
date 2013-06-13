@@ -578,11 +578,12 @@ public class UserManager implements ManagerInterface {
         msg.append("<p>Someone requested an account recovery for your email address on Blahgua.</p>");
         msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
         msg.append("<p>If you do want to reset your password, ");
-        final String endpoint = getSystemManager().isQaMode() ? getSystemManager().getQARestEndpoint() : getSystemManager().getClientServiceEndpoint();
+        final SystemManager sysMgr = getSystemManager();
+        final String endpoint = (sysMgr.isQaMode() || sysMgr.isDevMode()) ? sysMgr.getLocalRestEndpoint() : sysMgr.getClientServiceEndpoint();
         msg.append("<a href='https://");
         msg.append(endpoint);
         msg.append("/recover?n=");
-        if (!getSystemManager().isCryptoOn()) {
+        if (!sysMgr.isCryptoOn()) {
             msg.append(nonCryptoUrlEncodedBase64RecoveryCode);
         } else {
             msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));

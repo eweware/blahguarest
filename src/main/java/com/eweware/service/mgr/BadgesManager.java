@@ -123,7 +123,7 @@ public final class BadgesManager {
         if (mgr.isQaMode()) {
             authorityId = mgr.getQaBadgeAuthorityEndpoint();
         } else if (mgr.isDevMode()) {
-            authorityId = "localhost";
+            authorityId = mgr.getDevBadgeAuthorityEndpoint();
         }
         BadgeAuthorityDAO authDAO = null;
         if (!(mgr.isQaMode() || mgr.isDevMode())) {

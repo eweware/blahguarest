@@ -29,6 +29,7 @@ public final class MongoStoreManager implements StoreManager {
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
     private String qaMongoDbHostname;
+    private String devMongoDbHostname;
     private List<String> hostnames;
 
     public static MongoStoreManager getInstance() throws SystemErrorException {
@@ -89,6 +90,7 @@ public final class MongoStoreManager implements StoreManager {
 
             String hostnames,
             String qaMongoDbHostname,
+            String devMongoDbHostname,
             String mongoDbPort,
             String userDbName,
             String blahDbName,
@@ -97,6 +99,7 @@ public final class MongoStoreManager implements StoreManager {
             Integer connectionsPerHost
     ) {
         this.qaMongoDbHostname = qaMongoDbHostname;
+        this.devMongoDbHostname = devMongoDbHostname;
         doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, trackerDbName,
                 connectionsPerHost);
     }
@@ -342,7 +345,7 @@ public final class MongoStoreManager implements StoreManager {
             // Set up connections per host
             if (qaMode || devMode) {
                 this.connectionsPerHost = 3;
-                logger.info("*** MongoDB hostname: " + (qaMode ? qaMongoDbHostname : "localhost") + " port " + this.mongoDbPort);
+                logger.info("*** MongoDB hostname: " + (qaMode ? qaMongoDbHostname : devMongoDbHostname) + " port " + this.mongoDbPort);
             } else {
                 logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
             }
@@ -352,7 +355,7 @@ public final class MongoStoreManager implements StoreManager {
             final MongoClientOptions.Builder builder = new MongoClientOptions.Builder().connectionsPerHost(connectionsPerHost);
             List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
             if (qaMode || devMode) {
-                serverAddresses.add(new ServerAddress((qaMode ? qaMongoDbHostname : "localhost"), mongoDbPort));
+                serverAddresses.add(new ServerAddress((qaMode ? qaMongoDbHostname : devMongoDbHostname), mongoDbPort));
             } else {
                 for (String hostname : hostnames) {
                     serverAddresses.add(new ServerAddress(hostname, mongoDbPort));

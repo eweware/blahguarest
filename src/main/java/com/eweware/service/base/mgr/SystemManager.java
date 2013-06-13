@@ -69,9 +69,6 @@ public final class SystemManager implements ManagerInterface {
             String logLevel,
             boolean cryptoOn,
             String clientServiceEndpoint,
-//            String memcachedHostname,
-//            String memcachedPort,
-//            String qaMemcachedHostname,
             String qaRestPort
     ) {
         final String randomProvider = "SHA1PRNG";
@@ -79,11 +76,7 @@ public final class SystemManager implements ManagerInterface {
             configureLogger(logLevel);
             this.cryptoOn = cryptoOn;
             maybeSetNonProductionContext(mode);
-            if (isQaMode()) {
-//                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-//                    memcachedHostname = qaMemcachedHostname; // same port 21191
-//                }
-//                logger.finer("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
+            if (isQaMode() || isDevMode()) {
                 restEndpoint = "localhost:" + qaRestPort;
                 cryptoOn = true;
             }
@@ -138,7 +131,7 @@ public final class SystemManager implements ManagerInterface {
      * @return Local hostname and port for Catalina service
      * @see #isQaMode()
      */
-    public String getQARestEndpoint() {
+    public String getLocalRestEndpoint() {
         return restEndpoint;
     }
 
@@ -146,7 +139,7 @@ public final class SystemManager implements ManagerInterface {
      * <p>Returns true if we're in qa mode.</p>
      *
      * @return true if we're in qa mode
-     * @see #getQARestEndpoint()
+     * @see #getLocalRestEndpoint()
      */
     public boolean isQaMode() {
         return qaMode;
