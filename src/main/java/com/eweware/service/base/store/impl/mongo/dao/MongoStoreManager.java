@@ -28,7 +28,7 @@ public final class MongoStoreManager implements StoreManager {
 
     // Keep it simple for now: only one type and one instance allowed
     protected static MongoStoreManager singleton;
-    private String devMongoDbHostname;
+    private String qaMongoDbHostname;
     private List<String> hostnames;
 
     // Whether we are using a replica or not
@@ -46,10 +46,10 @@ public final class MongoStoreManager implements StoreManager {
     private Integer connectionsPerHost = 10; // default
     private MongoClient mongo;
     private Map<String, DB> dbNameToDbMap;
+
     private String sysDbName;
     private String userDbName;
     private String blahDbName;
-    //    private String mediaDbName;
     private String trackerDbName;
 
     private String badgeAuthorityCollectionName;
@@ -91,7 +91,7 @@ public final class MongoStoreManager implements StoreManager {
     public MongoStoreManager(
 
             String hostnames,
-            String devMongoDbHostname,
+            String qaMongoDbHostname,
             String mongoDbPort,
             String userDbName,
             String blahDbName,
@@ -99,7 +99,7 @@ public final class MongoStoreManager implements StoreManager {
 
             Integer connectionsPerHost
     ) {
-        this.devMongoDbHostname = devMongoDbHostname;
+        this.qaMongoDbHostname = qaMongoDbHostname;
         doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, trackerDbName,
                 connectionsPerHost);
     }
@@ -291,10 +291,6 @@ public final class MongoStoreManager implements StoreManager {
 
 
     /**
-     * tracks stats TODO will eventually be a separate tracking service *
-     */
-
-    /**
      * Initializes the store manager. This method is public to allow
      * test units to initialize it outside the context of the web server.
      *
@@ -309,7 +305,7 @@ public final class MongoStoreManager implements StoreManager {
                              Integer connectionsPerHost) {
 
         if (hostnames == null || hostnames.length() == 0) {
-            throw new WebServiceException("Failed to start store manager: missing hostnames");
+            throw new WebServiceException("Failed to initialize store manager: missing hostnames");
         }
         this.hostnames = Arrays.asList(hostnames.split("\\|"));
         this.mongoDbPort = Integer.parseInt(port);
@@ -328,7 +324,7 @@ public final class MongoStoreManager implements StoreManager {
         dbNameToDbMap.put(blahDbName, null);
         dbNameToDbMap.put(trackerDbName, null);
 
-        System.out.println("*STORE MGR: known databases: " + dbNameToDbMap.keySet());
+        System.out.println("*** STORE MGR: known databases: " + dbNameToDbMap.keySet());
         MongoStoreManager.singleton = this;
         this.status = ManagerState.INITIALIZED;
     }
@@ -344,34 +340,42 @@ public final class MongoStoreManager implements StoreManager {
     public void start() {
         try {
             setMongoDebuggingLevel();
-            boolean devMode = false;
+            SystemManager sysMgr = null;
             try {
-                devMode = SystemManager.getInstance().isQaMode();
-                if (devMode) {
-                    this.connectionsPerHost = 3;
-                }
-                logger.info("*** mongodb connections = " + this.connectionsPerHost + " ***");
-//                if (devMode && (System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-//                    this.hostnames = new ArrayList<String>();
-//                    this.hostnames.add(devMongoDbHostname);  // same default 21191 port
-//                }
-                logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
+                sysMgr = SystemManager.getInstance();
             } catch (Exception e) {
-                // if sysmgr not initialized, no need for this.
                 throw new WebServiceException("Failed to find System Manager?", e);
             }
+
+            final boolean qaMode = sysMgr.isQaMode();
+            final boolean devMode = sysMgr.isDevMode();
+
+            // Set up connections per host
+            if (qaMode || devMode) {
+                this.connectionsPerHost = 3;
+                logger.info("*** MongoDB hostname: " + (qaMode ? qaMongoDbHostname : "localhost") + " port " + this.mongoDbPort);
+            } else {
+                logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
+            }
+            logger.info("*** mongodb connections = " + this.connectionsPerHost + " ***");
+
+            //  Configure db host addresses
             final MongoClientOptions.Builder builder = new MongoClientOptions.Builder().connectionsPerHost(connectionsPerHost);
             List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
-            for (String hostname : hostnames) {
-                serverAddresses.add(new ServerAddress(hostname, mongoDbPort));
+            if (qaMode || devMode) {
+                serverAddresses.add(new ServerAddress((qaMode ? qaMongoDbHostname : "localhost"), mongoDbPort));
+            } else {
+                for (String hostname : hostnames) {
+                    serverAddresses.add(new ServerAddress(hostname, mongoDbPort));
+                }
             }
             if (serverAddresses.size() == 1) {
-                logger.info("*** Connecting as a standalone hostname " + hostnames + " port=" + mongoDbPort + " ***");
+                logger.info("*** Connecting as a standalone hostname " + hostnames.get(0) + " at port " + mongoDbPort + " ***");
             } else if (usingReplica) {
                 builder
                         .readPreference(ReadPreference.primaryPreferred()) // tries to read from primary
                         .writeConcern(WriteConcern.MAJORITY);      // Writes to secondaries before returning
-                logger.info("*** Connecting to hostname(s) in replica set: " + hostnames + " port=" + mongoDbPort + " ***");
+                logger.info("*** Connecting to hostnames in replica set: " + hostnames + " at port " + mongoDbPort + " ***");
             } else {
                 throw new WebServiceException("Neither using replica nor using standalone DB");
             }
