@@ -119,12 +119,20 @@ public final class BadgesManager {
 //        if (activeBadgesForAuthorityExist(userId, authorityId, badgeTypeId)) {
 //            return Response.status(Response.Status.ACCEPTED).build();
 //        }
-        authorityId = SystemManager.getInstance().isDevMode() ? "localhost:8081" : authorityId;
-        final BadgeAuthorityDAO authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL, BadgeAuthorityDAO.DISPLAY_NAME);
-        if (authDAO == null) {
-            throw new InvalidRequestException("Invalid authority id '" + authorityId + "'", ErrorCodes.INVALID_INPUT);
+        final SystemManager mgr = SystemManager.getInstance();
+        if (mgr.isQaMode()) {
+            authorityId = mgr.getQaBadgeAuthorityEndpoint();
+        } else if (mgr.isDevMode()) {
+            authorityId = "localhost";
         }
-        final String endpoint = makeBadgeAuthorityCreateBadgeEndpoint(authDAO);
+        BadgeAuthorityDAO authDAO = null;
+        if (!(mgr.isQaMode() || mgr.isDevMode())) {
+            authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL, BadgeAuthorityDAO.DISPLAY_NAME);
+            if (authDAO == null) {
+                throw new InvalidRequestException("Invalid authority id '" + authorityId + "'", ErrorCodes.INVALID_INPUT);
+            }
+        }
+        final String endpoint = makeBadgeAuthorityCreateBadgeEndpoint(authDAO == null?null:authDAO.getRestEndpointUrl());
 
         HttpEntity entity = null;
         HttpPost post = null;
@@ -202,29 +210,6 @@ public final class BadgesManager {
             }
         }
     }
-
-//    /**
-//     * <p>Returns true if either (1) the user has already an unexpired badge of the
-//     * specified badge type, or (2) when the badge type isn't specified, when
-//     * there is at least one badge from the current authority (i.e., of any type).</p>
-//     * @param userId
-//     * @param authorityId
-//     * @param badgeTypeId
-//     * @return   <p>Returns true if there is at least one badge from the current authority.</p>
-//     * @throws SystemErrorException
-//     */
-//    private boolean activeBadgesForAuthorityExist(String userId, String authorityId, String badgeTypeId) throws SystemErrorException {
-//        final BadgeDAO badgeDAO = storeManager.createBadge();
-//        // TODO create index for this at cost peril if that's the way we're eventually going to do this!
-//        //  Alternately, create a composite key with user id, authority id, and blah type. But that complexity is not currently time-warranted.
-//        badgeDAO.setUserId(userId);
-//        badgeDAO.setAuthorityId(authorityId);
-//        if (badgeTypeId != null) {
-//            badgeDAO.setBadgeType(badgeTypeId);
-//        }
-//        // TODO check expiration date
-//        return badgeDAO._exists();
-//    }
 
     /**
      * <p>Receives badge creation result from authority.</p>
@@ -313,7 +298,6 @@ public final class BadgesManager {
         final String authority = (String) entity.get(BadgingNotificationEntity.AUTHORITY_FIELDNAME);
         final List<Map<String, Object>> badgeEntities = (List<Map<String, Object>>) entity.get("badges");
         logger.finer("finer RECEIVED BADGES:\n" + entity);
-        logger.info("info RECEIVED BADGES:\n" + entity);
 
         if (badgeEntities != null) {
             final DBCollection txCollection = MongoStoreManager.getInstance().getCollection(MongoStoreManager.getInstance().getBadgeTransactionCollectionName());
@@ -437,8 +421,16 @@ public final class BadgesManager {
         return new ObjectMapper().readValue(EntityUtils.toString(entity), beanClass);
     }
 
-    private String makeBadgeAuthorityCreateBadgeEndpoint(BadgeAuthorityDAO authDAO) throws SystemErrorException {
-        return (SystemManager.getInstance().isDevMode() ? "http://localhost:8081/v1" : authDAO.getRestEndpointUrl()) + "/badges/create";
+    private String makeBadgeAuthorityCreateBadgeEndpoint(String productionEndpoint) throws SystemErrorException {
+        final SystemManager mgr = SystemManager.getInstance();
+        final String method = "/badges/create";
+        if (mgr.isQaMode()) {
+            return mgr.getQaBadgeAuthorityEndpoint() + method;
+        } else if (mgr.isDevMode()) {
+            return mgr.getDevBadgeAuthorityEndpoint() + method;
+        } else {
+            return productionEndpoint + method;
+        }
     }
 
 

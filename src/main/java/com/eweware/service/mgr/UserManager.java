@@ -578,7 +578,7 @@ public class UserManager implements ManagerInterface {
         msg.append("<p>Someone requested an account recovery for your email address on Blahgua.</p>");
         msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
         msg.append("<p>If you do want to reset your password, ");
-        final String endpoint = getSystemManager().isDevMode() ? getSystemManager().getDevRestEndpoint() : getSystemManager().getClientServiceEndpoint();
+        final String endpoint = getSystemManager().isQaMode() ? getSystemManager().getQARestEndpoint() : getSystemManager().getClientServiceEndpoint();
         msg.append("<a href='https://");
         msg.append(endpoint);
         msg.append("/recover?n=");

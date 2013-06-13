@@ -346,7 +346,7 @@ public final class MongoStoreManager implements StoreManager {
             setMongoDebuggingLevel();
             boolean devMode = false;
             try {
-                devMode = SystemManager.getInstance().isDevMode();
+                devMode = SystemManager.getInstance().isQaMode();
                 if (devMode) {
                     this.connectionsPerHost = 3;
                 }

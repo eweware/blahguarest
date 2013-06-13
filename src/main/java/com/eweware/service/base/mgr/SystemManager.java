@@ -37,6 +37,7 @@ public final class SystemManager implements ManagerInterface {
     private static SystemManager singleton;
 
     private ManagerState state = ManagerState.UNKNOWN;
+    private boolean qaMode;
     private boolean devMode;
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
@@ -51,10 +52,10 @@ public final class SystemManager implements ManagerInterface {
     private Integer maxHttpConnections;
     private Integer maxHttpConnectionsPerRoute;
     private Integer httpConnectionTimeoutInMs;
-    private Integer devBadgeAuthorityPort;
-
-    /** for dev mode */
-
+    private String qaBadgeAuthorityEndpoint; // contains protocol, hostname, port, and REST version
+    private Integer qaBadgeAuthorityPort; // for http client
+    private String devBadgeAuthorityEndpoint; // contains protocol, hostname, port, and REST version
+    private Integer devBadgeAuthorityPort; // for http client
 
     public static SystemManager getInstance() throws SystemErrorException {
         if (SystemManager.singleton == null) {
@@ -69,20 +70,20 @@ public final class SystemManager implements ManagerInterface {
             String clientServiceEndpoint,
 //            String memcachedHostname,
 //            String memcachedPort,
-//            String devMemcachedHostname,
-            String devRestPort
-            ) {
+//            String qaMemcachedHostname,
+            String qaRestPort
+    ) {
         final String randomProvider = "SHA1PRNG";
         try {
             configureLogger(logLevel);
             this.cryptoOn = cryptoOn;
-            maybeSetDevelopmentMode();
-            if (isDevMode()) {
+            maybeSetNonProductionContext();
+            if (isQaMode()) {
 //                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
-//                    memcachedHostname = devMemcachedHostname; // same port 21191
+//                    memcachedHostname = qaMemcachedHostname; // same port 21191
 //                }
 //                logger.finer("Memcached hostname '" + memcachedHostname + "' port '" + memcachedPort + "'");
-                restEndpoint = "localhost:" + devRestPort;
+                restEndpoint = "localhost:" + qaRestPort;
                 cryptoOn = true;
             }
             logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
@@ -116,25 +117,46 @@ public final class SystemManager implements ManagerInterface {
         return cryptoOn;
     }
 
-    private void maybeSetDevelopmentMode() {
-        final String dev = System.getenv("BLAHGUA_DEV_MODE");
-        devMode = (dev != null && dev.equals("true"));
+    /**
+     * We use a single config file to keep it manageable by one person who
+     * has to do many other things. Eventually, this would all be pre-configured.
+     */
+    private void maybeSetNonProductionContext() {
+        final String qa = System.getenv("BLAHGUA_QA_MODE");
+        qaMode = (qa != null && qa.equals("true"));
+        if (qaMode) {
+            logger.info(">>> STARTING IN QA MODE <<<");
+        } else {
+            final String dev = System.getenv("BLAHGUA_DEV_MODE");
+            devMode = (dev != null && dev.equals("true"));
+            if (devMode) {
+                logger.info(">>> STARTING IN DEVELOPMENT MODE <<<");
+            } else {
+                logger.info(">>> STARTING IN PRODUCTION MODE <<<");
+            }
+        }
     }
 
     /**
-     * <p>Get the local REST service endpoint (hostname+port) only if in dev mode.</p>
+     * <p>Get the local REST service endpoint (hostname+port) only if in qa mode.</p>
+     *
      * @return Local hostname and port for Catalina service
-     * @see #isDevMode()
+     * @see #isQaMode()
      */
-    public String getDevRestEndpoint() {
+    public String getQARestEndpoint() {
         return restEndpoint;
     }
 
     /**
-     * <p>Returns true if we're in development mode.</p>
-     * @return true if we're in development mode
-     * @see #getDevRestEndpoint()
+     * <p>Returns true if we're in qa mode.</p>
+     *
+     * @return true if we're in qa mode
+     * @see #getQARestEndpoint()
      */
+    public boolean isQaMode() {
+        return qaMode;
+    }
+
     public boolean isDevMode() {
         return devMode;
     }
@@ -246,8 +268,11 @@ public final class SystemManager implements ManagerInterface {
     private void startHttpClient() {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-        if (isDevMode()) { // Debug BA port 8081
-            schemeRegistry.register(new Scheme("http", getDevBadgeAuthorityPort(), PlainSocketFactory.getSocketFactory()));
+        if (isQaMode()) {
+            schemeRegistry.register(new Scheme("http", 8080, PlainSocketFactory.getSocketFactory()));
+//            schemeRegistry.register(new Scheme("http", getQaBadgeAuthorityPort(), PlainSocketFactory.getSocketFactory()));
+        } else if (isDevMode()) {
+            schemeRegistry.register(new Scheme("http", 8080, PlainSocketFactory.getSocketFactory()));
         }
         connectionPoolMgr = new PoolingClientConnectionManager(schemeRegistry);
         connectionPoolMgr.setMaxTotal(getMaxHttpConnections()); // maximum total connections
@@ -296,12 +321,36 @@ public final class SystemManager implements ManagerInterface {
         this.httpConnectionTimeoutInMs = httpConnectionTimeoutInMs;
     }
 
+    public String getQaBadgeAuthorityEndpoint() {
+        return qaBadgeAuthorityEndpoint;
+    }
+
+    public void setQaBadgeAuthorityEndpoint(String endpoint) {
+        this.qaBadgeAuthorityEndpoint = endpoint;
+    }
+
+    public Integer getQaBadgeAuthorityPort() {
+        return qaBadgeAuthorityPort;
+    }
+
+    public void setQaBadgeAuthorityPort(Integer port) {
+        qaBadgeAuthorityPort = port;
+    }
+
+    public String getDevBadgeAuthorityEndpoint() {
+        return devBadgeAuthorityEndpoint;
+    }
+
+    public void setDevBadgeAuthorityEndpoint(String endpoint) {
+        devBadgeAuthorityEndpoint = endpoint;
+    }
+
     public Integer getDevBadgeAuthorityPort() {
         return devBadgeAuthorityPort;
     }
 
     public void setDevBadgeAuthorityPort(Integer port) {
-        this.devBadgeAuthorityPort = port;
+        devBadgeAuthorityPort = port;
     }
 
     java.util.Map<String, OperationInfo> operationToOpInfoMap = new HashMap<String, OperationInfo>();

@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.xml.ws.WebServiceException;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.Enumeration;
@@ -109,7 +108,7 @@ public class MailManager implements ManagerInterface {
 
     private void notifyStartup() throws SystemErrorException {
         try {
-            final boolean devMode = SystemManager.getInstance().isDevMode();
+            final boolean devMode = SystemManager.getInstance().isQaMode();
             final String host = InetAddress.getLocalHost().getHostName();
             final StringBuilder subject = new StringBuilder("Blahgua Service ");
             subject.append(System.getProperty("user.name"));
