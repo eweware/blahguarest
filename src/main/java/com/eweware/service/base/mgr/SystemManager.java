@@ -65,6 +65,7 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public SystemManager(
+            String mode,
             String logLevel,
             boolean cryptoOn,
             String clientServiceEndpoint,
@@ -77,7 +78,7 @@ public final class SystemManager implements ManagerInterface {
         try {
             configureLogger(logLevel);
             this.cryptoOn = cryptoOn;
-            maybeSetNonProductionContext();
+            maybeSetNonProductionContext(mode);
             if (isQaMode()) {
 //                if ((System.getenv("BLAHGUA_DEBUG_AWS") == null)) {
 //                    memcachedHostname = qaMemcachedHostname; // same port 21191
@@ -117,18 +118,12 @@ public final class SystemManager implements ManagerInterface {
         return cryptoOn;
     }
 
-    /**
-     * We use a single config file to keep it manageable by one person who
-     * has to do many other things. Eventually, this would all be pre-configured.
-     */
-    private void maybeSetNonProductionContext() {
-        final String qa = System.getenv("BLAHGUA_QA_MODE");
-        qaMode = (qa != null && qa.equals("true"));
+    private void maybeSetNonProductionContext(String mode) {
+        qaMode = (mode.equals("qa"));
         if (qaMode) {
             logger.info(">>> STARTING IN QA MODE <<<");
         } else {
-            final String dev = System.getenv("BLAHGUA_DEV_MODE");
-            devMode = (dev != null && dev.equals("true"));
+            devMode = (mode.equals("dev"));
             if (devMode) {
                 logger.info(">>> STARTING IN DEVELOPMENT MODE <<<");
             } else {
