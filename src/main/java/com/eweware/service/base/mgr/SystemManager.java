@@ -4,6 +4,7 @@ import main.java.com.eweware.service.base.cache.BlahCache;
 import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
+import main.java.com.eweware.service.base.type.RunMode;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.params.ConnManagerPNames;
@@ -35,16 +36,15 @@ public final class SystemManager implements ManagerInterface {
     private static final Logger logger = Logger.getLogger(SystemManager.class.getName());
 
     private static SystemManager singleton;
-
     private ManagerState state = ManagerState.UNKNOWN;
+
     private boolean qaMode;
     private boolean devMode;
+
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
     private BlahCache blahCache;
     private final BlahCacheConfiguration blahCacheConfiguration;
-    private String restEndpoint;
-    private final String clientServiceEndpoint;
     private final boolean cryptoOn;
     private HttpClient client;
 
@@ -52,6 +52,17 @@ public final class SystemManager implements ManagerInterface {
     private Integer maxHttpConnections;
     private Integer maxHttpConnectionsPerRoute;
     private Integer httpConnectionTimeoutInMs;
+
+    private final String prodBaseUrlWithVersion;
+    private final String qaBaseUrlWithVersion;
+    private final String devBaseUrlWithVersion;
+
+    private String restServiceBaseUrl;
+    private String s3WebsiteProdBucket;
+    private String s3WebsiteQABucket;
+    private String s3WebsiteDevBucket;
+    private String s3BaseUrl; // The base URL with protocol for all S3 buckets (in PROD, QA, and DEV)
+
     private String qaBadgeAuthorityEndpoint; // contains protocol, hostname, port, and REST version
     private Integer qaBadgeAuthorityPort; // for http client
     private String devBadgeAuthorityEndpoint; // contains protocol, hostname, port, and REST version
@@ -65,23 +76,48 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public SystemManager(
-            String mode,
+            String runMode,
+            String prodRestVersion,
+            String qaRestVersion,
+            String devRestVersion,
             String logLevel,
             boolean cryptoOn,
-            String clientServiceEndpoint,
-            String qaRestPort
+            String prodRestProtocol,
+            String prodRestHostname,
+            String qaRestProtocol,
+            String qaRestHostname,
+            String qaRestPort,
+            String devRestProtocol,
+            String devRestHostname,
+            String devRestPort,
+            String s3BaseUrl // we assume that it is the same for QA, DEV and PROD
     ) {
         final String randomProvider = "SHA1PRNG";
         try {
             configureLogger(logLevel);
-            this.cryptoOn = cryptoOn;
-            maybeSetNonProductionContext(mode);
-            if (isQaMode() || isDevMode()) {
-                restEndpoint = "localhost:" + qaRestPort;
-                cryptoOn = true;
+
+            setRunMode(runMode);
+
+            if (qaMode) {
+                restServiceBaseUrl = qaRestProtocol + "://" + qaRestHostname + ":" + qaRestPort;
+            } else if (devMode) {
+                restServiceBaseUrl = devRestProtocol + "://" + devRestHostname + ":" + devRestPort;
+            } else { // RunMode.PROD
+                restServiceBaseUrl = prodRestProtocol + "://" + prodRestHostname; // port 80
             }
+            this.s3BaseUrl = s3BaseUrl;
+            this.prodBaseUrlWithVersion = prodRestProtocol + "://" + prodRestHostname + "/" + prodRestVersion;
+            this.qaBaseUrlWithVersion = qaRestProtocol + "://" + qaRestHostname + ":" + qaRestPort + "/" + qaRestVersion;
+            this.devBaseUrlWithVersion = devRestProtocol + "://" + devRestHostname + ":" + devRestPort + "/" + devRestVersion;
+            this.cryptoOn = cryptoOn;
+
+            logger.info("s3BaseUrl=" + s3BaseUrl);
+            logger.info("restServiceBaseUrl=" + restServiceBaseUrl);
+            logger.info("prodBaseUrlWithVersion=" + prodBaseUrlWithVersion);
+            logger.info("qaBaseUrlWithVersion=" + qaBaseUrlWithVersion);
+            logger.info("devBaseUrlWithVersion=" + devBaseUrlWithVersion);
+
             logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
-            this.clientServiceEndpoint = clientServiceEndpoint;
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(null, null).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance(randomProvider);
@@ -95,6 +131,18 @@ public final class SystemManager implements ManagerInterface {
         SystemManager.singleton = this;
         this.state = ManagerState.INITIALIZED;
         System.out.println("*** SystemManager initialized ***");
+    }
+
+    public String getProdBaseUrlWithVersion() {
+        return prodBaseUrlWithVersion;
+    }
+
+    public String getBaseUrlWithVersion() {
+        return qaMode ? qaBaseUrlWithVersion : (devMode ? devBaseUrlWithVersion : prodBaseUrlWithVersion);
+    }
+
+    public String getS3BaseUrl() {
+        return s3BaseUrl;
     }
 
     public String getSecureRandomString() throws SystemErrorException {
@@ -111,7 +159,7 @@ public final class SystemManager implements ManagerInterface {
         return cryptoOn;
     }
 
-    private void maybeSetNonProductionContext(String mode) {
+    private void setRunMode(String mode) {
         qaMode = (mode.equals("qa"));
         if (qaMode) {
             logger.info(">>> STARTING IN QA MODE <<<");
@@ -126,33 +174,18 @@ public final class SystemManager implements ManagerInterface {
     }
 
     /**
-     * <p>Get the local REST service endpoint (hostname+port) only if in qa mode.</p>
+     * <p>Get the  REST service endpoint base Url. E.g., "http://qa.rest.blahgua.com:8080".</p>
+     * <p>Provides protocol, hostname, and port.</p>
      *
-     * @return Local hostname and port for Catalina service
-     * @see #isQaMode()
+     * @return Base URL for REST service
      */
-    public String getLocalRestEndpoint() {
-        return restEndpoint;
+    public String getRestServiceBaseUrl() {
+        return restServiceBaseUrl;
     }
 
-    /**
-     * <p>Returns true if we're in qa mode.</p>
-     *
-     * @return true if we're in qa mode
-     * @see #getLocalRestEndpoint()
-     */
-    public boolean isQaMode() {
-        return qaMode;
+    public RunMode getRunMode() {
+        return qaMode ? RunMode.QA : (devMode ? RunMode.DEV : RunMode.PROD);
     }
-
-    public boolean isDevMode() {
-        return devMode;
-    }
-
-    public String getClientServiceEndpoint() {
-        return clientServiceEndpoint;
-    }
-
 
     public String makeShortRandomCode() throws SystemErrorException {
         try {
@@ -255,12 +288,14 @@ public final class SystemManager implements ManagerInterface {
      */
     private void startHttpClient() {
         final SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-        if (isQaMode()) {
-            schemeRegistry.register(new Scheme("http", 8080, PlainSocketFactory.getSocketFactory()));
-//            schemeRegistry.register(new Scheme("http", getQaBadgeAuthorityPort(), PlainSocketFactory.getSocketFactory()));
-        } else if (isDevMode()) {
-            schemeRegistry.register(new Scheme("http", 8080, PlainSocketFactory.getSocketFactory()));
+        if (qaMode) {
+//            schemeRegistry.register(new Scheme("http", 8080, PlainSocketFactory.getSocketFactory()));
+            schemeRegistry.register(new Scheme("http", getQaBadgeAuthorityPort(), PlainSocketFactory.getSocketFactory()));
+        } else if (devMode) {
+//            schemeRegistry.register(new Scheme("http", 8080, PlainSocketFactory.getSocketFactory()));
+            schemeRegistry.register(new Scheme("http", getDevBadgeAuthorityPort(), PlainSocketFactory.getSocketFactory()));
+        } else { // PROD
+            schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
         }
         connectionPoolMgr = new PoolingClientConnectionManager(schemeRegistry);
         connectionPoolMgr.setMaxTotal(getMaxHttpConnections()); // maximum total connections
@@ -339,6 +374,34 @@ public final class SystemManager implements ManagerInterface {
 
     public void setDevBadgeAuthorityPort(Integer port) {
         devBadgeAuthorityPort = port;
+    }
+
+    public String getS3WebsiteProdBucket() {
+        return s3WebsiteProdBucket;
+    }
+
+    public void setS3WebsiteProdBucket(String bucket) {
+        s3WebsiteProdBucket = bucket;
+    }
+
+    public String getS3WebsiteQABucket() {
+        return s3WebsiteQABucket;
+    }
+
+    public void setS3WebsiteQABucket(String bucket) {
+        s3WebsiteQABucket = bucket;
+    }
+
+    public String getS3WebsiteDevBucket() {
+        return s3WebsiteDevBucket;
+    }
+
+    public void setS3WebsiteDevBucket(String bucket) {
+        s3WebsiteDevBucket = bucket;
+    }
+
+    public String getWebsiteBucket() {
+        return qaMode ? s3WebsiteQABucket : (devMode ? s3WebsiteDevBucket : s3WebsiteProdBucket);
     }
 
     java.util.Map<String, OperationInfo> operationToOpInfoMap = new HashMap<String, OperationInfo>();

@@ -18,6 +18,7 @@ import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import main.java.com.eweware.service.base.type.RunMode;
 import main.java.com.eweware.service.base.type.TrackerType;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.search.index.common.BlahguaFilterIndexReader;
@@ -579,8 +580,8 @@ public class UserManager implements ManagerInterface {
         msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
         msg.append("<p>If you do want to reset your password, ");
         final SystemManager sysMgr = getSystemManager();
-        final String endpoint = (sysMgr.isQaMode() || sysMgr.isDevMode()) ? sysMgr.getLocalRestEndpoint() : sysMgr.getClientServiceEndpoint();
-        msg.append("<a href='https://");
+        final String endpoint = sysMgr.getRestServiceBaseUrl();
+        msg.append("<a href='");
         msg.append(endpoint);
         msg.append("/recover?n=");
         if (!sysMgr.isCryptoOn()) {

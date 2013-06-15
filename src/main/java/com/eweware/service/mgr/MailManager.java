@@ -5,6 +5,7 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.mgr.SystemManager;
+import main.java.com.eweware.service.base.type.RunMode;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.*;
@@ -108,7 +109,7 @@ public class MailManager implements ManagerInterface {
 
     private void notifyStartup() throws SystemErrorException {
         try {
-            final boolean devMode = SystemManager.getInstance().isQaMode();
+            final boolean devMode = (SystemManager.getInstance().getRunMode() == RunMode.DEV);
             final String host = InetAddress.getLocalHost().getHostName();
             final StringBuilder subject = new StringBuilder("Blahgua Service ");
             subject.append(System.getProperty("user.name"));
@@ -125,7 +126,7 @@ public class MailManager implements ManagerInterface {
             }
             body.append("<br/>");
             System.setProperty("blahgua.crypto", SystemManager.getInstance().isCryptoOn() ? "on" : "off");
-            Properties props =  System.getProperties();
+            Properties props = System.getProperties();
             final Enumeration<?> elements = props.propertyNames();
             while (elements.hasMoreElements()) {
                 final String pname = (String) elements.nextElement();

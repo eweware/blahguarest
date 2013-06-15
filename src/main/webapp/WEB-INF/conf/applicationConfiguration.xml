@@ -11,14 +11,21 @@
 
     <bean id="systemManager" class="main.java.com.eweware.service.base.mgr.SystemManager"
           init-method="start" destroy-method="shutdown">
-        <constructor-arg value="${blagua.mode}" />
+        <constructor-arg value="${blagua.run.mode}" />
+        <constructor-arg value="${blahgua.prod.rest.version}" />
+        <constructor-arg value="${blahgua.qa.rest.version}" />
+        <constructor-arg value="${blahgua.dev.rest.version}" />
         <constructor-arg value="${blahgua.sys.log.level}" />
         <constructor-arg value="${blahgua.crypto.on}" />
-        <constructor-arg value="${blahgua.rest.service.endpoint}" />
-        <!--<constructor-arg value="${blahgua.memcached.hostname}" />-->
-        <!--<constructor-arg value="${blahgua.memcached.port}" />-->
-        <!--<constructor-arg value="${blahgua.qa.memcached.hostname}" />-->
+        <constructor-arg value="${blahgua.prod.rest.protocol}" />
+        <constructor-arg value="${blahgua.prod.rest.hostname}" />
+        <constructor-arg value="${blahgua.qa.rest.protocol}" />
+        <constructor-arg value="${blahgua.qa.rest.hostname}" />
         <constructor-arg value="${blahgua.qa.rest.port}" />
+        <constructor-arg value="${blahgua.dev.rest.protocol}" />
+        <constructor-arg value="${blahgua.dev.rest.hostname}" />
+        <constructor-arg value="${blahgua.dev.rest.port}" />
+        <constructor-arg value="${blahgua.s3.base.url}" />
         <property name="maxHttpConnections" value="${blahgua.sys.http.max.connections}"/>
         <property name="maxHttpConnectionsPerRoute" value="${blahgua.sys.http.max.connections.per.route}"/>
         <property name="httpConnectionTimeoutInMs" value="${blahgua.sys.http.connection.timeout.in.ms}"/>
@@ -26,6 +33,9 @@
         <property name="qaBadgeAuthorityPort" value="${blahgua.sys.qa.badge.authority.port}"/>
         <property name="devBadgeAuthorityEndpoint" value="${blahgua.sys.dev.badge.authority.endpoint}"/>
         <property name="devBadgeAuthorityPort" value="${blahgua.sys.dev.badge.authority.port}"/>
+        <property name="s3WebsiteProdBucket" value="${blahgua.s3.website.prod.bucket}"/>
+        <property name="s3WebsiteQABucket" value="${blahgua.s3.website.qa.bucket}"/>
+        <property name="s3WebsiteDevBucket" value="${blahgua.s3.website.dev.bucket}"/>
     </bean>
 
     <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"

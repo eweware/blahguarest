@@ -16,6 +16,7 @@ import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.dao.type.BadgeTransactionState;
 import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import main.java.com.eweware.service.base.type.RunMode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -120,13 +121,13 @@ public final class BadgesManager {
 //            return Response.status(Response.Status.ACCEPTED).build();
 //        }
         final SystemManager mgr = SystemManager.getInstance();
-        if (mgr.isQaMode()) {
-            authorityId = mgr.getQaBadgeAuthorityEndpoint();
-        } else if (mgr.isDevMode()) {
-            authorityId = mgr.getDevBadgeAuthorityEndpoint();
-        }
+        final RunMode runMode = mgr.getRunMode();
         BadgeAuthorityDAO authDAO = null;
-        if (!(mgr.isQaMode() || mgr.isDevMode())) {
+        if (runMode == RunMode.QA) {
+            authorityId = mgr.getQaBadgeAuthorityEndpoint();
+        } else if (runMode == RunMode.DEV) {
+            authorityId = mgr.getDevBadgeAuthorityEndpoint();
+        } else { // PROD
             authDAO = (BadgeAuthorityDAO) storeManager.createBadgeAuthority(authorityId)._findByPrimaryId(BadgeAuthorityDAO.REST_ENDPOINT_URL, BadgeAuthorityDAO.DISPLAY_NAME);
             if (authDAO == null) {
                 throw new InvalidRequestException("Invalid authority id '" + authorityId + "'", ErrorCodes.INVALID_INPUT);
@@ -424,12 +425,13 @@ public final class BadgesManager {
     private String makeBadgeAuthorityCreateBadgeEndpoint(String productionEndpoint) throws SystemErrorException {
         final SystemManager mgr = SystemManager.getInstance();
         final String method = "/badges/create";
-        if (mgr.isQaMode()) {
-            return mgr.getQaBadgeAuthorityEndpoint() + method;
-        } else if (mgr.isDevMode()) {
-            return mgr.getDevBadgeAuthorityEndpoint() + method;
-        } else {
+        final RunMode runMode = mgr.getRunMode();
+        if (runMode == RunMode.PROD) {
             return productionEndpoint + method;
+        } else if (runMode == RunMode.QA) {
+            return mgr.getQaBadgeAuthorityEndpoint() + method;
+        } else { // RunMode.DEV
+            return mgr.getDevBadgeAuthorityEndpoint() + method;
         }
     }
 

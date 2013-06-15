@@ -7,6 +7,7 @@ import main.java.com.eweware.service.base.mgr.ManagerState;
 import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.store.StoreManager;
 import main.java.com.eweware.service.base.store.dao.*;
+import main.java.com.eweware.service.base.type.RunMode;
 import org.bson.types.ObjectId;
 
 import javax.xml.ws.WebServiceException;
@@ -339,13 +340,12 @@ public final class MongoStoreManager implements StoreManager {
                 throw new WebServiceException("Failed to find System Manager?", e);
             }
 
-            final boolean qaMode = sysMgr.isQaMode();
-            final boolean devMode = sysMgr.isDevMode();
+            final RunMode runMode = sysMgr.getRunMode();
 
             // Set up connections per host
-            if (qaMode || devMode) {
+            if (runMode != RunMode.PROD) {
                 this.connectionsPerHost = 3;
-                logger.info("*** MongoDB hostname: " + (qaMode ? qaMongoDbHostname : devMongoDbHostname) + " port " + this.mongoDbPort);
+                logger.info("*** MongoDB hostname: " + (runMode == RunMode.QA ? qaMongoDbHostname : devMongoDbHostname) + " port " + this.mongoDbPort);
             } else {
                 logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
             }
@@ -354,8 +354,8 @@ public final class MongoStoreManager implements StoreManager {
             //  Configure db host addresses
             final MongoClientOptions.Builder builder = new MongoClientOptions.Builder().connectionsPerHost(connectionsPerHost);
             List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
-            if (qaMode || devMode) {
-                serverAddresses.add(new ServerAddress((qaMode ? qaMongoDbHostname : devMongoDbHostname), mongoDbPort));
+            if (runMode != RunMode.PROD) {
+                serverAddresses.add(new ServerAddress((runMode == RunMode.QA ? qaMongoDbHostname : devMongoDbHostname), mongoDbPort));
             } else {
                 for (String hostname : hostnames) {
                     serverAddresses.add(new ServerAddress(hostname, mongoDbPort));
