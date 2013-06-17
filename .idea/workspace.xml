@@ -9,10 +9,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="BWC-1219">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/AWSUtilities.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/AWSUtilities.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/servlet/WebClientCSSServlet.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/servlet/WebClientCSSServlet.java" />
+    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -168,7 +165,7 @@
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Entry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357330149291" ignored="false" />
     <file path="/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328258608" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328273494" ignored="false" />
-    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371512317018" ignored="false" />
+    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371512729982" ignored="false" />
     <file path="/CommonUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369514308809" ignored="false" />
     <file path="/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367877039112" ignored="false" />
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876976769" ignored="false" />
@@ -197,7 +194,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371071029238" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371332504816" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371504630245" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371512332404" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370911752114" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1321,7 +1318,7 @@
       <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="18" selection-start="350" selection-end="350" vertical-scroll-proportion="0.15641293">
+            <state line="10" column="20" selection-start="352" selection-end="352" vertical-scroll-proportion="0.15641293">
               <folding />
             </state>
           </provider>
@@ -3303,7 +3300,11 @@
       <created>1371340402612</created>
       <updated>1371340402612</updated>
     </task>
-    <option name="localTasksCounter" value="253" />
+    <task id="LOCAL-00253" summary="BWC-1219 tested DEV after Dave's latest checkins">
+      <created>1371512335162</created>
+      <updated>1371512335162</updated>
+    </task>
+    <option name="localTasksCounter" value="254" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3396,7 +3397,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="BWC-1219" />
+    <option name="LAST_COMMIT_MESSAGE" value="BWC-1219 tested DEV after Dave's latest checkins" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -3410,7 +3411,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="use converter on payload objects" />
     <MESSAGE value="debug getuserimages&#10;" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-934" />
     <MESSAGE value="test" />
@@ -3435,6 +3435,7 @@
     <MESSAGE value="Using config properties to set running mode" />
     <MESSAGE value="BWC-1202" />
     <MESSAGE value="BWC-1219" />
+    <MESSAGE value="BWC-1219 tested DEV after Dave's latest checkins" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3546,7 +3547,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="18" selection-start="350" selection-end="350" vertical-scroll-proportion="0.15641293">
+        <state line="10" column="20" selection-start="352" selection-end="352" vertical-scroll-proportion="0.15641293">
           <folding />
         </state>
       </provider>
