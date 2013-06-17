@@ -11,7 +11,6 @@ import main.java.com.eweware.service.base.mgr.SystemManager;
 import main.java.com.eweware.service.base.type.RunMode;
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +43,7 @@ public class AWSUtilities {
     private static String websiteProdBucket;
     private static String restServiceBaseUrl;
     private static String s3BaseUrl;
+    private static String prodBaseUrl;
     private static String prodBaseUrlWithVersion;
     private static String baseUrlWithVersion;
     private static RunMode runMode;
@@ -95,6 +95,13 @@ public class AWSUtilities {
             prodBaseUrlWithVersion = getSystemManager().getProdBaseUrlWithVersion();
         }
         return prodBaseUrlWithVersion;
+    }
+
+    private static String getProdBaseUrl() throws SystemErrorException {
+        if (prodBaseUrl == null) {
+            prodBaseUrl = getSystemManager().getProdBaseUrl();
+        }
+        return prodBaseUrl;
     }
 
     private static String getBaseUrlWithVersion() throws SystemErrorException {
@@ -180,7 +187,6 @@ public class AWSUtilities {
 
     /**
      * <p>Transforms content if this is not a PROD environment.</p>
-     *
      * @return A possibly transformed content
      */
     private static String doGetDefaultHtmlFromS3() {
@@ -205,45 +211,60 @@ public class AWSUtilities {
      */
     private static String transformDefaultHtmlFile(String contents) throws SystemErrorException {
 
-        /* Direct CSS files to QA or DEV server's servley instead of the S3 bucket */
+        /* Replace the reference to blahgua.css with links to all files imported by it */
+        contents = maybeReplaceAll(getProdCssPattern(), contents, getCssLinks());
 
-        // First, get blahgua.css and inspect which other css files are imported from it
-        final List<String> importedFilenames = getImportedFilenames(getContentsFromS3("css/blahgua.css"));
-//        importedFilenames.add(0, "blahgua.css");  TODO: discuss with UI team. This should only be done if blahgua.css contains styles, in which case imports ought to be removed
-        final StringBuilder links = new StringBuilder();
-        for (String filename : importedFilenames) {
-            links.append("<link rel=\"stylesheet\" href=\"");
-            links.append(getRestServiceBaseUrl());
-            links.append("/css/");
-            links.append(filename);
-            links.append("\" />\n");
-        }
-        // Now replace the reference to blahgua.css with links to all files imported by it
-//        final String prodCss = "(<link rel=\"stylesheet\" href=\"https://s3-us-west-2.amazonaws.com/beta.blahgua.com/css/blahgua.css\" />)";
-        final String prodCss = "(<link rel=\"stylesheet\" href=\"" + getS3BaseUrl() + "/" + getS3WebsiteProdBucket() + "/css/blahgua.css\"" + " />)";
+        /* Point S3 bucket references to QA or DEV bucket */
+        contents = maybeReplaceAll(getProdBucketPattern(), contents, getS3BaseUrl() + "/" + getWebsiteBucket());
 
-        Pattern prodCssPattern = Pattern.compile(prodCss);
-        final Matcher cssmatcher = prodCssPattern.matcher(contents);
-        contents = cssmatcher.replaceAll(links.toString());
-
-        /* Point S3 files to QA or DEV bucket instead of PROD bucket */
-        final String prodS3Bucket = getS3BaseUrl() + "/" + getS3WebsiteProdBucket();
-        Pattern p = Pattern.compile(prodS3Bucket, Pattern.MULTILINE);
-        final Matcher s3BucketRefMatcher = p.matcher(contents);
-        final String s3matcher = getS3BaseUrl() + "/" + getWebsiteBucket();
-        contents = s3BucketRefMatcher.replaceAll(s3matcher);
-
-        /* Replace PROD REST server references with QA or DEV reference */
-        final String prodRestUrl = getProdBaseUrlWithVersion();
-        Pattern fragment = Pattern.compile(prodRestUrl, Pattern.MULTILINE);
-        final Matcher matcher = fragment.matcher(contents);
-        contents = matcher.replaceAll(getBaseUrlWithVersion());
-
-        return contents;
+        /** Replace PROD REST references to blahgua REST or QA */
+        return maybeReplaceAll(getProdRestPattern(), contents, getRestServiceBaseUrl());
     }
 
-    private static List<String> getImportedFilenames(String css) {
+    private static String maybeReplaceAll(Pattern regex, String string, String replacement) {
+        final Matcher matcher = regex.matcher(string);
+        if (matcher.find()) {
+            return matcher.replaceAll(replacement);
+        } else {
+            return string;
+        }
+    }
 
+
+//        /* Replace PROD REST server references with QA or DEV reference */
+//        final String prodRestUrl = getProdBaseUrlWithVersion();
+//        Pattern fragment = Pattern.compile(prodRestUrl, Pattern.MULTILINE);
+//        final Matcher matcher = fragment.matcher(contents);
+//        contents = matcher.replaceAll(getBaseUrlWithVersion());
+
+    private static Pattern prodCssPattern;
+    private static Pattern prodBucketPattern;
+    private static Pattern prodRestPattern;
+
+    private static Pattern getProdRestPattern() throws SystemErrorException {
+        if (prodRestPattern == null) {
+            prodRestPattern = Pattern.compile(getProdBaseUrl(), Pattern.MULTILINE);
+        }
+        return prodRestPattern;
+    }
+
+    private static Pattern getProdBucketPattern() throws SystemErrorException {
+        if (prodBucketPattern == null) {
+            prodBucketPattern = Pattern.compile(getS3BaseUrl() + "/" + getS3WebsiteProdBucket(), Pattern.MULTILINE);
+        }
+        return prodBucketPattern;
+    }
+
+    private static Pattern getProdCssPattern() throws SystemErrorException {
+        if (prodCssPattern == null) {
+            prodCssPattern = Pattern.compile("(<link rel=\"stylesheet\" href=\"" + getS3BaseUrl() + "/" + getS3WebsiteProdBucket() + "/css/blahgua.css\"" + " />)");
+        }
+        return prodCssPattern;
+    }
+
+    // Don't need to cache this because access is under default.html lock and cache timing
+    private static String getCssLinks() throws SystemErrorException {
+        final String css = getContentsFromS3("css/blahgua.css");
         final String[] lines = css.split("\n");
         final List<String> imports = new ArrayList<String>(lines.length);
         Pattern f = Pattern.compile("\\\"(\\S+)\\\"", Pattern.MULTILINE | Pattern.DOTALL);
@@ -253,25 +274,14 @@ public class AWSUtilities {
                 imports.add(matcher.group(1));
             }
         }
-        return imports;
+        final StringBuilder links = new StringBuilder();
+        for (String filename : imports) {
+            links.append("<link rel=\"stylesheet\" href=\"");
+            links.append(getRestServiceBaseUrl());
+            links.append("/css/");
+            links.append(filename);
+            links.append("\" />\n");
+        }
+        return links.toString();
     }
-
-//    public static void main(String[] a) throws IOException, SystemErrorException {
-//         String src = "@import url(\"cssreset-min.css\");\n" +
-//                "@import url(\"basestyles.css\");\n" +
-//                "@import url(\"blahdetail.css\");\n" +
-//                "@import url(\"blahroll.css\");\n" +
-//                "@import url(\"channels.css\");\n" +
-//                "@import url(\"preview.css\");\n" +
-//                "@import url(\"profiledetail.css\");\n" +
-//                "@import url(\"signup.css\");\n" +
-//                "@import url(\"createblah.css\");\n" +
-//                "@import url(\"badges.css\");\n" +
-//                "@import url(\"polls.css\");\n" +
-//                "@import url(\"predictions.css\");";
-//        final List<String> importedFilenames = getImportedFilenames(src);
-//        System.out.println(importedFilenames);
-////        final String contents = FileUtils.readFileToString(new File("/Users/admin/dev/blahgua/beta/Blahgua-beta-HTML/default.html"));
-////        System.out.println(transformDefaultHtmlFile(contents));
-//    }
 }

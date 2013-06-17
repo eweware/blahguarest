@@ -67,7 +67,7 @@ public class WebClientCSSServlet extends HttpServlet {
         if (getRunMode() == RunMode.PROD) {
             resp.getWriter().write(contents);
         } else {
-            logger.info(">>> " + getRunMode() + " mode: transforming contents of " + s3BucketKey);
+//            logger.info(">>> " + getRunMode() + " mode: transforming contents of " + s3BucketKey);
             resp.getWriter().write(transform(contents));
         }
     }

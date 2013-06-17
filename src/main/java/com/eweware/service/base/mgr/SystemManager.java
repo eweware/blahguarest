@@ -53,10 +53,11 @@ public final class SystemManager implements ManagerInterface {
     private Integer maxHttpConnectionsPerRoute;
     private Integer httpConnectionTimeoutInMs;
 
+    private String prodBaseUrl;
     private final String prodBaseUrlWithVersion;
     private final String qaBaseUrlWithVersion;
-    private final String devBaseUrlWithVersion;
 
+    private final String devBaseUrlWithVersion;
     private String restServiceBaseUrl;
     private String s3WebsiteProdBucket;
     private String s3WebsiteQABucket;
@@ -106,6 +107,7 @@ public final class SystemManager implements ManagerInterface {
                 restServiceBaseUrl = prodRestProtocol + "://" + prodRestHostname; // port 80
             }
             this.s3BaseUrl = s3BaseUrl;
+            this.prodBaseUrl = prodRestProtocol + "://" + prodRestHostname;
             this.prodBaseUrlWithVersion = prodRestProtocol + "://" + prodRestHostname + "/" + prodRestVersion;
             this.qaBaseUrlWithVersion = qaRestProtocol + "://" + qaRestHostname + ":" + qaRestPort + "/" + qaRestVersion;
             this.devBaseUrlWithVersion = devRestProtocol + "://" + devRestHostname + ":" + devRestPort + "/" + devRestVersion;
@@ -135,6 +137,10 @@ public final class SystemManager implements ManagerInterface {
 
     public String getProdBaseUrlWithVersion() {
         return prodBaseUrlWithVersion;
+    }
+
+    public String getProdBaseUrl() {
+        return prodBaseUrl;
     }
 
     public String getBaseUrlWithVersion() {
