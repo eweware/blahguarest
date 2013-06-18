@@ -36,17 +36,19 @@ def main(argv=None):
                 line = c.readline()
                 if line == '': break
                 print line.strip("\r\n")
-                subprocess.Popen(['sh','-c', 'cd', '..'], stdout=subprocess.PIPE).communicate()[0]
-                print 'Building...'
-                c = pexpect.spawn('mvn -f ../pom.xml clean package')
-                while (True):
-                    line = c.readline()
-                    if line == '': break
-                    print line.strip("\r\n")
+            print 'New git version fetched'
         elif index == 2:
             print 'Timeout out waiting for git pull to complete'
             print 'Try again or build manually'
             return 1
+        print 'Building war...'
+        subprocess.Popen(['sh','-c', 'cd', '..'], stdout=subprocess.PIPE).communicate()[0]
+        c = pexpect.spawn('mvn -f ../pom.xml clean package')
+        while (True):
+            line = c.readline()
+            if line == '': break
+            print line.strip("\r\n")
+
     except Exception as e:
         print str(e)
         return 2
