@@ -86,7 +86,7 @@ def main(argv=None):
             print s.before
             time.sleep(5)
             print 'Removing current version from container...'
-            s.sendline('sudo rm -rf /usr/share/tomcat7/website/ROOT*')
+            s.sendline('sudo rm -rf /usr/share/tomcat7/webapps/ROOT*')
             s.prompt()
             print s.before
             print 'Copying new war to container...'
