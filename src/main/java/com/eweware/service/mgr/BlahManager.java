@@ -68,7 +68,6 @@ public final class BlahManager implements ManagerInterface {
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
     private static final String EMPTY_STRING = "";
 
-    private boolean debug;
     private final boolean doIndex;
     private final File blahIndexDir;
     private final File commentIndexDir;
@@ -102,10 +101,9 @@ public final class BlahManager implements ManagerInterface {
         return BlahManager.singleton;
     }
 
-    public BlahManager(Boolean debug, Boolean doIndex, String blahIndexDir, String commentIndexDir,
+    public BlahManager(Boolean doIndex, String blahIndexDir, String commentIndexDir,
                        String batchSize, String batchDelay, int maxOpensOrViewsPerUpdate,
                        Integer returnedObjectLimit) {
-        this.debug = (debug == Boolean.TRUE);
         this.doIndex = (doIndex == Boolean.TRUE);
         this.blahIndexDir = new File(blahIndexDir);
         this.commentIndexDir = new File(commentIndexDir);
@@ -1739,9 +1737,6 @@ public final class BlahManager implements ManagerInterface {
             events.add(event);
             try {
                 this.blahIndexingSystem.consume(events);
-                if (debug) {
-                    System.out.println("Indexed blah: " + blah);
-                }
             } catch (ZoieException e) {
                 throw new SystemErrorException("Indexing error", e, ErrorCodes.SERVER_INDEXING_ERROR);
             }
@@ -1787,10 +1782,6 @@ public final class BlahManager implements ManagerInterface {
             events.add(event);
             try {
                 this.commentIndexingSystem.consume(events);
-                if (debug) {
-                    System.out.println("Indexed comment: " + comment);
-                }
-
             } catch (ZoieException e) {
                 throw new SystemErrorException("indexing error", e, ErrorCodes.SERVER_INDEXING_ERROR);
             }

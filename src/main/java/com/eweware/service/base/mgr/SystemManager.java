@@ -38,8 +38,11 @@ public final class SystemManager implements ManagerInterface {
     private static SystemManager singleton;
     private ManagerState state = ManagerState.UNKNOWN;
 
+
+    private RunMode runMode;
     private boolean qaMode;
     private boolean devMode;
+    private boolean prodMode;
 
     private final SecureRandom randomizer;
     private final MessageDigest sha1Digest;
@@ -55,14 +58,13 @@ public final class SystemManager implements ManagerInterface {
 
     private String prodBaseUrl;
     private final String prodBaseUrlWithVersion;
-    private final String qaBaseUrlWithVersion;
-
-    private final String devBaseUrlWithVersion;
-    private String restServiceBaseUrl;
-    private String s3WebsiteProdBucket;
-    private String s3WebsiteQABucket;
-    private String s3WebsiteDevBucket;
-    private String s3BaseUrl; // The base URL with protocol for all S3 buckets (in PROD, QA, and DEV)
+    private String restServiceBaseUrl;  // e.g., https://beta.blahgua.com
+    private String restServiceBaseUrlWithVersion;  // e.g., https://beta.blahgua.com/v2
+    private String prodS3WebsiteProdBucket;
+    private String s3WebsiteBucket;
+    private String s3BaseUrl; // The base URL with protocol for all S3 buckets (in PROD, QA, and DEV)  private String prodImagesBucketUrl;
+    private String prodImagesBucketUrl;
+    private String imagesBucketUrl;
 
     private String qaBadgeAuthorityEndpoint; // contains protocol, hostname, port, and REST version
     private Integer qaBadgeAuthorityPort; // for http client
@@ -91,7 +93,13 @@ public final class SystemManager implements ManagerInterface {
             String devRestProtocol,
             String devRestHostname,
             String devRestPort,
-            String s3BaseUrl // we assume that it is the same for QA, DEV and PROD
+            String s3BaseUrl, // we assume that it is the same for QA, DEV and PROD
+            String prodImagesBucket,
+            String qaImagesBucket,
+            String devImagesBucket,
+            String s3WebsiteProdBucket,
+            String s3WebsiteQABucket,
+            String s3WebsiteDevBucket
     ) {
         final String randomProvider = "SHA1PRNG";
         try {
@@ -101,23 +109,31 @@ public final class SystemManager implements ManagerInterface {
 
             if (qaMode) {
                 restServiceBaseUrl = qaRestProtocol + "://" + qaRestHostname + ":" + qaRestPort;
+                restServiceBaseUrlWithVersion = restServiceBaseUrl + "/" + qaRestVersion;
+                imagesBucketUrl = s3BaseUrl + "/" + qaImagesBucket;
+                s3WebsiteBucket = s3WebsiteQABucket;
             } else if (devMode) {
                 restServiceBaseUrl = devRestProtocol + "://" + devRestHostname + ":" + devRestPort;
+                restServiceBaseUrlWithVersion = restServiceBaseUrl + "/" + devRestVersion;
+                imagesBucketUrl = s3BaseUrl + "/" + devImagesBucket;
+                s3WebsiteBucket = s3WebsiteDevBucket;
             } else { // RunMode.PROD
                 restServiceBaseUrl = prodRestProtocol + "://" + prodRestHostname; // port 80
+                restServiceBaseUrlWithVersion = restServiceBaseUrl + "/" + prodRestVersion;
+                imagesBucketUrl = s3BaseUrl + "/" + prodImagesBucket;
+                s3WebsiteBucket = s3WebsiteProdBucket;
             }
             this.s3BaseUrl = s3BaseUrl;
             this.prodBaseUrl = prodRestProtocol + "://" + prodRestHostname;
             this.prodBaseUrlWithVersion = prodRestProtocol + "://" + prodRestHostname + "/" + prodRestVersion;
-            this.qaBaseUrlWithVersion = qaRestProtocol + "://" + qaRestHostname + ":" + qaRestPort + "/" + qaRestVersion;
-            this.devBaseUrlWithVersion = devRestProtocol + "://" + devRestHostname + ":" + devRestPort + "/" + devRestVersion;
+            this.prodS3WebsiteProdBucket = s3WebsiteProdBucket;
+            this.prodImagesBucketUrl = s3BaseUrl + "/" + prodImagesBucket;
             this.cryptoOn = cryptoOn;
 
             logger.info("s3BaseUrl=" + s3BaseUrl);
             logger.info("restServiceBaseUrl=" + restServiceBaseUrl);
-            logger.info("prodBaseUrlWithVersion=" + prodBaseUrlWithVersion);
-            logger.info("qaBaseUrlWithVersion=" + qaBaseUrlWithVersion);
-            logger.info("devBaseUrlWithVersion=" + devBaseUrlWithVersion);
+            logger.info("restServiceBaseUrlWithVersion=" + restServiceBaseUrlWithVersion);
+            logger.info("s3WebsiteBucket=" + s3WebsiteBucket);
 
             logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
             final int expirationTime = 0; // TODO refine this?
@@ -135,6 +151,14 @@ public final class SystemManager implements ManagerInterface {
         System.out.println("*** SystemManager initialized ***");
     }
 
+    public String getProdImagesBucketUrl() {
+        return prodImagesBucketUrl;
+    }
+
+    public String getImagesBucketUrl() {
+        return imagesBucketUrl;
+    }
+
     public String getProdBaseUrlWithVersion() {
         return prodBaseUrlWithVersion;
     }
@@ -143,8 +167,8 @@ public final class SystemManager implements ManagerInterface {
         return prodBaseUrl;
     }
 
-    public String getBaseUrlWithVersion() {
-        return qaMode ? qaBaseUrlWithVersion : (devMode ? devBaseUrlWithVersion : prodBaseUrlWithVersion);
+    public String getRestServiceBaseUrlWithVersion() {
+        return restServiceBaseUrlWithVersion;
     }
 
     public String getS3BaseUrl() {
@@ -166,17 +190,35 @@ public final class SystemManager implements ManagerInterface {
     }
 
     private void setRunMode(String mode) {
-        qaMode = (mode.equals("qa"));
+        try {
+            this.runMode = RunMode.valueOf(mode.toUpperCase());
+        } catch (Exception e) {
+            throw new WebServiceException("Invalid run mode '" + mode + "'");
+        }
+        qaMode = (runMode == RunMode.QA);
         if (qaMode) {
             logger.info(">>> STARTING IN QA MODE <<<");
         } else {
-            devMode = (mode.equals("dev"));
+            devMode = (runMode == RunMode.DEV);
             if (devMode) {
                 logger.info(">>> STARTING IN DEVELOPMENT MODE <<<");
             } else {
+                prodMode = true;
                 logger.info(">>> STARTING IN PRODUCTION MODE <<<");
             }
         }
+    }
+    public RunMode getRunMode() {
+        return runMode;
+    }
+    public boolean isQaMode() {
+        return qaMode;
+    }
+    public boolean isDevMode() {
+        return devMode;
+    }
+    public boolean isProdMode() {
+        return prodMode;
     }
 
     /**
@@ -187,10 +229,6 @@ public final class SystemManager implements ManagerInterface {
      */
     public String getRestServiceBaseUrl() {
         return restServiceBaseUrl;
-    }
-
-    public RunMode getRunMode() {
-        return qaMode ? RunMode.QA : (devMode ? RunMode.DEV : RunMode.PROD);
     }
 
     public String makeShortRandomCode() throws SystemErrorException {
@@ -383,31 +421,15 @@ public final class SystemManager implements ManagerInterface {
     }
 
     public String getS3WebsiteProdBucket() {
-        return s3WebsiteProdBucket;
+        return prodS3WebsiteProdBucket;
     }
 
     public void setS3WebsiteProdBucket(String bucket) {
-        s3WebsiteProdBucket = bucket;
-    }
-
-    public String getS3WebsiteQABucket() {
-        return s3WebsiteQABucket;
-    }
-
-    public void setS3WebsiteQABucket(String bucket) {
-        s3WebsiteQABucket = bucket;
-    }
-
-    public String getS3WebsiteDevBucket() {
-        return s3WebsiteDevBucket;
-    }
-
-    public void setS3WebsiteDevBucket(String bucket) {
-        s3WebsiteDevBucket = bucket;
+        prodS3WebsiteProdBucket = bucket;
     }
 
     public String getWebsiteBucket() {
-        return qaMode ? s3WebsiteQABucket : (devMode ? s3WebsiteDevBucket : s3WebsiteProdBucket);
+        return s3WebsiteBucket;
     }
 
     java.util.Map<String, OperationInfo> operationToOpInfoMap = new HashMap<String, OperationInfo>();

@@ -26,6 +26,13 @@
         <constructor-arg value="${blahgua.dev.rest.hostname}" />
         <constructor-arg value="${blahgua.dev.rest.port}" />
         <constructor-arg value="${blahgua.s3.base.url}" />
+        <constructor-arg value="${blahgua.s3.images.prod.bucket}" />
+        <constructor-arg value="${blahgua.s3.images.qa.bucket}" />
+        <constructor-arg value="${blahgua.s3.images.dev.bucket}" />
+        <constructor-arg value="${blahgua.s3.website.prod.bucket}" />
+        <constructor-arg value="${blahgua.s3.website.qa.bucket}" />
+        <constructor-arg value="${blahgua.s3.website.dev.bucket}" />
+
         <property name="maxHttpConnections" value="${blahgua.sys.http.max.connections}"/>
         <property name="maxHttpConnectionsPerRoute" value="${blahgua.sys.http.max.connections.per.route}"/>
         <property name="httpConnectionTimeoutInMs" value="${blahgua.sys.http.connection.timeout.in.ms}"/>
@@ -33,9 +40,6 @@
         <property name="qaBadgeAuthorityPort" value="${blahgua.sys.qa.badge.authority.port}"/>
         <property name="devBadgeAuthorityEndpoint" value="${blahgua.sys.dev.badge.authority.endpoint}"/>
         <property name="devBadgeAuthorityPort" value="${blahgua.sys.dev.badge.authority.port}"/>
-        <property name="s3WebsiteProdBucket" value="${blahgua.s3.website.prod.bucket}"/>
-        <property name="s3WebsiteQABucket" value="${blahgua.s3.website.qa.bucket}"/>
-        <property name="s3WebsiteDevBucket" value="${blahgua.s3.website.dev.bucket}"/>
     </bean>
 
     <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
@@ -96,7 +100,6 @@
 
     <bean id="userManager" class="main.java.com.eweware.service.mgr.UserManager"
 		init-method="start" destroy-method="shutdown">
-        <constructor-arg type="java.lang.Boolean" value="${blahgua.debug}" />
         <constructor-arg type="java.lang.Boolean" value="${blahgua.index.doIndex}" />
         <constructor-arg value="${blahgua.user.index.dir}" />
         <constructor-arg value="${blahgua.user.index.event.count.before.flush}" />
@@ -116,7 +119,6 @@
 
     <bean id="blahManager" class="main.java.com.eweware.service.mgr.BlahManager"
 		init-method="start" destroy-method="shutdown">
-        <constructor-arg type="java.lang.Boolean" value="${blahgua.debug}" />
         <constructor-arg type="java.lang.Boolean" value="${blahgua.index.doIndex}" />
         <constructor-arg value="${blahgua.blah.index.dir}" />
         <constructor-arg value="${blahgua.blah.comment.index.dir}" />

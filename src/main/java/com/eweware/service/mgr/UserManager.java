@@ -73,7 +73,6 @@ public class UserManager implements ManagerInterface {
 
     private static final int ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
-    private final boolean debug;
     private final boolean doIndex;
     private StoreManager storeManager;
     private SystemManager systemManager;
@@ -93,8 +92,7 @@ public class UserManager implements ManagerInterface {
 
     private ZoieSystem<BlahguaFilterIndexReader, UserDAO> indexingSystem;
 
-    public UserManager(Boolean debug, Boolean doIndex, String indexDir, String batchSize, String batchDelay, Integer returnedObjectLimit) {
-        this.debug = (debug == Boolean.TRUE);
+    public UserManager(Boolean doIndex, String indexDir, String batchSize, String batchDelay, Integer returnedObjectLimit) {
         this.doIndex = (doIndex == Boolean.TRUE);
         this.indexDir = new File(indexDir);
         this.batchSize = Integer.parseInt(batchSize);
@@ -1420,9 +1418,6 @@ public class UserManager implements ManagerInterface {
         events.add(event);
         try {
             this.indexingSystem.consume(events);
-            if (debug) {
-                System.out.println("Added: " + user);
-            }
         } catch (ZoieException e) {
             throw new SystemErrorException("user indexer has a problem", e, ErrorCodes.SERVER_INDEXING_ERROR);
         }
