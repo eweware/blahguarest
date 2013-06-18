@@ -128,14 +128,16 @@ public final class SystemManager implements ManagerInterface {
             this.prodBaseUrlWithVersion = prodRestProtocol + "://" + prodRestHostname + "/" + prodRestVersion;
             this.prodS3WebsiteProdBucket = s3WebsiteProdBucket;
             this.prodImagesBucketUrl = s3BaseUrl + "/" + prodImagesBucket;
+
             this.cryptoOn = cryptoOn;
 
             logger.info("s3BaseUrl=" + s3BaseUrl);
             logger.info("restServiceBaseUrl=" + restServiceBaseUrl);
             logger.info("restServiceBaseUrlWithVersion=" + restServiceBaseUrlWithVersion);
             logger.info("s3WebsiteBucket=" + s3WebsiteBucket);
+            logger.info("imagesBucketUrl=" + imagesBucketUrl);
+            logger.info("crypto " + (cryptoOn ? "on" : "off"));
 
-            logger.info("*** Crypto is " + (cryptoOn ? "on" : "off") + " ***");
             final int expirationTime = 0; // TODO refine this?
             this.blahCacheConfiguration = new BlahCacheConfiguration(null, null).setInboxBlahExpirationTime(expirationTime);
             this.randomizer = SecureRandom.getInstance(randomProvider);
