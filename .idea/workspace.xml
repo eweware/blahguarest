@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/buildAndPushToQA.py" afterPath="$PROJECT_DIR$/scripts/buildAndPushToQA.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -176,7 +176,7 @@
     <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371585440526" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
-    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371585995227" ignored="false" />
+    <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371600751989" ignored="false" />
     <file path="/SessionAttributes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1361315297858" ignored="false" />
     <file path="/ErrorCodes.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369781214474" ignored="false" />
     <file path="/BlahSession.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356736407022" ignored="false" />
@@ -191,10 +191,10 @@
     <file path="/UsersResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370975802523" ignored="false" />
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371315449132" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369330928757" ignored="false" />
-    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371071029238" ignored="false" />
+    <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371602060085" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371586613200" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371599593968" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371599854573" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370911752114" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1294,10 +1294,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SystemManager.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SystemManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="130" column="14" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.45923632">
+            <state line="130" column="14" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageUploadResource.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="182" column="44" selection-start="7999" selection-end="7999" vertical-scroll-proportion="0.16220473">
               <folding />
             </state>
           </provider>
@@ -1344,7 +1353,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/MailManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BadgesManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/servlet/UserSessionRecoveryServlet.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/client/ConvertFile.java" />
@@ -1360,6 +1368,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/AWSUtilities.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
       </list>
     </option>
   </component>
@@ -3294,7 +3303,11 @@
       <created>1371599598621</created>
       <updated>1371599598621</updated>
     </task>
-    <option name="localTasksCounter" value="259" />
+    <task id="LOCAL-00259" summary="BWC-1226. Tested in DEV. Now test in QA">
+      <created>1371599857596</created>
+      <updated>1371599857596</updated>
+    </task>
+    <option name="localTasksCounter" value="260" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3326,7 +3339,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2650231" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24961948" sideWeight="0.720339" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22187981" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22187981" sideWeight="0.9812834" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30184048" sideWeight="0.69273126" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32856005" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -3335,8 +3348,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15498008" sideWeight="0.38289675" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32978183" sideWeight="0.6201849" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2516489" sideWeight="0.77812016" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18924403" sideWeight="0.77812016" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2516489" sideWeight="0.7349769" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18924403" sideWeight="0.7349769" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3174114" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -3439,11 +3452,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar!/java/net/PlainSocketImpl.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="24" selection-start="4383" selection-end="4383" vertical-scroll-proportion="0.54901963" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="65" column="34" selection-start="2760" selection-end="2760" vertical-scroll-proportion="0.0">
@@ -3536,7 +3544,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="130" column="14" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.45923632">
+        <state line="130" column="14" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="182" column="44" selection-start="7999" selection-end="7999" vertical-scroll-proportion="0.16220473">
           <folding />
         </state>
       </provider>

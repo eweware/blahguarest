@@ -180,6 +180,7 @@ public class ImageUploadResource {
     }
 
     private Response doUpload(String objectType, String objectId, InputStream in, FormDataContentDisposition metadata, HttpServletRequest request) {
+        logger.info("objectType="+objectType);
         final MediaReferendType referendType;
         try {
             BlahguaSession.ensureAuthenticated(request);
