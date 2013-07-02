@@ -135,16 +135,13 @@ public class UserProfileSchema extends BaseSchema implements SchemaConstants, Us
 
     private void createIncomeRangeSpec() {
         LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>(10);
-        data.put("0", "Under $2.5K"); // TODO obtain from i18n service
-        data.put("1", "$2.5K to $9.9K");
-        data.put("2", "$10K to $24.9K");
-        data.put("3", "$25K to $49.9K");
-        data.put("4", "$50K to $74.9K");
-        data.put("5", "$75K to $99.9K");
-        data.put("6", "$100K to $149.9K");
-        data.put("7", "$150K to $199.9K");
-        data.put("8", "$200K to $249.9K");
-        data.put("9", "$250K and above");
+        data.put("0", "Under $24.9K"); // TODO obtain from i18n service
+        data.put("1", "$25K to $49.9K");
+        data.put("2", "$50K to $74.9K");
+        data.put("3", "$75K to $99.9K");
+        data.put("4", "$100K to $149.9K");
+        data.put("5", "$150K to $199.9K");
+        data.put("6", "$200K and above");
         data.put(UNSPECIFIED_SELECTION_KEY, "Unspecified");
         createSpec(SchemaDataType.ILS, new FieldDescriptor(USER_PROFILE_INCOME_RANGE), "Income Range", null, null, data, true, UNSPECIFIED_SELECTION_KEY);
         createSpec(SchemaDataType.I, new FieldDescriptor(USER_PROFILE_INCOME_RANGE_PERMISSIONS), "Permissions", null, null, null, true, UserProfilePermissions.PRIVATE);
