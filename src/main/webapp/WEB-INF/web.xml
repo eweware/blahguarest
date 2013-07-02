@@ -30,7 +30,7 @@
         </init-param>
         <init-param>
             <param-name>cors.supportedMethods</param-name>
-            <param-value>GET, POST, HEAD, PUT</param-value>
+            <param-value>GET, POST, HEAD, PUT, DELETE</param-value>
         </init-param>
         <init-param>
             <param-name>cors.supportedHeaders</param-name>
