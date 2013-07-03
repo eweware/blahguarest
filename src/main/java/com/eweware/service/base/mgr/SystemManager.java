@@ -192,25 +192,25 @@ public final class SystemManager implements ManagerInterface {
     }
 
     private void setRunMode(String mode) {
-        final String sysProp = System.getProperty("blagua.run.mode");
-        if (sysProp != null) {
-            System.out.println("Run mode from System property=" + sysProp);
+        final String modeProp = System.getProperty("blagua.run.mode");
+        if (modeProp != null) {
+            System.out.println("Run mode from System property=" + modeProp);
         }
         try {
-            this.runMode = RunMode.valueOf((sysProp == null) ? mode.toUpperCase() : sysProp);
+            this.runMode = RunMode.valueOf((modeProp == null) ? mode.toUpperCase() : modeProp.toUpperCase());
         } catch (Exception e) {
             throw new WebServiceException("Invalid run mode '" + mode + "'");
         }
         qaMode = (runMode == RunMode.QA);
         if (qaMode) {
-            logger.info(">>> STARTING IN QA MODE <<<");
+            System.out.println(">>> STARTING IN QA MODE <<<");
         } else {
             devMode = (runMode == RunMode.DEV);
             if (devMode) {
-                logger.info(">>> STARTING IN DEVELOPMENT MODE <<<");
+                System.out.println(">>> STARTING IN DEVELOPMENT MODE <<<");
             } else {
                 prodMode = true;
-                logger.info(">>> STARTING IN PRODUCTION MODE <<<");
+                System.out.println(">>> STARTING IN PRODUCTION MODE <<<");
             }
         }
     }
