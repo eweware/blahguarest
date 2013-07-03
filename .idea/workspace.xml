@@ -10,7 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="BWC-1267">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/logging.properties" afterPath="$PROJECT_DIR$/src/main/resources/logging.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -165,7 +168,7 @@
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/lang/Entry.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357330149291" ignored="false" />
     <file path="/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328258608" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/PLAN.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357328273494" ignored="false" />
-    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372788060188" ignored="false" />
+    <file path="/blahguaConfiguration.properties" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372813632611" ignored="false" />
     <file path="/CommonUtilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369514308809" ignored="false" />
     <file path="/UserPayload.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367877039112" ignored="false" />
     <file path="/UserDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876976769" ignored="false" />
@@ -173,7 +176,7 @@
     <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876900384" ignored="false" />
     <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371317153881" ignored="false" />
     <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916650152" ignored="false" />
-    <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371585440526" ignored="false" />
+    <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372813717544" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
     <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372784961583" ignored="false" />
@@ -192,11 +195,11 @@
     <file path="/web.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372787798420" ignored="false" />
     <file path="/upload-image.html" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369330928757" ignored="false" />
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371602060085" ignored="false" />
-    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372707221000" ignored="false" />
+    <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372811674934" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372800711394" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372813380630" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
-    <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1370911752114" ignored="false" />
+    <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372812822995" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
     <file path="/DefaultUserValidationMethod.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357942757084" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/.idea/workspace.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357947053957" ignored="false" />
@@ -512,7 +515,7 @@
     <file path="/UserDescriptiveStats.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369431615895" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/TestConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366661043861" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/Main.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372707539245" ignored="false" />
-    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369513254613" ignored="false" />
+    <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/help/Utilities.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372808279055" ignored="false" />
     <file path="$PROJECT_DIR$/../stats/src/main/java/com/eweware/stats/CommentDemographics.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369429489736" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1365535942060" ignored="false" />
     <file path="$PROJECT_DIR$/../RestUnitTests/src/main/java/com/eweware/sandbox/BuildSocialGraph.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1363237801639" ignored="false" />
@@ -1197,11 +1200,11 @@
     <file path="$PROJECT_DIR$/../../../storm-starter-0.9.0/src/jvm/storm/starter/spout/rk/MongoDBSpout.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372389835653" ignored="false" />
     <file path="/MongoDBSpout.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372714126727" ignored="false" />
     <file path="$PROJECT_DIR$/../../../storm-starter-0.9.0/src/jvm/storm/starter/MongoDBTopology.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372434379878" ignored="false" />
-    <file path="/MongoDBTopology.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372714649250" ignored="false" />
+    <file path="/MongoDBTopology.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372811762697" ignored="false" />
     <file path="$PROJECT_DIR$/../../../storm-starter-0.9.0/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372434379878" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../storm-blahgua/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372703219447" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../storm-blahgua/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372812402965" ignored="false" />
     <file path="$PROJECT_DIR$/../../../storm-blahgua/src/main/java/spout/Test.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372445851009" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../storm-blahgua/src/main/java/topology/MongoDBTopology.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372714706089" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../storm-blahgua/src/main/java/topology/MongoDBTopology.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372812414200" ignored="false" />
     <file path="$PROJECT_DIR$/../../../storm-blahgua/src/main/java/spout/MongoDBSpout.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372714172967" ignored="false" />
     <file path="$PROJECT_DIR$/../../../storm-blahgua/src/main/java/bolt/VoteAggregatorBolt.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372477437915" ignored="false" />
     <file path="/VoteAggregatorBolt.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372477402994" ignored="false" />
@@ -1316,16 +1319,43 @@
       <file leaf-file-name="blahguaConfiguration.properties" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="20" selection-start="280" selection-end="280" vertical-scroll-proportion="0.0">
+            <state line="5" column="123" selection-start="227" selection-end="227" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserProfileSchema.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SystemManager.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="195" column="58" selection-start="8042" selection-end="8042" vertical-scroll-proportion="0.34950384">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserProfileSchema.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="143" column="19" selection-start="7242" selection-end="7242" vertical-scroll-proportion="0.7150965">
+            <state line="123" column="52" selection-start="6090" selection-end="6090" vertical-scroll-proportion="-7.5">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="32" column="39" selection-start="1392" selection-end="1392" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="logging.properties" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/logging.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="23" selection-start="1004" selection-end="1004" vertical-scroll-proportion="-3.0">
               <folding />
             </state>
           </provider>
@@ -1354,22 +1384,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/client/ConvertFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/client/ConvertClientFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/client/TransformClientFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/client/TransformDefaultHtmlFile.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/logging.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/servlet/WebClientCSSServlet.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/BlahManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/AWSUtilities.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/ImageUploadResource.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
-        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/resources/logging.properties" />
+        <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
       </list>
     </option>
   </component>
@@ -1485,33 +1515,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resource" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="blahguarest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="schema" />
+              <option name="myItemId" value="mgr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1608,6 +1612,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -3018,7 +3026,11 @@
       <created>1372788093800</created>
       <updated>1372788093800</updated>
     </task>
-    <option name="localTasksCounter" value="265" />
+    <task id="LOCAL-00265" summary="BWC-1267">
+      <created>1372800778845</created>
+      <updated>1372800778845</updated>
+    </task>
+    <option name="localTasksCounter" value="266" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3111,7 +3123,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="BWC-1414" />
+    <option name="LAST_COMMIT_MESSAGE" value="BWC-1267" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -3125,7 +3137,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="changed info to finer log for appropriate cases" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-1025" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-1093" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BA-28" />
@@ -3150,6 +3161,7 @@
     <MESSAGE value="New docs" />
     <MESSAGE value="BWC-1250" />
     <MESSAGE value="BWC-1414" />
+    <MESSAGE value="BWC-1267" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3163,25 +3175,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAOConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="24" selection-start="1000" selection-end="1000" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/impl/mongo/dao/UserDAOImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="16" selection-start="2964" selection-end="2964" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/UserDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="16" selection-start="384" selection-end="384" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/mgr/UserManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1025" column="31" selection-start="50643" selection-end="50643" vertical-scroll-proportion="0.0">
@@ -3259,16 +3252,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="20" selection-start="280" selection-end="280" vertical-scroll-proportion="0.0">
+        <state line="123" column="52" selection-start="6090" selection-end="6090" vertical-scroll-proportion="-7.5">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="143" column="19" selection-start="7242" selection-end="7242" vertical-scroll-proportion="0.7150965">
+        <state line="32" column="39" selection-start="1392" selection-end="1392" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/logging.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="23" selection-start="1004" selection-end="1004" vertical-scroll-proportion="-3.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="123" selection-start="227" selection-end="227" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="195" column="58" selection-start="8042" selection-end="8042" vertical-scroll-proportion="0.34950384">
           <folding />
         </state>
       </provider>
