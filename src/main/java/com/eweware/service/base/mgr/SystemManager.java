@@ -192,10 +192,12 @@ public final class SystemManager implements ManagerInterface {
     }
 
     private void setRunMode(String mode) {
-        final String modeProp = System.getProperty("blagua.run.mode");
-        System.out.println("Run mode from System property=" + modeProp);
+        final String sysProp = System.getProperty("blagua.run.mode");
+        if (sysProp != null) {
+            System.out.println("Run mode from System property=" + sysProp);
+        }
         try {
-            this.runMode = RunMode.valueOf((modeProp == null) ? mode.toUpperCase() : modeProp);
+            this.runMode = RunMode.valueOf((sysProp == null) ? mode.toUpperCase() : sysProp);
         } catch (Exception e) {
             throw new WebServiceException("Invalid run mode '" + mode + "'");
         }

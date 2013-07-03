@@ -9,11 +9,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="BWC-1267">
+    <list default="true" id="864f780e-9add-4411-99d2-8bc3bda84103" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" afterPath="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/logging.properties" afterPath="$PROJECT_DIR$/src/main/resources/logging.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blahguarest.iws" />
@@ -176,7 +174,7 @@
     <file path="/UserDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1367876900384" ignored="false" />
     <file path="/UserManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371317153881" ignored="false" />
     <file path="/Login.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1366916650152" ignored="false" />
-    <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372813717544" ignored="false" />
+    <file path="/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372814554446" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/webapp/WEB-INF/conf/applicationConfiguration.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1357515666418" ignored="false" />
     <file path="$PROJECT_DIR$/../../../apps/logopod/src/main/java/com/rubenkleiman/logopod/mgr/SystemManager.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1356916343034" ignored="false" />
     <file path="/a.dummy" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372784961583" ignored="false" />
@@ -197,7 +195,7 @@
     <file path="/ImageUploadResource.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1371602060085" ignored="false" />
     <file path="/fragment.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372811674934" ignored="false" />
     <file path="/BlahDAOImpl.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369427059771" ignored="false" />
-    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372813380630" ignored="false" />
+    <file path="/Dummy.txt" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372813766252" ignored="false" />
     <file path="/BaseDAOConstants.java" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1369094766709" ignored="false" />
     <file path="/pom.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1372812822995" ignored="false" />
     <file path="/pom-jar.xml" changelist="864f780e-9add-4411-99d2-8bc3bda84103" time="1362118426856" ignored="false" />
@@ -1325,10 +1323,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SystemManager.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SystemManager.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="195" column="58" selection-start="8042" selection-end="8042" vertical-scroll-proportion="0.34950384">
+            <state line="194" column="28" selection-start="7941" selection-end="7941" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1352,10 +1350,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logging.properties" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="logging.properties" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/logging.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="23" selection-start="1004" selection-end="1004" vertical-scroll-proportion="-3.0">
+            <state line="30" column="42" selection-start="2109" selection-end="2109" vertical-scroll-proportion="0.52816904">
               <folding />
             </state>
           </provider>
@@ -1397,9 +1395,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/rest/resource/UsersResource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/store/dao/schema/UserProfileSchema.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/resources/logging.properties" />
         <option value="$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/logging.properties" />
       </list>
     </option>
   </component>
@@ -3030,7 +3028,11 @@
       <created>1372800778845</created>
       <updated>1372800778845</updated>
     </task>
-    <option name="localTasksCounter" value="266" />
+    <task id="LOCAL-00266" summary="BWC-1416, BWC-1417">
+      <created>1372813773304</created>
+      <updated>1372813773304</updated>
+    </task>
+    <option name="localTasksCounter" value="267" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -3123,7 +3125,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="BWC-1267" />
+    <option name="LAST_COMMIT_MESSAGE" value="BWC-1416, BWC-1417" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -3137,7 +3139,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="https://eweware.atlassian.net/browse/BWC-1025" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-1093" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BA-28" />
     <MESSAGE value="https://eweware.atlassian.net/browse/BWC-951" />
@@ -3162,6 +3163,7 @@
     <MESSAGE value="BWC-1250" />
     <MESSAGE value="BWC-1414" />
     <MESSAGE value="BWC-1267" />
+    <MESSAGE value="BWC-1416, BWC-1417" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3266,13 +3268,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/logging.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="23" selection-start="1004" selection-end="1004" vertical-scroll-proportion="-3.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/conf/blahguaConfiguration.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="123" selection-start="227" selection-end="227" vertical-scroll-proportion="0.0">
@@ -3282,7 +3277,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/eweware/service/base/mgr/SystemManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="195" column="58" selection-start="8042" selection-end="8042" vertical-scroll-proportion="0.34950384">
+        <state line="194" column="28" selection-start="7941" selection-end="7941" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/logging.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="42" selection-start="2109" selection-end="2109" vertical-scroll-proportion="0.52816904">
           <folding />
         </state>
       </provider>
