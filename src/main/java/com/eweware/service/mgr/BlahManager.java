@@ -276,7 +276,7 @@ public final class BlahManager implements ManagerInterface {
         updateGroupBlahCount(groupId, true);
 
         // Add to inboxes
-        inboxHandler.spreadBlah(LocaleId.en_us, blahDAO, groupId);
+        inboxHandler.newSpreadBlah(LocaleId.en_us, blahDAO, groupId);
 
         // Track it
         trackBlah(authorId, blahDAO);
@@ -1589,11 +1589,6 @@ public final class BlahManager implements ManagerInterface {
         final InboxData inbox = inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber);
 
         BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
-
-        if (inbox == null) {
-            logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber);
-            return new ArrayList<Map<String, Object>>(0);
-        }
 
         return inbox.getInboxItems();
     }

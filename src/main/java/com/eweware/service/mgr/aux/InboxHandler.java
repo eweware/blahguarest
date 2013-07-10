@@ -49,6 +49,7 @@ public class InboxHandler extends Thread {
     private static final Logger logger = Logger.getLogger(InboxHandler.class.getName());
 
     private static final int MAX_NUMBER_INBOX_ITEMS_IN_RECENTS_INBOX = 1000;
+    private static final int INBOX_ITEM_SIZE_IN_BYTES = 2048;
 
     private MongoStoreManager storeManager;
 
@@ -301,29 +302,20 @@ public class InboxHandler extends Thread {
         inboxCollection.insert(dao); // This is a capped and circular collection
     }
 
-    private DBCollection _recentsInboxCollection;
-
     private DBCollection getRecentsInboxCollection(DB inboxDB, String inboxCollectionName) {
-        if (_recentsInboxCollection != null) {
-            return _recentsInboxCollection;
+        if (inboxDB.collectionExists(inboxCollectionName)) {   // TODO: could be cached
+             return inboxDB.getCollection(inboxCollectionName);
         }
-        if (_recentsInboxCollection == null) {
-            // Should have been created by attempt creation (possible race condition with other REST servers)
-            if (!inboxDB.collectionExists(inboxCollectionName)) {
-                final BasicDBObject options = new BasicDBObject("capped", true);
-                options.put("max", MAX_NUMBER_INBOX_ITEMS_IN_RECENTS_INBOX);
-//                options.put("size", 1000 * 512); TODO worth it?
-                try {
-                    _recentsInboxCollection = inboxDB.createCollection(inboxCollectionName, options);
-                } catch (Exception e) {
-                    logger.log(Level.WARNING, "Ignored race condition creating recents inbox collection. Delegate this to DB initialization sequence?", e);
-                    if (_recentsInboxCollection == null) {
-                        _recentsInboxCollection = inboxDB.getCollection(inboxCollectionName);
-                    }
-                }
-            }
+        // The next piece of code should never be reached as the capped collection are created at DB initialization
+        final BasicDBObject options = new BasicDBObject("capped", true);
+        options.put("max", MAX_NUMBER_INBOX_ITEMS_IN_RECENTS_INBOX);
+        options.put("size", MAX_NUMBER_INBOX_ITEMS_IN_RECENTS_INBOX * INBOX_ITEM_SIZE_IN_BYTES);
+        try {
+            return inboxDB.createCollection(inboxCollectionName, options);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Ignored race condition creating recents inbox collection. Delegate this to DB initialization sequence?", e);
+            return inboxDB.getCollection(inboxCollectionName);
         }
-        return _recentsInboxCollection;
     }
 
     /**
@@ -366,7 +358,7 @@ public class InboxHandler extends Thread {
             } else {
                 nextBoxNumber = first;
             }
-            final List<Map<String, Object>> inboxItems = getInboxItems(groupId, CommonUtilities.makeInboxCollectionName(groupId, inboxNumber));
+            final List<Map<String, Object>> inboxItems = getInboxItems(groupId, CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber));
             if (inboxItems.size() == 0) {
                 logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");
             }
