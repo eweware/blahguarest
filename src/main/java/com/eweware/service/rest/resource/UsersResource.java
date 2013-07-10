@@ -744,7 +744,7 @@ public class UsersResource {
 
 
     /**
-     * <p><Use this method to get an inbox for the current session./p>
+     * <p><Use this method to get an inbox for the current session.</p>
      * <p>This method may be used by both anonymous and logged in (authenticated) users.
      * If the user is <i>anonymous</i> (not logged in), only a group open to anonymous
      * users is acceptable. In the latter case, it is not necessary to join a group
@@ -752,6 +752,11 @@ public class UsersResource {
      * <p>If a group id is requested for a group that is not open
      * to anonymous users, then the user must have already logged in to access it.
      * Moreover, the user must have already joined (i.e., be a member of) the group.</p>
+     * <p>There are two types of inboxes: one type includes all processed inboxes
+     * in an analytics run. The other type, fetched when the query parameter 'r' is
+     * set to 'true', returns recently posted blahs. The client may create a
+     * presentation blending both types of blahs. Depending on how fast
+     * the backend analytics is, the recent blahs will appear in the other inboxes.</p>
      * <p>Various query parameters are available to modify this query.</p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
@@ -760,12 +765,8 @@ public class UsersResource {
      * @param groupId       <i>Query Parameter:</i> Required. The inbox group id.
      * @param inboxNumber   <i>Query Parameter:</i> Optional. The inbox number to fetch. If not provided,
      *                      inboxes are fetched in sequential order within the group on each request.
-//     * @param start         <i>Query Parameter:</i> Optional. The start index of the inbox rows.
-//     * @param count         <i>Query Parameter:</i> Optional. The number of rows to fetch in a row.
-//     * @param sortFieldName <i>Query Parameter:</i> Optional. The name of an inbox field for sorting the results
-//     * @param sortDirection <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> The direction of the sort as
-//     *                      an integer: +1 means ascending, -1 means descending. Default is descending.
-//     * @param blahTypeId    <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> A blah type id with which to filter the results.
+     * @param recentInbox   <i>Query Parameter:</i> Optional. If set to true, an inbox with the
+     *                      most recent entries in the group is returned.
      * @return Returns an inbox JSON object as an array of inbox blah entities (InboxBlahPayload entities) with http code 200.
      *         If a group has no blahs, this will return an empty array. If the inbox number if not specified,
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
