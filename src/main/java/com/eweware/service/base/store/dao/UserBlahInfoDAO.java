@@ -12,6 +12,10 @@ public interface UserBlahInfoDAO extends BaseDAO, UserBlahInfoDAOConstants {
 
     public void setUserId(String userId);
 
+    public String getAuthorId();
+
+    public void setAuthorId(String authorId);
+
     public String getBlahId();
 
     public void setBlahId(String blahId);

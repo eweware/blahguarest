@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.base.payload;
 
+import com.mongodb.DBCollection;
 import main.java.com.eweware.service.base.date.DateUtils;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;

@@ -51,6 +51,7 @@
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.port}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.userDBName}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.blahDBName}" />
+        <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.inboxDBName}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.trackerDBName}" />
         <constructor-arg  type="java.lang.Integer" value="${blahgua.store.mongo.connectionsPerHost}" />
         <property name="badgeAuthorityCollectionName" value="${blahgua.store.mongo.userdb.collection.badgeauthorities}"/>

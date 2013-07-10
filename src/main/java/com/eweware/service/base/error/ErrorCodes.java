@@ -412,9 +412,9 @@ public final class ErrorCodes {
     public static final Integer SERVER_DATA_INCONSISTENT = 80; // TODO refactor: use this where appropriate
 
     /**
-     * MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED_4000_CHARS = 81
+     * MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED = 81
      */
-    public static final Integer MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED_4000_CHARS = 81;
+    public static final Integer MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED = 81;
 
     /**
      * SEVERE_AWS_ERROR = 82

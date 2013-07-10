@@ -50,6 +50,7 @@ public final class MongoStoreManager implements StoreManager {
     private String userDbName;
     private String blahDbName;
     private String trackerDbName;
+    private String inboxDbName;
 
     private String badgeAuthorityCollectionName;
     private String badgeTransactionCollectionName;
@@ -95,14 +96,14 @@ public final class MongoStoreManager implements StoreManager {
             String mongoDbPort,
             String userDbName,
             String blahDbName,
+            String inboxDbName,
             String trackerDbName,
 
             Integer connectionsPerHost
     ) {
         this.qaMongoDbHostname = qaMongoDbHostname;
         this.devMongoDbHostname = devMongoDbHostname;
-        doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, trackerDbName,
-                connectionsPerHost);
+        doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, inboxDbName,trackerDbName, connectionsPerHost);
     }
 
 
@@ -294,8 +295,8 @@ public final class MongoStoreManager implements StoreManager {
      * @param trackerDbName
      * @param connectionsPerHost
      */
-    public void doInitialize(String hostnames, String port, String userDbName, String blahDbName, String trackerDbName,
-                             Integer connectionsPerHost) {
+    public void doInitialize(String hostnames, String port, String userDbName, String blahDbName,
+                             String inboxDbName, String trackerDbName, Integer connectionsPerHost) {
 
         if (hostnames == null || hostnames.length() == 0) {
             throw new WebServiceException("Failed to initialize store manager: missing hostnames");
@@ -310,12 +311,14 @@ public final class MongoStoreManager implements StoreManager {
         this.userDbName = userDbName;
         this.blahDbName = blahDbName;
         this.trackerDbName = trackerDbName;
+        this.inboxDbName = inboxDbName;
 
         dbNameToDbMap.put(sysDbName, null);
         dbNameToDbMap.put(userDbName, null);
 //        dbNameToDbMap.put(mediaDbName, null);
         dbNameToDbMap.put(blahDbName, null);
         dbNameToDbMap.put(trackerDbName, null);
+        dbNameToDbMap.put(inboxDbName, null);
 
         System.out.println("*** STORE MGR: known databases: " + dbNameToDbMap.keySet());
         MongoStoreManager.singleton = this;
@@ -387,48 +390,70 @@ public final class MongoStoreManager implements StoreManager {
             for (String dbname : dbNameToDbMap.keySet()) {
                 dbNameToDbMap.put(dbname, mongo.getDB(dbname));
             }
+            checkCollection(collectionNameToCollectionMap, groupCollectionName);
             collectionNameToCollectionMap.put(groupCollectionName, getUserDb().getCollection(groupCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, groupTypeCollectionName);
             collectionNameToCollectionMap.put(groupTypeCollectionName, getUserDb().getCollection(groupTypeCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, userCollectionName);
             collectionNameToCollectionMap.put(userCollectionName, getUserDb().getCollection(userCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, userAccountsCollectionName);
             collectionNameToCollectionMap.put(userAccountsCollectionName, getUserDb().getCollection(userAccountsCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, userProfileCollectionName);
             collectionNameToCollectionMap.put(userProfileCollectionName, getUserDb().getCollection(userProfileCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, userGroupCollectionName);
             collectionNameToCollectionMap.put(userGroupCollectionName, getUserDb().getCollection(userGroupCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, badgeAuthorityCollectionName);
             collectionNameToCollectionMap.put(badgeAuthorityCollectionName, getUserDb().getCollection(badgeAuthorityCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, badgeTransactionCollectionName);
             collectionNameToCollectionMap.put(badgeTransactionCollectionName, getUserDb().getCollection(badgeTransactionCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, badgeCollectionName);
             collectionNameToCollectionMap.put(badgeCollectionName, getUserDb().getCollection(badgeCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, blahCollectionName);
             collectionNameToCollectionMap.put(blahCollectionName, getBlahDb().getCollection(blahCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, mediaCollectionName);
             collectionNameToCollectionMap.put(mediaCollectionName, getBlahDb().getCollection(mediaCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, inboxStateCollectionName);
             collectionNameToCollectionMap.put(inboxStateCollectionName, getBlahDb().getCollection(inboxStateCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, blahTypeCollectionName);
             collectionNameToCollectionMap.put(blahTypeCollectionName, getBlahDb().getCollection(blahTypeCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, commentCollectionName);
             collectionNameToCollectionMap.put(commentCollectionName, getBlahDb().getCollection(commentCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, userBlahInfoCollectionName);
             collectionNameToCollectionMap.put(userBlahInfoCollectionName, getUserDb().getCollection(userBlahInfoCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, blahInboxCollectionName);
             collectionNameToCollectionMap.put(blahInboxCollectionName, getBlahDb().getCollection(blahInboxCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, demographicsCollectionName);
             collectionNameToCollectionMap.put(demographicsCollectionName, getTrackerDb().getCollection(demographicsCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, userCommentInfoCollectionName);
             collectionNameToCollectionMap.put(userCommentInfoCollectionName, getUserDb().getCollection(userCommentInfoCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, trackBlahCollectionName);
             collectionNameToCollectionMap.put(trackBlahCollectionName, getTrackerDb().getCollection(trackBlahCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, trackCommentCollectionName);
             collectionNameToCollectionMap.put(trackCommentCollectionName, getTrackerDb().getCollection(trackCommentCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, trackUserCollectionName);
             collectionNameToCollectionMap.put(trackUserCollectionName, getTrackerDb().getCollection(trackUserCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, trackerCollectionName);
             collectionNameToCollectionMap.put(trackerCollectionName, getTrackerDb().getCollection(trackerCollectionName));
 
             this.status = ManagerState.STARTED;
@@ -439,6 +464,13 @@ public final class MongoStoreManager implements StoreManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void checkCollection(Map<String, DBCollection> map, String key) throws SystemErrorException {
+        if (map.containsKey(key)) {
+            throw new SystemErrorException("Collection name '" + key + "' is not unique. Collection names must be unique across all databases.");
+        }
+
     }
 
     private void setMongoDebuggingLevel() {
@@ -474,9 +506,9 @@ public final class MongoStoreManager implements StoreManager {
         return dbNameToDbMap.get(blahDbName);
     }
 
-//    public DB getMediaDb() {
-//        return dbNameToDbMap.get(mediaDbName);
-//    }
+    public DB getInboxDB() {
+        return dbNameToDbMap.get(inboxDbName);
+    }
 
     public DB getTrackerDb() {
         return dbNameToDbMap.get(trackerDbName);

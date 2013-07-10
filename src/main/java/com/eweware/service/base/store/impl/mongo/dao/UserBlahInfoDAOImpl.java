@@ -25,6 +25,7 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
 
     static {  // TODO should be derived from schema
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
+        UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(ORIGINAL_GROUP_ID, MongoFieldTypes.STRING);
         UserBlahInfoDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_TYPE_ID, MongoFieldTypes.STRING);
@@ -84,6 +85,16 @@ public class UserBlahInfoDAOImpl extends BaseDAOImpl implements UserBlahInfoDAO 
     @Override
     public void setUserId(String userId) {
         put(USER_ID, userId);
+    }
+
+    @Override
+    public String getAuthorId() {
+        return (String) get(AUTHOR_ID);
+    }
+
+    @Override
+    public void setAuthorId(String authorId) {
+        put(AUTHOR_ID, authorId);
     }
 
     @Override

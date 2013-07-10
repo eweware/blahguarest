@@ -60,13 +60,13 @@ public interface GroupDAOConstants {
 
     /**
      * <p> This group's validation method. A string</p>
-     * <p><b>TODO this will be changed when badging is implemented. Was in use in alpha but is no longer supported.</b></p>
+     * <p><b>TODO Was in use in alpha but is no longer supported.</b></p>
      */
     static final String USER_VALIDATION_METHOD = "M";
 
     /**
      * <p> This group's validation method parameters. </p>
-     * <p><b>TODO this will be changed when badging is implemented. Was in use in alpha but is no longer supported.</b></p>
+     * <p><b>TODO Was in use in alpha but is no longer supported.</b></p>
      */
     static final String USER_VALIDATION_PARAMETERS = "P";
 
@@ -77,11 +77,41 @@ public interface GroupDAOConstants {
      */
     static final String STATE = "S";
 
+    /**
+     * <p>The number of the first active inbox of the group, an Integer.</p>
+     * <p>Each inbox is a collection whose name is the concatenation
+     * of the group id and the inbox number.</p>
+     */
+    static final String FIRST_INBOX_NUMBER = "F";
+
+    /**
+     * <p>The number of the last active inbox of the group, an Integer.</p>
+     * <p>Each inbox is a collection whose name is the concatenation
+     * of the group id and the inbox number.</p>
+     */
+    static final String LAST_INBOX_NUMBER = "L";
+
+    /**
+     * <p>The last time that the inboxes for this group were generated, a Date.</p>
+     * <p>Precisely, this is the generation completion time.</p>
+     */
+    static final String LAST_TIME_INBOXES_GENERATED = "G";
+
+    /**
+     * <p>The number of milliseconds it took to generate the inboxes for
+     * this group, a Long</p>
+     */
+    static final String INBOX_GENERATION_DURATION = "I";
+
+
+
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                 DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, USER_VALIDATION_METHOD, USER_VALIDATION_PARAMETERS, STATE
         }),
-        new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT}),
+        new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT, INBOX_GENERATION_DURATION}),
+        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER}),
+        new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_TIME_INBOXES_GENERATED})
     };
 
 

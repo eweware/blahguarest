@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -37,12 +39,18 @@ public final class GroupManager implements ManagerInterface {
 
     private final Integer returnedObjectLimit;
 
+    private static final long CACHE_REFRESH_INTERVAL_IN_MILLIS = 1000 * 60 * 2;
+    private AtomicLong _cacheLastRefreshed = new AtomicLong(System.currentTimeMillis());
+
     /**
-     * Maps a group id to its descriptor.
-     * Currently loads only open groups.
-     * A synchronized hash.
+     * Maps a group id to its payload.
      */
-    private final ConcurrentHashMap<String, GroupPayload> groupMap = new ConcurrentHashMap<String, GroupPayload>();
+    private final ConcurrentHashMap<String, GroupPayload> _groupMap = new ConcurrentHashMap<String, GroupPayload>();
+
+    /**
+     * Maps an open group id to its payload
+     */
+    private final ConcurrentHashMap<String, GroupPayload> _openGroupMap = new ConcurrentHashMap<String, GroupPayload>();
 
 
     public static GroupManager getInstance() throws SystemErrorException {
@@ -75,22 +83,47 @@ public final class GroupManager implements ManagerInterface {
     }
 
     /**
-     * Locally caches some group information.
+     * Locally caches some group information.                                           `
      */
     private void initializeGroupCache() throws SystemErrorException {
         final GroupDAO groupDAO = getStoreManager().createGroup();
         groupDAO.setState(AuthorizedState.A.toString());
-        final String descriptor = GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode();
-        groupDAO.setDescriptor(descriptor);
         final List<GroupDAO> groups = (List<GroupDAO>) groupDAO._findMany();
         for (GroupDAO group : groups) {
             final GroupPayload g = new GroupPayload(group);
-            groupMap.putIfAbsent(g.getId(), g);
+            _groupMap.putIfAbsent(g.getId(), g);
+            final String desc = group.getDescriptor();
+            if (desc != null && desc.equals(GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode())) {
+                _openGroupMap.putIfAbsent(group.getId(), g);
+            }
+        }
+    }
+
+    /**
+     * <p>Returns a cached group.</p>
+     * @param groupId   The group's id
+     * @return  Returns the group payload or null if no group with the specified id exists.
+     */
+    public GroupPayload getCachedGroup(String groupId) throws SystemErrorException {
+        maybeRefreshCache();
+        return _groupMap.get(groupId);
+    }
+
+    private void maybeRefreshCache() throws SystemErrorException {
+        final long lastTime = _cacheLastRefreshed.get();
+        if ((System.currentTimeMillis() - lastTime) > CACHE_REFRESH_INTERVAL_IN_MILLIS) {
+            synchronized (_cacheLastRefreshed) {
+                if (lastTime == _cacheLastRefreshed.get()) { // check again
+                    _cacheLastRefreshed.set(System.currentTimeMillis());
+                    refreshCaches();
+                }
+            }
         }
     }
 
     public void refreshCaches() throws SystemErrorException {
-        groupMap.clear();
+        _groupMap.clear();
+        _openGroupMap.clear();
         initializeGroupCache();
     }
 
@@ -149,33 +182,12 @@ public final class GroupManager implements ManagerInterface {
      * @return True if the group is open
      */
     public boolean isOpenGroup(String groupId) throws SystemErrorException {
-        ensureReady();
         if (groupId == null) {
             return false;
         }
-        return groupMap.get(groupId) != null;
+        // This is faily static, so no need to check cache refresh
+        return _openGroupMap.containsKey(groupId);
     }
-
-//    /**
-//     * Registers the group with the specified descriptor. Only open groups are actually registered.
-//     *
-//     * @param groupId The group's id (unchecked!)
-//     * @param payload The group's payload (unchecked!)
-//     */
-//    public void registerGroup(String groupId, GroupPayload payload) {
-//        if (GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode().equals(payload.getDescriptor())) {
-//            if (groupMap.containsKey(groupId)) {
-//                groupMap.replace(groupId, payload);
-//            } else {
-//                groupMap.putIfAbsent(groupId, payload);
-//            }
-//        } else { /* ignore others for now */ }
-//    }
-//
-//    public void unregisterGroup(String groupId) {
-//        groupMap.remove(groupId);
-//    }
-
 
 
     /**
@@ -234,25 +246,8 @@ public final class GroupManager implements ManagerInterface {
      */
     public Collection<GroupPayload> getOpenGroups(LocaleId localeId, Integer start, Integer count) throws SystemErrorException {
         ensureReady();
-//        if (count == null) {
-//            count = returnedObjectLimit;
-//        }
-        return groupMap.values();
-
-//        final GroupDAO groupDAO = storeManager.createGroup();
-//        groupDAO.setDescriptor(GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode());
-//        final List<? extends BaseDAO> groups = groupDAO._findMany(start, count, null);
-//        if (groups.isEmpty()) {
-//            return new ArrayList<GroupPayload>(0);
-//        }
-//        final List<GroupPayload> result = new ArrayList<GroupPayload>(groups.size());
-//        for (BaseDAO group : groups) {
-//            final GroupDAO g = (GroupDAO) group;
-//            if (g.getState().equals(AuthorizedState.A.toString())) {
-//                result.add(new GroupPayload(g));
-//            }
-//        }
-//        return result;
+        // Static info: no need to check for refresh here
+        return _openGroupMap.values();
     }
 
     /**

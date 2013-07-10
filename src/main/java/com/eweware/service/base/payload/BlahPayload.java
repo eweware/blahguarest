@@ -111,7 +111,7 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
 
     /**
      * <p>Returns the blah's body. This is additional text
-     * and it may be up to 4000 characters in length.</p>
+     * and it may be up to 1024 characters in length.</p>
      * @return  The blah's body text or null if the blah has no body text.
      */
     public String getBody() {

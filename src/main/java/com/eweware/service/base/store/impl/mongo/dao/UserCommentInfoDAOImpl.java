@@ -24,6 +24,7 @@ public class UserCommentInfoDAOImpl extends BaseDAOImpl implements UserCommentIn
 
     static {   // TODO should be derived from schema
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
+        UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_ID, MongoFieldTypes.STRING);
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENT_ID, MongoFieldTypes.STRING);
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VOTE, MongoFieldTypes.NUMBER);
         UserCommentInfoDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
@@ -76,6 +77,16 @@ public class UserCommentInfoDAOImpl extends BaseDAOImpl implements UserCommentIn
     @Override
     public void setUserId(String id) {
         put(USER_ID, id);
+    }
+
+    @Override
+    public String getAuthorId() {
+        return (String) get(AUTHOR_ID);
+    }
+
+    @Override
+    public void setAuthorId(String authorId) {
+        put(AUTHOR_ID, authorId);
     }
 
     @Override

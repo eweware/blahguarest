@@ -10,6 +10,10 @@ public interface UserCommentInfoDAO extends BaseDAO, UserCommentInfoDAOConstants
 
     public void setUserId(String id);
 
+    public String getAuthorId();
+
+    public void setAuthorId(String authorId);
+
     public String getCommentId();
 
     public void setCommentId(String id);

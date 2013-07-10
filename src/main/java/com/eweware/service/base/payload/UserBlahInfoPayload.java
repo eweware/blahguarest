@@ -66,6 +66,18 @@ public class UserBlahInfoPayload extends BasePayload implements UserBlahInfoDAOC
     }
 
     /**
+     * <p>Returns the blah author's id.</p>
+     * @return  The author id
+     */
+    public String getAuthorId() {
+        return (String) get(AUTHOR_ID);
+    }
+
+    public void setAuthorId(String authorId) {
+        put(AUTHOR_ID, authorId);
+    }
+
+    /**
      * <p>Returns the index of the poll vote option that the user
      * has voted upon.</p>
      * @return  The index of the poll vote option or

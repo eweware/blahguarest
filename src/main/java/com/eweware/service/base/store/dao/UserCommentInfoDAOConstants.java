@@ -17,6 +17,11 @@ public interface UserCommentInfoDAOConstants {
     static final String USER_ID = "U";
 
     /**
+     * <p>The comment author's id. A string.</p>
+     */
+    static final String AUTHOR_ID = "A";
+
+    /**
      * <p>The comment's id. A string.</p>
      */
     static final String COMMENT_ID = "C";
@@ -42,7 +47,7 @@ public interface UserCommentInfoDAOConstants {
     static final String OPENS = "O";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, COMMENT_ID}),
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, AUTHOR_ID, COMMENT_ID}),
             new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{VOTE, VIEWS, OPENS})
     };
 }

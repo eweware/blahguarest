@@ -8,6 +8,7 @@ import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
 import main.java.com.eweware.service.base.store.dao.schema.GroupSchema;
 import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CURRENT_VIEWER_COUNT, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(FIRST_INBOX_NUMBER, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX_NUMBER, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_TIME_INBOXES_GENERATED, MongoFieldTypes.DATE);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_GENERATION_DURATION, MongoFieldTypes.DATE);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -176,5 +181,45 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     @Override
     public void setValidationParameters(String params) {
         put(USER_VALIDATION_PARAMETERS, params);
+    }
+
+    @Override
+    public Integer getFirstInboxNumber() {
+        return (Integer) get(FIRST_INBOX_NUMBER);
+    }
+
+    @Override
+    public void setFirstInboxNumber(Integer number) {
+        put(FIRST_INBOX_NUMBER, number);
+    }
+
+    @Override
+    public Integer getLastInboxNumber() {
+        return (Integer) get(LAST_INBOX_NUMBER);
+    }
+
+    @Override
+    public void setLastInboxNumber(Integer number) {
+        put(LAST_INBOX_NUMBER, number);
+    }
+
+    @Override
+    public Date getLastInboxGenerated() {
+        return (Date) get(LAST_TIME_INBOXES_GENERATED);
+    }
+
+    @Override
+    public void setLastInboxGenerated(Date date) {
+        put(LAST_TIME_INBOXES_GENERATED, date);
+    }
+
+    @Override
+    public Long getLastInboxGeneratedDuration() {
+        return (Long) get(INBOX_GENERATION_DURATION);
+    }
+
+    @Override
+    public void setLastInboxGeneratedDuration(Long duration) {
+        put(INBOX_GENERATION_DURATION, duration);
     }
 }

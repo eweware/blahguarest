@@ -48,6 +48,22 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setValidationParameters(String parameters);
 
+    public Integer getFirstInboxNumber();
+
+    public void setFirstInboxNumber(Integer number);
+
+    public Integer getLastInboxNumber();
+
+    public void setLastInboxNumber(Integer number);
+
+    public Date getLastInboxGenerated();
+
+    public void setLastInboxGenerated(Date date);
+
+    public Long getLastInboxGeneratedDuration();
+
+    public void setLastInboxGeneratedDuration(Long duration);
+
     public Date getCreated();
 
     public void setCreated(Date created);

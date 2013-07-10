@@ -20,6 +20,11 @@ public interface UserBlahInfoDAOConstants {
     static final String USER_ID = "U";
 
     /**
+     * Id of author of this blah.
+     */
+    static final String AUTHOR_ID = "A";
+
+    /**
      * <p>Id of the blah being acted upon.
      * A string.</p>
      */
@@ -104,7 +109,7 @@ public interface UserBlahInfoDAOConstants {
     static final String COMMENTS_ON_THIS_BLAH = "C";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, BLAH_ID, ORIGINAL_GROUP_ID, PREDICTION_VOTE, PREDICTION_RESULT_VOTE}),
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USER_ID, AUTHOR_ID, BLAH_ID, ORIGINAL_GROUP_ID, PREDICTION_VOTE, PREDICTION_RESULT_VOTE}),
             new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{PROMOTION, POLL_VOTE_INDEX, VIEWS, OPENS, COMMENTS_ON_THIS_BLAH}),
             new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{POLL_VOTE_TIMESTAMP})
     };

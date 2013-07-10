@@ -345,6 +345,29 @@ public final class CommonUtilities {
         return (longVal != null) ? longVal : defaultValue;
     }
 
+    /**
+     * <p>Returns the name of the collection in the blahdb containing the
+     * inbox items for the specified group and inbox number.</p>
+     * @param groupId   The group id
+     * @param inboxNumber The inbox number
+     * @return  Returns the collection name of the inbox
+     */
+    public static String makeInboxCollectionName(String groupId, Integer inboxNumber) {
+        final StringBuilder inboxCollectionName = new StringBuilder(groupId);
+        inboxCollectionName.append("-");
+        inboxCollectionName.append(String.format("%07d", inboxNumber));
+        return inboxCollectionName.toString();
+    }
+
+    /**
+     * <p>Returns the name of the inbox collection holding recent blahs for the specified group.</p>
+     * @param groupId The id of the group.
+     * @return The recents inbox collection name for the group
+     */
+    public static String makeRecentsInboxCollectionName(String groupId) {
+        return groupId;
+    }
+
 //    public static void main(String[] s) throws SystemErrorException {
 //        final String t = scrapeMarkup("<html><p>hello</p><p>there</p>\n\n\n\n\n\nHello there.\n" +
 //                "&nbsp;    &#933;&#933; People of the world.\n" +

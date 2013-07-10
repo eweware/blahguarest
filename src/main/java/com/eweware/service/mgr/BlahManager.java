@@ -19,6 +19,7 @@ import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.base.type.TrackerType;
+import main.java.com.eweware.service.mgr.aux.InboxData;
 import main.java.com.eweware.service.mgr.aux.InboxHandler;
 import main.java.com.eweware.service.mgr.type.PredictionExpirationType;
 import main.java.com.eweware.service.mgr.type.PredictionVote;
@@ -67,6 +68,8 @@ public final class BlahManager implements ManagerInterface {
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
     private static final String EMPTY_STRING = "";
+    private static final int MAXIMUM_BLAH_OR_COMMENT_TEXT_LENGTH = 1024;
+    private static final int MAXIMUM_BLAH_HEADLINE_TEXT_LENGTH = 64;
 
     private final boolean doIndex;
     private final File blahIndexDir;
@@ -228,8 +231,19 @@ public final class BlahManager implements ManagerInterface {
         }
 
         text = cleanupBlahTextString(text);
-        entity.setText(text);
-        entity.setBody(cleanupBlahTextString(entity.getBody()));
+        if (text != null) {
+            if (text.length() > MAXIMUM_BLAH_HEADLINE_TEXT_LENGTH) {
+                throw new InvalidRequestException("Blah text line cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
+            }
+            entity.setText(text);
+        }
+        final String body = cleanupBlahTextString(entity.getBody());
+        if (body != null) {
+            if (body.length() > MAXIMUM_BLAH_OR_COMMENT_TEXT_LENGTH) {
+                throw new InvalidRequestException("Blah body text cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
+            }
+            entity.setBody(body);
+        }
 
         final String groupId = entity.getGroupId();
         if (CommonUtilities.isEmptyString(groupId)) {
@@ -446,7 +460,7 @@ public final class BlahManager implements ManagerInterface {
         if (pollOptionIndex == null || pollOptionIndex < 0L || pollOptionIndex > PollOptionDAOConstants.MAX_POLL_OPTIONS) {
             throw new InvalidRequestException("invalid poll index; maximum is " + PollOptionDAOConstants.MAX_POLL_OPTIONS + " but was=" + pollOptionIndex, ErrorCodes.INVALID_INPUT);
         }
-        final BlahDAO blahDAO = getBlahById_unsafe(blahId, BlahDAO.POLL_OPTION_COUNT, BlahDAO.TYPE_ID);
+        final BlahDAO blahDAO = getBlahById_unsafe(blahId, BlahDAO.POLL_OPTION_COUNT, BlahDAO.TYPE_ID, BlahDAO.AUTHOR_ID);
         if (blahDAO == null) {
             throw new InvalidRequestException("blahId '" + blahId + "' doesn't exist", ErrorCodes.NOT_FOUND_BLAH_ID);
         }
@@ -471,6 +485,7 @@ public final class BlahManager implements ManagerInterface {
         if (userBlahInfoData.exists) {
             userBlahInfoData.dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
+            userBlahInfoData.dao.setAuthorId(blahDAO.getAuthorId());
             userBlahInfoData.dao._insert();
         }
 
@@ -548,6 +563,7 @@ public final class BlahManager implements ManagerInterface {
         if (userBlahInfoData.exists) {
             userBlahInfoData.dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
+            userBlahInfoData.dao.setAuthorId(blahDAO.getAuthorId());
             userBlahInfoData.dao._insert();
         }
     }
@@ -820,21 +836,20 @@ public final class BlahManager implements ManagerInterface {
         for (Map.Entry<String, Long> entry : map.entrySet()) {
             final String blahId = entry.getKey();
             final Long count = entry.getValue();
-            final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
-            if (blahDAO._exists()) {
+            final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID);
+            if (blahDAO != null) {
                 blahDAO.put(blahFieldName, count);
                 blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-            } else {
-                continue;
-            }
-            if (userId != null) {
-                final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo(userId, blahId);
-                if (userBlahInfoDAO._exists()) {
-                    userBlahInfoDAO.put(userBlahInfoFieldname, count);
-                    userBlahInfoDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
-                } else {
-                    userBlahInfoDAO.put(userBlahInfoFieldname, count);
-                    userBlahInfoDAO._insert();
+                if (userId != null) {
+                    final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo(userId, blahId);
+                    if (userBlahInfoDAO._exists()) {
+                        userBlahInfoDAO.put(userBlahInfoFieldname, count);
+                        userBlahInfoDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+                    } else {
+                        userBlahInfoDAO.put(userBlahInfoFieldname, count);
+                        userBlahInfoDAO.setAuthorId(blahDAO.getAuthorId());
+                        userBlahInfoDAO._insert();
+                    }
                 }
             }
         }
@@ -861,8 +876,7 @@ public final class BlahManager implements ManagerInterface {
     private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Long promotionOrDemotion,
                                        Long viewCount, Long openCount, boolean creatingComment)
             throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
-        BlahDAO blahDAO = getStoreManager().createBlah(blahId);
-        blahDAO = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
         if (blahDAO == null) {
             throw new ResourceNotFoundException("blah not found; blahId=" + blahId, ErrorCodes.NOT_FOUND_BLAH_ID);
         }
@@ -906,6 +920,7 @@ public final class BlahManager implements ManagerInterface {
             userBlahInfoDAO.setBlahTypeId(blahDAO.getTypeId());
             userBlahInfoDAO.setUserId(userId);
             userBlahInfoDAO.setBlahId(blahId);
+            userBlahInfoDAO.setAuthorId(authorId);
             userBlahInfoDAO._insert();
         } else {
             userBlahInfoDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
@@ -932,58 +947,6 @@ public final class BlahManager implements ManagerInterface {
 
         return blah;
     }
-
-//    /**
-//     * Permanently deletes the blahs and its comments from the DB and the index.
-//     * Transaction cost:
-//     * 1. delete comments
-//     * 2. delete blah
-//     * 3. remove comments from index
-//     * 4. remove blah from index
-//     * <p/>
-//     * TODO draconic: should archive them if needed, though old blahs should really just fade away
-//     *
-//     * @param localeId
-//     * @param blahId
-//     * @throws InvalidRequestException
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-//     *
-//     */
-//    public void deleteBlah(LocaleId localeId, String blahId) throws InvalidRequestException, SystemErrorException {
-//        ensureReady();
-//        if (CommonUtilities.isEmptyString(blahId)) {
-//            throw new InvalidRequestException("missing blah id", ErrorCodes.MISSING_BLAH_ID);
-//        }
-//
-//        // Fetch comment ids
-//        final CommentDAO searchCommentDAO = getStoreManager().createComment();
-//        searchCommentDAO.setBlahId(blahId);
-//
-//        // Fetch comments to delete
-//        final List<CommentDAO> commentDAOs = (List<CommentDAO>) searchCommentDAO._findManyByCompositeId(null, null, null, new String[]{CommentDAO.ID}, CommentDAO.BLAH_ID);
-//
-//        // Delete comments and blahs
-//        searchCommentDAO._deleteByCompositeId(CommentDAO.BLAH_ID); // multiple deletes
-//        final BlahDAO blah = getStoreManager().createBlah(blahId);
-//        decrementGroupBlahCount(blah);
-//        blah._deleteByPrimaryId();
-//
-//
-//        if (doIndex()) {
-//            for (CommentDAO commentDAO : commentDAOs) {
-//                deleteCommentFromIndex(commentDAO);
-//            }
-//            deleteBlahFromIndex(blahId); // TODO when queued, this will automatically delete dependent comments
-//        }
-//    }
-//
-//    private void decrementGroupBlahCount(BlahDAO blah) throws SystemErrorException {
-//        final BlahDAO blahDAO = (BlahDAO) blah._findByPrimaryId(BlahDAO.GROUP_ID);
-//        final String groupId = blahDAO.getGroupId();
-//        final GroupDAO group = getStoreManager().createGroup(groupId);
-//        group.setBlahCount(-1);
-//        group._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-//    }
 
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
         ensureReady();
@@ -1251,7 +1214,8 @@ public final class BlahManager implements ManagerInterface {
      * @throws ResourceNotFoundException
      * @throws StateConflictException
      */
-    public CommentPayload createComment(LocaleId localeId, String commentAuthorId, CommentPayload entity) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    public CommentPayload
+    createComment(LocaleId localeId, String commentAuthorId, CommentPayload entity) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
         ensureReady();
 
         // Check parameters
@@ -1270,6 +1234,9 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing text", entity, ErrorCodes.MISSING_TEXT);
         }
         text = CommonUtilities.scrapeMarkup(text);
+        if (text.length() > MAXIMUM_BLAH_OR_COMMENT_TEXT_LENGTH) {
+            throw new InvalidRequestException("Comment text length exceeded maximum", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
+        }
 
         final List<String> mediaIds = entity.getImageIds();
         final boolean hasMedia = (mediaIds != null && mediaIds.size() > 0);
@@ -1414,6 +1381,7 @@ public final class BlahManager implements ManagerInterface {
             userCommentInfoDAO.setOpens(opens);
         }
         if (foundUserCommentInfo == null) {
+            userCommentInfoDAO.setAuthorId(commentAuthorId);
             userCommentInfoDAO._insert();
         } else {
             userCommentInfoDAO.setId(foundUserCommentInfo.getId());
@@ -1468,7 +1436,7 @@ public final class BlahManager implements ManagerInterface {
             fetchAndAddCommentTrackers(commentId, statsStartDate, statsEndDate, entity);
         }
 
-        // TODO expensive! see WRS-252
+        // TODO expensive! Use local cache with somewhat short expiration date
         CommonUtilities.maybeAddUserNickname(storeManager, authenticated, commentDAO.getAuthorId(), entity);
 
         return entity;
@@ -1605,6 +1573,51 @@ public final class BlahManager implements ManagerInterface {
         return inbox.getItems();
     }
 
+    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber)
+            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+
+        ensureReady();
+
+        if (groupId == null) {
+            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+        }
+
+        checkGroupAccess(request, groupId);
+
+        final Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId) : null;
+
+        final InboxData inbox = inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber);
+
+        BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
+
+        if (inbox == null) {
+            logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber);
+            return new ArrayList<Map<String, Object>>(0);
+        }
+
+        return inbox.getInboxItems();
+    }
+
+    public List<Map<String, Object>> getRecentsInbox(String groupId, HttpServletRequest request)
+            throws SystemErrorException, InvalidRequestException, InvalidAuthorizedStateException, StateConflictException, ResourceNotFoundException {
+
+        ensureReady();
+
+        if (groupId == null) {
+            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+        }
+
+        checkGroupAccess(request, groupId);
+
+        final InboxData inbox = inboxHandler.getRecentsInbox(groupId);
+
+        if (inbox.getInboxItems().size() == 0) {
+            logger.warning("Got no recent inbox items for groupId '" + groupId + "'");
+        }
+
+        return inbox.getInboxItems();
+    }
+
     /**
      * <p>Associates an image with a comment.</p>
      * <p>This method does NOT delete any existing images for the comment.</p>
@@ -1626,6 +1639,9 @@ public final class BlahManager implements ManagerInterface {
 
     /**
      * <p>Checks whether the group may be accessed in this session.</p>
+     * <p>Open groups may be accessed by any user. Other groups require the
+     * user to be authenticated (already logged in) and the user must have
+     * registered in the group.</p>
      *
      * @param request The http request (unchecked!)
      * @param groupId The group id (unchecked!)
@@ -1640,21 +1656,14 @@ public final class BlahManager implements ManagerInterface {
      */
     private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException, StateConflictException {
 
+        // TODO cache static group info
         if (!storeManager.createGroup(groupId)._exists()) {
             throw new ResourceNotFoundException("Group id '" + groupId + "' does not exist");
         }
-
         final boolean isOpenGroup = groupManager.isOpenGroup(groupId);
 
         if (!isOpenGroup) {
-            final boolean authenticated = BlahguaSession.isAuthenticated(request);
-            if (!authenticated) {
-                throw new InvalidAuthorizedStateException("user not authorized to access inbox", ErrorCodes.UNAUTHORIZED_USER);
-            }
-            String userId = BlahguaSession.getUserId(request);
-            if (userId == null) { // could be a race condition: client should retry
-                throw new SystemErrorException("No userId for session", ErrorCodes.SERVER_RECOVERABLE_ERROR);
-            }
+            String userId = BlahguaSession.ensureAuthenticated(request, true);
             final UserGroupDAO userGroupDAO = getStoreManager().createUserGroup();
             userGroupDAO.setUserId(userId);
             userGroupDAO.setGroupId(groupId);

@@ -158,7 +158,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                     final SchemaDataType dataType = spec.getDataType();
                     if (dataType == SchemaDataType.S) {
                         if (value != null && ((String) value).length() > 4000) {
-                            throw new SystemErrorException(getClass().getSimpleName() + ": validateAndConvertFields; string field '" + fieldName + "'s length was " + ((String) value).length() + " but maximum allowed is 4000", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED_4000_CHARS);
+                            throw new SystemErrorException(getClass().getSimpleName() + ": validateAndConvertFields; string field '" + fieldName + "'s length was " + ((String) value).length() + " but maximum allowed is 4000", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
                         }
                     }
                     final FieldValidator converter = spec.getValidator() == null ? dataType.getConverter() : spec.getValidator();

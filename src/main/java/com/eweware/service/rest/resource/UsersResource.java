@@ -38,7 +38,7 @@ public class UsersResource {
 
     private static final String GET_USER_INFO_OPERATION = "getUserInfo";
     private static final String GET_USER_INFO_FOR_BLAH_OPERATION = "getUserInfo4Blah";
-    private static final String GET_ANONYMOUS_INBOX_OPERATION = "getUserInbox";
+    private static final String GET_INBOX_OPERATION = "getUserInbox";
     private static final String GET_USER_PROFILE_BY_ID_OPERATION = "getUserProfileById";
     private static final String GET_USER_PROFILE_SCHEMA_OPERATION = "getUserProfileSchema";
     private static final String UPDATE_USERNAME_OPERATION = "updateUsername";
@@ -760,12 +760,12 @@ public class UsersResource {
      * @param groupId       <i>Query Parameter:</i> Required. The inbox group id.
      * @param inboxNumber   <i>Query Parameter:</i> Optional. The inbox number to fetch. If not provided,
      *                      inboxes are fetched in sequential order within the group on each request.
-     * @param start         <i>Query Parameter:</i> Optional. The start index of the inbox rows.
-     * @param count         <i>Query Parameter:</i> Optional. The number of rows to fetch in a row.
-     * @param sortFieldName <i>Query Parameter:</i> Optional. The name of an inbox field for sorting the results
-     * @param sortDirection <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> The direction of the sort as
-     *                      an integer: +1 means ascending, -1 means descending. Default is descending.
-     * @param blahTypeId    <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> A blah type id with which to filter the results.
+//     * @param start         <i>Query Parameter:</i> Optional. The start index of the inbox rows.
+//     * @param count         <i>Query Parameter:</i> Optional. The number of rows to fetch in a row.
+//     * @param sortFieldName <i>Query Parameter:</i> Optional. The name of an inbox field for sorting the results
+//     * @param sortDirection <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> The direction of the sort as
+//     *                      an integer: +1 means ascending, -1 means descending. Default is descending.
+//     * @param blahTypeId    <i>Query Parameter:</i> Optional. <b>Would like to remove this option.</b> A blah type id with which to filter the results.
      * @return Returns an inbox JSON object as an array of inbox blah entities (InboxBlahPayload entities) with http code 200.
      *         If a group has no blahs, this will return an empty array. If the inbox number if not specified,
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
@@ -779,16 +779,18 @@ public class UsersResource {
     public Response getInbox(
             @QueryParam("groupId") String groupId,
             @QueryParam("in") Integer inboxNumber,
-            @QueryParam("start") Integer start,
-            @QueryParam("count") Integer count,
-            @QueryParam("sort") String sortFieldName,  // TODO would be nice to get rid of type option (to reduce db index size)
-            @QueryParam("sortDir") Integer sortDirection,  // TODO would be nice to get rid of type option (to reduce db index size)
-            @QueryParam("type") String blahTypeId,  // TODO would be nice to get rid of type option (to reduce db index size)
+            @QueryParam("r") boolean recentInbox,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
-            final Response response = RestUtilities.make200OkResponse(getBlahManager().getInbox(LocaleId.en_us, groupId, request, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
-            getSystemManager().setResponseTime(GET_ANONYMOUS_INBOX_OPERATION, (System.currentTimeMillis() - s));
+            Response response;
+            if (recentInbox) {
+                response = RestUtilities.make200OkResponse(getBlahManager().getRecentsInbox(groupId, request));
+            }   else {
+                 response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber));
+            }
+//            final Response response = RestUtilities.make200OkResponse(getBlahManager().getInbox(LocaleId.en_us, groupId, request, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
+            getSystemManager().setResponseTime(GET_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
