@@ -367,7 +367,7 @@ public class InboxHandler extends Thread {
                 nextBoxNumber = first;
             }
             final List<Map<String, Object>> inboxItems = getInboxItems(groupId, CommonUtilities.makeInboxCollectionName(groupId, inboxNumber));
-            if (inboxItems.size() == 0 && logger.getLevel().intValue() > Level.SEVERE.intValue()) {
+            if (inboxItems.size() == 0) {
                 logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");
             }
             return new InboxData(nextBoxNumber, inboxItems);
