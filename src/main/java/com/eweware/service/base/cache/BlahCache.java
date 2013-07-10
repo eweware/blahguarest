@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 /**
  * @author rk@post.harvard.edu
  *         Date: 10/6/12 Time: 8:50 PM
+ * @deprecated
  */
 public final class BlahCache {
 
@@ -311,7 +312,7 @@ public final class BlahCache {
             if (value instanceof BasicDBObject) {
                 items.add(new InboxBlahPayload((BasicDBObject) value));
             } else {
-                throw new SystemErrorException("inbox #"+inbox+" for group id '"+groupId+"': value should have been a BasicDBObject, but it was a '" + value.getClass().getSimpleName() + "'", value, ErrorCodes.SERVER_CACHE_ERROR);
+                throw new SystemErrorException("inbox #" + inbox + " for group id '" + groupId + "': value should have been a BasicDBObject, but it was a '" + value.getClass().getSimpleName() + "'", value, ErrorCodes.SERVER_CACHE_ERROR);
             }
         }
 
@@ -348,9 +349,9 @@ public final class BlahCache {
     /**
      * <p>Try to get the inbox items from memcached. If that fails, try to get them from the database.</p>
      *
-     * @param keys Inbox item ids
+     * @param keys    Inbox item ids
      * @param groupId
-     *@param inbox @return Map whose values are the DBObject instances for each inbox item
+     * @param inbox   @return Map whose values are the DBObject instances for each inbox item
      */
     private Map<String, Object> doGetInboxItems(List<String> keys, String groupId, Integer inbox) throws SystemErrorException {
         BulkFuture<Map<String, Object>> future = null;

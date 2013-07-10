@@ -1,7 +1,6 @@
 package main.java.com.eweware.service.mgr;
 
 import main.java.com.eweware.service.base.CommonUtilities;
-import main.java.com.eweware.service.base.cache.Inbox;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.mgr.ManagerInterface;
@@ -68,8 +67,8 @@ public final class BlahManager implements ManagerInterface {
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
     private static final String EMPTY_STRING = "";
-    private static final int MAXIMUM_BLAH_OR_COMMENT_TEXT_LENGTH = 1024;
-    private static final int MAXIMUM_BLAH_HEADLINE_TEXT_LENGTH = 64;
+    private static final int MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH = 1024;
+    private static final int MAXIMUM_BLAH_HEADLINE_LENGTH = 64;
 
     private final boolean doIndex;
     private final File blahIndexDir;
@@ -231,15 +230,16 @@ public final class BlahManager implements ManagerInterface {
         }
 
         text = cleanupBlahTextString(text);
-        if (text != null) {
-            if (text.length() > MAXIMUM_BLAH_HEADLINE_TEXT_LENGTH) {
+        if (!CommonUtilities.isEmptyString(text)) {
+            if (text.length() > MAXIMUM_BLAH_HEADLINE_LENGTH) {
                 throw new InvalidRequestException("Blah text line cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
             }
             entity.setText(text);
         }
-        final String body = cleanupBlahTextString(entity.getBody());
-        if (body != null) {
-            if (body.length() > MAXIMUM_BLAH_OR_COMMENT_TEXT_LENGTH) {
+        String body = entity.getBody();
+        if (!CommonUtilities.isEmptyString(body)) {
+            body = cleanupBlahTextString(body);
+            if (body.length() > MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH) {
                 throw new InvalidRequestException("Blah body text cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
             }
             entity.setBody(body);
@@ -250,7 +250,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing field groupId=" + groupId, ErrorCodes.MISSING_GROUP_ID);
         }
 
-        // Ensure user is active in group  // TODO authorized groups could be cached in session obj
+        // Ensure user is active in group
         ensureUserActiveInGroup(authorId, groupId);
 
         verifyBadges(entity);
@@ -259,7 +259,6 @@ public final class BlahManager implements ManagerInterface {
         final BlahDAO blahDAO = getStoreManager().createBlah();
         blahDAO.initToDefaultValues(localeId);
         blahDAO.addFromMap(entity, true); // removes fields not in schema
-        // TODO maybe set fields explicitly instead of trusting request payload's data
         blahDAO.setAuthorId(authorId);
         if (hasMedia) {
             blahDAO.setImageIds(mediaIds);
@@ -276,7 +275,7 @@ public final class BlahManager implements ManagerInterface {
         updateGroupBlahCount(groupId, true);
 
         // Add to inboxes
-        inboxHandler.newSpreadBlah(LocaleId.en_us, blahDAO, groupId);
+        inboxHandler.spreadBlahToRecents(LocaleId.en_us, blahDAO, groupId);
 
         // Track it
         trackBlah(authorId, blahDAO);
@@ -298,8 +297,9 @@ public final class BlahManager implements ManagerInterface {
     /**
      * <p>If there is no text, it returns an empty string; else it cleans up
      * the text by scraping off any possible HTML markup</p>
+     *
      * @param text
-     * @return   <p>A valid blah text string (suitable for text line or body)</p>
+     * @return <p>A valid blah text string (suitable for text line or body)</p>
      * @throws SystemErrorException
      */
     private String cleanupBlahTextString(String text) throws SystemErrorException {
@@ -352,7 +352,8 @@ public final class BlahManager implements ManagerInterface {
 
     /**
      * Adds the poll options to the poll blah.
-     * @param text  The first line of text
+     *
+     * @param text    The first line of text
      * @param blahDAO The blah
      * @throws InvalidRequestException
      * @throws SystemErrorException
@@ -680,7 +681,6 @@ public final class BlahManager implements ManagerInterface {
     }
 
 
-
     private StoreManager getStoreManager() {
         return storeManager;
     }
@@ -811,8 +811,9 @@ public final class BlahManager implements ManagerInterface {
 
     /**
      * <p>Updates multiple blah view and open counts</p>
+     *
      * @param localeId
-     * @param userId  The user id who is viewing/opening the blahs, or null if the user is anonymous.
+     * @param userId   The user id who is viewing/opening the blahs, or null if the user is anonymous.
      * @param viewsMap Map: key is a blah id and value is the number of views of that blah
      * @param opensMap Map: key is a blah id and value is the number of opens of that blah
      */
@@ -861,12 +862,12 @@ public final class BlahManager implements ManagerInterface {
      * Updates userBlahInfoDAO and blahDAOs.
      *
      * @param localeId
-     * @param blahId          The blah's id
-     * @param userId          The user's id
-     * @param promotionOrDemotion            The promotion or demotion (always one of 0, 1, -1)
-     * @param viewCount       The view count (always one of 0, 1, -1)
-     * @param openCount       The open count (always one of 0, 1, -1)
-     * @param creatingComment True if this is called when a comment is created
+     * @param blahId              The blah's id
+     * @param userId              The user's id
+     * @param promotionOrDemotion The promotion or demotion (always one of 0, 1, -1)
+     * @param viewCount           The view count (always one of 0, 1, -1)
+     * @param openCount           The open count (always one of 0, 1, -1)
+     * @param creatingComment     True if this is called when a comment is created
      * @return BlahDAO  The blah DAO including the updates plus the author id
      * @throws SystemErrorException
      * @throws ResourceNotFoundException
@@ -1207,7 +1208,7 @@ public final class BlahManager implements ManagerInterface {
      *
      * @param localeId
      * @param commentAuthorId
-     * @param entity         @return
+     * @param entity          @return
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
@@ -1234,7 +1235,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing text", entity, ErrorCodes.MISSING_TEXT);
         }
         text = CommonUtilities.scrapeMarkup(text);
-        if (text.length() > MAXIMUM_BLAH_OR_COMMENT_TEXT_LENGTH) {
+        if (text.length() > MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH) {
             throw new InvalidRequestException("Comment text length exceeded maximum", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
         }
 
@@ -1306,11 +1307,10 @@ public final class BlahManager implements ManagerInterface {
      * <p/>
      * TODO check injection problems: e.g., blahId or authorId changed, etc...
      *
-     *
      * @param localeId
-     * @param entity   The client request
+     * @param entity    The client request
      * @param userId
-     *@param commentId  @throws InvalidRequestException
+     * @param commentId @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
@@ -1527,52 +1527,6 @@ public final class BlahManager implements ManagerInterface {
         return comments;
     }
 
-    // TODO replace get user inbox with this: right now, trusts client that inbox is accessible by user
-    // TODO 1. if the groupId is not anonymous, check whether the user is authenticated and, if so, check whether he joined the group.
-    // TODO 2. require the group id
-    public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
-                                           String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
-            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
-        ensureReady();
-        if (groupId == null) {
-            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
-        }
-
-        count = ensureCount(count);
-        if (sortDirection == null || (sortDirection != 1 && sortDirection != -1)) {
-            sortDirection = -1;
-        }
-
-        checkGroupAccess(request, groupId);
-
-        // Cycle through inboxes
-        final Integer maxInbox = inboxHandler.getMaxInbox(groupId);
-        final Integer unknown = -1;
-        if (maxInbox == unknown) {
-            // we don't know the max: attempt to get the first inbox (getting an inbox from the inbox cache retrieves the max, if any)
-            inboxNumber = 0;
-        } else {
-            if (inboxNumber == null) { // if no inbox number is requested, find last
-                Integer lastInbox = BlahguaSession.getLastInboxNumber(request, groupId);
-                inboxNumber = (lastInbox == null) ? 0 : (++lastInbox);  // if we have last, increment it; else start at first inbox
-                if (inboxNumber >= maxInbox) { // rewind if past the maximum number of inboxes; else go to next
-                    inboxNumber = 0;
-                }
-            }
-        }
-        final Inbox inbox = inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
-
-        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
-
-        if (inbox == null) {
-            logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber + " when maxInbox=" + maxInbox);
-            return new ArrayList<InboxBlahPayload>(0);
-        }
-
-
-        return inbox.getItems();
-    }
-
     public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber)
             throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
@@ -1616,8 +1570,9 @@ public final class BlahManager implements ManagerInterface {
     /**
      * <p>Associates an image with a comment.</p>
      * <p>This method does NOT delete any existing images for the comment.</p>
-     * @param commentId  The comment id
-     * @param mediaId The media id
+     *
+     * @param commentId The comment id
+     * @param mediaId   The media id
      * @throws SystemErrorException
      * @throws ResourceNotFoundException
      * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
@@ -2067,3 +2022,47 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 }
+
+
+//    public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
+//                                           String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
+//            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+//        ensureReady();
+//        if (groupId == null) {
+//            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+//        }
+//
+//        count = ensureCount(count);
+//        if (sortDirection == null || (sortDirection != 1 && sortDirection != -1)) {
+//            sortDirection = -1;
+//        }
+//
+//        checkGroupAccess(request, groupId);
+//
+//        // Cycle through inboxes
+//        final Integer maxInbox = inboxHandler.getMaxInbox(groupId);
+//        final Integer unknown = -1;
+//        if (maxInbox == unknown) {
+//            // we don't know the max: attempt to get the first inbox (getting an inbox from the inbox cache retrieves the max, if any)
+//            inboxNumber = 0;
+//        } else {
+//            if (inboxNumber == null) { // if no inbox number is requested, find last
+//                Integer lastInbox = BlahguaSession.getLastInboxNumber(request, groupId);
+//                inboxNumber = (lastInbox == null) ? 0 : (++lastInbox);  // if we have last, increment it; else start at first inbox
+//                if (inboxNumber >= maxInbox) { // rewind if past the maximum number of inboxes; else go to next
+//                    inboxNumber = 0;
+//                }
+//            }
+//        }
+//        final Inbox inbox = inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
+//
+//        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
+//
+//        if (inbox == null) {
+//            logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber + " when maxInbox=" + maxInbox);
+//            return new ArrayList<InboxBlahPayload>(0);
+//        }
+//
+//
+//        return inbox.getItems();
+//    }
