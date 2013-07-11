@@ -170,15 +170,16 @@ public class InboxHandler extends Thread {
                 nextBoxNumber = first;
             }
             final List<Map<String, Object>> inboxItems = getInboxItems(CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber), false, limit);
-            if (inboxItems.size() == 0) {
-                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");
-            }
 
             // TODO: remove experiment: adds some recents to the top
             final int maxRecentsToAdd = 10;
-            final InboxData recentsInbox = getRecentsInbox(groupId, maxRecentsToAdd);
-            if (recentsInbox.getInboxItems().size() > 0) {
-                inboxItems.addAll(0, recentsInbox.getInboxItems());
+            final List<Map<String, Object>> recentInboxItems = getInboxItems(CommonUtilities.makeRecentsInboxCollectionName(groupId), true, maxRecentsToAdd);
+            if (recentInboxItems.size() > 0) {
+                inboxItems.addAll(0, recentInboxItems);
+            }
+
+            if (inboxItems.size() == 0) {
+                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");
             }
 
             return new InboxData(nextBoxNumber, inboxItems);
