@@ -1540,7 +1540,7 @@ public final class BlahManager implements ManagerInterface {
 
         final Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId) : null;
 
-        final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber);
+        final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null);
 
         BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
 
@@ -1558,7 +1558,7 @@ public final class BlahManager implements ManagerInterface {
 
         checkGroupAccess(request, groupId);
 
-        final InboxData inbox = _inboxHandler.getRecentsInbox(groupId);
+        final InboxData inbox = _inboxHandler.getRecentsInbox(groupId, null);
 
         if (inbox.getInboxItems().size() == 0) {
             logger.warning("Got no recent inbox items for groupId '" + groupId + "'");

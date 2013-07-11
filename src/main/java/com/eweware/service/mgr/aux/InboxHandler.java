@@ -132,15 +132,17 @@ public class InboxHandler extends Thread {
      * <p>The client may request a specific inbox number, or the client may hint with the
      * last fetched inbox number to request the next one. In either case, if the
      * inbox does not exist, the first inbox in the group, if any, will be returned.</p>
+     *
      * @param groupId The group id
      * @param inboxNumber   If specified, lastInboxNumber is ignored and a best attempt
      *                      is made to fetch the specified inbox number. If there is no
      *                      such inbox, the first inbox in the group will be returned.
      * @param lastInboxNumber   If specified and inboxNumber is not specified, the next
      *                          inbox after the lastInboxNumber will be fetched.
+     * @param limit
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
-    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber) throws SystemErrorException {
+    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit) throws SystemErrorException {
         final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group != null) {
             Integer first = group.getFirstInboxNumber();
@@ -167,32 +169,45 @@ public class InboxHandler extends Thread {
             } else {
                 nextBoxNumber = first;
             }
-            final List<Map<String, Object>> inboxItems = getInboxItems(CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber), false);
+            final List<Map<String, Object>> inboxItems = getInboxItems(CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber), false, limit);
             if (inboxItems.size() == 0) {
                 logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");
             }
+
+            // TODO: remove experiment: adds some recents to the top
+            final int maxRecentsToAdd = 10;
+            final InboxData recentsInbox = getRecentsInbox(groupId, maxRecentsToAdd);
+            if (recentsInbox.getInboxItems().size() > 0) {
+                inboxItems.addAll(0, recentsInbox.getInboxItems());
+            }
+
             return new InboxData(nextBoxNumber, inboxItems);
         } else {
             throw new SystemErrorException("Invalid group id '" + groupId + "' (uncached)", ErrorCodes.SERVER_SEVERE_ERROR);
         }
     }
 
-    public InboxData getRecentsInbox(String groupId) {
-        return new InboxData(getInboxItems(CommonUtilities.makeRecentsInboxCollectionName(groupId), true));
+    public InboxData getRecentsInbox(String groupId, Integer limit) {
+        return new InboxData(getInboxItems(CommonUtilities.makeRecentsInboxCollectionName(groupId), true, limit));
     }
 
     /**
      * <p>Returns a list of inbox items in their natural order.</p>
      *
+     *
      * @param collectionName   The name of the inbox collection
      * @param recents
+     * @param limit
      * @return  Returns the inbox items or an empty list if there are no items.
      */
-    private List<Map<String, Object>> getInboxItems(String collectionName, boolean recents) {
+    private List<Map<String, Object>> getInboxItems(String collectionName, boolean recents, Integer limit) {
         final DBCollection col = _storeManager.getInboxDB().getCollection(collectionName);
-        final DBCursor daos = recents ? col.find().sort(REVERSED_NATURAL_SORT_ORDER) : col.find();
+        DBCursor cursor = recents ? col.find().sort(REVERSED_NATURAL_SORT_ORDER) : col.find();
+        if (limit != null) {
+            cursor = cursor.limit(limit);
+        }
         final List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        for (DBObject dao : daos) {
+        for (DBObject dao : cursor) {
             dao.removeField(BaseDAOConstants.ID);
             items.add((Map<String, Object>) dao);
         }
