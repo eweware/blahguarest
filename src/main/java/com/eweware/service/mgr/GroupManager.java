@@ -19,11 +19,8 @@ import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 
 import javax.xml.ws.WebServiceException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -39,18 +36,26 @@ public final class GroupManager implements ManagerInterface {
 
     private final Integer returnedObjectLimit;
 
-    private static final long CACHE_REFRESH_INTERVAL_IN_MILLIS = 1000 * 60 * 2;
+    private static final long MINIMUM_CACHE_REFRESH_INTERVAL_IN_MILLIS = 1000 * 60 * 2;
+    private long _cacheRefreshIntervalInMillis = MINIMUM_CACHE_REFRESH_INTERVAL_IN_MILLIS;
     private AtomicLong _cacheLastRefreshed = new AtomicLong(System.currentTimeMillis());
+
+    /**
+     * Acquire this lock to modify either _groupCacheMap or _openGroupCacheMap.
+     * Even though the maps are concurrent-safe, we are also locking for
+     * the refresh times.
+     */
+    private final Object _cacheLock = new Object();
 
     /**
      * Maps a group id to its payload.
      */
-    private final ConcurrentHashMap<String, GroupPayload> _groupMap = new ConcurrentHashMap<String, GroupPayload>();
+    private final ConcurrentHashMap<String, GroupDAO> _groupCacheMap = new ConcurrentHashMap<String, GroupDAO>();
 
     /**
      * Maps an open group id to its payload
      */
-    private final ConcurrentHashMap<String, GroupPayload> _openGroupMap = new ConcurrentHashMap<String, GroupPayload>();
+    private final ConcurrentHashMap<String, GroupPayload> _openGroupCacheMap = new ConcurrentHashMap<String, GroupPayload>();
 
 
     public static GroupManager getInstance() throws SystemErrorException {
@@ -73,7 +78,7 @@ public final class GroupManager implements ManagerInterface {
     public void start() {
         try {
             this.storeManager = MongoStoreManager.getInstance();
-            initializeGroupCache();
+            maybeRefreshGroupCache(true);
             state = ManagerState.STARTED;
             System.out.println("*** GroupManager started ***");
         } catch (SystemErrorException e) {
@@ -83,48 +88,52 @@ public final class GroupManager implements ManagerInterface {
     }
 
     /**
-     * Locally caches some group information.                                           `
-     */
-    private void initializeGroupCache() throws SystemErrorException {
-        final GroupDAO groupDAO = getStoreManager().createGroup();
-        groupDAO.setState(AuthorizedState.A.toString());
-        final List<GroupDAO> groups = (List<GroupDAO>) groupDAO._findMany();
-        for (GroupDAO group : groups) {
-            final GroupPayload g = new GroupPayload(group);
-            _groupMap.putIfAbsent(g.getId(), g);
-            final String desc = group.getDescriptor();
-            if (desc != null && desc.equals(GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode())) {
-                _openGroupMap.putIfAbsent(group.getId(), g);
-            }
-        }
-    }
-
-    /**
      * <p>Returns a cached group.</p>
      * @param groupId   The group's id
      * @return  Returns the group payload or null if no group with the specified id exists.
      */
-    public GroupPayload getCachedGroup(String groupId) throws SystemErrorException {
-        maybeRefreshCache();
-        return _groupMap.get(groupId);
+    public GroupDAO getCachedGroup(String groupId) throws SystemErrorException {
+        maybeRefreshGroupCache(false);
+        return _groupCacheMap.get(groupId);
     }
 
-    private void maybeRefreshCache() throws SystemErrorException {
+    /**
+     * <p>Refresh group caches if refresh time is up.</p>
+     * @param force Do it unconditionally.
+     * @throws SystemErrorException
+     */
+    public void maybeRefreshGroupCache(boolean force) throws SystemErrorException {
         final long lastTime = _cacheLastRefreshed.get();
-        if ((System.currentTimeMillis() - lastTime) > CACHE_REFRESH_INTERVAL_IN_MILLIS) {
-            synchronized (_cacheLastRefreshed) {
+        if (force || ( (System.currentTimeMillis() - lastTime) > _cacheRefreshIntervalInMillis) ) {
+            synchronized (_cacheLock) { //
                 if (lastTime == _cacheLastRefreshed.get()) { // check again
                     _cacheLastRefreshed.set(System.currentTimeMillis());
-                    refreshCaches();
+                    doRefreshGroupCache();
                 }
             }
         }
     }
 
-    public void refreshCaches() throws SystemErrorException {
-        _groupMap.clear();
-        _openGroupMap.clear();
-        initializeGroupCache();
+    /**
+     * <p>Must be called under lock.</p>
+     * <p>IMPORTANT: we assume that any added groups will be a strict
+     * superset of existing groups!</p>
+     */
+    private void doRefreshGroupCache() throws SystemErrorException {
+        final GroupDAO groupDAO = getStoreManager().createGroup();
+        groupDAO.setState(AuthorizedState.A.toString());
+        final List<GroupDAO> groups = (List<GroupDAO>) groupDAO._findMany();
+        for (GroupDAO group : groups) {
+            final Long duration = group.getLastInboxGeneratedDuration();
+            if (duration != null) {  // adjust for the actual time it takes to generate inboxes
+                _cacheRefreshIntervalInMillis = Math.max(duration, _cacheRefreshIntervalInMillis);
+            }
+            _groupCacheMap.putIfAbsent(group.getId(), group);
+            final String desc = group.getDescriptor();
+            if (desc != null && desc.equals(GroupDAOConstants.GroupDescriptor.VISIBILITY_OPEN.getCode())) {
+                _openGroupCacheMap.putIfAbsent(group.getId(), new GroupPayload(group));
+            }
+        }
     }
 
     public void shutdown() {
@@ -185,8 +194,8 @@ public final class GroupManager implements ManagerInterface {
         if (groupId == null) {
             return false;
         }
-        // This is faily static, so no need to check cache refresh
-        return _openGroupMap.containsKey(groupId);
+        // This is fairly static (and is called often), so no need to check cache refresh
+        return _openGroupCacheMap.containsKey(groupId);
     }
 
 
@@ -246,8 +255,7 @@ public final class GroupManager implements ManagerInterface {
      */
     public Collection<GroupPayload> getOpenGroups(LocaleId localeId, Integer start, Integer count) throws SystemErrorException {
         ensureReady();
-        // Static info: no need to check for refresh here
-        return _openGroupMap.values();
+        return _openGroupCacheMap.values();
     }
 
     /**

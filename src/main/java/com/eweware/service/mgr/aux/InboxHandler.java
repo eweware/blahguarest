@@ -6,10 +6,7 @@ import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.payload.GroupPayload;
-import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
-import main.java.com.eweware.service.base.store.dao.BlahDAO;
-import main.java.com.eweware.service.base.store.dao.InboxBlahDAOConstants;
-import main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants;
+import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.GroupManager;
 
@@ -146,7 +143,7 @@ public class InboxHandler extends Thread {
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
     public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber) throws SystemErrorException {
-        final GroupPayload group = GroupManager.getInstance().getCachedGroup(groupId);
+        final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group != null) {
             Integer first = group.getFirstInboxNumber();
             if (first == null) {

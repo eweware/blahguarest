@@ -20,9 +20,9 @@ import java.util.logging.Logger;
 
 /**
  * <p>System-level API.</p>
- * <p>These methods are for development only and will be removed from
+ * <p>Some methods are for development only and will be removed from
  * public access once we launch.</p>
- * <p><b>DANGER Mr. Robinson! DANGER!!!</b></p>
+ * <p><b>DANGER, Will Robinson. DANGER!!!</b></p>
  *
  * @author rk@post.harvard.edu
  */
@@ -104,38 +104,6 @@ public class SystemResource {
         }
     }
 
-//    /**
-//     * <p>Use this method to turn security on/off.</p>
-//     * <b>This method is for development only and will be removed from
-//     * public access once we launch.</b>
-//     * <p><i>User must be authenticated and have an admin account.</i></p>
-//     * <p/>
-//     * <div><b>METHOD:</b> GET</div>
-//     * <div><b>URL:</b> sys/secure/{on}</div>
-//     *
-//     * @param action <i>Path Parameter:</i> If "on" turns security on.
-//     *               If "get" returns security state. Any other value turns security off.
-//     * @return Http status code 200 with plain text specifying the new security state.
-//     */
-//    @POST
-//    @Path("/security/{action}")                // TODO get rid of this "feature"
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public Response flipSecurity(
-//            @PathParam("action") String action,
-//            @Context HttpServletRequest request) {
-//        try {
-//            BlahguaSession.ensureAdmin(request);
-//            if (action.equals("get")) {
-//                return Response.ok(BlahguaSession.getSecurity() ? "on" : "off").build();
-//            }
-//            final boolean on = action.equals("on");
-//            BlahguaSession.setSecurity(on);
-//            return Response.ok("security " + (on ? "ON" : "OFF")).build();
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
-//        }
-//    }
-
 
     /**
      * <p>Use this method to get information about the session state.</p>
@@ -173,13 +141,14 @@ public class SystemResource {
     @POST
     @Path("/refresh/{pass}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshCaches(@PathParam("pass") String pass, @Context HttpServletRequest request) { // TODO dangerous (remove as soon as feasible)
+    public Response refreshCaches(@PathParam("pass") String pass, @Context HttpServletRequest request) {
+        // TODO dangerous (remove as soon as feasible) -- used by DB reset sequence during initial development
         try {
             if (!pass.equals("kwfew303bf3sss")) {
                 Response.status(Response.Status.FORBIDDEN).build();
             }
             BlahManager.getInstance().refreshCaches();
-            GroupManager.getInstance().refreshCaches();
+            GroupManager.getInstance().maybeRefreshGroupCache(true);
             logger.info("Refreshed blah manager and group manager local caches");
             return RestUtilities.make202AcceptedResponse();
         } catch (Exception e) {
