@@ -60,7 +60,7 @@ public class InboxHandler extends Thread {
 
         // TODO need a static method in baselib for the inbox item creation so that it's shared with stats app, see stats InboxBuilder.buildInboxes()
 
-        final DBObject dao = new BasicDBObject(UserBlahInfoDAOConstants.BLAH_ID, blahDAO.getId());
+        final DBObject dao = new BasicDBObject(InboxBlahDAOConstants.BLAH_ID, blahDAO.getId());
         dao.put(BaseDAOConstants.CREATED, blahDAO.getCreated());
         dao.put(InboxBlahDAOConstants.BLAH_TEXT, blahDAO.getText());
         dao.put(InboxBlahDAOConstants.TYPE, blahDAO.getTypeId());
