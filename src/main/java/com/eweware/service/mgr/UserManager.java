@@ -18,7 +18,6 @@ import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
 import main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.base.type.RunMode;
 import main.java.com.eweware.service.base.type.TrackerType;
 import main.java.com.eweware.service.rest.session.BlahguaSession;
 import main.java.com.eweware.service.search.index.common.BlahguaFilterIndexReader;
@@ -60,10 +59,11 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
+ * <p>Handles user-oriented operations.</p>
+ * <p/>
+ * TODO add transaction-level management (rollbacks)
+ *
  * @author rk@post.harvard.edu
- *         <p/>
- *         TODO add monitors for mutating variables or lists with mutating elements
- *         TODO add transaction-level management (rollbacks)
  */
 public class UserManager implements ManagerInterface {
 
@@ -73,15 +73,15 @@ public class UserManager implements ManagerInterface {
 
     private static final int ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
-    private final boolean doIndex;
-    private StoreManager storeManager;
-    private SystemManager systemManager;
-    private MailManager mailManager;
-    private ManagerState state = ManagerState.UNKNOWN;
-    private final File indexDir;
-    private final int batchSize;
-    private final long batchDelay;
-    private final Integer returnedObjectLimit;
+    private final boolean _doIndex;
+    private StoreManager _storeManager;
+    private SystemManager _systemManager;
+    private MailManager _mailManager;
+    private ManagerState _state = ManagerState.UNKNOWN;
+    private final File _indexDir;
+    private final int _batchSize;
+    private final long _batchDelay;
+    private final Integer _returnedObjectLimit;
 
     public static UserManager getInstance() throws SystemErrorException {
         if (UserManager.singleton == null) {
@@ -90,19 +90,19 @@ public class UserManager implements ManagerInterface {
         return UserManager.singleton;
     }
 
-    private ZoieSystem<BlahguaFilterIndexReader, UserDAO> indexingSystem;
+    private ZoieSystem<BlahguaFilterIndexReader, UserDAO> _indexingSystem;
 
     public UserManager(Boolean doIndex, String indexDir, String batchSize, String batchDelay, Integer returnedObjectLimit) {
-        this.doIndex = (doIndex == Boolean.TRUE);
-        this.indexDir = new File(indexDir);
-        this.batchSize = Integer.parseInt(batchSize);
-        this.batchDelay = Long.parseLong(batchDelay);
-        this.returnedObjectLimit = returnedObjectLimit;
+        _doIndex = (doIndex == Boolean.TRUE);
+        _indexDir = new File(indexDir);
+        _batchSize = Integer.parseInt(batchSize);
+        _batchDelay = Long.parseLong(batchDelay);
+        _returnedObjectLimit = returnedObjectLimit;
         UserManager.singleton = this;
-        this.state = ManagerState.INITIALIZED;
+        _state = ManagerState.INITIALIZED;
         if (doIndex) {
             System.out.println("*** UserManager Initializing ***");
-            final File searchDir = this.indexDir.getParentFile();
+            final File searchDir = _indexDir.getParentFile();
             if (!searchDir.exists()) {
                 System.out.println("*** UserManager: Search directory '" + searchDir + "' doesn't exist. Creating it...");
                 try {
@@ -113,7 +113,7 @@ public class UserManager implements ManagerInterface {
                     throw new WebServiceException("Couldn't create search directory index '" + searchDir + "'. UserManager aborting.");
                 }
             }
-            System.out.println("*** User Index: " + this.indexDir.getAbsolutePath() + " ***");
+            System.out.println("*** User Index: " + _indexDir.getAbsolutePath() + " ***");
         } else {
             System.out.println("*** UserManager search disabled ***");
         }
@@ -121,7 +121,7 @@ public class UserManager implements ManagerInterface {
     }
 
     public boolean doIndex() {
-        return doIndex;
+        return _doIndex;
     }
 
     /**
@@ -129,11 +129,11 @@ public class UserManager implements ManagerInterface {
      */
     public void start() {
         try {
-            storeManager = MongoStoreManager.getInstance();
-            systemManager = SystemManager.getInstance();
-            mailManager = MailManager.getInstance();
+            _storeManager = MongoStoreManager.getInstance();
+            _systemManager = SystemManager.getInstance();
+            _mailManager = MailManager.getInstance();
             InitializeUserSearch(); // TODO should be its own service
-            this.state = ManagerState.STARTED;
+            _state = ManagerState.STARTED;
             System.out.println("*** UserManager started ***");
         } catch (Exception e) {
             throw new WebServiceException(e);
@@ -145,15 +145,15 @@ public class UserManager implements ManagerInterface {
      */
     public void shutdown() {
         if (doIndex()) {
-            indexingSystem.shutdown();
+            _indexingSystem.shutdown();
         }
 
-        this.state = ManagerState.SHUTDOWN;
+        _state = ManagerState.SHUTDOWN;
         System.out.println("*** UserManager shut down ***");
     }
 
     public ManagerState getState() {
-        return this.state;
+        return _state;
     }
 
     /**
@@ -221,7 +221,7 @@ public class UserManager implements ManagerInterface {
             }
         }
 
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_USER);
+//        final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.CREATE_USER);
 //        tracker.setUserId(userDAO.getId());
 //        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
 
@@ -601,7 +601,7 @@ public class UserManager implements ManagerInterface {
      * @param validationKey A validation method-specific input string. For example, for
      *                      an email validation method style, this would be the user's email address.
      *                      Some validation methods don't require a key, in which case this may be null.
-     * @param groupId       The he group into which the user will be entered in a pending state
+     * @param groupId       The he group into which the user will be entered in a pending _state
      * @return UserPayload  If userId is provided, returns null; else returns a payload with the user's id, displayName, and groupId
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
@@ -638,10 +638,10 @@ public class UserManager implements ManagerInterface {
 //        final String validationCode = vmeth.startValidation(userId, groupId, groupDAO.getDisplayName(), validationKey);
 //        final String validationCode = AuthorizedState.A.toString();  // TODO now carte blanche authorization as we don't have any way to change it
 
-        // Add user to the group with authorized state
+        // Add user to the group with authorized _state
         updateUserStatus(LocaleId.en_us, userId, groupId, defaultState.toString());
 
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
+//        final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
 //        tracker.setUserId(userId);
 //        tracker.setGroupId(groupId);
 //        tracker.setState(defaultState.toString());
@@ -745,7 +745,7 @@ public class UserManager implements ManagerInterface {
 
     public UserBlahInfoPayload getUserInfoForBlah(String userId, String blahId) throws SystemErrorException, InvalidRequestException {
         ensureReady();
-        final UserBlahInfoDAO dao = (UserBlahInfoDAO) storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(null, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+        final UserBlahInfoDAO dao = (UserBlahInfoDAO) _storeManager.createUserBlahInfo(userId, blahId)._findByCompositeId(null, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao == null) {
             throw new InvalidRequestException("no user info for blah", ErrorCodes.INVALID_STATE_CODE);
         }
@@ -810,7 +810,7 @@ public class UserManager implements ManagerInterface {
 
         if (userId != null) {
 
-            final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+            final UserDAO userDAO = (UserDAO) _storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
             if (userDAO == null) {
                 throw new ResourceNotFoundException("No such user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
             }
@@ -1127,7 +1127,7 @@ public class UserManager implements ManagerInterface {
         searchUserGroupDAO.setState(state);
 
         final List<UserGroupDAO> userGroupDAOs;
-        // TODO we would obviate need of index for state field if we fetch all and filter results by state
+        // TODO we would obviate need of index for _state field if we fetch all and filter results by _state
         if (state == null) {
             userGroupDAOs = (List<UserGroupDAO>) searchUserGroupDAO._findManyByCompositeId(start, count, sortFieldName, new String[]{UserGroupDAO.GROUP_ID, UserGroupDAO.STATE}, UserGroupDAO.USER_ID);
         } else {
@@ -1153,8 +1153,8 @@ public class UserManager implements ManagerInterface {
     }
 
     private Integer ensureCount(Integer count) {
-        if (count == null || count > returnedObjectLimit) {
-            count = returnedObjectLimit;
+        if (count == null || count > _returnedObjectLimit) {
+            count = _returnedObjectLimit;
         }
         return count;
     }
@@ -1162,7 +1162,7 @@ public class UserManager implements ManagerInterface {
     /**
      * Join, accept, or suspend a user to/from a group.
      * Also allows the association to be deleted from the database.
-     * Allowed state transitions:
+     * Allowed _state transitions:
      * <Does not exist> -> P
      * P, S -> A
      * A -> S
@@ -1171,11 +1171,11 @@ public class UserManager implements ManagerInterface {
      * @param localeId
      * @param userId   The user id
      * @param groupId  The group id
-     * @param newState If AuthorizedState.P.getDescription, the user will be joined to the group in a pending state.
+     * @param newState If AuthorizedState.P.getDescription, the user will be joined to the group in a pending _state.
      *                 If AuthorizedState.A.getDescription, the user will be activated in the group.
      *                 If AuthorizedState.S.getDescription, the user will be suspended in the group.
      *                 If AuthorizedState.DT.getDescription, the user/group association will be deleted from the database.
-     *                 //     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) state.
+     *                 //     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) _state.
      *                 //     *                       If not null, this is simply inserted into the DB for future reference.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
@@ -1241,7 +1241,7 @@ public class UserManager implements ManagerInterface {
                     userGroup.setState(AuthorizedState.S.toString());
                     userGroup._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-//                    final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
+//                    final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
 //                    tracker.setUserId(userId);
 //                    tracker.setGroupId(groupId);
 //                    tracker.setState(AuthorizedState.S.toString());
@@ -1251,10 +1251,10 @@ public class UserManager implements ManagerInterface {
                     throw new StateConflictException("user in state '" + state + "' cannot be suspended; userId " + userId + " groupId " + groupId, ErrorCodes.USER_CANNOT_BE_SUSPENDED_IN_STATE_OTHER_THAN_A);
                 }
             } else if (delete) {  // hard delete!
-                // TODO should we change state to DT (and register and other methods would need to be aware of this)?
+                // TODO should we change _state to DT (and register and other methods would need to be aware of this)?
                 getStoreManager().createUserGroup(userGroupId)._deleteByPrimaryId();
 
-//                final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
+//                final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
 //                tracker.setUserId(userId);
 //                tracker.setGroupId(groupId);
 //                tracker.setState(AuthorizedState.D.toString());
@@ -1356,7 +1356,7 @@ public class UserManager implements ManagerInterface {
      */
     public void deleteAllMediaForUser(String userId) throws SystemErrorException, ResourceNotFoundException {
         ensureReady();
-        final UserDAO userDAO = (UserDAO) storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
+        final UserDAO userDAO = (UserDAO) _storeManager.createUser(userId)._findByPrimaryId(UserDAO.IMAGE_IDS);
         if (userDAO == null) {
             throw new ResourceNotFoundException("no user id '" + userId + "'");
         }
@@ -1367,7 +1367,7 @@ public class UserManager implements ManagerInterface {
         ensureReady();
         if (mediaIds != null && mediaIds.size() > 0) {
             for (String mediaId : mediaIds) {
-                final MediaDAO media = storeManager.createMedia(mediaId);
+                final MediaDAO media = _storeManager.createMedia(mediaId);
                 if (media._exists()) { // ignore missing media dao: it might have been deleted in a previous broken attempt
                     media.setDeleted(true); // soft-delete
                     try {
@@ -1385,7 +1385,7 @@ public class UserManager implements ManagerInterface {
 
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
@@ -1417,7 +1417,7 @@ public class UserManager implements ManagerInterface {
         final List<DataEvent<UserDAO>> events = new ArrayList<DataEvent<UserDAO>>(1);
         events.add(event);
         try {
-            this.indexingSystem.consume(events);
+            _indexingSystem.consume(events);
         } catch (ZoieException e) {
             throw new SystemErrorException("user indexer has a problem", e, ErrorCodes.SERVER_INDEXING_ERROR);
         }
@@ -1432,7 +1432,7 @@ public class UserManager implements ManagerInterface {
         List<ZoieIndexReader<BlahguaFilterIndexReader>> readerList = null;
         try {
             // get the IndexReaders
-            readerList = this.indexingSystem.getIndexReaders();
+            readerList = _indexingSystem.getIndexReaders();
 
             // BlahguaFilterIndexReader instances can be obtained by calling
             // ZoieIndexReader.getDecoratedReaders()
@@ -1446,7 +1446,7 @@ public class UserManager implements ManagerInterface {
             // do search
             final IndexSearcher searcher = new IndexSearcher(reader);
 
-            final TopDocs docs = searcher.search(buildQueryForField(fieldName, query, indexingSystem.getAnalyzer()), 10);
+            final TopDocs docs = searcher.search(buildQueryForField(fieldName, query, _indexingSystem.getAnalyzer()), 10);
 
             final ScoreDoc[] scoreDocs = docs.scoreDocs;
 
@@ -1467,7 +1467,7 @@ public class UserManager implements ManagerInterface {
             throw new SystemErrorException("user indexer problem during search", e, ErrorCodes.SERVER_INDEXING_ERROR);
         } finally {
             if (readerList != null) {
-                indexingSystem.returnIndexReaders(readerList);
+                _indexingSystem.returnIndexReaders(readerList);
             }
         }
     }
@@ -1487,10 +1487,10 @@ public class UserManager implements ManagerInterface {
 
         final ZoieConfig config = makeIndexConfiguration();
 
-        this.indexingSystem = new ZoieSystem<BlahguaFilterIndexReader, UserDAO>(new DefaultDirectoryManager(
-                indexDir), interpreter, decorator, config);
+        _indexingSystem = new ZoieSystem<BlahguaFilterIndexReader, UserDAO>(new DefaultDirectoryManager(
+                _indexDir), interpreter, decorator, config);
 
-        indexingSystem.start(); // ready to accept indexing events
+        _indexingSystem.start(); // ready to accept indexing events
     }
 
     // TODO this can be configured via Spring, but will be factored out to its own service so don't bother yet
@@ -1498,22 +1498,22 @@ public class UserManager implements ManagerInterface {
         final ZoieConfig config = new ZoieConfig();
         config.setAnalyzer(new StandardAnalyzer(Version.LUCENE_35));
         config.setSimilarity(new DefaultSimilarity());
-        config.setBatchSize(batchSize);
-        config.setBatchDelay(batchDelay);
+        config.setBatchSize(_batchSize);
+        config.setBatchDelay(_batchDelay);
         config.setRtIndexing(true); // real-time indexing
         return config;
     }
 
     private StoreManager getStoreManager() {
-        return storeManager;
+        return _storeManager;
     }
 
     private SystemManager getSystemManager() {
-        return systemManager;
+        return _systemManager;
     }
 
     private MailManager getMailManager() {
-        return mailManager;
+        return _mailManager;
     }
 }
 
@@ -1546,7 +1546,7 @@ public class UserManager implements ManagerInterface {
 //            throw new InvalidRequestException("invalid recovery request", ErrorCodes.INVALID_INPUT);
 //        }
 //
-//        final UserProfileDAO profileDAO = storeManager.createUserProfile();
+//        final UserProfileDAO profileDAO = _storeManager.createUserProfile();
 //        if (isRecoveryCodeRecovery) {
 //            profileDAO.setRecoveryCode(recoveryCode);
 //            final UserProfileDAO dao = (UserProfileDAO) profileDAO._findByCompositeId(new String[]{UserProfileDAO.ID, UserProfileDAO.USER_PROFILE_RECOVER_CODE_SET_METHOD}, UserProfileDAO.USER_PROFILE_RECOVERY_CODE);
@@ -1564,7 +1564,7 @@ public class UserManager implements ManagerInterface {
 //            if (dao == null) {
 //                throw new StateConflictException("no user with specified methodKey=" + methodKey, ErrorCodes.NOT_FOUND_USER_ID);
 //            }
-//            recoveryCode = systemManager.makeShortRandomCode();
+//            recoveryCode = _systemManager.makeShortRandomCode();
 //            dao.setRecoveryCode(recoveryCode);
 //            dao._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
 //
@@ -1631,7 +1631,7 @@ public class UserManager implements ManagerInterface {
 //     */
 //    public List<UserPayload> getUsers(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
 //        count = ensureCount(count);
-//        final UserDAO dao = storeManager.createUser();
+//        final UserDAO dao = _storeManager.createUser();
 //        final List<? extends BaseDAO> userDAOs = dao._findMany(start, count, sortFieldName);
 //        final List<UserPayload> users = new ArrayList<UserPayload>(userDAOs.size());
 //        for (BaseDAO item : userDAOs) {
@@ -1645,13 +1645,13 @@ public class UserManager implements ManagerInterface {
 //     * <p><b>Not in use.</b></p>
 //     * A user entered a validation code in a client. Looks for the
 //     * code in a usergroup association and, if it is there, advances
-//     * the user to the active (A) state. The code is deleted from
+//     * the user to the active (A) _state. The code is deleted from
 //     * the association to prevent it from being re-user by user or others.
 //     *
 //     * @param localeId
 //     * @param validationCode
 //     * @return UserPayload  Returns payload with the userId and the validated groupId.
-//     *         If there is no error, the usergroup state becomes A (active).
+//     *         If there is no error, the usergroup _state becomes A (active).
 //     */
 //    public void validateUser(LocaleId localeId, String validationCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
 //        if (CommonUtilities.isEmptyString(validationCode)) {
@@ -1663,11 +1663,11 @@ public class UserManager implements ManagerInterface {
 //        if (userGroupDAO == null) {
 //            throw new InvalidRequestException("No pending user found for validation code '" + validationCode + "'. The code is incorrect; else it expired.", ErrorCodes.VALIDATION_CODE_INVALID_OR_EXPIRED);
 //        }
-//        final String state = userGroupDAO.getState();
+//        final String _state = userGroupDAO.getState();
 //        try {
-//            final AuthorizedState s = AuthorizedState.valueOf(state);
+//            final AuthorizedState s = AuthorizedState.valueOf(_state);
 //            if (s != AuthorizedState.P && s != AuthorizedState.S) {
-//                throw new StateConflictException("state=" + state + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId() +
+//                throw new StateConflictException("_state=" + _state + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId() +
 //                        " is neither " + AuthorizedState.P + " nor " + AuthorizedState.S, ErrorCodes.INVALID_STATE_CODE_IS_NEITHER_P_NOR_S);
 //            }
 //            userGroupDAO.setState(AuthorizedState.A.toString());
@@ -1678,14 +1678,14 @@ public class UserManager implements ManagerInterface {
 //            groupDAO.setUserCount(1);
 //            groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 //
-////            final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
+////            final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
 ////            tracker.setUserId(userGroupDAO.getUserId());
 ////            tracker.setGroupId(userGroupDAO.getGroupId());
 ////            tracker.setState(userGroupDAO.getState());
 ////            TrackingManager.getInstance().track(LocaleId.en_us, tracker);
 //
 //        } catch (IllegalArgumentException e) {
-//            throw new StateConflictException("invalid state=" + state + " in usergroup id=" + userGroupDAO.getId() + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId(), e,
+//            throw new StateConflictException("invalid _state=" + _state + " in usergroup id=" + userGroupDAO.getId() + " for userId=" + userGroupDAO.getUserId() + " groupId=" + userGroupDAO.getGroupId(), e,
 //                    ErrorCodes.INVALID_STATE_CODE);
 //        }
 //    }

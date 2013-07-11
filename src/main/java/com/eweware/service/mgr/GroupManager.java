@@ -34,29 +34,51 @@ public final class GroupManager implements ManagerInterface {
 
     private static GroupManager singleton;
 
-    private final Integer returnedObjectLimit;
-
-    private static final long MINIMUM_CACHE_REFRESH_INTERVAL_IN_MILLIS = 1000 * 60 * 2;
-    private long _cacheRefreshIntervalInMillis = MINIMUM_CACHE_REFRESH_INTERVAL_IN_MILLIS;
-    private AtomicLong _cacheLastRefreshed = new AtomicLong(System.currentTimeMillis());
+    private final Integer _returnedObjectLimit;
 
     /**
-     * Acquire this lock to modify either _groupCacheMap or _openGroupCacheMap.
+     * <p>The initial duration in milliseconds after which the caches should be refreshed.</p>
+     */
+    private static final long MINIMUM_CACHE_REFRESH_INTERVAL_IN_MILLIS = 1000 * 60 * 2;
+
+    /**
+     * <p>Factor by which a new cache refresh interval should be multiplied.</p>
+     * <p>Since it is possible for a new inbox generation to take only a few milliseconds
+     * longer from the previous one, we don't want to refresh too soon. Hence, we pad
+     * the duration this factor.</p>
+     */
+    private static final double CACHE_REFRESH_INTERVAL_FACTOR = 1.1d;
+
+    /**
+     * <p>The actual interval after which we should refresh the caches.</p>
+     */
+    private long _cacheRefreshIntervalInMillis = MINIMUM_CACHE_REFRESH_INTERVAL_IN_MILLIS;
+
+    /**
+     * <p>Last time (in millis) that the caches were refreshed.</p>
+     */
+    private AtomicLong _cachesLastRefreshed = new AtomicLong(System.currentTimeMillis());
+
+    /**
+     * <p>Acquire this lock to modify either _groupCacheMap or _openGroupCacheMap.
      * Even though the maps are concurrent-safe, we are also locking for
-     * the refresh times.
+     * the refresh times.</p>
      */
     private final Object _cacheLock = new Object();
 
     /**
-     * Maps a group id to its payload.
+     * <p>Maps a group id to its dao.</p>
      */
     private final ConcurrentHashMap<String, GroupDAO> _groupCacheMap = new ConcurrentHashMap<String, GroupDAO>();
 
     /**
-     * Maps an open group id to its payload
+     * <p>Maps an open group id to its payload.</p>
      */
     private final ConcurrentHashMap<String, GroupPayload> _openGroupCacheMap = new ConcurrentHashMap<String, GroupPayload>();
 
+
+    private StoreManager _storeManager;
+    private ManagerState _state = ManagerState.UNKNOWN;
 
     public static GroupManager getInstance() throws SystemErrorException {
         if (GroupManager.singleton == null) {
@@ -65,21 +87,18 @@ public final class GroupManager implements ManagerInterface {
         return GroupManager.singleton;
     }
 
-    private StoreManager storeManager;
-    private ManagerState state = ManagerState.UNKNOWN;
-
     public GroupManager(Integer returnedObjectLimit) {
-        this.returnedObjectLimit = returnedObjectLimit;
+        _returnedObjectLimit = returnedObjectLimit;
         GroupManager.singleton = this;
-        state = ManagerState.INITIALIZED;
+        _state = ManagerState.INITIALIZED;
         System.out.println("*** GroupManager initialized ***");
     }
 
     public void start() {
         try {
-            this.storeManager = MongoStoreManager.getInstance();
+            this._storeManager = MongoStoreManager.getInstance();
             maybeRefreshGroupCache(true);
-            state = ManagerState.STARTED;
+            _state = ManagerState.STARTED;
             System.out.println("*** GroupManager started ***");
         } catch (SystemErrorException e) {
             e.printStackTrace();
@@ -103,11 +122,11 @@ public final class GroupManager implements ManagerInterface {
      * @throws SystemErrorException
      */
     public void maybeRefreshGroupCache(boolean force) throws SystemErrorException {
-        final long lastTime = _cacheLastRefreshed.get();
+        final long lastTime = _cachesLastRefreshed.get();
         if (force || ( (System.currentTimeMillis() - lastTime) > _cacheRefreshIntervalInMillis) ) {
             synchronized (_cacheLock) { //
-                if (lastTime == _cacheLastRefreshed.get()) { // check again
-                    _cacheLastRefreshed.set(System.currentTimeMillis());
+                if (lastTime == _cachesLastRefreshed.get()) { // check again
+                    _cachesLastRefreshed.set(System.currentTimeMillis());
                     doRefreshGroupCache();
                 }
             }
@@ -126,7 +145,7 @@ public final class GroupManager implements ManagerInterface {
         for (GroupDAO group : groups) {
             final Long duration = group.getLastInboxGeneratedDuration();
             if (duration != null) {  // adjust for the actual time it takes to generate inboxes
-                _cacheRefreshIntervalInMillis = Math.max(duration, _cacheRefreshIntervalInMillis);
+                _cacheRefreshIntervalInMillis = Math.max(Math.round(duration * CACHE_REFRESH_INTERVAL_FACTOR), _cacheRefreshIntervalInMillis);
             }
             _groupCacheMap.putIfAbsent(group.getId(), group);
             final String desc = group.getDescriptor();
@@ -137,7 +156,7 @@ public final class GroupManager implements ManagerInterface {
     }
 
     public void shutdown() {
-        this.state = ManagerState.SHUTDOWN;
+        _state = ManagerState.SHUTDOWN;
         System.out.println("*** GroupManager shut down ***");
     }
 
@@ -148,8 +167,8 @@ public final class GroupManager implements ManagerInterface {
      */
     public List<GroupTypePayload> getGroupTypes(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
         ensureReady();
-        if (count == null || count > returnedObjectLimit) {
-            count = returnedObjectLimit;
+        if (count == null || count > _returnedObjectLimit) {
+            count = _returnedObjectLimit;
         }
 
         final GroupTypeDAO groupTypeDAO = getStoreManager().createGroupType();
@@ -203,12 +222,12 @@ public final class GroupManager implements ManagerInterface {
      * @param localeId
      * @param groupTypeId   A group type id (optional).
      * @param displayName   A group's display name (optional).
-     * @param state         A group state (optional: if null, all groups are returned).
+     * @param state         A group _state (optional: if null, all groups are returned).
      * @param start         Optional start index
      * @param count         Optional number of items to fetch
      * @param sortFieldName
      * @return List<GroupDAOImpl>	Returns a possibly empty list of groups of the
-     *         given type and state.
+     *         given type and _state.
      * @throws InvalidRequestException
      * @throws main.java.com.eweware.service.base.error.SystemErrorException
      *
@@ -216,7 +235,7 @@ public final class GroupManager implements ManagerInterface {
     public List<GroupPayload> getGroups(LocaleId localeId, String groupTypeId, String displayName, String state, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
         ensureReady();
         if (count == null) {
-            count = returnedObjectLimit;
+            count = _returnedObjectLimit;
         }
         if (state != null) {
             final AuthorizedState authorizedState = AuthorizedState.valueOf(state);
@@ -321,205 +340,19 @@ public final class GroupManager implements ManagerInterface {
     // Internal ------------------------------------------------------------------------------------------------
 
     public ManagerState getState() {
-        return this.state;
+        return _state;
     }
 
     private StoreManager getStoreManager() {
-        return storeManager;
+        return _storeManager;
     }
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
 }
-
-//    /**
-//     *
-//     * @return GroupDAOImpl    Creates a group and returns the dao.
-//     * @throws InvalidRequestException
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-//     *
-//     */
-//    public GroupPayload createGroup(LocaleId localeId, String groupTypeId, String displayName, String description, String descriptor, String validationMethod) throws InvalidRequestException, SystemErrorException {
-//
-//        if (isEmptyString(displayName)) {
-//            throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_USERNAME);
-//        }
-//
-//        if (isEmptyString(groupTypeId)) {
-//            throw new InvalidRequestException("missing group type id", ErrorCodes.MISSING_GROUP_TYPE_ID);
-//        }
-//
-//        if (GroupDAOConstants.GroupDescriptor.findDescriptor(descriptor) == null) {
-//            throw new InvalidRequestException("missing/invalid group descriptor", ErrorCodes.MISSING_GROUP_DESCRIPTOR);
-//        }
-//
-//        final GroupTypeDAO groupTypeDAO = getStoreManager().createGroupType(groupTypeId);
-//        if (!groupTypeDAO._exists()) {
-//            throw new InvalidRequestException("no group type exists with groupTypeId=", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
-//        }
-//
-//        if (isEmptyString(validationMethod)) {
-//            throw new InvalidRequestException("Missing user validation method field " + GroupDAO.USER_VALIDATION_METHOD);
-//        }
-//        final UserValidationMethod vmeth = UserValidationMethod.getValidationMethod(validationMethod);
-//        if (vmeth == null) {
-//            throw new InvalidRequestException("invalid validation method " + GroupDAO.USER_VALIDATION_METHOD + "=" + validationMethod + ". Must be one of " + UserValidationMethod.validationMethodValues.keySet());
-//        }
-//
-//        try {
-//            vmeth.checkParameters(group.getValidationParameters());
-//        } catch (InvalidUserValidationMethodParameters e) {
-//            throw new InvalidRequestException("invalid validation parameters for group", group, ErrorCodes.INVALID_USER_VALIDATION_PARAMS);
-//        }
-//
-//        final GroupDAO dao = getStoreManager().createGroup();
-//        dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
-//        dao.setGroupTypeId(groupTypeId);
-//        if (dao._exists()) {
-//            throw new InvalidRequestException("a group with this name already exists in the given display name and group type", dao, ErrorCodes.ALREADY_EXISTS_GROUP_WITH_DISPLAY_NAME);
-//        }
-//        dao.setGroupTypeId(groupTypeId);
-//        dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
-//        if (description != null && description.length() != 0) {
-//            dao.setDescription(CommonUtilities.scrapeMarkup(description));
-//        }
-//        dao.setDescriptor(descriptor);
-//        dao.setValidationMethod(validationMethod);
-//        dao.setState((vmeth instanceof DefaultUserValidationMethod) ? AuthorizedState.A.toString() : AuthorizedState.getDefaultState());
-//        dao._insert();
-//
-//        // Bump group type count
-//        final GroupTypeDAO groupType = getStoreManager().createGroupType(groupTypeId);
-//        groupType.setGroupCount(1);
-//        groupType._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-//
-////        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_GROUP);
-////        tracker.setGroupId(dao.getId());
-////        tracker.setGroupTypeId(groupTypeId);
-////        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-//
-//        final GroupPayload groupPayload = new GroupPayload(dao);
-//
-//        // Updates local cache
-//        registerGroup(groupPayload.getId(), groupPayload);
-//
-//        return groupPayload;
-//    }
-
-//    /**
-//     * Used to update a group's display name, description, or state.
-//     *
-//     * @param localeId
-//     * @param groupId     The group id
-//     * @param displayName The display name
-//     * @param description The group description
-//     * @param state       The new group state
-//     * @throws InvalidRequestException
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-//     *
-//     * @throws ResourceNotFoundException
-//     * @throws StateConflictException
-//     */
-//    public void updateGroup(LocaleId localeId, String groupId, String displayName, String description, String state) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
-//        if (groupId == null) {
-//            throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
-//        }
-//        if (state != null && AuthorizedState.find(state) == null) { // TODO should check for valid state transition
-//            throw new InvalidRequestException("requested an invalid group state", ErrorCodes.INVALID_STATE_CODE);
-//        }
-//
-//        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId);
-//        if (!groupDAO._exists()) {
-//            throw new ResourceNotFoundException("no group exists with requested id", ErrorCodes.NOT_FOUND_GROUP_ID);
-//        }
-//
-//        final GroupDAO updateDAO = getStoreManager().createGroup(groupId);
-//        if (displayName != null && displayName.length() != 0) {
-//            updateDAO.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
-//        }
-//        if (description != null && description.length() != 0) {
-//            updateDAO.setDescription(CommonUtilities.scrapeMarkup(description));
-//        }
-//        if (state != null) {
-//            updateDAO.setState(state);
-//        }
-//
-//        updateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-//
-//        if (state != null) {
-//            if (state.equals(AuthorizedState.A.toString())) {
-//                registerGroup(groupId, new GroupPayload(groupDAO));
-//            } else {
-//                unregisterGroup(groupId);
-//            }
-//        }
-//    }
-
-//    /**
-//     * Creates a group type.
-//     *
-//     * @param displayName The display name for this group. Note that this is not localized.
-//     * @return GroupTypeDAOImpl    The created group type dao
-//     * @throws InvalidRequestException
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-//     *
-//     * @throws StateConflictException
-//     */
-//    public GroupTypePayload createGroupType(LocaleId localeId, String displayName) throws InvalidRequestException, SystemErrorException, StateConflictException {
-//        if (isEmptyString(displayName)) {
-//            throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_DISPLAY_NAME);
-//        }
-//        displayName = CommonUtilities.scrapeMarkup(displayName);
-//
-//        final GroupTypeDAO dao = getStoreManager().createGroupType();
-//        dao.setDisplayName(displayName);
-//        if (dao._exists()) {
-//            throw new StateConflictException("group type with displayName already exists", displayName, ErrorCodes.ALREADY_EXISTS_GROUP_TYPE_WITH_DISPLAY_NAME);
-//        }
-////        dao.initToDefaultValues(localeId);
-//        dao.setDisplayName(displayName);
-//        dao._insert();
-//
-////        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_GROUP_TYPE);
-////        tracker.setGroupId(dao.getId());
-////        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-//
-//        return new GroupTypePayload(dao);
-//    }
-
-//    /**
-//     * Updates the group type.
-//     * TODO: This should be a protected API: only PMs should be able to require a new group type. Can have drastic performance implications.
-//     * <p/>
-//     * Transaction cost:
-//     * 1. check that group type exists
-//     * 2. update group type
-//     *
-//     * @param localeId
-//     * @param groupTypeId The group type id
-//     * @param displayName The new display name
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
-//     *
-//     * @throws InvalidRequestException
-//     */
-//    public void updateGroupTypeDisplayName(LocaleId localeId, String groupTypeId, String displayName) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
-//        if (CommonUtilities.isEmptyString(displayName)) {
-//            throw new InvalidRequestException("group type display name must have more than one character", ErrorCodes.MISSING_DISPLAY_NAME);
-//        }
-//        if (groupTypeId == null) {
-//            throw new InvalidRequestException("groupTypeId is required", ErrorCodes.MISSING_GROUP_TYPE_ID);
-//        }
-//        final GroupTypeDAO dao = getStoreManager().createGroupType(groupTypeId);
-//        if (!dao._exists()) {
-//            throw new ResourceNotFoundException("no group type exists with groupTypeId ", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
-//        }
-//
-//        dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
-//        dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-//    }
 
 
 

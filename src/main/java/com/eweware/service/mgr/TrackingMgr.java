@@ -20,15 +20,15 @@ public final class TrackingMgr implements ManagerInterface {
 
     private static TrackingMgr singleton;
 
-    private DBCollection trackerCollection;
-    private ManagerState state = ManagerState.UNKNOWN;
+    private DBCollection _trackerCollection;
+    private ManagerState _state = ManagerState.UNKNOWN;
 
     /**
      * Empty constructor.
      */
     public TrackingMgr() {
         TrackingMgr.singleton = this;
-        state = ManagerState.INITIALIZED;
+        _state = ManagerState.INITIALIZED;
     }
 
     public static TrackingMgr getInstance() {
@@ -39,8 +39,8 @@ public final class TrackingMgr implements ManagerInterface {
     public void start() {
         try {
             final MongoStoreManager storeManager = MongoStoreManager.getInstance();
-            trackerCollection = storeManager.getCollection(storeManager.getTrackerCollectionName());
-            state = ManagerState.STARTED;
+            _trackerCollection = storeManager.getCollection(storeManager.getTrackerCollectionName());
+            _state = ManagerState.STARTED;
             System.out.println("*** TrackingMgr Started ***");
         } catch (Exception e) {
             throw new WebServiceException("Failed to start", e);
@@ -73,14 +73,14 @@ public final class TrackingMgr implements ManagerInterface {
             tracker.put(TrackerDAOConstants.VOTED_POLL_INDEX, pollVotedIndex);
         }
         try {
-            trackerCollection.insert(tracker);
+            _trackerCollection.insert(tracker);
         } catch (Exception e) {
             throw new SystemErrorException("Error creating blah update tracker for blah id '" + blahId + "'", e, ErrorCodes.SERVER_DB_ERROR);
         }
     }
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }

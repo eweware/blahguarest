@@ -70,31 +70,31 @@ public final class BlahManager implements ManagerInterface {
     private static final int MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH = 1024;
     private static final int MAXIMUM_BLAH_HEADLINE_LENGTH = 64;
 
-    private final boolean doIndex;
-    private final File blahIndexDir;
-    private final File commentIndexDir;
-    private final int batchSize;
-    private final long batchDelay;
-    private final long maxOpensOrViewsPerUpdate;
-    private final InboxHandler inboxHandler;
+    private final boolean _doIndex;
+    private final File _blahIndexDir;
+    private final File _commentIndexDir;
+    private final int _batchSize;
+    private final long _batchDelay;
+    private final long _maxOpensOrViewsPerUpdate;
+    private final InboxHandler _inboxHandler;
 
     /**
      * Maps an existing blah type id to its data
      */
-    private Map<String, BlahTypeEntry> blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>(10);
-    private Object blahTypeIdToBlahTypeEntryMapLock = new Object(); // locks blahTypeIdToBlahTypeEntryMap
-    private long lastTimeBlahTypesCached = System.currentTimeMillis() - TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS - 1;
+    private Map<String, BlahTypeEntry> _blahTypeIdToBlahTypeEntryMap = new HashMap<String, BlahTypeEntry>();
+    private Object _blahTypeIdToBlahTypeEntryMapLock = new Object(); // locks _blahTypeIdToBlahTypeEntryMap
+    private long _lastTimeBlahTypesCached = System.currentTimeMillis() - TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS - 1;
 
-    private ZoieSystem<BlahguaFilterIndexReader, BlahDAO> blahIndexingSystem;
-    private ZoieSystem<BlahguaFilterIndexReader, CommentDAO> commentIndexingSystem;
-    private ManagerState state = ManagerState.UNKNOWN;
+    private ZoieSystem<BlahguaFilterIndexReader, BlahDAO> _blahIndexingSystem;
+    private ZoieSystem<BlahguaFilterIndexReader, CommentDAO> _commentIndexingSystem;
+    private ManagerState _state = ManagerState.UNKNOWN;
     public static BlahManager singleton;
-    private StoreManager storeManager;
-    private TrackingManager trackingManager;
-    private TrackingMgr trackingMgr;
-    private UserManager userManager;
-    private GroupManager groupManager;
-    private final Integer returnedObjectLimit;
+    private StoreManager _storeManager;
+    private TrackingManager _trackingManager;
+    private TrackingMgr _trackingMgr;
+    private UserManager _userManager;
+    private GroupManager _groupManager;
+    private final Integer _returnedObjectLimit;
 
     public static BlahManager getInstance() throws SystemErrorException {
         if (BlahManager.singleton == null) {
@@ -106,27 +106,27 @@ public final class BlahManager implements ManagerInterface {
     public BlahManager(Boolean doIndex, String blahIndexDir, String commentIndexDir,
                        String batchSize, String batchDelay, int maxOpensOrViewsPerUpdate,
                        Integer returnedObjectLimit) {
-        this.doIndex = (doIndex == Boolean.TRUE);
-        this.blahIndexDir = new File(blahIndexDir);
-        this.commentIndexDir = new File(commentIndexDir);
-        this.batchSize = Integer.parseInt(batchSize);
-        this.batchDelay = Long.parseLong(batchDelay);
-        this.maxOpensOrViewsPerUpdate = maxOpensOrViewsPerUpdate;
-        this.returnedObjectLimit = returnedObjectLimit;
+        _doIndex = (doIndex == Boolean.TRUE);
+        _blahIndexDir = new File(blahIndexDir);
+        _commentIndexDir = new File(commentIndexDir);
+        _batchSize = Integer.parseInt(batchSize);
+        _batchDelay = Long.parseLong(batchDelay);
+        _maxOpensOrViewsPerUpdate = maxOpensOrViewsPerUpdate;
+        _returnedObjectLimit = returnedObjectLimit;
         try {
-            this.inboxHandler = new InboxHandler();
+            _inboxHandler = new InboxHandler();
         } catch (SystemErrorException e) {
             throw new WebServiceException(e);
         }
         BlahManager.singleton = this;
-        this.state = ManagerState.INITIALIZED;
+        _state = ManagerState.INITIALIZED;
 
         if (doIndex) {
             System.out.println("*** BlahManager Initializing ***");
-            ensureIndex(this.blahIndexDir);
-            ensureIndex(this.commentIndexDir);
-            System.out.println("*** BlahManager Blah Index: " + this.blahIndexDir.getAbsolutePath() + " ***");
-            System.out.println("*** BlahManager Comment Index: " + this.commentIndexDir.getAbsolutePath() + " ***");
+            ensureIndex(_blahIndexDir);
+            ensureIndex(_commentIndexDir);
+            System.out.println("*** BlahManager Blah Index: " + _blahIndexDir.getAbsolutePath() + " ***");
+            System.out.println("*** BlahManager Comment Index: " + _commentIndexDir.getAbsolutePath() + " ***");
         } else {
             System.out.println("*** BlahManager search disabled ***");
         }
@@ -135,7 +135,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     public boolean doIndex() {
-        return doIndex;
+        return _doIndex;
     }
 
     private void ensureIndex(File indexDir) {
@@ -154,11 +154,11 @@ public final class BlahManager implements ManagerInterface {
 
     public void start() {
         try {
-            storeManager = MongoStoreManager.getInstance();
-            trackingManager = TrackingManager.getInstance();
-            userManager = UserManager.getInstance();
-            groupManager = GroupManager.getInstance();
-            trackingMgr = TrackingMgr.getInstance();
+            _storeManager = MongoStoreManager.getInstance();
+            _trackingManager = TrackingManager.getInstance();
+            _userManager = UserManager.getInstance();
+            _groupManager = GroupManager.getInstance();
+            _trackingMgr = TrackingMgr.getInstance();
 
             if (doIndex()) {
                 initializeBlahIndex();
@@ -166,7 +166,7 @@ public final class BlahManager implements ManagerInterface {
 
             refreshBlahTypesCache();
 
-            this.state = ManagerState.STARTED;
+            _state = ManagerState.STARTED;
             System.out.println("*** BlahManager started ***");
 
         } catch (Exception e) {
@@ -176,15 +176,15 @@ public final class BlahManager implements ManagerInterface {
 
     public void shutdown() {
         if (doIndex()) {
-            blahIndexingSystem.shutdown();
-            commentIndexingSystem.shutdown();
+            _blahIndexingSystem.shutdown();
+            _commentIndexingSystem.shutdown();
         }
-        this.state = ManagerState.SHUTDOWN;
+        _state = ManagerState.SHUTDOWN;
         System.out.println("*** BlahManager shut down ***");
     }
 
     public ManagerState getState() {
-        return this.state;
+        return _state;
     }
 
 
@@ -275,17 +275,17 @@ public final class BlahManager implements ManagerInterface {
         updateGroupBlahCount(groupId, true);
 
         // Add to inboxes
-        inboxHandler.spreadBlahToRecents(LocaleId.en_us, blahDAO, groupId);
+        _inboxHandler.spreadBlahToRecents(LocaleId.en_us, blahDAO, groupId);
 
         // Track it
         trackBlah(authorId, blahDAO);
 
-//        final TrackerDAO tracker = storeManager.createTracker(TrackerOperation.CREATE_BLAH);
+//        final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.CREATE_BLAH);
 //        tracker.setBlahId(blahDAO.getId());
 //        tracker.setUserId(authorId);
 //        tracker.setBlahAuthorId(authorId);
 //        tracker.setGroupId(groupId);
-//        trackingManager.track(LocaleId.en_us, tracker);
+//        _trackingManager.track(LocaleId.en_us, tracker);
 
         if (doIndex()) {
             indexBlah(blahDAO);
@@ -314,7 +314,7 @@ public final class BlahManager implements ManagerInterface {
     private void verifyBadges(BlahPayload entity) throws SystemErrorException, InvalidRequestException {
         final List<String> badgeIds = entity.getBadgeIds();
         if (badgeIds != null && badgeIds.size() > 0) {
-            final BadgeDAO badge = storeManager.createBadge();
+            final BadgeDAO badge = _storeManager.createBadge();
             for (String badgeId : badgeIds) {
                 badge.setId(badgeId);
                 if (badge._count() == 0L) {
@@ -447,9 +447,9 @@ public final class BlahManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(typeId)) {
             throw new InvalidRequestException("missing typeId");
         }
-        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
+        synchronized (_blahTypeIdToBlahTypeEntryMapLock) {
             ensureBlahTypesCached();
-            return blahTypeIdToBlahTypeEntryMap.get(typeId) != null;
+            return _blahTypeIdToBlahTypeEntryMap.get(typeId) != null;
         }
     }
 
@@ -481,13 +481,13 @@ public final class BlahManager implements ManagerInterface {
         }
         blahDAO.addPollOptionVote_immediate(pollOptionIndex);
 
-        userBlahInfoData.dao.setPollVoteIndex(pollOptionIndex);
-        userBlahInfoData.dao.setPollVoteTimestamp(new Date());
-        if (userBlahInfoData.exists) {
-            userBlahInfoData.dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        userBlahInfoData._dao.setPollVoteIndex(pollOptionIndex);
+        userBlahInfoData._dao.setPollVoteTimestamp(new Date());
+        if (userBlahInfoData._exists) {
+            userBlahInfoData._dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
-            userBlahInfoData.dao.setAuthorId(blahDAO.getAuthorId());
-            userBlahInfoData.dao._insert();
+            userBlahInfoData._dao.setAuthorId(blahDAO.getAuthorId());
+            userBlahInfoData._dao._insert();
         }
 
         getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
@@ -508,7 +508,7 @@ public final class BlahManager implements ManagerInterface {
         if (predictionVote == null) {
             throw new InvalidRequestException("missing or invalid vote", ErrorCodes.INVALID_INPUT);
         }
-        final BlahDAO blahDAO = (BlahDAO) storeManager.createBlah(blahId)._findByPrimaryId(BlahDAO.EXPIRATION_DATE, BlahDAO.TYPE_ID, BlahDAO.AUTHOR_ID);
+        final BlahDAO blahDAO = (BlahDAO) _storeManager.createBlah(blahId)._findByPrimaryId(BlahDAO.EXPIRATION_DATE, BlahDAO.TYPE_ID, BlahDAO.AUTHOR_ID);
         if (blahDAO == null) {
             throw new InvalidRequestException("invalid blah id", ErrorCodes.INVALID_INPUT);
         }
@@ -524,7 +524,7 @@ public final class BlahManager implements ManagerInterface {
 
         final UserBlahInfoData userBlahInfoData = ensurePredictionConsistent(userId, blahId, preExpirationVote, expirationDate);
 
-        final BlahDAO updateBlahDAO = storeManager.createBlah(blahId);
+        final BlahDAO updateBlahDAO = _storeManager.createBlah(blahId);
 
         switch (predictionVote) {
             case YES:
@@ -554,18 +554,18 @@ public final class BlahManager implements ManagerInterface {
 
         // Update Blah dao
         if (preExpirationVote) {
-            userBlahInfoData.dao.setPredictionVote(vote);
+            userBlahInfoData._dao.setPredictionVote(vote);
         } else {
-            userBlahInfoData.dao.setPredictionResultVote(vote);
+            userBlahInfoData._dao.setPredictionResultVote(vote);
         }
         updateBlahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         // Update blah user info dao
-        if (userBlahInfoData.exists) {
-            userBlahInfoData.dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        if (userBlahInfoData._exists) {
+            userBlahInfoData._dao._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
-            userBlahInfoData.dao.setAuthorId(blahDAO.getAuthorId());
-            userBlahInfoData.dao._insert();
+            userBlahInfoData._dao.setAuthorId(blahDAO.getAuthorId());
+            userBlahInfoData._dao._insert();
         }
     }
 
@@ -580,7 +580,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // Check whether user already voted
-        final UserBlahInfoDAO userBlahInfoDAO = storeManager.createUserBlahInfo(userId, blahId);
+        final UserBlahInfoDAO userBlahInfoDAO = _storeManager.createUserBlahInfo(userId, blahId);
         final String[] fieldsToReturnHint = {preExpirationVote ? UserBlahInfoDAO.PREDICTION_VOTE : UserBlahInfoDAO.PREDICTION_RESULT_VOTE};
         final UserBlahInfoDAO dao = (UserBlahInfoDAO) userBlahInfoDAO._findByCompositeId(fieldsToReturnHint, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
         if (dao != null) {
@@ -637,10 +637,10 @@ public final class BlahManager implements ManagerInterface {
      */
     private boolean isBlahTypeCategory(String blahTypeId, BlahTypeCategoryType categoryType) {
         BlahTypeEntry entry = null;
-        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
-            entry = blahTypeIdToBlahTypeEntryMap.get(blahTypeId);
+        synchronized (_blahTypeIdToBlahTypeEntryMapLock) {
+            entry = _blahTypeIdToBlahTypeEntryMap.get(blahTypeId);
         }
-        return (entry != null && entry.categoryType == categoryType);
+        return (entry != null && entry._categoryType == categoryType);
     }
 
     /**
@@ -682,29 +682,29 @@ public final class BlahManager implements ManagerInterface {
 
 
     private StoreManager getStoreManager() {
-        return storeManager;
+        return _storeManager;
     }
 
     private TrackingManager getTrackingManager() {
-        return trackingManager;
+        return _trackingManager;
     }
 
     private UserManager getUserManager() {
-        return userManager;
+        return _userManager;
     }
 
     private class UserBlahInfoData {
-        private final UserBlahInfoDAO dao;
-        private final boolean exists;
+        private final UserBlahInfoDAO _dao;
+        private final boolean _exists;
 
         UserBlahInfoData(UserBlahInfoDAO dao, boolean exists) {
-            this.dao = dao;
-            this.exists = exists;
+            _dao = dao;
+            _exists = exists;
         }
     }
 
     /**
-     * Throws a state exception if the user already voted in this poll.
+     * Throws a _state exception if the user already voted in this poll.
      *
      * @param blahId The blah id (a poll blah)
      * @param userId The user id
@@ -732,7 +732,7 @@ public final class BlahManager implements ManagerInterface {
      */
     public void updateBlahViewsOrOpensByAnonymousUser(LocaleId en_us, BlahPayload entity, String blahId) throws InvalidRequestException, SystemErrorException {
         ensureReady();
-        final long maxViewIncrements = maxOpensOrViewsPerUpdate;
+        final long maxViewIncrements = _maxOpensOrViewsPerUpdate;
         final Long viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0L, maxViewIncrements, entity);
         final Long openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0L, maxViewIncrements, entity);
         if (viewCount == 0L && openCount == 0L) {
@@ -751,7 +751,7 @@ public final class BlahManager implements ManagerInterface {
         }
         blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
-        trackingMgr.trackBlahUpdate(blahId, null, null, viewCount, openCount, null);
+        _trackingMgr.trackBlahUpdate(blahId, null, null, viewCount, openCount, null);
     }
 
     /**
@@ -781,7 +781,7 @@ public final class BlahManager implements ManagerInterface {
 
         final Long promotionOrDemotion = CommonUtilities.checkDiscreteValue(entity.getUserPromotion(), entity);
 
-        final long maxViewIncrements = maxOpensOrViewsPerUpdate;
+        final long maxViewIncrements = _maxOpensOrViewsPerUpdate;
         final Long viewCount = CommonUtilities.checkValueRange(entity.getViews(), 0L, maxViewIncrements, entity);
         final Long openCount = CommonUtilities.checkValueRange(entity.getOpens(), 0L, maxViewIncrements, entity);
         if (promotionOrDemotion == 0L && viewCount == 0L && openCount == 0L) {
@@ -970,8 +970,8 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private Integer ensureCount(Integer count) {
-        if (count == null || count > returnedObjectLimit) {
-            count = returnedObjectLimit;
+        if (count == null || count > _returnedObjectLimit) {
+            count = _returnedObjectLimit;
         }
         return count;
     }
@@ -996,18 +996,18 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private void ensureBlahTypesCached() throws SystemErrorException {
-        if (((lastTimeBlahTypesCached - System.currentTimeMillis()) > TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS)) {
+        if (((_lastTimeBlahTypesCached - System.currentTimeMillis()) > TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS)) {
             refreshBlahTypesCache();
         }
     }
 
     private class BlahTypeEntry {
-        private final BlahTypeDAO blahTypeDAO;
-        private final BlahTypeCategoryType categoryType;
+        private final BlahTypeDAO _blahTypeDAO;
+        private final BlahTypeCategoryType _categoryType;
 
         BlahTypeEntry(BlahTypeDAO blahTypeDAO, BlahTypeCategoryType categoryType) {
-            this.blahTypeDAO = blahTypeDAO;
-            this.categoryType = categoryType;
+            _blahTypeDAO = blahTypeDAO;
+            _categoryType = categoryType;
         }
     }
 
@@ -1024,19 +1024,19 @@ public final class BlahManager implements ManagerInterface {
             }
             map.put(dao.getId(), new BlahTypeEntry(dao, categoryId));
         }
-        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
-            blahTypeIdToBlahTypeEntryMap = map;
-            lastTimeBlahTypesCached = System.currentTimeMillis();
+        synchronized (_blahTypeIdToBlahTypeEntryMapLock) {
+            _blahTypeIdToBlahTypeEntryMap = map;
+            _lastTimeBlahTypesCached = System.currentTimeMillis();
         }
         System.out.println(new Date() + ": Blah type cache refreshed");
     }
 
     public List<BlahTypePayload> getBlahTypes() throws SystemErrorException {
         ensureReady();
-        synchronized (blahTypeIdToBlahTypeEntryMapLock) {
-            final List<BlahTypePayload> bt = new ArrayList<BlahTypePayload>(blahTypeIdToBlahTypeEntryMap.size());
-            for (BlahTypeEntry entry : blahTypeIdToBlahTypeEntryMap.values()) {
-                bt.add(new BlahTypePayload(entry.blahTypeDAO.toMap()));
+        synchronized (_blahTypeIdToBlahTypeEntryMapLock) {
+            final List<BlahTypePayload> bt = new ArrayList<BlahTypePayload>(_blahTypeIdToBlahTypeEntryMap.size());
+            for (BlahTypeEntry entry : _blahTypeIdToBlahTypeEntryMap.values()) {
+                bt.add(new BlahTypePayload(entry._blahTypeDAO.toMap()));
             }
             return bt;
         }
@@ -1334,8 +1334,8 @@ public final class BlahManager implements ManagerInterface {
 
         final Long voteForComment = CommonUtilities.checkDiscreteValue(entity.getCommentVotes(), entity);
         final boolean didVoteForComment = (voteForComment != 0L);
-        final Long views = CommonUtilities.checkValueRange(entity.getViews(), 0L, maxOpensOrViewsPerUpdate, entity);
-        final Long opens = CommonUtilities.checkValueRange(entity.getOpens(), 0L, maxOpensOrViewsPerUpdate, entity);
+        final Long views = CommonUtilities.checkValueRange(entity.getViews(), 0L, _maxOpensOrViewsPerUpdate, entity);
+        final Long opens = CommonUtilities.checkValueRange(entity.getOpens(), 0L, _maxOpensOrViewsPerUpdate, entity);
         if (!didVoteForComment &&
                 (views == 0L) &&
                 (opens == 0L)) {
@@ -1437,7 +1437,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // TODO expensive! Use local cache with somewhat short expiration date
-        CommonUtilities.maybeAddUserNickname(storeManager, authenticated, commentDAO.getAuthorId(), entity);
+        CommonUtilities.maybeAddUserNickname(_storeManager, authenticated, commentDAO.getAuthorId(), entity);
 
         return entity;
     }
@@ -1516,7 +1516,7 @@ public final class BlahManager implements ManagerInterface {
         for (CommentDAO dao : commentDAOs) {
             final CommentPayload commentPayload = new CommentPayload(dao);
             // TODO expensive! see WRS-252
-            CommonUtilities.maybeAddUserNickname(storeManager, authenticated, dao.getAuthorId(), commentPayload);
+            CommonUtilities.maybeAddUserNickname(_storeManager, authenticated, dao.getAuthorId(), commentPayload);
             comments.add(commentPayload);
         }
         if (!CommonUtilities.isEmptyString(userId)) {
@@ -1540,7 +1540,7 @@ public final class BlahManager implements ManagerInterface {
 
         final Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId) : null;
 
-        final InboxData inbox = inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber);
+        final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber);
 
         BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
 
@@ -1558,7 +1558,7 @@ public final class BlahManager implements ManagerInterface {
 
         checkGroupAccess(request, groupId);
 
-        final InboxData inbox = inboxHandler.getRecentsInbox(groupId);
+        final InboxData inbox = _inboxHandler.getRecentsInbox(groupId);
 
         if (inbox.getInboxItems().size() == 0) {
             logger.warning("Got no recent inbox items for groupId '" + groupId + "'");
@@ -1607,10 +1607,10 @@ public final class BlahManager implements ManagerInterface {
     private void checkGroupAccess(HttpServletRequest request, String groupId) throws SystemErrorException, InvalidAuthorizedStateException, ResourceNotFoundException, StateConflictException {
 
         // TODO cache static group info
-        if (!storeManager.createGroup(groupId)._exists()) {
+        if (!_storeManager.createGroup(groupId)._exists()) {
             throw new ResourceNotFoundException("Group id '" + groupId + "' does not exist");
         }
-        final boolean isOpenGroup = groupManager.isOpenGroup(groupId);
+        final boolean isOpenGroup = _groupManager.isOpenGroup(groupId);
 
         if (!isOpenGroup) {
             String userId = BlahguaSession.ensureAuthenticated(request, true);
@@ -1625,7 +1625,7 @@ public final class BlahManager implements ManagerInterface {
     }
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
@@ -1643,9 +1643,9 @@ public final class BlahManager implements ManagerInterface {
         if (doIndex()) {
             final IndexReaderDecorator<BlahguaFilterIndexReader> decorator = new BlahguaIndexReaderDecorator();
             final ZoieConfig config = makeIndexConfiguration();
-            System.out.println("Creating Zoie index in directory " + commentIndexDir.getAbsolutePath());
-            this.commentIndexingSystem = new ZoieSystem<BlahguaFilterIndexReader, CommentDAO>(new DefaultDirectoryManager(commentIndexDir), new BlahCommentDataIndexableInterpreter(), decorator, config);
-            commentIndexingSystem.start(); // ready to accept indexing events
+            System.out.println("Creating Zoie index in directory " + _commentIndexDir.getAbsolutePath());
+            _commentIndexingSystem = new ZoieSystem<BlahguaFilterIndexReader, CommentDAO>(new DefaultDirectoryManager(_commentIndexDir), new BlahCommentDataIndexableInterpreter(), decorator, config);
+            _commentIndexingSystem.start(); // ready to accept indexing events
         }
     }
 
@@ -1653,9 +1653,9 @@ public final class BlahManager implements ManagerInterface {
         if (doIndex()) {
             final IndexReaderDecorator<BlahguaFilterIndexReader> decorator = new BlahguaIndexReaderDecorator();
             final ZoieConfig config = makeIndexConfiguration();
-            System.out.println("Creating Zoie index in directory " + blahIndexDir.getAbsolutePath());
-            this.blahIndexingSystem = new ZoieSystem<BlahguaFilterIndexReader, BlahDAO>(new DefaultDirectoryManager(blahIndexDir), new BlahDataIndexableInterpreter(), decorator, config);
-            blahIndexingSystem.start(); // ready to accept indexing events
+            System.out.println("Creating Zoie index in directory " + _blahIndexDir.getAbsolutePath());
+            _blahIndexingSystem = new ZoieSystem<BlahguaFilterIndexReader, BlahDAO>(new DefaultDirectoryManager(_blahIndexDir), new BlahDataIndexableInterpreter(), decorator, config);
+            _blahIndexingSystem.start(); // ready to accept indexing events
         }
     }
 
@@ -1664,8 +1664,8 @@ public final class BlahManager implements ManagerInterface {
         final ZoieConfig config = new ZoieConfig();
         config.setAnalyzer(new StandardAnalyzer(Version.LUCENE_35));
         config.setSimilarity(new DefaultSimilarity());
-        config.setBatchSize(batchSize);
-        config.setBatchDelay(batchDelay);
+        config.setBatchSize(_batchSize);
+        config.setBatchDelay(_batchDelay);
         config.setRtIndexing(true); // real-time indexing
         return config;
     }
@@ -1695,7 +1695,7 @@ public final class BlahManager implements ManagerInterface {
             final List<DataEvent<BlahDAO>> events = new ArrayList<DataEvent<BlahDAO>>(1);
             events.add(event);
             try {
-                this.blahIndexingSystem.consume(events);
+                _blahIndexingSystem.consume(events);
             } catch (ZoieException e) {
                 throw new SystemErrorException("Indexing error", e, ErrorCodes.SERVER_INDEXING_ERROR);
             }
@@ -1740,7 +1740,7 @@ public final class BlahManager implements ManagerInterface {
             final List<DataEvent<CommentDAO>> events = new ArrayList<DataEvent<CommentDAO>>(1);
             events.add(event);
             try {
-                this.commentIndexingSystem.consume(events);
+                _commentIndexingSystem.consume(events);
             } catch (ZoieException e) {
                 throw new SystemErrorException("indexing error", e, ErrorCodes.SERVER_INDEXING_ERROR);
             }
@@ -1768,7 +1768,7 @@ public final class BlahManager implements ManagerInterface {
 //        if (CommonUtilities.isEmptyString(commentId)) {
 //            throw new SystemErrorException("missing comment id in " + this, ErrorCodes.SERVER_INDEXING_ERROR);
 //        }
-//        final CommentDAO comment = storeManager.createComment(commentId);
+//        final CommentDAO comment = _storeManager.createComment(commentId);
 //        comment.setDeleted(Boolean.TRUE);
 //        indexComment(comment);
 //    }
@@ -1843,7 +1843,7 @@ public final class BlahManager implements ManagerInterface {
         List<ZoieIndexReader<BlahguaFilterIndexReader>> readerList = null;
         ZoieSystem<BlahguaFilterIndexReader, ?> indexingSystem = null;
         try {
-            indexingSystem = searchBlahs ? blahIndexingSystem : commentIndexingSystem;
+            indexingSystem = searchBlahs ? _blahIndexingSystem : _commentIndexingSystem;
 
             if (CommonUtilities.isEmptyString(query)) {
                 return getFromIndex(maxResults, indexingSystem, searchBlahs);
@@ -1984,7 +1984,7 @@ public final class BlahManager implements ManagerInterface {
         List<ZoieIndexReader<BlahguaFilterIndexReader>> readerList = null;
         ZoieSystem<BlahguaFilterIndexReader, ?> system = null;
         try {
-            system = isBlahIndex ? this.blahIndexingSystem : this.commentIndexingSystem;
+            system = isBlahIndex ? _blahIndexingSystem : _commentIndexingSystem;
 
             // get the IndexReaders
             readerList = system.getIndexReaders();
@@ -2040,7 +2040,7 @@ public final class BlahManager implements ManagerInterface {
 //        checkGroupAccess(request, groupId);
 //
 //        // Cycle through inboxes
-//        final Integer maxInbox = inboxHandler.getMaxInbox(groupId);
+//        final Integer maxInbox = _inboxHandler.getMaxInbox(groupId);
 //        final Integer unknown = -1;
 //        if (maxInbox == unknown) {
 //            // we don't know the max: attempt to get the first inbox (getting an inbox from the inbox cache retrieves the max, if any)
@@ -2054,7 +2054,7 @@ public final class BlahManager implements ManagerInterface {
 //                }
 //            }
 //        }
-//        final Inbox inbox = inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
+//        final Inbox inbox = _inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
 //
 //        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
 //

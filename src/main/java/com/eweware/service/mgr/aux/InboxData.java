@@ -9,23 +9,23 @@ import java.util.Map;
  */
 public class InboxData {
 
-    private final Integer inboxNumber;
-    private final List<Map<String, Object>> inboxItems;
+    private final Integer _inboxNumber;
+    private final List<Map<String, Object>> _inboxItems;
 
     public InboxData(List<Map<String, Object>> inboxItems) {
         this(-1, inboxItems);
     }
 
     public InboxData(Integer inboxNumber, List<Map<String, Object>> inboxItems) {
-        this.inboxNumber = inboxNumber;
-        this.inboxItems = inboxItems;
+        _inboxNumber = inboxNumber;
+        _inboxItems = inboxItems;
     }
 
     public Integer getInboxNumber() {
-        return inboxNumber;
+        return _inboxNumber;
     }
 
     public List<Map<String, Object>> getInboxItems() {
-        return inboxItems;
+        return _inboxItems;
     }
 }

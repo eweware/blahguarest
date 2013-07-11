@@ -19,10 +19,12 @@ public final class MediaManager implements ManagerInterface {
 
 	private static MediaManager singleton;
 
-    private final String imagePathname;
-    private final String bucketImageDir;
-    private final String bucketOriginalDir;
-    private String imageBucketName;
+    private final String _imagePathname;
+    private final String _bucketImageDir;
+    private final String _bucketOriginalDir;
+    private final String _imageBucketName;
+    private ManagerState _state = ManagerState.UNKNOWN;
+
 
 	public static MediaManager getInstance() throws SystemErrorException {
 		if (MediaManager.singleton == null) {
@@ -30,9 +32,7 @@ public final class MediaManager implements ManagerInterface {
 		}
 		return singleton;
 	}
-	
-	private ManagerState state = ManagerState.UNKNOWN;
-	private GridFS gridFS;
+//	private GridFS _gridFS;
 	
 	public MediaManager(
             String imagePathname,
@@ -40,16 +40,16 @@ public final class MediaManager implements ManagerInterface {
             String imagesDir,
             String originalsDir) {
         MediaManager.singleton = this;
-        this.imagePathname = imagePathname;
-        this.bucketImageDir = imagesDir;
-        this.bucketOriginalDir = originalsDir;
-        this.imageBucketName = imageBucketName;
-        this.state = ManagerState.INITIALIZED;
+        _imagePathname = imagePathname;
+        _bucketImageDir = imagesDir;
+        _bucketOriginalDir = originalsDir;
+        _imageBucketName = imageBucketName;
+        _state = ManagerState.INITIALIZED;
         System.out.println("*** MediaManager initialized ***");
     }
 
     public ManagerState getState() {
-		return state;
+		return _state;
 	}
 
     /**
@@ -58,7 +58,7 @@ public final class MediaManager implements ManagerInterface {
      */
     public String getImagePathname() throws SystemErrorException {
         ensureReady();
-        return imagePathname;
+        return _imagePathname;
     }
 
     /**
@@ -66,7 +66,7 @@ public final class MediaManager implements ManagerInterface {
      */
     public String getBucketImageDir() throws SystemErrorException {
         ensureReady();
-        return bucketImageDir;
+        return _bucketImageDir;
     }
 
     /**
@@ -74,7 +74,7 @@ public final class MediaManager implements ManagerInterface {
      */
     public String getBucketOriginalDir() throws SystemErrorException {
         ensureReady();
-        return bucketOriginalDir;
+        return _bucketOriginalDir;
     }
 
     /**
@@ -82,25 +82,25 @@ public final class MediaManager implements ManagerInterface {
      * // TODO we'll need to shard these eventually
      */
     public String getImageBucketName() {
-        return imageBucketName;
+        return _imageBucketName;
     }
 
     public void start() {
 //        try {
-//            this.gridFS = new GridFS(((MongoStoreManager) MongoStoreManager.getInstance()).getMediaDb());
+//            gridFS = new GridFS(((MongoStoreManager) MongoStoreManager.getInstance()).getMediaDb());
 //        } catch (SystemErrorException e) {
 //            throw new WebServiceException(e);
 //        }
 //        System.out.println("*** MediaManager starting ***");
-        this.state = ManagerState.STARTED;
-        System.out.println("Images Bucket=" + imageBucketName);
-        System.out.println("Formatted Images Pathname=" + imagePathname);
-        System.out.println("Original Images Pathname=" + bucketOriginalDir);
+        _state = ManagerState.STARTED;
+        System.out.println("Images Bucket=" + _imageBucketName);
+        System.out.println("Formatted Images Pathname=" + _imagePathname);
+        System.out.println("Original Images Pathname=" + _bucketOriginalDir);
         System.out.println("*** MediaManager started ***");
     }
 
     public void shutdown() {
-        this.state = ManagerState.SHUTDOWN;
+        _state = ManagerState.SHUTDOWN;
         System.out.println("*** MediaManager shut down  ***");
     }
 
@@ -117,7 +117,7 @@ public final class MediaManager implements ManagerInterface {
     }
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }

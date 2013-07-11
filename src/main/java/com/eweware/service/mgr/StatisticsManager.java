@@ -24,10 +24,11 @@ import java.util.List;
 public class StatisticsManager implements ManagerInterface {
 
     private static StatisticsManager singleton;
-    private ManagerState state = ManagerState.UNKNOWN;
-    private MongoStoreManager storeManager;
-    private BlahManager blahManager;
-    private DBCollection demoCollection;
+
+    private ManagerState _state = ManagerState.UNKNOWN;
+    private MongoStoreManager _storeManager;
+    private BlahManager _blahManager;
+    private DBCollection _demoCollection;
 
     public static StatisticsManager getInstance() throws SystemErrorException {
         if (StatisticsManager.singleton == null) {
@@ -38,17 +39,17 @@ public class StatisticsManager implements ManagerInterface {
 
     public StatisticsManager() {
         StatisticsManager.singleton = this;
-        this.state = ManagerState.INITIALIZED;
+        _state = ManagerState.INITIALIZED;
         System.out.println("*** StatisticsManager initialized ***");
     }
 
     @Override
     public void start() {
         try {
-            storeManager = MongoStoreManager.getInstance();
-            blahManager = BlahManager.getInstance();
-            this.demoCollection = storeManager.getCollection(storeManager.getDemographicsCollectionName());
-            this.state = ManagerState.STARTED;
+            _storeManager = MongoStoreManager.getInstance();
+            _blahManager = BlahManager.getInstance();
+            _demoCollection = _storeManager.getCollection(_storeManager.getDemographicsCollectionName());
+            _state = ManagerState.STARTED;
             System.out.println("*** StatisticsManager started ***");
         } catch (Exception e) {
             throw new WebServiceException(e);
@@ -57,7 +58,7 @@ public class StatisticsManager implements ManagerInterface {
 
     @Override
     public void shutdown() {
-        this.state = ManagerState.SHUTDOWN;
+        _state = ManagerState.SHUTDOWN;
         System.out.println("*** StatisticsManager shut down ***");
     }
 
@@ -89,7 +90,7 @@ public class StatisticsManager implements ManagerInterface {
         }
         final BasicDBObject clause = new BasicDBObject("$in", ids);
         final DBObject query = new BasicDBObject(BaseDAO.ID, clause);
-        final DBCursor cursor = demoCollection.find(query);
+        final DBCursor cursor = _demoCollection.find(query);
         final Object[] demos = new Object[cursor.count()];
         int i = 0;
         for (DBObject rec : cursor) {
@@ -108,7 +109,7 @@ public class StatisticsManager implements ManagerInterface {
 
     public Object getBlahTypeDemographics() throws SystemErrorException {
         ensureReady();
-        final List<BlahTypePayload> types = blahManager.getBlahTypes(); // TODO right now, it can dynamically change so it can't be cached
+        final List<BlahTypePayload> types = _blahManager.getBlahTypes(); // TODO right now, it can dynamically change so it can't be cached
         final String[] ids = new String[types.size()];
         int i = 0;
         for (BlahTypePayload bt : types) {
@@ -118,7 +119,7 @@ public class StatisticsManager implements ManagerInterface {
     }
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }

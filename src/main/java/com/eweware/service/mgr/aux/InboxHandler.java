@@ -5,7 +5,6 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.GroupPayload;
 import main.java.com.eweware.service.base.store.dao.*;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.GroupManager;
@@ -35,13 +34,13 @@ public class InboxHandler extends Thread {
     private static final int INBOX_ITEM_SIZE_IN_BYTES = 2048;
     private static final BasicDBObject REVERSED_NATURAL_SORT_ORDER = new BasicDBObject("$natural", -1);
 
-    private MongoStoreManager storeManager;
+    private MongoStoreManager _storeManager;
     /**
      * Constructor initializes the store manager and a random seed.
      * @throws SystemErrorException
      */
     public InboxHandler() throws SystemErrorException {
-        this.storeManager = MongoStoreManager.getInstance();
+        _storeManager = MongoStoreManager.getInstance();
 //        this.random = new Random();
     }
 
@@ -59,7 +58,7 @@ public class InboxHandler extends Thread {
      */
     public void spreadBlahToRecents(LocaleId localeId, BlahDAO blahDAO, String groupId) throws SystemErrorException {
 
-        // TODO need a static method in baselib for the inbox blah creation so that it's shared with stats app, see stats InboxBuilder.buildInboxes()
+        // TODO need a static method in baselib for the inbox item creation so that it's shared with stats app, see stats InboxBuilder.buildInboxes()
 
         final DBObject dao = new BasicDBObject(UserBlahInfoDAOConstants.BLAH_ID, blahDAO.getId());
         dao.put(BaseDAOConstants.CREATED, blahDAO.getCreated());
@@ -68,7 +67,6 @@ public class InboxHandler extends Thread {
         dao.put(InboxBlahDAOConstants.GROUP_ID, groupId);
         dao.put(InboxBlahDAOConstants.AUTHOR_ID, blahDAO.getAuthorId());
         dao.put(InboxBlahDAOConstants.TYPE, blahDAO.getTypeId());
-
 
         Long tmp = blahDAO.getPromotedCount();
         if (tmp != null) {
@@ -94,7 +92,7 @@ public class InboxHandler extends Thread {
         if (tmpList != null && tmpList.size() > 0) {
             dao.put(InboxBlahDAOConstants.IMAGE_IDS, "b");
         }
-        final String nickname = CommonUtilities.maybeGetUserNickname(storeManager, false, blahDAO.getAuthorId());
+        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
         if (nickname != null) {
             dao.put(InboxBlahDAOConstants.AUTHOR_NICKNAME, nickname);
         }
@@ -104,11 +102,11 @@ public class InboxHandler extends Thread {
         // Insert into db after state has been successfully updated
 //        final GroupPayload group = GroupManager.getInstance().getCachedGroup(groupId);
 //        final String inboxName = group.randomInboxCollectionName();
-//        final DBCollection inboxCollection = storeManager.getBlahDb().getCollection(inboxName);
+//        final DBCollection inboxCollection = _storeManager.getBlahDb().getCollection(inboxName);
 
 
         final String inboxCollectionName = CommonUtilities.makeRecentsInboxCollectionName(groupId);
-        final DBCollection inboxCollection = getRecentsInboxCollection(storeManager.getInboxDB(), inboxCollectionName);
+        final DBCollection inboxCollection = getRecentsInboxCollection(_storeManager.getInboxDB(), inboxCollectionName);
 
         inboxCollection.insert(dao); // This is a capped and circular collection
     }
@@ -191,7 +189,7 @@ public class InboxHandler extends Thread {
      * @return  Returns the inbox items or an empty list if there are no items.
      */
     private List<Map<String, Object>> getInboxItems(String collectionName, boolean recents) {
-        final DBCollection col = storeManager.getInboxDB().getCollection(collectionName);
+        final DBCollection col = _storeManager.getInboxDB().getCollection(collectionName);
         final DBCursor daos = recents ? col.find().sort(REVERSED_NATURAL_SORT_ORDER) : col.find();
         final List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
         for (DBObject dao : daos) {
@@ -289,7 +287,7 @@ public class InboxHandler extends Thread {
 //
 //        // TODO need a static method in baselib for the inbox blah creation so that it's shared with stats app, see stats InboxBuilder.buildInboxes()
 //
-//        InboxBlahDAO dao = storeManager.createInboxBlah();
+//        InboxBlahDAO dao = _storeManager.createInboxBlah();
 //        dao.initToDefaultValues(localeId);
 //
 //        dao.setBlahId(blahDAO.getId());
@@ -309,7 +307,7 @@ public class InboxHandler extends Thread {
 //        if (tmpList != null) {dao.setImageIds(tmpList);}
 //        tmpList = blahDAO.getBadgeIds();
 //        if (tmpList != null && tmpList.size() != 0) {dao.setBadgeIndicator("b");}
-//        final String nickname = CommonUtilities.maybeGetUserNickname(storeManager, false, blahDAO.getAuthorId());
+//        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
 //        if (nickname != null) {dao.setAuthorNickname(nickname);}
 //
 //        // TODO Speculative for now: put new ones in the 85 percentile
@@ -355,7 +353,7 @@ public class InboxHandler extends Thread {
 //        try {
 //            final String stateId = getBlahCache().makeInboxStateKey(groupId, inbox);
 //            final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
-//            final DBCollection stateCol = storeManager.getCollection(storeManager.getInboxStateCollectionName());
+//            final DBCollection stateCol = _storeManager.getCollection(_storeManager.getInboxStateCollectionName());
 //            final DBObject state = stateCol.findOne(query);
 //            if (state == null) {
 //                final DBObject insert = new BasicDBObject(BaseDAOConstants.ID, stateId);

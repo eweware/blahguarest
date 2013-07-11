@@ -56,10 +56,10 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     private static final Logger logger = Logger.getLogger(TrackingManager.class.getName());
 
-    private MongoStoreManager storeManager;
+    private MongoStoreManager _storeManager;
 
     private MongoStoreManager getStoreManager() {
-        return storeManager;
+        return _storeManager;
     }
 
     /**
@@ -116,29 +116,29 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     private static TrackingManager singleton;
 
-    private ManagerState state = ManagerState.UNKNOWN;
+    private ManagerState _state = ManagerState.UNKNOWN;
 
     // Tracks both comments and blahs:
-    private DBCollection blahTrackerCollection;
+    private DBCollection _blahTrackerCollection;
 
     // Tracks comments
-    private DBCollection commentTrackerCollection;
+    private DBCollection _commentTrackerCollection;
 
     // Tracks users for both comments and blahs:
-    private DBCollection userTrackerCollection;
+    private DBCollection _userTrackerCollection;
 
-    private DBCollection trackerCollection;
+    private DBCollection _trackerCollection;
 
-    private DBCollection userCollection;
+    private DBCollection _userCollection;
 
     public TrackingManager() {
         TrackingManager.singleton = this;
-        state = ManagerState.INITIALIZED;
+        _state = ManagerState.INITIALIZED;
         System.out.println("*** TrackingManager initialized ***");
     }
 
     public ManagerState getState() {
-        return state;
+        return _state;
     }
 
     public static TrackingManager getInstance() throws SystemErrorException {
@@ -786,27 +786,27 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     }
 
     private DBCollection getBlahTrackerCollection() {
-        return blahTrackerCollection;
+        return _blahTrackerCollection;
     }
 
     private DBCollection getCommentTrackerCollection() {
-        return commentTrackerCollection;
+        return _commentTrackerCollection;
     }
 
     private DBCollection getUserTrackerCollection() {
-        return userTrackerCollection;
+        return _userTrackerCollection;
     }
 
     private DBCollection getTrackerCollection() {
-        return trackerCollection;
+        return _trackerCollection;
     }
 
     private DBCollection getUserCollection() {
-        return userCollection;
+        return _userCollection;
     }
 
     private void ensureReady() throws SystemErrorException {
-        if (state != ManagerState.STARTED) {
+        if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
         }
     }
@@ -814,21 +814,21 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     public void start() {
         try {
             // TODO remove dependency on MongoStoreManager
-            this.storeManager = ((MongoStoreManager) MongoStoreManager.getInstance());
+            _storeManager = ((MongoStoreManager) MongoStoreManager.getInstance());
         } catch (SystemErrorException e) {
             throw new WebServiceException(e);
         }
-        userTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackUserCollectionName());
-        blahTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackBlahCollectionName());
-        commentTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackCommentCollectionName());
-        trackerCollection = getStoreManager().getCollection(getStoreManager().getTrackerCollectionName());
-        userCollection = getStoreManager().getCollection(getStoreManager().getUserCollectionName());
-        state = ManagerState.STARTED;
+        _userTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackUserCollectionName());
+        _blahTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackBlahCollectionName());
+        _commentTrackerCollection = getStoreManager().getCollection(getStoreManager().getTrackCommentCollectionName());
+        _trackerCollection = getStoreManager().getCollection(getStoreManager().getTrackerCollectionName());
+        _userCollection = getStoreManager().getCollection(getStoreManager().getUserCollectionName());
+        _state = ManagerState.STARTED;
         System.out.println("*** TrackingManager started ***");
     }
 
     public void shutdown() {
-        state = ManagerState.SHUTDOWN;
+        _state = ManagerState.SHUTDOWN;
         System.out.println("*** TrackingManager shutdown ***");
     }
 }
