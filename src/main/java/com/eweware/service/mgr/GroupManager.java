@@ -146,6 +146,7 @@ public final class GroupManager implements ManagerInterface {
             final Long duration = group.getLastInboxGeneratedDuration();
             if (duration != null) {  // adjust for the actual time it takes to generate inboxes
                 _cacheRefreshIntervalInMillis = Math.max(Math.round(duration * CACHE_REFRESH_INTERVAL_FACTOR), _cacheRefreshIntervalInMillis);
+                System.out.println("_cacheRefreshIntervalInMillis=" + _cacheRefreshIntervalInMillis);
             }
             _groupCacheMap.putIfAbsent(group.getId(), group);
             final String desc = group.getDescriptor();
