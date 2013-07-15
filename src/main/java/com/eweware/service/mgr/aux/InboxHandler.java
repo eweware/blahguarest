@@ -5,7 +5,10 @@ import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.error.ErrorCodes;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.*;
+import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
+import main.java.com.eweware.service.base.store.dao.BlahDAO;
+import main.java.com.eweware.service.base.store.dao.GroupDAO;
+import main.java.com.eweware.service.base.store.dao.InboxBlahDAOConstants;
 import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import main.java.com.eweware.service.mgr.GroupManager;
 
@@ -41,12 +44,7 @@ public class InboxHandler extends Thread {
      */
     public InboxHandler() throws SystemErrorException {
         _storeManager = MongoStoreManager.getInstance();
-//        this.random = new Random();
     }
-
-
-    // NEW METHODS ---------------------------------------------------------------------------------
-
 
     /**
      * <p>Spreads blah to the group's recents inbox.</p>
@@ -62,28 +60,27 @@ public class InboxHandler extends Thread {
 
         final DBObject dao = new BasicDBObject(InboxBlahDAOConstants.BLAH_ID, blahDAO.getId());
         dao.put(BaseDAOConstants.CREATED, blahDAO.getCreated());
-        dao.put(InboxBlahDAOConstants.BLAH_TEXT, blahDAO.getText());
+//        dao.put(InboxBlahDAOConstants.BLAH_TEXT, blahDAO.getText());
         dao.put(InboxBlahDAOConstants.TYPE, blahDAO.getTypeId());
-        dao.put(InboxBlahDAOConstants.GROUP_ID, groupId);
-        dao.put(InboxBlahDAOConstants.AUTHOR_ID, blahDAO.getAuthorId());
-        dao.put(InboxBlahDAOConstants.TYPE, blahDAO.getTypeId());
+//        dao.put(InboxBlahDAOConstants.GROUP_ID, groupId);
+//        dao.put(InboxBlahDAOConstants.AUTHOR_ID, blahDAO.getAuthorId());
 
-        Long tmp = blahDAO.getPromotedCount();
-        if (tmp != null) {
-            dao.put(InboxBlahDAOConstants.UP_VOTES, tmp);
-        }
-        tmp = blahDAO.getDemotedCount();
-        if (tmp != null) {
-            dao.put(InboxBlahDAOConstants.DOWN_VOTES, tmp);
-        }
-        tmp = blahDAO.getOpens();
-        if (tmp != null) {
-            dao.put(InboxBlahDAOConstants.OPENS, tmp);
-        }
-        tmp = blahDAO.getViews();
-        if (tmp != null) {
-            dao.put(InboxBlahDAOConstants.VIEWS, tmp);
-        }
+//        Long tmp = blahDAO.getPromotedCount();
+//        if (tmp != null) {
+//            dao.put(InboxBlahDAOConstants.UP_VOTES, tmp);
+//        }
+//        tmp = blahDAO.getDemotedCount();
+//        if (tmp != null) {
+//            dao.put(InboxBlahDAOConstants.DOWN_VOTES, tmp);
+//        }
+//        tmp = blahDAO.getOpens();
+//        if (tmp != null) {
+//            dao.put(InboxBlahDAOConstants.OPENS, tmp);
+//        }
+//        tmp = blahDAO.getViews();
+//        if (tmp != null) {
+//            dao.put(InboxBlahDAOConstants.VIEWS, tmp);
+//        }
         List<String> tmpList = blahDAO.getImageIds();
         if (tmpList != null && tmpList.size() > 0) {
             dao.put(InboxBlahDAOConstants.IMAGE_IDS, tmpList);
@@ -92,10 +89,10 @@ public class InboxHandler extends Thread {
         if (tmpList != null && tmpList.size() > 0) {
             dao.put(InboxBlahDAOConstants.IMAGE_IDS, "b");
         }
-        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
-        if (nickname != null) {
-            dao.put(InboxBlahDAOConstants.AUTHOR_NICKNAME, nickname);
-        }
+//        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
+//        if (nickname != null) {
+//            dao.put(InboxBlahDAOConstants.AUTHOR_NICKNAME, nickname);
+//        }
 
         dao.put(InboxBlahDAOConstants.BLAH_STRENGTH, 0.99D);
 
