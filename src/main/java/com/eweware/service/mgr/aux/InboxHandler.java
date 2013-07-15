@@ -60,7 +60,7 @@ public class InboxHandler extends Thread {
 
         final DBObject dao = new BasicDBObject(InboxBlahDAOConstants.BLAH_ID, blahDAO.getId());
         dao.put(BaseDAOConstants.CREATED, blahDAO.getCreated());
-//        dao.put(InboxBlahDAOConstants.BLAH_TEXT, blahDAO.getText());
+        dao.put(InboxBlahDAOConstants.BLAH_TEXT, blahDAO.getText());
         dao.put(InboxBlahDAOConstants.TYPE, blahDAO.getTypeId());
 //        dao.put(InboxBlahDAOConstants.GROUP_ID, groupId);
 //        dao.put(InboxBlahDAOConstants.AUTHOR_ID, blahDAO.getAuthorId());
@@ -87,7 +87,7 @@ public class InboxHandler extends Thread {
         }
         tmpList = blahDAO.getBadgeIds();
         if (tmpList != null && tmpList.size() > 0) {
-            dao.put(InboxBlahDAOConstants.IMAGE_IDS, "b");
+            dao.put(InboxBlahDAOConstants.BLAH_ID, "b");
         }
 //        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
 //        if (nickname != null) {
@@ -95,12 +95,6 @@ public class InboxHandler extends Thread {
 //        }
 
         dao.put(InboxBlahDAOConstants.BLAH_STRENGTH, 0.99D);
-
-        // Insert into db after state has been successfully updated
-//        final GroupPayload group = GroupManager.getInstance().getCachedGroup(groupId);
-//        final String inboxName = group.randomInboxCollectionName();
-//        final DBCollection inboxCollection = _storeManager.getBlahDb().getCollection(inboxName);
-
 
         final String inboxCollectionName = CommonUtilities.makeRecentsInboxCollectionName(groupId);
         final DBCollection inboxCollection = getRecentsInboxCollection(_storeManager.getInboxDB(), inboxCollectionName);
