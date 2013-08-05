@@ -71,6 +71,17 @@ public class UserManager implements ManagerInterface {
 
     private static UserManager singleton;
 
+    private static final int USER_PROFILE_CITY_LENGTH = 32;
+    private static final int USER_PROFILE_COUNTRY_LENGTH = 32;
+    private static final int USER_PROFILE_DOB_LENGTH = 32;
+    private static final int USER_PROFILE_GENDER_LENGTH = 10;
+    private static final int USER_PROFILE_GPS_LOCATION_LENGTH = 64;
+    private static final int USER_PROFILE_INCOME_LENGTH = 32;
+    private static final int USER_PROFILE_NICKNAME_LENGTH = 20;
+    private static final int USER_PROFILE_RACE_LENGTH = 16;
+    private static final int USER_PROFILE_STATE_LENGTH = 32;
+    private static final int USER_PROFILE_ZIP_LENGTH = 16;
+
     private static final int ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
     private final boolean _doIndex;
@@ -423,7 +434,16 @@ public class UserManager implements ManagerInterface {
         if (profile.getUserType() != null) {
             throw new InvalidRequestException("user type cannot be changed", profile, ErrorCodes.INVALID_UPDATE);
         }
-        if ((profile.getCity() != null && profile.getCity().length() > 32) || (profile.getCountry() != null && profile.getCountry().length() > 32) || (profile.getDateOfBirth() != null && profile.getDateOfBirth().length() > 32) || (profile.getGender() != null && profile.getGender().length() > 10) || (profile.getGPSLocation() != null && profile.getGPSLocation().length() > 64) || (profile.getIncomeRange() != null && profile.getIncomeRange().length() > 32) || (profile.getNickname() != null && profile.getNickname().length() > 32) || (profile.getRace() != null && profile.getRace().length() > 16) || (profile.getState() != null && profile.getState().length() > 32) || (profile.getZipCode() != null && profile.getZipCode().length() > 16)) {
+        if ((profile.getCity() != null && profile.getCity().length() > USER_PROFILE_CITY_LENGTH) ||
+                (profile.getCountry() != null && profile.getCountry().length() > USER_PROFILE_COUNTRY_LENGTH) ||
+                (profile.getDateOfBirth() != null && profile.getDateOfBirth().length() > USER_PROFILE_DOB_LENGTH) ||
+                (profile.getGender() != null && profile.getGender().length() > USER_PROFILE_GENDER_LENGTH) ||
+                (profile.getGPSLocation() != null && profile.getGPSLocation().length() > USER_PROFILE_GPS_LOCATION_LENGTH) ||
+                (profile.getIncomeRange() != null && profile.getIncomeRange().length() > USER_PROFILE_INCOME_LENGTH) ||
+                (profile.getNickname() != null && profile.getNickname().length() > USER_PROFILE_NICKNAME_LENGTH) ||
+                (profile.getRace() != null && profile.getRace().length() > USER_PROFILE_RACE_LENGTH) ||
+                (profile.getState() != null && profile.getState().length() > USER_PROFILE_STATE_LENGTH) ||
+                (profile.getZipCode() != null && profile.getZipCode().length() > USER_PROFILE_ZIP_LENGTH)) {
             throw new InvalidRequestException("max field length exceeded on some field", ErrorCodes.INVALID_INPUT);
         }
     }
