@@ -64,6 +64,14 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
         put(DESCRIPTOR, descriptor);
     }
 
+    public Integer getRank() {
+        return (Integer) get(RANK);
+    }
+
+    public void setRank(Integer rank) {
+        put(RANK, rank);
+    }
+
     public String getState() {
         return (String) get(STATE);
     }

@@ -26,6 +26,7 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
 
     static {   // TODO should be derived from schema
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_TYPE_ID, MongoFieldTypes.STRING);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(RANK, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DESCRIPTION, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DESCRIPTOR, MongoFieldTypes.STRING);
@@ -61,7 +62,7 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
             try {
                 GroupDAOImpl.collection = MongoStoreManager.getInstance().getCollection(_getCollectionName());
             } catch (SystemErrorException e) {
-                e.printStackTrace();  // TODO catch
+                throw new RuntimeException("Missing mongo col for group", e);
             }
         }
         return GroupDAOImpl.collection;
@@ -91,6 +92,16 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     @Override
     public void setGroupTypeId(String groupTypeId) {
         put(GROUP_TYPE_ID, groupTypeId);
+    }
+
+    @Override
+    public Integer getRank() {
+        return (Integer) get(RANK);
+    }
+
+    @Override
+    public void setRank(Integer rank) {
+        put(RANK, rank);
     }
 
     @Override

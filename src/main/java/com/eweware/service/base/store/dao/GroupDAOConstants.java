@@ -44,6 +44,12 @@ public interface GroupDAOConstants {
     static final String GROUP_TYPE_ID = "Y";
 
     /**
+     * <p>The relative rank order for displaying groups (an integer). The lower
+     * the number, the more prominent the group.</p>
+     */
+    static final String RANK = "R";
+
+    /**
      * <p> The current number of users in this group. An integer</p>
      */
     static final String USER_COUNT = "U";
@@ -110,7 +116,7 @@ public interface GroupDAOConstants {
                 DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, USER_VALIDATION_METHOD, USER_VALIDATION_PARAMETERS, STATE
         }),
         new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT, INBOX_GENERATION_DURATION}),
-        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER}),
+        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER}),
         new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_TIME_INBOXES_GENERATED})
     };
 
