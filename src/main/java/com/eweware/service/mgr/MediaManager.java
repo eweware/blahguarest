@@ -7,8 +7,11 @@ import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
 import main.java.com.eweware.service.base.mgr.ManagerInterface;
 import main.java.com.eweware.service.base.mgr.ManagerState;
+import main.java.com.eweware.service.base.mgr.SystemManager;
+import main.java.com.eweware.service.base.type.RunMode;
 
 import javax.ws.rs.core.Response;
+import javax.xml.ws.WebServiceException;
 
 /**
  * @author rk@post.harvard.edu
@@ -40,12 +43,17 @@ public final class MediaManager implements ManagerInterface {
             String imagesDir,
             String originalsDir) {
         MediaManager.singleton = this;
-        _imagePathname = imagePathname;
-        _bucketImageDir = imagesDir;
-        _bucketOriginalDir = originalsDir;
-        _imageBucketName = imageBucketName;
-        _state = ManagerState.INITIALIZED;
-        System.out.println("*** MediaManager initialized ***");
+        try {
+            final RunMode runMode = SystemManager.getInstance().getRunMode();
+            _imagePathname = (runMode == RunMode.QA) ? "qa." + imagePathname : ((runMode == RunMode.DEV) ? "dev." + imagePathname : imagePathname);
+            _imageBucketName = (runMode == RunMode.QA) ? "qa." + imageBucketName : ((runMode == RunMode.DEV) ? "dev." + imageBucketName : imageBucketName);
+            _bucketImageDir = imagesDir;
+            _bucketOriginalDir = originalsDir;
+            _state = ManagerState.INITIALIZED;
+            System.out.println("*** MediaManager initialized ***");
+        } catch (SystemErrorException e) {
+            throw new WebServiceException("Failed to initialize MediaManager", e);
+        }
     }
 
     public ManagerState getState() {

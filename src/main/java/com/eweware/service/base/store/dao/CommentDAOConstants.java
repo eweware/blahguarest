@@ -27,22 +27,22 @@ public interface CommentDAOConstants {
 
     /**
      * <p>The vote, if any, of the comment on the blah.
-     * An integer.</p>
+     * A long.</p>
      */
     static final String BLAH_VOTE = "V";
 
     /**
-     * <p>The total number of votes on this comment. An integer. <b>TODO: get rid of this: can be inferred from sum of up/down votes</b></p>
+     * <p>The total number of votes on this comment. A long. <b>TODO: get rid of this: can be inferred from sum of up/down votes</b></p>
      */
     static final String COMMENT_VOTES = "C";
 
     /**
-     * <p>The number of up votes for this comment. An integer.</p>
+     * <p>The number of up votes for this comment. A long.</p>
      */
     static final String COMMENT_UP_VOTES = "U";
 
     /**
-     * <p>The number of down votes for this comment. An integer.</p>
+     * <p>The number of down votes for this comment. A long.</p>
      */
     static final String COMMENT_DOWN_VOTES = "D";
 
@@ -52,12 +52,12 @@ public interface CommentDAOConstants {
     static final String COMMENT_STRENGTH = "S";
 
     /**
-     * <p>The number of times this comment has been viewed. An integer.</p>
+     * <p>The number of times this comment has been viewed. A long.</p>
      */
     static final String VIEWS = "W";
 
     /**
-     * <p>The number of times this comment has been opened. An integer.</p>
+     * <p>The number of times this comment has been opened. A long.</p>
      */
     static final String OPENS = "O";
 

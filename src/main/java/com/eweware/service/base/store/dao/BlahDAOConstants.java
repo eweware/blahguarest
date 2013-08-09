@@ -44,31 +44,31 @@ public interface BlahDAOConstants {
 
     /**
      * <p>The count of users who have promoted this blah.
-     * An integer.</p>
+     * A long.</p>
      */
     static final String PROMOTED_COUNT = "P";
 
     /**
      * <p>The count of users who have demoted this blah.
-     * An integer.</p>
+     * A Long.</p>
      */
     static final String DEMOTED_COUNT = "D";
 
     /**
      * <p>The number of views of this blah.
-     * An integer.</p>
+     * A Long.</p>
      */
     static final String VIEWS = "V";
 
     /**
      * <p>The number of opens of this blah.
-     * An integer.</p>
+     * A long.</p>
      */
     static final String OPENS = "O";
 
     /**
      * <p>The number of comments on this blah.
-     * An integer.</p>
+     * A long.</p>
      */
     static final String COMMENTS = "C";
 
@@ -144,7 +144,7 @@ public interface BlahDAOConstants {
     /**
      * <p>If this blah is a poll, this is the number
      * of poll options.
-     * An integer.</p>
+     * A long.</p>
      *
      * @see #POLL_OPTIONS_TEXT
      * @see #POLL_OPTION_VOTES
