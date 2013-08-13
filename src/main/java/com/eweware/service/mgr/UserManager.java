@@ -1158,10 +1158,9 @@ public class UserManager implements ManagerInterface {
             return new ArrayList<GroupPayload>(0);
         }
 
-        // TODO inefficient
         final List<GroupPayload> payload = new ArrayList<GroupPayload>(groupCount);
         for (UserGroupDAO ug : userGroupDAOs) {
-            final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(ug.getGroupId())._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.DESCRIPTION);
+            final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(ug.getGroupId())._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.DESCRIPTION, GroupDAO.RANK);
             if (groupDAO != null) {
                 final GroupPayload group = new GroupPayload(groupDAO);
                 group.addFromMap(ug);

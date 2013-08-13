@@ -172,7 +172,7 @@ public class UserGroupsResource {
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
      * <div><b>METHOD:</b> GET</div>
-     * <div><b>URL:</b> userGroups/{userId}</div>
+     * <div><b>URL:</b> userGroups</div>
      *
      * @param state         <i>Query Parameter:</i> The user-to-group state (see AuthorizedState)
      * @param start         <i>Query Parameter:</i> The start index for the returned items
