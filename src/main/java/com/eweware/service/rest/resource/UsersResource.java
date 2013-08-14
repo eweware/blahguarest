@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -459,17 +460,22 @@ public class UsersResource {
      *
      * @param entity Expects a JSON entity containing an array of user ids in a
      *               field named 'IDS'.
-     * @return An http status of 200 with a JSON entity consisting of a
-     *         single field named 'd' whose value is a string--the descriptor.
+     *
+     * @return An http status of 200 with a JSON entity including a
+     *         field named 'd' whose value is a string--the descriptor.
+     *         The user's nickname is returned in the field named 'K'
+     *         and the user's image id is returned in a field named 'm'.
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         On error conditions, a JSON object is returned with details.
+     * @deprecated
+     * @see #getUserDescriptorStrings(String, javax.servlet.http.HttpServletRequest)
      */
     @POST
     @Path("/descriptors")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getUserDescriptorStrings(
+    public Response getUserDescriptorStringsDeprecated(
             Map<String, List<String>> entity,
             @Context HttpServletRequest request) {
         try {
@@ -489,6 +495,54 @@ public class UsersResource {
         }
     }
 
+
+    /**
+     * <p>Use this method to obtain an array of descriptors for a set of user ids.</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/descriptors/{userIds}</div>
+     *
+     * @param userIds A comma-separated list of user ids
+     *
+     * @return An http status of 200 with a JSON entity including a
+     *         field named 'd' whose value is a string--the descriptor.
+     *         The user's nickname is returned in the field named 'K'
+     *         and the user's image id is returned in a field named 'm'.
+     *         If the request is invalid, returns 400 (BAD REQUEST).
+     *         If the profile has not been created, returns 404 (NOT FOUND).
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @GET
+    @Path("/descriptors/{userIds}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserDescriptorStrings(
+            @PathParam("userIds") String userIds,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final List<String> ids = toUserIdList(userIds);
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptors(LocaleId.en_us, request, ids));
+            getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    private List<String> toUserIdList(String userIds) {
+        final List<String> ids = new ArrayList<String>();
+        for (String id : userIds.split(",")) {
+            ids.add(id.trim());
+        }
+        return ids;
+    }
+
     /**
      * <p>Use this method to obtain a string descriptor of the user's profile.</p>
      * <p/>
@@ -500,23 +554,74 @@ public class UsersResource {
      *               the user id is assumed to be that of the logged in user;
      *               and, if there is no logged in user, then the user
      *               is assumed to be anonymous.
-     * @return An http status of 200 with a JSON entity consisting of a
-     *         single field named 'd' whose value is a string--the descriptor.
+     *
+     * @return An http status of 200 with a JSON entity including a
+     *         field named 'd' whose value is a string--the descriptor.
+     *         The user's nickname is returned in the field named 'K'
+     *         and the user's image id is returned in a field named 'm'.
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the profile has not been created, returns 404 (NOT FOUND).
      *         On error conditions, a JSON object is returned with details.
+     *
+     * @see #getUserDescriptorString(String, javax.servlet.http.HttpServletRequest)
+     * @deprecated
      */
     @POST
     @Path("/descriptor")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getUserDescriptorString(
+    public Response getUserDescriptorStringDeprecated(
             Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             final String userId = (entity == null) ? (BlahguaSession.getUserId(request)) : entity.get("I");
-            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, request, userId));
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, userId));
+            getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    /**
+     * <p>Use this method to obtain a string descriptor of the user's profile.</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> users/descriptor/{userId}</div>
+     *
+     * @param userId If the currently logged in user is intended, this should
+     *               be set to the string "CURRENT"; else, this should
+     *               be a user id.
+     *
+     * @return An http status of 200 with a JSON entity including a
+     *         field named 'd' whose value is a string--the descriptor.
+     *         The user's nickname is returned in the field named 'K'
+     *         and the user's image id is returned in a field named 'm'.
+     *         If the request is invalid, returns 400 (BAD REQUEST).
+     *         If the profile has not been created, returns 404 (NOT FOUND).
+     *         On error conditions, a JSON object is returned with details.
+     */
+    @GET
+    @Path("/descriptor/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUserDescriptorString(
+            @PathParam("userId") String userId,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            userId = (userId.equals("CURRENT")) ? BlahguaSession.getUserId(request) : userId;
+            if (userId == null) {
+                throw new InvalidAuthorizedStateException("user not logged in", ErrorCodes.UNAUTHORIZED_USER);
+            }
+            final Response response = RestUtilities.make200OkResponse(getUserManager().getUserProfileDescriptor(LocaleId.en_us, userId));
             getSystemManager().setResponseTime(UPDATE_USER_PROFILE_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (ResourceNotFoundException e) {
@@ -762,11 +867,11 @@ public class UsersResource {
      * <div><b>METHOD:</b> GET</div>
      * <div><b>URL:</b> users/inbox</div>
      *
-     * @param groupId       <i>Query Parameter:</i> Required. The inbox group id.
-     * @param inboxNumber   <i>Query Parameter:</i> Optional. The inbox number to fetch. If not provided,
-     *                      inboxes are fetched in sequential order within the group on each request.
-     * @param recentInbox   <i>Query Parameter:</i> Optional. If set to true, an inbox with the
-     *                      most recent entries in the group is returned.
+     * @param groupId     <i>Query Parameter:</i> Required. The inbox group id.
+     * @param inboxNumber <i>Query Parameter:</i> Optional. The inbox number to fetch. If not provided,
+     *                    inboxes are fetched in sequential order within the group on each request.
+     * @param recentInbox <i>Query Parameter:</i> Optional. If set to true, an inbox with the
+     *                    most recent entries in the group is returned.
      * @return Returns an inbox JSON object as an array of inbox blah entities (InboxBlahPayload entities) with http code 200.
      *         If a group has no blahs, this will return an empty array. If the inbox number if not specified,
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
@@ -787,8 +892,8 @@ public class UsersResource {
             Response response;
             if (recentInbox) {
                 response = RestUtilities.make200OkResponse(getBlahManager().getRecentsInbox(groupId, request));
-            }   else {
-                 response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber));
+            } else {
+                response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber));
             }
 //            final Response response = RestUtilities.make200OkResponse(getBlahManager().getInbox(LocaleId.en_us, groupId, request, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
             getSystemManager().setResponseTime(GET_INBOX_OPERATION, (System.currentTimeMillis() - s));
@@ -893,15 +998,15 @@ public class UsersResource {
     /**
      * <p>Returns a JSON entity with the specified user's image ids, if any, in
      * the usual images field of the UserPayload entity.</p>
-     *
+     * <p/>
      * <div><b>METHOD: </b>GET</div>
      * <div><b>URL: </b>users/images/{userId}</div>
      *
      * @param userId The user's id
      * @return Returns a JSON entity with http status 200 (OK) with the UserPayload. Only the user images
-     * field will be populated, or it will be absent if there are no images associated with the user.
-     * Returns 404 (NOT FOUND) if the user id record doesn't exist.
-     * On error conditions, a JSON object is returned with details.
+     *         field will be populated, or it will be absent if there are no images associated with the user.
+     *         Returns 404 (NOT FOUND) if the user id record doesn't exist.
+     *         On error conditions, a JSON object is returned with details.
      * @see UserPayload
      */
     @GET
@@ -929,15 +1034,15 @@ public class UsersResource {
     /**
      * <p>Associates the specified media id as a user's image.</p>
      * <p>Previous images are deleted.</p>
-     *
+     * <p/>
      * <div><b>METHOD: </b>POST</div>
      * <div><b>URL: </b>users/image/{mediaId}</div>
      *
-     * @param mediaId  The media id (this is returned by the image uploader)
-     * @return  Returns a response with http status 202 (ACCEPTED) when it succeeds.
-     * Returns 404 (NOT FOUND) if the user or media object are not found.
-     * Returns 401 (UNAUTHORIZED) if the user is not authorized (not logged in).
-     * On error conditions, a JSON object is returned with details.
+     * @param mediaId The media id (this is returned by the image uploader)
+     * @return Returns a response with http status 202 (ACCEPTED) when it succeeds.
+     *         Returns 404 (NOT FOUND) if the user or media object are not found.
+     *         Returns 401 (UNAUTHORIZED) if the user is not authorized (not logged in).
+     *         On error conditions, a JSON object is returned with details.
      */
     @POST
     @Path("/image/{mediaId}")

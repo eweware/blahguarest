@@ -296,7 +296,7 @@ public class UserManager implements ManagerInterface {
     private void checkUserAccountFieldLengths(String emailAddress, String challengeAnswer1) throws InvalidRequestException {
         if ((emailAddress != null && emailAddress.length() > 64) ||
                 (challengeAnswer1 != null && challengeAnswer1.length() > 64)) {
-            throw new InvalidRequestException("Some field length exceeded max", ErrorCodes.INVALID_INPUT);
+            throw new InvalidRequestException("email address or challenge answer field exceeded max length", ErrorCodes.INVALID_INPUT);
         }
 
     }
@@ -799,7 +799,7 @@ public class UserManager implements ManagerInterface {
             return descriptors;
         }
         for (String userId : userIds) {
-            descriptors.add(getUserProfileDescriptor(en_us, request, userId));
+            descriptors.add(getUserProfileDescriptor(en_us, userId));
         }
         return descriptors;
     }
@@ -814,7 +814,7 @@ public class UserManager implements ManagerInterface {
     }
 
     // hastily put together
-    public Map<String, String> getUserProfileDescriptor(LocaleId localeId, HttpServletRequest request, String userId)
+    public Map<String, String> getUserProfileDescriptor(LocaleId localeId, String userId)
             throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
         ensureReady();
         final StringBuilder descriptor = new StringBuilder();
@@ -1013,7 +1013,7 @@ public class UserManager implements ManagerInterface {
         final Map<String, String> map = new HashMap<String, String>(1);
         map.put("d", descriptor.toString());
         if (nickname != null) {
-            map.put("n", nickname);
+            map.put("K", nickname);
         }
         if (userImageId != null) {
             map.put("m", userImageId);
