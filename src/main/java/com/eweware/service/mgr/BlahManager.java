@@ -1,5 +1,7 @@
 package main.java.com.eweware.service.mgr;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import main.java.com.eweware.service.base.CommonUtilities;
 import main.java.com.eweware.service.base.error.*;
 import main.java.com.eweware.service.base.i18n.LocaleId;
@@ -55,6 +57,7 @@ import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -67,7 +70,8 @@ public final class BlahManager implements ManagerInterface {
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
     private static final String EMPTY_STRING = "";
-    private static final int MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH = 1024;
+    private static final int MAXIMUM_BLAH_BODY_LENGTH = 2000;
+    private static final int MAXIMUM_COMMENT_LENGTH = 1500;
     private static final int MAXIMUM_BLAH_HEADLINE_LENGTH = 64;
 
     private final boolean _doIndex;
@@ -239,7 +243,7 @@ public final class BlahManager implements ManagerInterface {
         String body = entity.getBody();
         if (!CommonUtilities.isEmptyString(body)) {
             body = cleanupBlahTextString(body);
-            if (body.length() > MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH) {
+            if (body.length() > MAXIMUM_BLAH_BODY_LENGTH) {
                 throw new InvalidRequestException("Blah body text cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
             }
             entity.setBody(body);
@@ -818,38 +822,89 @@ public final class BlahManager implements ManagerInterface {
      * @param opensMap Map: key is a blah id and value is the number of opens of that blah
      */
     public void updateBlahCounts(LocaleId localeId, String userId, Map<String, Long> viewsMap, Map<String, Long> opensMap) throws ResourceNotFoundException, SystemErrorException, InvalidRequestException {
-        if (userId != null) {
-            if (!getStoreManager().createUser(userId)._exists()) {
-                throw new ResourceNotFoundException("No user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
-            }
-        }
-        if (((viewsMap == null || viewsMap.size() == 0) && (opensMap == null || opensMap.size() == 0))) {
-            throw new InvalidRequestException("No view or open count updates requested", ErrorCodes.INVALID_INPUT);
-        }
-        maybeAddCount(BlahDAOConstants.VIEWS, UserBlahInfoDAOConstants.VIEWS, viewsMap, userId);
-        maybeAddCount(BlahDAOConstants.OPENS, UserBlahInfoDAOConstants.OPENS, opensMap, userId);
-    }
 
-    private void maybeAddCount(String blahFieldName, String userBlahInfoFieldname, Map<String, Long> map, String userId) throws SystemErrorException {
-        if (map == null || map.size() == 0) {
-            return;
-        }
-        for (Map.Entry<String, Long> entry : map.entrySet()) {
+        final Map<String, OpenViewCount> blahCountMap = aggregateBlahCounts(viewsMap, opensMap);
+        for (Map.Entry<String, OpenViewCount> entry : blahCountMap.entrySet()) {
             final String blahId = entry.getKey();
-            final Long count = entry.getValue();
-            final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID);
-            if (blahDAO != null) {
-                blahDAO.put(blahFieldName, count);
+            final OpenViewCount counts = entry.getValue();
+
+            if (counts.opens > 0 || counts.views > 0) {
+
+                final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID);   // Get blah's author id
+
+                if (blahDAO == null) {
+                    logger.warning("Blah id '" + blahId + "' referenced but not found in updateBlahCounts");
+                    return;
+                }
+
+                if (counts.opens > 0) {
+                    blahDAO.put(BlahDAOConstants.OPENS, counts.opens);
+                }
+                if (counts.views > 0) {
+                    blahDAO.put(BlahDAOConstants.VIEWS, counts.views);
+                }
                 blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+                // Update user/blah info and track it
                 if (userId != null) {
                     final UserBlahInfoDAO userBlahInfoDAO = getStoreManager().createUserBlahInfo(userId, blahId);
-                    if (userBlahInfoDAO._exists()) {
-                        userBlahInfoDAO.put(userBlahInfoFieldname, count);
-                        userBlahInfoDAO._updateByCompoundId(DAOUpdateType.INCREMENTAL_DAO_UPDATE, UserBlahInfoDAO.USER_ID, UserBlahInfoDAO.BLAH_ID);
+                    final boolean userBlahInfoDAOExists = userBlahInfoDAO._exists();
+                    if (counts.opens > 0) {
+                        userBlahInfoDAO.put(UserBlahInfoDAOConstants.OPENS, counts.opens);
+                    }
+                    if (counts.views > 0) {
+                        userBlahInfoDAO.put(UserBlahInfoDAOConstants.VIEWS, counts.views);
+                    }
+
+                    // Need to upsert due to possible collisions with simultaneous queries
+                    final MongoStoreManager store = (MongoStoreManager) getStoreManager();
+                    final DBCollection col = store.getCollection(store.getUserBlahInfoCollectionName());
+                    if (!userBlahInfoDAOExists) {
+                        setRequiredFieldsForUserBlahInfo(userBlahInfoDAO, userId, blahId, blahDAO.getAuthorId(), blahDAO.getTypeId());
+                    }
+                    final BasicDBObject query = new BasicDBObject(UserBlahInfoDAOConstants.USER_ID, userId);
+                    query.put(UserBlahInfoDAOConstants.BLAH_ID, blahId);
+                    userBlahInfoDAO._upsert(query);
+
+                }
+                getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, blahDAO.getAuthorId(), true, false, blahId, null, false, false, null,
+                        counts.views, counts.opens);
+            }
+
+        }
+    }
+
+    private class OpenViewCount {
+        private Long opens = 0L;
+        private Long views = 0L;
+    }
+
+    /** Aggregates the blah's opens and views into one map.
+     * TODO: change API so that this is not necessary
+     */
+    private Map<String, OpenViewCount> aggregateBlahCounts(Map<String, Long> viewsMap, Map<String, Long> opensMap) {
+        // map blah id to its open and view counts
+        final Map<String, OpenViewCount> blahCountsMap = new HashMap<String, OpenViewCount>();
+        aggregateBlahCounts1(blahCountsMap, opensMap, true);
+        aggregateBlahCounts1(blahCountsMap, viewsMap, false);
+        return blahCountsMap;
+    }
+
+    private void aggregateBlahCounts1(Map<String, OpenViewCount> blahCountsMap, Map<String, Long> map, boolean opens) {
+        if (map != null && map.size() > 0) {
+            for (Map.Entry<String, Long> entry : map.entrySet()) {
+                final String blahId = entry.getKey();
+                final Long count = entry.getValue();
+                if (count > 0) {
+                    OpenViewCount openViewCount = blahCountsMap.get(blahId);
+                    if (openViewCount == null) {
+                        openViewCount = new OpenViewCount();
+                        blahCountsMap.put(blahId, openViewCount);
+                    }
+                    if (opens) {
+                        openViewCount.opens++;
                     } else {
-                        userBlahInfoDAO.put(userBlahInfoFieldname, count);
-                        userBlahInfoDAO.setAuthorId(blahDAO.getAuthorId());
-                        userBlahInfoDAO._insert();
+                        openViewCount.views++;
                     }
                 }
             }
@@ -918,10 +973,7 @@ public final class BlahManager implements ManagerInterface {
 
         if (insert) {
             userBlahInfoDAO.setGroupId(blahDAO.getGroupId()); // original group id
-            userBlahInfoDAO.setBlahTypeId(blahDAO.getTypeId());
-            userBlahInfoDAO.setUserId(userId);
-            userBlahInfoDAO.setBlahId(blahId);
-            userBlahInfoDAO.setAuthorId(authorId);
+            setRequiredFieldsForUserBlahInfo(userBlahInfoDAO, userId, blahId, authorId, blahDAO.getTypeId());
             userBlahInfoDAO._insert();
         } else {
             userBlahInfoDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
@@ -947,6 +999,13 @@ public final class BlahManager implements ManagerInterface {
         blah.setAuthorId(authorId);
 
         return blah;
+    }
+
+    private void setRequiredFieldsForUserBlahInfo(UserBlahInfoDAO userBlahInfoDAO, String userId, String blahId, String authorId, String blahTypeId) {
+        userBlahInfoDAO.setBlahTypeId(blahTypeId);
+        userBlahInfoDAO.setUserId(userId);
+        userBlahInfoDAO.setBlahId(blahId);
+        userBlahInfoDAO.setAuthorId(authorId);
     }
 
     public List<BlahPayload> getBlahs(LocaleId localeId, String userId, String authorId, String typeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
@@ -1235,7 +1294,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing text", entity, ErrorCodes.MISSING_TEXT);
         }
         text = CommonUtilities.scrapeMarkup(text);
-        if (text.length() > MAXIMUM_BLAH_OR_COMMENT_BODY_LENGTH) {
+        if (text.length() > MAXIMUM_COMMENT_LENGTH) {
             throw new InvalidRequestException("Comment text length exceeded maximum", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
         }
 

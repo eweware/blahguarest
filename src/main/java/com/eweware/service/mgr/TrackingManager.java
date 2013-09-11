@@ -179,7 +179,9 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
             trackUserStats(trackerData);
             trackBlahOrCommentStats(trackerData);
         } catch (MongoException e) {  // TODO this should be offline and in a queue, anyway, but see RTUA-8
-            logger.log(Level.SEVERE, "Ignored db exception while writing tracker object for user id '" + userId + "' author id '" + authorId + "' isBlah="
+//            logger.log(Level.SEVERE, "Ignored db exception while writing tracker object for user id '" + userId + "' author id '" + authorId + "' isBlah="
+//                    + isBlah + " isNewObject=" + isNewObject + " object id '" + objectId + "' sub-object id '" + subObjectId + "'", e);
+            throw new SystemErrorException("DB exception while writing tracker object for user id '" + userId + "' author id '" + authorId + "' isBlah="
                     + isBlah + " isNewObject=" + isNewObject + " object id '" + objectId + "' sub-object id '" + subObjectId + "'", e);
         } catch (ResourceNotFoundException e) {
             throw e;
@@ -271,22 +273,38 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     }
 
     private void trackUpdateBlahOperation(TrackerQueueItem trackerData) throws SystemErrorException, ResourceNotFoundException {
-        final String trackerId = maybeAllocateUserTracker(trackerData.userId);
-        final String blahAuthorId = BlahManager.getInstance().getAuthorIdForBlah(trackerData.objectId);
-        boolean userIsBlahCreator = blahAuthorId.equals(trackerData.userId);
 
-        if (userIsBlahCreator) {
-            final boolean trackerIsForUser = false;
-            updateUserStats(trackerData, trackerIsForUser, trackerId, userIsBlahCreator);
+        if (trackerData.userId == null) {
+            trackAnonymousUpdateBlahOperation(trackerData);
         } else {
-            boolean trackerIsForUser = true;
-            updateUserStats(trackerData, trackerIsForUser, trackerId, userIsBlahCreator);
+            final String trackerId = maybeAllocateUserTracker(trackerData.userId);
+            final String blahAuthorId = trackerData.authorId; //.getInstance().getAuthorIdForBlah(trackerData.objectId);
+            boolean userIsBlahCreator = blahAuthorId.equals(trackerData.userId);
 
-            final String blahAuthorTrackerId = maybeAllocateUserTracker(blahAuthorId);
-            trackerIsForUser = false;
-            userIsBlahCreator = true;
-            updateUserStats(trackerData, trackerIsForUser, blahAuthorTrackerId, userIsBlahCreator);
+            if (userIsBlahCreator) {
+                final boolean trackerIsForUser = false;
+                updateUserStats(trackerData, trackerIsForUser, trackerId, userIsBlahCreator);
+            } else {
+                boolean trackerIsForUser = true;
+                updateUserStats(trackerData, trackerIsForUser, trackerId, userIsBlahCreator);
+
+                final String blahAuthorTrackerId = maybeAllocateUserTracker(blahAuthorId);
+                trackerIsForUser = false;
+                userIsBlahCreator = true;
+                updateUserStats(trackerData, trackerIsForUser, blahAuthorTrackerId, userIsBlahCreator);
+            }
         }
+    }
+
+    /**
+     * A blah has been updated by an anonymous user.
+     * @param trackerData
+     */
+    private void trackAnonymousUpdateBlahOperation(TrackerQueueItem trackerData) throws SystemErrorException {
+        final String blahAuthorTrackerId = maybeAllocateUserTracker(trackerData.authorId);
+        boolean trackerIsForUser = false;
+        boolean userIsBlahCreator = true;
+        updateUserStats(trackerData, trackerIsForUser, blahAuthorTrackerId, userIsBlahCreator);
     }
 
     private void trackCreateBlahOperation(TrackerQueueItem trackerData) throws SystemErrorException {
@@ -294,7 +312,6 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         final boolean userIsBlahCreator = true;
         final boolean trackerIsForUser = true;
         updateUserStats(trackerData, trackerIsForUser, trackerId, userIsBlahCreator);
-        return;
     }
 
     /**
@@ -347,16 +364,16 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         }
     }
 
-    private Map<String, Object> updateUserMonthlies(TrackerQueueItem trackerData, boolean trackerIsForUser, boolean userIsBlahCreator, boolean hasVoted, boolean hasViewed, boolean hasOpened) {
+    private Map<String, Object> updateUserMonthlies(TrackerQueueItem trackerData, boolean trackerIsForUser, boolean userIsBlahCreator, boolean hasVoted, boolean views, boolean opens) {
 
         Map<String, Object> monthlyCumFieldMap = new HashMap<String, Object>();
 
         final boolean daily = false;
         final String dailyIndex = "";
         if (trackerData.isBlah) {
-            updateUserBlahEntry(daily, dailyIndex, trackerData, trackerIsForUser, userIsBlahCreator, hasVoted, hasViewed, hasOpened, monthlyCumFieldMap);
+            updateUserBlahEntry(daily, dailyIndex, trackerData, trackerIsForUser, userIsBlahCreator, hasVoted, views, opens, monthlyCumFieldMap);
         } else {
-            updateUserCommentEntry(daily, dailyIndex, trackerData, trackerIsForUser, userIsBlahCreator, hasVoted, hasViewed, hasOpened, monthlyCumFieldMap);
+            updateUserCommentEntry(daily, dailyIndex, trackerData, trackerIsForUser, userIsBlahCreator, hasVoted, views, opens, monthlyCumFieldMap);
         }
         return monthlyCumFieldMap;
     }
@@ -383,7 +400,8 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         return todayFieldMap;
     }
 
-    private void updateUserBlahEntry(boolean day, String dayMarker, TrackerQueueItem trackerData, boolean trackerIsForUser, boolean userIsBlahCreator, boolean hasVoted, boolean hasViewed, boolean hasOpened, Map<String, Object> map) {
+    private void updateUserBlahEntry(boolean day, String dayMarker, TrackerQueueItem trackerData, boolean trackerIsForUser, boolean userIsBlahCreator,
+                                     boolean hasVoted, boolean hasViewed, boolean hasOpened, Map<String, Object> map) {
 
         final boolean creatingObject = trackerData.isNewObject;
 
@@ -397,10 +415,10 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
             if (trackerIsForUser) { // creatingObject = false && trackerIsForUser = true
                 if (userIsBlahCreator) {
                     if (hasViewed) {
-                        map.put(day ? dayMarker + UT_VIEWS_OF_OWNED_BLAHS_BY_SELF_IN_DAY : UT_VIEWS_OF_OWNED_BLAHS_BY_SELF_IN_MONTH, 1);
+                        map.put(day ? dayMarker + UT_VIEWS_OF_OWNED_BLAHS_BY_SELF_IN_DAY : UT_VIEWS_OF_OWNED_BLAHS_BY_SELF_IN_MONTH, trackerData.viewCount);
                     }
                     if (hasOpened) {
-                        map.put(day ? dayMarker + UT_OPENS_OF_OWNED_BLAHS_BY_SELF_IN_DAY : UT_OPENS_OF_OWNED_BLAHS_BY_SELF_IN_MONTH, 1);
+                        map.put(day ? dayMarker + UT_OPENS_OF_OWNED_BLAHS_BY_SELF_IN_DAY : UT_OPENS_OF_OWNED_BLAHS_BY_SELF_IN_MONTH, trackerData.openCount);
                     }
                 } else {
                     if (hasVoted) {

@@ -63,7 +63,7 @@ public class InboxHandler extends Thread {
         dao.put(InboxBlahDAOConstants.BLAH_TEXT, blahDAO.getText());
         dao.put(InboxBlahDAOConstants.TYPE, blahDAO.getTypeId());
 //        dao.put(InboxBlahDAOConstants.GROUP_ID, groupId);
-//        dao.put(InboxBlahDAOConstants.AUTHOR_ID, blahDAO.getAuthorId());
+        dao.put(InboxBlahDAOConstants.AUTHOR_ID, blahDAO.getAuthorId());
 
 //        Long tmp = blahDAO.getPromotedCount();
 //        if (tmp != null) {
@@ -87,7 +87,7 @@ public class InboxHandler extends Thread {
         }
         tmpList = blahDAO.getBadgeIds();
         if (tmpList != null && tmpList.size() > 0) {
-            dao.put(InboxBlahDAOConstants.BLAH_ID, "b");
+            dao.put(InboxBlahDAOConstants.BADGE_INDICATOR, "b");
         }
 //        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
 //        if (nickname != null) {
@@ -163,11 +163,11 @@ public class InboxHandler extends Thread {
             final List<Map<String, Object>> inboxItems = getInboxItems(CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber), false, limit);
 
             // TODO: remove experiment: adds some recents to the top
-            final int maxRecentsToAdd = 10;
-            final List<Map<String, Object>> recentInboxItems = getInboxItems(CommonUtilities.makeRecentsInboxCollectionName(groupId), true, maxRecentsToAdd);
-            if (recentInboxItems.size() > 0) {
-                inboxItems.addAll(0, recentInboxItems);
-            }
+//            final int maxRecentsToAdd = 10;
+//            final List<Map<String, Object>> recentInboxItems = getInboxItems(CommonUtilities.makeRecentsInboxCollectionName(groupId), true, maxRecentsToAdd);
+//            if (recentInboxItems.size() > 0) {
+//                inboxItems.addAll(0, recentInboxItems);
+//            }
 
             if (inboxItems.size() == 0) {
                 logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");

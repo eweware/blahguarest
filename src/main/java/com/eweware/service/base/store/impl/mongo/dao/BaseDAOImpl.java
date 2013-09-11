@@ -17,16 +17,20 @@ import org.bson.types.ObjectId;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * @author rk@post.harvard.edu
  *         <p/>
- *         TODO still need to comb for IllegalArgumentException and possibly other runtime exception in Mongo calls below
+ *         TODO comb for IllegalArgumentException and possibly other runtime exception in Mongo calls below
  */
 abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
+
+    /** Attack check: will not store a string longer than this */
+    private static final int MAXIMUM_STRING_LENGTH = 4000;
 
     // MongoException error code for duplicate keys
 //    private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;
@@ -157,7 +161,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 } else {
                     final SchemaDataType dataType = spec.getDataType();
                     if (dataType == SchemaDataType.S) {
-                        if (value != null && ((String) value).length() > 4000) {
+                        if (value != null && ((String) value).length() > MAXIMUM_STRING_LENGTH) {
                             throw new SystemErrorException(getClass().getSimpleName() + ": validateAndConvertFields; string field '" + fieldName + "'s length was " + ((String) value).length() + " but maximum allowed is 4000", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
                         }
                     }
@@ -333,7 +337,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         for (int attempt = 1; attempt < 5; attempt++) {
             try {
                 obj = collection.findOne(criteria, fields);  // getting SocketException inside here
-                break;
+                return obj;
             } catch (Exception e) {
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("findOneRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
@@ -387,7 +391,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                                     (count != null) ? _getCollection().find(this).sort(sort).limit(count) :
                                             _getCollection().find(this).sort(sort));
                 }
-                break;
+                return cursor;
             } catch (Exception e) {
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("findManyRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
@@ -416,7 +420,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                                     (count != null) ? _getCollection().find(criteria, fields).sort(sort).limit(count) :
                                             _getCollection().find(criteria, fields).sort(sort);
                 }
-                break;
+                return cursor;
             } catch (Exception e) {
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("findManyByCriteriaRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
@@ -534,19 +538,53 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     @Override
     public void _insert() throws SystemErrorException, DuplicateKeyException {
         final DBCollection col = _getCollection();
+         BasicDBObject obj = null;
         this.setCreated(new Date());
         for (int attempt = 1; attempt < 5; attempt++) {
             try {
-                final WriteResult result = col.insert(this, WriteConcern.SAFE);
+                final WriteResult result = col.insert(this /* , WRITE_CONCERN */);
                 if (result.getError() != null) {
                     throw new SystemErrorException(makeErrorMessage("_insert","insert",attempt, null, result.getError()), ErrorCodes.SERVER_DB_ERROR);
                 }
-                break;
+                return;
             } catch (Exception e) {
+                if (e instanceof MongoException && ((MongoException) e).getCode() == 11000) {
+                    throw new DuplicateKeyException("Failed to insert " + this, e);
+                }
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("_insert", "insert", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
                 } else {
-                    logger.warning(getClass().getSimpleName() + ": _insert failed in attempt #" + attempt + " in collection '" + _getCollectionName() + "'");
+                    logger.log(Level.WARNING, getClass().getSimpleName() + ": _insert failed in attempt #" + attempt + " in collection '" + _getCollectionName() + "'", e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void _upsert(DBObject query) throws SystemErrorException {
+        if (query == null) {
+            throw new SystemErrorException(makeErrorMessage("_upsert", "upsert", null, null, "query is null"), ErrorCodes.SERVER_DB_ERROR);
+        }
+        this.setUpdated(new Date());
+
+        for (int attempt = 1; attempt < 5; attempt++) {
+            try {
+                WriteResult result = _getCollection().update(
+                        query,
+                        makeAtomicUpdateObject(DAOUpdateType.INCREMENTAL_DAO_UPDATE),
+                        true, false
+//                        ,WRITE_CONCERN
+                );
+                if (result.getError() != null) {
+                    throw new SystemErrorException(makeErrorMessage("_upsert", "upsert", null, null, result.getError()), ErrorCodes.SERVER_DB_ERROR);
+                }
+                return;
+
+            } catch (Exception e) {
+                if (attempt > 3) {
+                    throw new SystemErrorException(makeErrorMessage("_upsert", "upsert", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
+                } else {
+                    logger.warning("_upsert failed in attempt #" + attempt + " in collection '" + _getCollection() + "'");
                 }
             }
         }
@@ -568,11 +606,13 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 WriteResult result = _getCollection().update(
                         new BasicDBObject(ID, makeMongoId(this.getId())),
                         makeAtomicUpdateObject(updateType),
-                        false, false, WriteConcern.SAFE);
+                        false, false
+//                        ,WRITE_CONCERN
+                );
                 if (result.getError() != null) {
                     throw new SystemErrorException(makeErrorMessage("_updateByPrimaryId", "update", null, null, result.getError()), ErrorCodes.SERVER_DB_ERROR);
                 }
-                break;
+                return;
 
             } catch (Exception e) {
                 if (attempt > 3) {
@@ -610,11 +650,13 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 final WriteResult result = _getCollection().update(
                         criteria,
                         makeAtomicUpdateObject(updateType),
-                        false, false, WriteConcern.SAFE);
+                        false, false
+//                        , WRITE_CONCERN
+                );
                 if (result.getError() != null) {
                     throw new SystemErrorException(makeErrorMessage("updateRetry", "update", attempt, null, result.getError()), ErrorCodes.SERVER_DB_ERROR);
                 }
-                break;
+                return;
             } catch (Exception e) {
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("updateRetry", "update", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
@@ -632,11 +674,13 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         }
         for (int attempt = 1; attempt < 5; attempt++) {
             try {
-                final WriteResult result = _getCollection().remove(new BasicDBObject(ID, makeMongoId(this.getId())), WriteConcern.SAFE);
+                final WriteResult result = _getCollection().remove(new BasicDBObject(ID, makeMongoId(this.getId()))
+//                        , WRITE_CONCERN
+                );
                 if (result.getError() != null) {
                     throw new SystemErrorException(makeErrorMessage("_deleteByPrimaryId", "delete", attempt, null, result.getError()), ErrorCodes.SERVER_DB_ERROR);
                 }
-                break;
+                return;
             } catch (Exception e) {
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("_deleteByPrimaryId", "delete", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
@@ -662,11 +706,13 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         }
         for (int attempt = 1; attempt < 5; attempt++) {
             try {
-                final WriteResult result = _getCollection().remove(query, WriteConcern.SAFE);
+                final WriteResult result = _getCollection().remove(query
+//                        , WRITE_CONCERN
+                );
                 if (result.getError() != null) {
                     throw new SystemErrorException(makeErrorMessage("_deleteByCompositeId", "delete", attempt, null, result.getError()), ErrorCodes.SERVER_DB_ERROR);
                 }
-                break;
+                return;
             } catch (Exception e) {
                 if (attempt > 3) {
                     throw new SystemErrorException(makeErrorMessage("_deleteByCompositeId", "delete", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);

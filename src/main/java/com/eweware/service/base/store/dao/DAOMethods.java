@@ -1,5 +1,6 @@
 package main.java.com.eweware.service.base.store.dao;
 
+import com.mongodb.DBObject;
 import main.java.com.eweware.service.base.error.DuplicateKeyException;
 import main.java.com.eweware.service.base.error.SystemErrorException;
 import main.java.com.eweware.service.base.i18n.LocaleId;
@@ -34,6 +35,15 @@ public interface DAOMethods {
     public abstract void addFromMap(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException;
 
     /**
+     * Creates the DAO if it doesn't exist, otherwise it assumes
+     * that this is an incremental update.
+     * TODO requires use of DBObject. The extra work and indirection is not justified: treat it as an exception.
+     * @query The query object.
+     * @throws SystemErrorException
+     */
+    public abstract void _upsert(DBObject query) throws SystemErrorException;
+
+    /**
      * Updates this dao using the non-null fields in this object.
      * This dao must have a primary id value.
      * Updates in this method are additive--no fields are deleted
@@ -41,7 +51,6 @@ public interface DAOMethods {
      * If the underlying implementation supports it, the
      * update will be atomic.
      * <p/>
-     * TODO throw DoesNotExistInDBException
      *
      * @param updateType The type of update (see enum for documentation)
      * @throws main.java.com.eweware.service.base.error.SystemErrorException

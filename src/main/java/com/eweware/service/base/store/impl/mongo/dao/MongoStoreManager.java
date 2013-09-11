@@ -365,6 +365,7 @@ public final class MongoStoreManager implements StoreManager {
                 }
             }
             if (serverAddresses.size() == 1) {
+                builder.writeConcern(WriteConcern.FSYNCED);
                 logger.info("*** Connecting as a standalone hostname " + serverAddresses.get(0) + " at port " + mongoDbPort + " ***");
             } else if (serverAddresses.size() > 0) {
                 builder

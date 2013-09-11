@@ -226,8 +226,8 @@ public class ImageUploadResource {
 
     private String processFile(InputStream in, FormDataContentDisposition metadata, AmazonS3 s3, MediaReferendType referendType, String objectId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
         final long fileSize = metadata.getSize();
-        if (fileSize != 0 && fileSize > 1000000) { // can be misleading or -1, but try...
-            throw new InvalidRequestException("File size exceeds 1MB limit: " + fileSize);
+        if (fileSize != 0 && fileSize > 2000000) { // can be misleading or -1, but try...
+            throw new InvalidRequestException("File size exceeds 2MB limit: " + fileSize);
         }
         final String file = metadata.getFileName();
         final String extension = getExtension(file);
@@ -278,6 +278,7 @@ public class ImageUploadResource {
 
                 IMOperation op = new IMOperation();
                 op.addImage();
+                op.autoOrient(); // BWC-1540
 
                 if (spec.mode == TypeSpecMode.FIXED) {
                     if (imageWidth == imageHeight) {    // square image
@@ -328,11 +329,11 @@ public class ImageUploadResource {
                     s3.putObject(new PutObjectRequest(getMediaManager().getImageBucketName(), getMediaManager().getBucketImageDir() + newFilename, newFile));
 //                    System.out.println(newFilename + " SAVED TO S3 IN " + (System.currentTimeMillis() - start) + "ms");
                 } catch (com.amazonaws.AmazonServiceException e) {
-                    throw new SystemErrorException("AWS service exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
+                    throw new SystemErrorException("AWS service exception when putting " + filepath + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 } catch (com.amazonaws.AmazonClientException e) {
-                    throw new SystemErrorException("AWS client exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
+                    throw new SystemErrorException("AWS client exception when putting " + filepath + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 } catch (Exception e) {
-                    throw new SystemErrorException("Exception when putting " + original.getAbsolutePath() + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
+                    throw new SystemErrorException("Exception when putting " + filepath + " into s3", e, ErrorCodes.SEVERE_AWS_ERROR);
                 }
             }
             associateImageWithObject(mediaId, referendType, objectId);
@@ -353,7 +354,7 @@ public class ImageUploadResource {
             try {
                 original.delete();
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "Failed to delete original file: " + original.getAbsolutePath(), e);
+                logger.log(Level.SEVERE, "Failed to delete original file: " + filepath, e);
             }
         }
     }
