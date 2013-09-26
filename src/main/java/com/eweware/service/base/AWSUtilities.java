@@ -1,14 +1,14 @@
-package main.java.com.eweware.service.base;
+package com.eweware.service.base;
 
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.type.RunMode;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.type.RunMode;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;

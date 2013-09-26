@@ -1,11 +1,11 @@
-package main.java.com.eweware.service.base.store.dao.schema;
+package com.eweware.service.base.store.dao.schema;
 
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.type.DefaultEmbeddedDataTypeValidator;
-import main.java.com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.BaseDAOConstants;
+import com.eweware.service.base.store.dao.schema.type.DefaultEmbeddedDataTypeValidator;
+import com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 import java.util.HashMap;
 import java.util.Hashtable;

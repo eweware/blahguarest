@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.base;
+package com.eweware.service.base;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.payload.CommentPayload;
-import main.java.com.eweware.service.base.store.StoreManager;
-import main.java.com.eweware.service.base.store.dao.UserProfileDAO;
-import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.payload.CommentPayload;
+import com.eweware.service.base.store.StoreManager;
+import com.eweware.service.base.store.dao.UserProfileDAO;
+import com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -266,7 +266,7 @@ public final class CommonUtilities {
      * @param value The value to test
      * @param entity The entity to use in case of value is not within limits
      * @return	Integer	Returns the value. If the value is null, it returns 0.
-     * @throws main.java.com.eweware.service.base.error.InvalidRequestException  Thrown if the value is not null and is not in {-1, 0, 1}
+     * @throws com.eweware.service.base.error.InvalidRequestException  Thrown if the value is not null and is not in {-1, 0, 1}
 	 **/
 	public static Integer checkDiscreteValue(Integer value, Object entity) throws InvalidRequestException {
 		if (value != null) {
@@ -300,7 +300,7 @@ public final class CommonUtilities {
 	 * @param max The exclusive maximum
 	 * @param entity
 	 * @return Integer Returns the supplied value.
-	 * @throws main.java.com.eweware.service.base.error.InvalidRequestException Thrown if the value is not null and is not within range.
+	 * @throws com.eweware.service.base.error.InvalidRequestException Thrown if the value is not null and is not within range.
 	 */
 	public static Integer checkValueRange(Integer value, int min, int max, Object entity) throws InvalidRequestException {
         if (value != null) {

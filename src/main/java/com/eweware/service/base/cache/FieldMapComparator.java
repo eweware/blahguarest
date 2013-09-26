@@ -1,8 +1,8 @@
-package main.java.com.eweware.service.base.cache;
+package com.eweware.service.base.cache;
 
-import main.java.com.eweware.service.base.payload.BasePayload;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.payload.BasePayload;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 
 import java.util.Comparator;
 import java.util.Date;

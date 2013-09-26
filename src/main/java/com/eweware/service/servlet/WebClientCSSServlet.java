@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.servlet;
+package com.eweware.service.servlet;
 
-import main.java.com.eweware.service.base.AWSUtilities;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.type.RunMode;
-import main.java.com.eweware.service.rest.RestUtilities;
+import com.eweware.service.base.AWSUtilities;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.type.RunMode;
+import com.eweware.service.rest.RestUtilities;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 /**
  * @author rk@post.harvard.edu
@@ -29,7 +29,7 @@ public interface BadgeTransactionDAOConstants {
 
     /**
      * The transaction's current state.
-     * @see main.java.com.eweware.service.base.store.dao.type.BadgeTransactionState
+     * @see com.eweware.service.base.store.dao.type.BadgeTransactionState
      */
     static final String STATE = "S";
 

@@ -1,9 +1,9 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
-import main.java.com.eweware.service.base.store.dao.schema.type.PollOptionTextValidator;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
+import com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
+import com.eweware.service.base.store.dao.schema.type.PollOptionTextValidator;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
  * <p>Field names and value data types for blah entities.</p>
@@ -82,7 +82,7 @@ public interface BlahDAOConstants {
      * <p>Optional field: blah expires on this date. Used in, e.g., predictions.</p>
      * <p>A datetime.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String EXPIRATION_DATE = "E";
 
@@ -91,7 +91,7 @@ public interface BlahDAOConstants {
      * this blah's prediction result to be valid. Applicable to blahs whose blah type
      * category is a prediction pattern.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String PREDICTION_RESULT_CORRECT_COUNT = "1";
 
@@ -100,7 +100,7 @@ public interface BlahDAOConstants {
      * this blah's prediction result to be invalid. Applicable to blahs whose blah type
      * category is a prediction pattern.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String PREDICTION_RESULT_INCORRECT_COUNT = "2";
 
@@ -110,7 +110,7 @@ public interface BlahDAOConstants {
      * Applicable to blahs whose blah type
      * category is a prediction pattern.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String PREDICTION_RESULT_UNCLEAR_COUNT = "3";
 
@@ -119,7 +119,7 @@ public interface BlahDAOConstants {
      * Applicable to blahs whose blah type
      * category is a prediction pattern.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String PREDICTION_USER_AGREE_COUNT = "4";
 
@@ -128,7 +128,7 @@ public interface BlahDAOConstants {
      * Applicable to blahs whose blah type
      * category is a prediction pattern.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String PREDICTION_USER_DISAGREE_COUNT = "5";
 
@@ -137,7 +137,7 @@ public interface BlahDAOConstants {
      * Applicable to blahs whose blah type
      * category is a prediction pattern.</p>
      *
-     * @see main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
+     * @see com.eweware.service.base.store.dao.type.BlahTypeCategoryType#PREDICTION
      */
     static final String PREDICTION_USER_UNCLEAR_COUNT = "6";
 

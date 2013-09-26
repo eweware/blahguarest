@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.error;
+package com.eweware.service.base.error;
 
 /**
  * @author rk@post.harvard.edu
@@ -375,14 +375,14 @@ public final class ErrorCodes {
     /**
      * MISSING_GROUP_DESCRIPTOR = 74
      *
-     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
      */
     public static final Integer MISSING_GROUP_DESCRIPTOR = 74;
 
     /**
      * INVALID_GROUP_DESCRIPTOR = 75
      *
-     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
      */
     public static final Integer INVALID_GROUP_DESCRIPTOR = 75;
 

@@ -1,6 +1,6 @@
-package main.java.com.eweware.service.base.store.dao.schema.type;
+package com.eweware.service.base.store.dao.schema.type;
 
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
 
 import java.util.List;
 import java.util.Map;

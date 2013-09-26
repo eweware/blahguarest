@@ -1,2 +1,2 @@
 <%@ page  language="java" import="java.util.*" contentType="text/html" pageEncoding="UTF-8" errorPage="" %>
-<% final String msg = main.java.com.eweware.service.base.AWSUtilities.getDefaultHtmlFromS3(); out.print(msg.substring(1)); %>
+<% final String msg = com.eweware.service.base.AWSUtilities.getDefaultHtmlFromS3(); out.print(msg.substring(1)); %>

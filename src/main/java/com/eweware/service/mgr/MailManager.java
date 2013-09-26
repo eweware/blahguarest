@@ -1,11 +1,11 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.type.RunMode;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.type.RunMode;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.*;
@@ -27,14 +27,14 @@ public class MailManager implements ManagerInterface {
 
     private static MailManager singleton;
 
-    public static MailManager getInstance() throws main.java.com.eweware.service.base.error.SystemErrorException {
+    public static MailManager getInstance() throws com.eweware.service.base.error.SystemErrorException {
         if (MailManager.singleton == null) {
-            throw new main.java.com.eweware.service.base.error.SystemErrorException("mail manager not initialized");
+            throw new com.eweware.service.base.error.SystemErrorException("mail manager not initialized");
         }
         return MailManager.singleton;
     }
 
-    private main.java.com.eweware.service.base.mgr.ManagerState state = main.java.com.eweware.service.base.mgr.ManagerState.UNKNOWN;
+    private com.eweware.service.base.mgr.ManagerState state = com.eweware.service.base.mgr.ManagerState.UNKNOWN;
     private Properties props = new Properties();
     private Session session;
 

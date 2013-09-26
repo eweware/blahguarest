@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.base.store.impl.mongo.dao;
+package com.eweware.service.base.store.impl.mongo.dao;
 
 import com.mongodb.DBCollection;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.GroupTypeDAO;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.GroupTypeSchema;
-import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.GroupTypeDAO;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.GroupTypeSchema;
+import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.HashMap;
 import java.util.Map;

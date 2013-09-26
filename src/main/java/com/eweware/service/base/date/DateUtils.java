@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.base.date;
+package com.eweware.service.base.date;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidRequestException;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
@@ -122,7 +122,7 @@ public class DateUtils {
      * Converts the string to a calendar
      * @param dateAsString A date string in the format "yyMMdd"
      * @return Calendar Returns the calendar represented by the string or the current calendar if the string is null
-     * @throws main.java.com.eweware.service.base.error.InvalidRequestException Thrown if the date string is not in the expected format
+     * @throws com.eweware.service.base.error.InvalidRequestException Thrown if the date string is not in the expected format
      */
     public final static Calendar convertToCalendar(String dateAsString) throws InvalidRequestException {
         Calendar startDate = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));

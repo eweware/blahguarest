@@ -1,6 +1,6 @@
-package main.java.com.eweware.service.base.cache;
+package com.eweware.service.base.cache;
 
-import main.java.com.eweware.service.base.payload.InboxBlahPayload;
+import com.eweware.service.base.payload.InboxBlahPayload;
 
 import java.io.Serializable;
 import java.util.ArrayList;

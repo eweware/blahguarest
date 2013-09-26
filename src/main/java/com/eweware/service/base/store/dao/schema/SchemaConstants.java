@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.schema;
+package com.eweware.service.base.store.dao.schema;
 
 public interface SchemaConstants {
 
@@ -47,7 +47,7 @@ public interface SchemaConstants {
 
     /**
      * A data type.
-     * @see main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType
+     * @see com.eweware.service.base.store.dao.schema.type.SchemaDataType
      */
     static final String SCHEMA_SPEC_DATA_TYPE = "T";
 
@@ -61,7 +61,7 @@ public interface SchemaConstants {
      * The default value for this field. Used when the
      * DAO is explicitly initialized to defaults by the client.
      * Depending on the field, this is an i18n value.
-     * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#initToDefaultValues(main.java.com.eweware.service.base.i18n.LocaleId)
+     * @see com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#initToDefaultValues(com.eweware.service.base.i18n.LocaleId)
      */
     static final String SCHEMA_SPEC_DEFAULT_VALUE = "Di";
 

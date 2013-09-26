@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.mgr.type;
+package com.eweware.service.mgr.type;
 
 /**
  * <p>The type of vote cast by a user for a prediction.</p>

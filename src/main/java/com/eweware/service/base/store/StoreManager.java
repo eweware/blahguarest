@@ -1,8 +1,8 @@
-package main.java.com.eweware.service.base.store;
+package com.eweware.service.base.store;
 
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.store.dao.*;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.store.dao.*;
 
 import java.util.Map;
 
@@ -16,14 +16,14 @@ public interface StoreManager extends ManagerInterface {
 
     /**
      * @return GroupTypeDAO An empty group type dao
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      */
     public abstract GroupTypeDAO createGroupType() throws SystemErrorException;
 
     /**
      * @param id The group type id
      * @return GroupTypeDAO A group type dao populated with the id
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      */
     public abstract GroupTypeDAO createGroupType(String id) throws SystemErrorException;
     public abstract GroupTypeDAO createGroupType(Map<String, Object> map) throws SystemErrorException;

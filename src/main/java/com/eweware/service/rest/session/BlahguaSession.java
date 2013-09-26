@@ -1,14 +1,14 @@
-package main.java.com.eweware.service.rest.session;
+package com.eweware.service.rest.session;
 
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
-import main.java.com.eweware.service.mgr.GroupManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.user.validation.Login;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidAuthorizedStateException;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.store.dao.type.UserAccountType;
+import com.eweware.service.mgr.GroupManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.user.validation.Login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.user.validation;
+package com.eweware.service.user.validation;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
 
 /**
  * @author rk@post.harvard.edu

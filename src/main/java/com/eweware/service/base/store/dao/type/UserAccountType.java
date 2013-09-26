@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.type;
+package com.eweware.service.base.store.dao.type;
 
 /**
  * <p>User account types used in UserAccountDAO.</p>

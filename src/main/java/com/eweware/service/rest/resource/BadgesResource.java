@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.BadgePayload;
-import main.java.com.eweware.service.base.payload.BadgingNotificationEntity;
-import main.java.com.eweware.service.mgr.BadgesManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.BadgePayload;
+import com.eweware.service.base.payload.BadgingNotificationEntity;
+import com.eweware.service.mgr.BadgesManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +61,7 @@ public class BadgesResource {
      * @return Http 200 (OK) response includes an entity that is
      *         a list of badging authorities known to Blahgua. The badging
      *         authority entities' fields are described in BadgeAuthorityDAOConstants.
-     * @see main.java.com.eweware.service.base.store.dao.BadgeAuthorityDAOConstants
+     * @see com.eweware.service.base.store.dao.BadgeAuthorityDAOConstants
      */
     @GET
     @Path("authorities")
@@ -158,7 +158,7 @@ public class BadgesResource {
      * @param entity    A JSON entity representing the badge notification metadata
      *                  containing fields in BadgingNotificationEntity.
      * @return
-     * @see main.java.com.eweware.service.base.payload.BadgingNotificationEntity
+     * @see com.eweware.service.base.payload.BadgingNotificationEntity
      */
     @POST
     @Path("/add")

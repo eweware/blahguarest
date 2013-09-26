@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.mgr.StatisticsManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.InvalidAuthorizedStateException;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.mgr.StatisticsManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;

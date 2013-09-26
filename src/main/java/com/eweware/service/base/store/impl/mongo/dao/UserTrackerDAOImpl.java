@@ -1,11 +1,11 @@
-package main.java.com.eweware.service.base.store.impl.mongo.dao;
+package com.eweware.service.base.store.impl.mongo.dao;
 
 import com.mongodb.DBCollection;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.UserTrackerDAO;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.UserTrackerDAO;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -110,7 +110,7 @@ public class UserTrackerDAOImpl extends BaseDAOImpl implements UserTrackerDAO {
      *
      * @param id The id as a string
      * @return String A String version of the id, suitable for storage and use in Mongo
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *          Not thrown by this superclass but must be declared
      *          because Java is just so
      */

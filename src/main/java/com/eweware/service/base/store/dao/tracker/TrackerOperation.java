@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.tracker;
+package com.eweware.service.base.store.dao.tracker;
 
 /**
  * @author rk@post.harvard.edu

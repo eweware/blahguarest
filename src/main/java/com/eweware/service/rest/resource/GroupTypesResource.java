@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.mgr.GroupManager;
-import main.java.com.eweware.service.rest.RestUtilities;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.mgr.GroupManager;
+import com.eweware.service.rest.RestUtilities;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -40,7 +40,7 @@ public class GroupTypesResource {
      * @param sortFieldName<i>Query Parameter:</i>(Optional:) The name of a field to sort by. <b>Please don't use this as it will
      *                              be removed in a coming release.</b>
      * @return A list of JSON entities (GroupTypePayload entities) with http status of 200.
-     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
+     * @see com.eweware.service.base.store.dao.GroupTypeDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ public class GroupTypesResource {
      * @return A JSON entity (a GroupTypePayload) with the group type information.
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
-     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
+     * @see com.eweware.service.base.store.dao.GroupTypeDAOConstants
      */
     @GET
     @Path("/{groupTypeId}")
@@ -127,7 +127,7 @@ public class GroupTypesResource {
 //     *         If there is a state conflict (typically, the group type with the
 //     *         specified name already exists), returns code 409.
 //     *         If the user is not authorized to create a group type, returns code 401.
-//     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
+//     * @see com.eweware.service.base.store.dao.GroupTypeDAOConstants
 //     */
 //    @POST
 //    @Consumes(MediaType.APPLICATION_JSON)
@@ -166,7 +166,7 @@ public class GroupTypesResource {
 //     *         If there is an error in the request, returns status 400.
 //     *         If the group type doesn't exist, returns status 404.
 //     *         If the user isn't authorized to access this method, returns status 401.
-//     * @see main.java.com.eweware.service.base.store.dao.GroupTypeDAOConstants
+//     * @see com.eweware.service.base.store.dao.GroupTypeDAOConstants
 //     */
 //    @PUT
 //    @Path("/{groupTypeId}")

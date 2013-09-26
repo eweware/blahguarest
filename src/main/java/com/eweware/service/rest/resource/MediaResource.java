@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.mgr.MediaManager;
-import main.java.com.eweware.service.rest.RestUtilities;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.mgr.MediaManager;
+import com.eweware.service.rest.RestUtilities;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;

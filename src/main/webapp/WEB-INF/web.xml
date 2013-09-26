@@ -14,7 +14,7 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <listener> <!-- Listen to session create/destroy events -->
-        <listener-class>main.java.com.eweware.service.rest.session.BlahguaSessionListener</listener-class>
+        <listener-class>com.eweware.service.rest.session.BlahguaSessionListener</listener-class>
     </listener>
 
     <filter> <!-- CORS support: configured to be totally public -->
@@ -63,7 +63,7 @@
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
         <init-param> <!-- App class treats all classes in com.service.service as REST resources -->
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>main.java.com.eweware.service.App</param-value>
+            <param-value>com.eweware.service.App</param-value>
         </init-param>
         <init-param> <!-- JSON annotation support using Jackson libs -->
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -74,11 +74,11 @@
 
     <servlet>
         <servlet-name>User Account Recovery Servlet</servlet-name>
-        <servlet-class>main.java.com.eweware.service.servlet.UserSessionRecoveryServlet</servlet-class>
+        <servlet-class>com.eweware.service.servlet.UserSessionRecoveryServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Web Client CSS Servlet</servlet-name>
-        <servlet-class>main.java.com.eweware.service.servlet.WebClientCSSServlet</servlet-class>
+        <servlet-class>com.eweware.service.servlet.WebClientCSSServlet</servlet-class>
         <description>Serves up CSS files to web client.</description>
     </servlet>
 

@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.cache;
+package com.eweware.service.base.cache;
 
 import java.io.Serializable;
 import java.util.List;

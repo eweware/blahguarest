@@ -1,9 +1,9 @@
-package main.java.com.eweware.service.search.index.user;
+package com.eweware.service.search.index.user;
 
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.UserDAO;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.eweware.service.base.store.dao.UserDAO;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -44,7 +44,7 @@ public class UserDataIndexable implements ZoieIndexable {
         } else {
             throw new SystemErrorException("missing id in userDAO");
         }
-        field = doc.getFieldable(main.java.com.eweware.service.base.store.dao.UserDAO.USERNAME);
+        field = doc.getFieldable(com.eweware.service.base.store.dao.UserDAO.USERNAME);
         if (field != null) {
             map.put(UserDAO.USERNAME, field.stringValue());
         }

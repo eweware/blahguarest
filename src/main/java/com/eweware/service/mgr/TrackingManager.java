@@ -1,18 +1,18 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
 
 import com.mongodb.*;
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.base.type.TrackerType;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.store.dao.*;
+import com.eweware.service.base.store.dao.tracker.TrackerOperation;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.type.TrackerType;
 
 import javax.xml.ws.WebServiceException;
 import java.util.*;
@@ -165,7 +165,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param voteDown        Vote up for a blah or a comment
      * @param pollOptionIndex
      * @param viewCount       Number of views
-     * @param openCount       Number of opens         @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @param openCount       Number of opens         @throws com.eweware.service.base.error.SystemErrorException
      */
     public void trackObject(TrackerOperation operation, String userId, String authorId, boolean isBlah, boolean isNewObject,
                             String objectId, String subObjectId, boolean voteUp, boolean voteDown, Long pollOptionIndex,
@@ -193,7 +193,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     /**
      * Tracks the user stats for authors and consumers of blahs.
      *
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void trackUserStats(TrackerQueueItem trackerData) throws SystemErrorException, ResourceNotFoundException, InvalidRequestException {
@@ -319,7 +319,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      *
      * @param userId The user id
      * @return String   The tracker id for the tracker
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private String maybeAllocateUserTracker(String userId) throws SystemErrorException {
@@ -337,7 +337,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param trackerData
      * @param trackerIsForUser
      * @param userIsBlahCreator
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void updateUserStats(TrackerQueueItem trackerData, boolean trackerIsForUser, String trackerId, boolean userIsBlahCreator) throws SystemErrorException {
@@ -547,7 +547,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * See BlahTrackerDAOConstants for field names and structure.
      *
      * @param trackerData A tracker data instance.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void trackBlahOrCommentStats(TrackerQueueItem trackerData) throws SystemErrorException {
@@ -764,7 +764,7 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
      * @param trackerType Is this tracking a user, a blah or a comment?
      * @param objectId    A userId, blahId, or commentId, depending on the tracker type
      * @return String  The tracker id
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public static final String makeUserTrackerIdExternal(TrackerType trackerType, Calendar cal, String objectId) throws SystemErrorException {

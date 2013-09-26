@@ -1,14 +1,14 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.CommentPayload;
-import main.java.com.eweware.service.base.store.dao.CommentDAO;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.CommentPayload;
+import com.eweware.service.base.store.dao.CommentDAO;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.mgr.BlahManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -56,7 +56,7 @@ public class CommentsResource {
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
      *         If the user is not authorized to make this request, returns status 401.
-     * @see main.java.com.eweware.service.base.store.dao.UserDAOConstants
+     * @see com.eweware.service.base.store.dao.UserDAOConstants
      */
     @POST
     @Path("/author")
@@ -97,7 +97,7 @@ public class CommentsResource {
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
      *         If the user is not authorized to make this request, returns status 401.
-     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
+     * @see com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -144,7 +144,7 @@ public class CommentsResource {
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
      *         If the user is not authorized to make this request, returns status 401.
-     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
+     * @see com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @PUT
     @Path("/{commentId}")
@@ -197,7 +197,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
+     * @see com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @GET
     @Path("/{commentId}")
@@ -241,7 +241,7 @@ public class CommentsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see main.java.com.eweware.service.base.store.dao.CommentDAOConstants
+     * @see com.eweware.service.base.store.dao.CommentDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

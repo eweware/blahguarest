@@ -1,14 +1,14 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
 import com.mongodb.gridfs.GridFS;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.type.RunMode;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.type.RunMode;
 
 import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceException;

@@ -1,9 +1,9 @@
-package main.java.com.eweware.service.base.mgr;
+package com.eweware.service.base.mgr;
 
-import main.java.com.eweware.service.base.cache.BlahCacheConfiguration;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.type.RunMode;
+import com.eweware.service.base.cache.BlahCacheConfiguration;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.type.RunMode;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.params.ConnManagerPNames;

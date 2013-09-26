@@ -1,36 +1,36 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import main.java.com.eweware.service.base.CommonUtilities;
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.payload.*;
-import main.java.com.eweware.service.base.store.StoreManager;
-import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
-import main.java.com.eweware.service.base.store.dao.schema.CommentSchema;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.tracker.TrackerOperation;
-import main.java.com.eweware.service.base.store.dao.type.BlahTypeCategoryType;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.base.type.TrackerType;
-import main.java.com.eweware.service.mgr.aux.InboxData;
-import main.java.com.eweware.service.mgr.aux.InboxHandler;
-import main.java.com.eweware.service.mgr.type.PredictionExpirationType;
-import main.java.com.eweware.service.mgr.type.PredictionVote;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
-import main.java.com.eweware.service.search.index.blah.BlahCommentDataIndexable;
-import main.java.com.eweware.service.search.index.blah.BlahCommentDataIndexableInterpreter;
-import main.java.com.eweware.service.search.index.blah.BlahDataIndexable;
-import main.java.com.eweware.service.search.index.blah.BlahDataIndexableInterpreter;
-import main.java.com.eweware.service.search.index.common.BlahguaFilterIndexReader;
-import main.java.com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
+import com.eweware.service.base.CommonUtilities;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.payload.*;
+import com.eweware.service.base.store.StoreManager;
+import com.eweware.service.base.store.dao.*;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.BlahSchema;
+import com.eweware.service.base.store.dao.schema.CommentSchema;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.dao.tracker.TrackerOperation;
+import com.eweware.service.base.store.dao.type.BlahTypeCategoryType;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.base.store.dao.type.MediaReferendType;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.type.TrackerType;
+import com.eweware.service.mgr.aux.InboxData;
+import com.eweware.service.mgr.aux.InboxHandler;
+import com.eweware.service.mgr.type.PredictionExpirationType;
+import com.eweware.service.mgr.type.PredictionVote;
+import com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.search.index.blah.BlahCommentDataIndexable;
+import com.eweware.service.search.index.blah.BlahCommentDataIndexableInterpreter;
+import com.eweware.service.search.index.blah.BlahDataIndexable;
+import com.eweware.service.search.index.blah.BlahDataIndexableInterpreter;
+import com.eweware.service.search.index.common.BlahguaFilterIndexReader;
+import com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -198,7 +198,7 @@ public final class BlahManager implements ManagerInterface {
      * @param localeId
      * @param authorId
      * @param entity   The request object  @return BlahPayload A blah payload including the new blah id
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
@@ -339,7 +339,7 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing expiration date", ErrorCodes.INVALID_INPUT);
         }
         try {
-            final Date date = expirationDate; // main.java.com.eweware.service.base.date.DateUtils.fromISODateTimeToUTC(expirationDate);
+            final Date date = expirationDate; // com.eweware.service.base.date.DateUtils.fromISODateTimeToUTC(expirationDate);
             final long limit = System.currentTimeMillis() + THIRTY_MINUTES_IN_MILLIS;
             if (date.getTime() < limit) {
                 throw new InvalidRequestException("expiration date must be at least 30 minutes into the future", ErrorCodes.INVALID_INPUT);
@@ -766,7 +766,7 @@ public final class BlahManager implements ManagerInterface {
      * @param entity
      * @param blahId
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */
@@ -1104,7 +1104,7 @@ public final class BlahManager implements ManagerInterface {
     /**
      * Used for testing purposes: forces refresh of all caches.
      *
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public void refreshCaches() throws SystemErrorException {
@@ -1124,7 +1124,7 @@ public final class BlahManager implements ManagerInterface {
      *                       to search for stats
      * @return BlahPayload  The blah information
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */
@@ -1170,8 +1170,8 @@ public final class BlahManager implements ManagerInterface {
 
         // blah tracker ids are: <blahId><2-digit year><2-digit month><2-digit day of month> (e.g., 5031b25d036408e9b4160b95120820)
         // Next two calls also parse the string to make sure we've got a real date
-        Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
-        Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
+        Calendar startDate = com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
+        Calendar endDate = com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
 //        logger.finer(statsStartDate+" startDate=" + new Date(startDate.getTimeInMillis()));
 //        logger.finer(statsEndDate+" endDate=" + new Date(endDate.getTimeInMillis()));
 
@@ -1248,7 +1248,7 @@ public final class BlahManager implements ManagerInterface {
      *
      * @param blahId The blah's id
      * @param entity Any entity payload to use in a rest not found exception
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */
@@ -1269,7 +1269,7 @@ public final class BlahManager implements ManagerInterface {
      * @param commentAuthorId
      * @param entity          @return
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
@@ -1370,7 +1370,7 @@ public final class BlahManager implements ManagerInterface {
      * @param entity    The client request
      * @param userId
      * @param commentId @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      * @throws StateConflictException
@@ -1518,8 +1518,8 @@ public final class BlahManager implements ManagerInterface {
         }
 
         // comment tracker ids are: <commentId><2-digit year><2-digit month><2-digit day of month> (e.g., 5031b25d036408e9b4160b95120820)
-        Calendar startDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
-        Calendar endDate = main.java.com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
+        Calendar startDate = com.eweware.service.base.date.DateUtils.convertToCalendar(statsStartDate);
+        Calendar endDate = com.eweware.service.base.date.DateUtils.convertToCalendar(statsEndDate);
 
         // We've made sure that the dates can be parsed as expected and are available as calendar instances for comparison
         List<CommentTrackerPayload> trackers = null;
@@ -1634,7 +1634,7 @@ public final class BlahManager implements ManagerInterface {
      * @param mediaId   The media id
      * @throws SystemErrorException
      * @throws ResourceNotFoundException
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
+     * @see com.eweware.service.base.store.dao.type.MediaReferendType
      */
     public void associateImageWithComment(String commentId, String mediaId) throws SystemErrorException, ResourceNotFoundException {
         final CommentDAO comment = getStoreManager().createComment(commentId);
@@ -1738,7 +1738,7 @@ public final class BlahManager implements ManagerInterface {
      *
      * @param blahDAO
      * @return
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void indexBlah(BlahDAO blahDAO) throws SystemErrorException {
@@ -1765,7 +1765,7 @@ public final class BlahManager implements ManagerInterface {
      * Deletes the blah from the index.
      *
      * @param blahId The blah's id.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void deleteBlahFromIndex(String blahId) throws SystemErrorException {
@@ -1783,7 +1783,7 @@ public final class BlahManager implements ManagerInterface {
      *
      * @param comment
      * @return
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void indexComment(CommentDAO comment) throws SystemErrorException {
@@ -1820,7 +1820,7 @@ public final class BlahManager implements ManagerInterface {
 //     * Deletes the blah from the index.
 //     *
 //     * @param commentId The comment's id.
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     * @throws com.eweware.service.base.error.SystemErrorException
 //     *
 //     */
 //    private void deleteCommentFromIndex(String commentId) throws SystemErrorException {
@@ -1840,7 +1840,7 @@ public final class BlahManager implements ManagerInterface {
      * @param indexingSystem
      * @param searchBlahs
      * @return
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public List<BasePayload> getFromIndex(Integer maxResults, ZoieSystem<BlahguaFilterIndexReader, ?> indexingSystem, boolean searchBlahs) throws SystemErrorException {
@@ -1876,7 +1876,7 @@ public final class BlahManager implements ManagerInterface {
      * @param subset    A specific subset of the data to search (either "b" for blahs or "c" for comments).
      *                  Default: searches blahs.
      * @return
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public List<BasePayload> search(LocaleId localeId, String fieldName, String query, String subset, Integer maxResults) throws SystemErrorException {

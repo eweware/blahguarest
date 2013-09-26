@@ -1,9 +1,9 @@
-package main.java.com.eweware.service.base.store.dao.schema.type;
+package com.eweware.service.base.store.dao.schema.type;
 
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -21,7 +21,7 @@ public class DateTimeDataTypeValidator implements FieldValidator {
             try {
                 return DateUtils.fromISODateTimeToUTC((String) value);
             } catch (ParseException e) { // should not happen if field was first validated
-                throw new SystemErrorException("invalid value for " + main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType.DT.getDescription(), e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
+                throw new SystemErrorException("invalid value for " + com.eweware.service.base.store.dao.schema.type.SchemaDataType.DT.getDescription(), e, ErrorCodes.SERVER_RECOVERABLE_ERROR);
             }
         }
         return value;

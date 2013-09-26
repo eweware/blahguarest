@@ -1,8 +1,8 @@
-package main.java.com.eweware.service.base.store.dao.schema.type;
+package com.eweware.service.base.store.dao.schema.type;
 
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import org.bson.types.ObjectId;
 
 /**

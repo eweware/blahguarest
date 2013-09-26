@@ -1,6 +1,6 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.error.SystemErrorException;
 
 import java.util.Date;
 import java.util.List;

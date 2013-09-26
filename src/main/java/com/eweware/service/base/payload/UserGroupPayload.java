@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.base.payload;
+package com.eweware.service.base.payload;
 
 
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.UserGroupSchema;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.UserGroupDAOConstants;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.UserGroupSchema;
 
 import java.util.Map;
 

@@ -1,14 +1,14 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.InvalidAuthorizedStateException;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.mgr.GroupManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.InvalidAuthorizedStateException;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.mgr.GroupManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -42,7 +42,7 @@ public class GroupsResource {
      * @param groupId <i>Path Parameter</i>: The group's id
      * @return If successful, returns http status 200 with a JSON entity (a GroupPayload)
      *         containing the group id and the current viewer count for the group.
-     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Path("/{groupId}/viewerCount")
@@ -71,7 +71,7 @@ public class GroupsResource {
      * @param count<i>Query Parameter:</i>(Optional:) The number of items to return.
      * @return If successful, returns a possibly empty array of group ids with http status 200. These
      *         are the open group ids.
-     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Path("/featured")
@@ -111,7 +111,7 @@ public class GroupsResource {
      * @return If successful, returns a JSON entity (a GroupPayload) with http status 200
      *         with the group entities that match the query parameters.
      *         If the request has an error, returns http status 400.
-     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -149,7 +149,7 @@ public class GroupsResource {
      * @param groupId <i>Path Parameter:</i> The group's id
      * @return If successful, returns http status 200 with a JSON entity
      *         (a GroupPayload) containing the group's info.
-     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants
      */
     @GET
     @Path("/{groupId}")
@@ -204,7 +204,7 @@ public class GroupsResource {
 //     *         returns 404. If there is a state conflict implied by
 //     *         the change, returns status 409.
 //     *         On errors, a detailed error entity will be returned.
-//     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
+//     * @see com.eweware.service.base.store.dao.GroupDAOConstants
 //     */
 //    @PUT
 //    @Path("/{groupId}")
@@ -246,10 +246,10 @@ public class GroupsResource {
 //     *
 //     * @param entity A JSON entity (a GroupPayload) requiring the group type's id, the group's display name,
 //     *               a group descriptor, a description, and a validation method.
-//     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants
-//     * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
-//     * @see main.java.com.eweware.service.user.validation.DefaultUserValidationMethod
-//     * @see main.java.com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
+//     * @see com.eweware.service.base.store.dao.GroupDAOConstants
+//     * @see com.eweware.service.user.validation.DefaultUserValidationMethod
+//     * @see com.eweware.service.user.validation.DefaultUserValidationMethod
+//     * @see com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
 //     */
 //    @POST
 //    @Consumes(MediaType.APPLICATION_JSON)

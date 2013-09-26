@@ -1,14 +1,14 @@
-package main.java.com.eweware.service.base.payload;
+package com.eweware.service.base.payload;
 
 import com.mongodb.DBCollection;
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.eweware.service.base.store.dao.BaseDAOConstants;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.Serializable;
@@ -127,7 +127,7 @@ public abstract class BasePayload extends LinkedHashMap<String, Object> implemen
      * <p>Returns the schema for the payload's DAO representation.</p>
      *
      * @return the dao-equivalent schema
-     * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#getDAOSchema(main.java.com.eweware.service.base.i18n.LocaleId)
+     * @see com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#getDAOSchema(com.eweware.service.base.i18n.LocaleId)
      */
     protected final BaseSchema getCachedSchema() throws SystemErrorException {
         if (cachedSchema != null) {

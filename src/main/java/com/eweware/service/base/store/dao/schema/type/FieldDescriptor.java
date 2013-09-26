@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.schema.type;
+package com.eweware.service.base.store.dao.schema.type;
 
 /**
  * <p>Describes a field. A transient object.</p>

@@ -1,6 +1,6 @@
-package main.java.com.eweware.service.base.payload;
+package com.eweware.service.base.payload;
 
-import main.java.com.eweware.service.base.store.dao.PollOptionDAOConstants;
+import com.eweware.service.base.store.dao.PollOptionDAOConstants;
 
 /**
  * @author rk@post.harvard.edu

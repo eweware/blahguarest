@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.mgr.type;
+package com.eweware.service.mgr.type;
 
 /**
  * <p>Specifies whether a vote for a prediction is pre-expiration or post-expiration.</p>

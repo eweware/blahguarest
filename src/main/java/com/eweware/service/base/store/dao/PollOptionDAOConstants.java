@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 /**
  * <p>A poll option is an entity containing information about one of the

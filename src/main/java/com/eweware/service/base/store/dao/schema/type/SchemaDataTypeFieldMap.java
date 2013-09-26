@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.schema.type;
+package com.eweware.service.base.store.dao.schema.type;
 
 /**
  * @author rk@post.harvard.edu

@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.base.payload;
+package com.eweware.service.base.payload;
 
-import main.java.com.eweware.service.base.CommonUtilities;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.UserBlahInfoSchema;
+import com.eweware.service.base.CommonUtilities;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.UserBlahInfoDAOConstants;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.UserBlahInfoSchema;
 
 import java.util.Date;
 import java.util.Map;
@@ -110,7 +110,7 @@ public class UserBlahInfoPayload extends BasePayload implements UserBlahInfoDAOC
      * <p>For possible values, see the codes for PredictionVote.</p>
      * @return  The user's vote for the prediction before it expired, or null
      * if the user has not voted.
-     * @see main.java.com.eweware.service.mgr.type.PredictionVote
+     * @see com.eweware.service.mgr.type.PredictionVote
      */
     public String getPredictionVote() {
         return (String) get(PREDICTION_VOTE);
@@ -121,7 +121,7 @@ public class UserBlahInfoPayload extends BasePayload implements UserBlahInfoDAOC
      * <p>For possible values, see the codes for PredictionVote.</p>
      * @return  The user's vote for the prediction after it expired, or null
      * if the user has not voted on the result.
-     * @see main.java.com.eweware.service.mgr.type.PredictionVote
+     * @see com.eweware.service.mgr.type.PredictionVote
      */
     public String getPredictionResultVote() {
         return (String) get(PREDICTION_RESULT_VOTE);

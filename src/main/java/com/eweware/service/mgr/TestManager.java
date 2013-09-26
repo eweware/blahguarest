@@ -1,6 +1,6 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerInterface;
 
 /**
  * @author rk@post.harvard.edu

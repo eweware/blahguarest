@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.user.validation;
+package com.eweware.service.user.validation;
 
 /**
  * @author rk@post.harvard.edu

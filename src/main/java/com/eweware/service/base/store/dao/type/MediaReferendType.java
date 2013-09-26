@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.type;
+package com.eweware.service.base.store.dao.type;
 
 /**
  * <p>The media referend type specifies whether the image is used for objects such as blahs,

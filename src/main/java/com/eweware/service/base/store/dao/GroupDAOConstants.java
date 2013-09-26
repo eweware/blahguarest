@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
  *  <p>Field names and value data types for group entities.</p>
@@ -79,7 +79,7 @@ public interface GroupDAOConstants {
     /**
      * <p>Group state information.
      * Its value corresponds to an authorization state (e.g., active)</p>
-     * @see main.java.com.eweware.service.base.payload.AuthorizedState
+     * @see com.eweware.service.base.payload.AuthorizedState
      */
     static final String STATE = "S";
 

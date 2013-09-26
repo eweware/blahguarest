@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 /**
  * <p>_id for this blah is a String composite of:

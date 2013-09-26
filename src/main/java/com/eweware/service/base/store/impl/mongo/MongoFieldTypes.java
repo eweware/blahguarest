@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.impl.mongo;
+package com.eweware.service.base.store.impl.mongo;
 
 /**
  * @author rk@post.harvard.edu

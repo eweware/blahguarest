@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 
 /**
  * <p>Field names and corresponding data types for entity used to relate user and blah information.</p>
@@ -72,7 +72,7 @@ public interface UserBlahInfoDAOConstants {
      * <p>This field's value must be one of the codes
      * in PredictionVote. </p>
      *
-     * @see main.java.com.eweware.service.mgr.type.PredictionVote
+     * @see com.eweware.service.mgr.type.PredictionVote
      */
     static final String PREDICTION_VOTE = "D";
 
@@ -83,7 +83,7 @@ public interface UserBlahInfoDAOConstants {
      * <p>This field's value must be one of the codes
      * in PredictionVote. </p>
      *
-     * @see main.java.com.eweware.service.mgr.type.PredictionVote
+     * @see com.eweware.service.mgr.type.PredictionVote
      */
     static final String PREDICTION_RESULT_VOTE = "Z";
     /**

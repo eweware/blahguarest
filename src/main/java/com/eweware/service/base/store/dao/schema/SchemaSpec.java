@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.base.store.dao.schema;
+package com.eweware.service.base.store.dao.schema;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.FieldValidator;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.FieldValidator;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

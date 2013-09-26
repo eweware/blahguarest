@@ -1,9 +1,9 @@
-package main.java.com.eweware.service.base.store.impl.mongo.dao;
+package com.eweware.service.base.store.impl.mongo.dao;
 
 import com.mongodb.DBCollection;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.store.dao.BadgeAuthorityDAO;
-import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.store.dao.BadgeAuthorityDAO;
+import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.HashMap;
 import java.util.Map;

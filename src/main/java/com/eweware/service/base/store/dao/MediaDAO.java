@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 
 /**
@@ -12,7 +12,7 @@ public interface MediaDAO extends BaseDAO, MediaDAOConstants {
      * <p>Returns the media referend type</p>
      *
      * @return String   Returns the media referend type
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
+     * @see com.eweware.service.base.store.dao.type.MediaReferendType
      */
     public String getReferendType();
 
@@ -20,7 +20,7 @@ public interface MediaDAO extends BaseDAO, MediaDAOConstants {
      * <p> Sets the media referend's type</p>
      *
      * @param referendType Media referend type (a valid file extension)
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
+     * @see com.eweware.service.base.store.dao.type.MediaReferendType
      */
     public void setReferendType(String referendType);
 
@@ -28,7 +28,7 @@ public interface MediaDAO extends BaseDAO, MediaDAOConstants {
      * <p>Returns the media's type (is it an image, video?)</p>
      *
      * @return The media type
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaType
+     * @see com.eweware.service.base.store.dao.type.MediaType
      */
     public String getType();
 
@@ -36,7 +36,7 @@ public interface MediaDAO extends BaseDAO, MediaDAOConstants {
      * <p>Sets the media type</p>
      *
      * @param type The media's type (a MediaType)
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaType
+     * @see com.eweware.service.base.store.dao.type.MediaType
      */
     public void setType(String type);
 }

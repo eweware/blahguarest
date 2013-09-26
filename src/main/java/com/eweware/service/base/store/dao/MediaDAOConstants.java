@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 /**
  * <p>This is a metadata entity for media (e.g., audio, images, video).</p>
  * <p>Field names and value data types for media entities.</p>
@@ -14,13 +14,13 @@ public interface MediaDAOConstants {
 
     /**
      * <p>The media's type. A string representation of a MediaReferendType </p>
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaReferendType
+     * @see com.eweware.service.base.store.dao.type.MediaReferendType
      */
     static final String REFEREND_TYPE = "T";
 
     /**
      * <p>The media's type (e.g., image, video, etc.)</p>
-     * @see main.java.com.eweware.service.base.store.dao.type.MediaType
+     * @see com.eweware.service.base.store.dao.type.MediaType
      */
     static final String TYPE = "M";
 

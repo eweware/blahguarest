@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.base.store.dao.schema;
+package com.eweware.service.base.store.dao.schema;
 
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.GroupDAOConstants;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.GroupDAOConstants;
 
 /**
  * @author rk@post.harvard.edu

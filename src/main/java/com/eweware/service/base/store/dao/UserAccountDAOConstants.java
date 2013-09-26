@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 /**
  * <p>A user account entity holds sensitive data about a user. This information
@@ -12,13 +12,13 @@ public interface UserAccountDAOConstants {
 
     /**
      * <p>User account type.</p>
-     * @see main.java.com.eweware.service.base.store.dao.type.UserAccountType
+     * @see com.eweware.service.base.store.dao.type.UserAccountType
      */
     static String USER_ACCOUNT_TYPE = "T";
 
     /**
      * <p> The canonical version of the username. A string.</p>
-     * @see main.java.com.eweware.service.user.validation.Login#makeCanonicalUsername(String)
+     * @see com.eweware.service.user.validation.Login#makeCanonicalUsername(String)
      */
     static String CANONICAL_USERNAME = "U";
 
@@ -39,21 +39,21 @@ public interface UserAccountDAOConstants {
 
     /**
      * <p>Permissions associated with the email address field.</p>
-     * @see main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions
+     * @see com.eweware.service.base.store.dao.schema.type.UserProfilePermissions
      */
     static final String EMAIL_ADDRESS_PERMISSIONS = "P";
 
     /**
      * <p>Account recovery method.</p>
-     * @see main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType
+     * @see com.eweware.service.base.store.dao.type.RecoveryMethodType
      */
     static final String ACCOUNT_RECOVERY_METHOD = "M";
 
     /**
      * <p>String representation of recovery code structured as follows:</p>
      * <div>cipher-part-base64 | iv-algorithm-parameter-part-base64 | secret-key-part-base64</div>
-     * @see main.java.com.eweware.service.user.validation.RecoveryCode
-     * @see main.java.com.eweware.service.user.validation.RecoveryCodeComponents
+     * @see com.eweware.service.user.validation.RecoveryCode
+     * @see com.eweware.service.user.validation.RecoveryCodeComponents
      */
     static String RECOVERY_CODE_STRING = "R";
 

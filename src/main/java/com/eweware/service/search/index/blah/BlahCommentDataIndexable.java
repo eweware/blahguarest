@@ -1,11 +1,11 @@
-package main.java.com.eweware.service.search.index.blah;
+package com.eweware.service.search.index.blah;
 
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.BasePayload;
-import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.CommentDAO;
-import main.java.com.eweware.service.base.store.dao.schema.CommentSchema;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.payload.BasePayload;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.eweware.service.base.store.dao.CommentDAO;
+import com.eweware.service.base.store.dao.schema.CommentSchema;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;

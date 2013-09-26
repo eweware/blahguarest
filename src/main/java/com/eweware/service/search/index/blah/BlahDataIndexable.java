@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.search.index.blah;
+package com.eweware.service.search.index.blah;
 
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.BlahPayload;
-import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.BlahDAO;
-import main.java.com.eweware.service.base.store.dao.schema.BlahSchema;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.payload.BlahPayload;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.eweware.service.base.store.dao.BlahDAO;
+import com.eweware.service.base.store.dao.schema.BlahSchema;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -121,7 +121,7 @@ public class BlahDataIndexable implements ZoieIndexable {
      *
      * @param doc The Lucene Document containing blah fields
      * @return The blah payload
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public static BlahPayload fromBlahDocument(Document doc) throws SystemErrorException {

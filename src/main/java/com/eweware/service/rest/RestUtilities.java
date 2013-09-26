@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.rest;
+package com.eweware.service.rest;
 
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.payload.ErrorResponsePayload;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.payload.ErrorResponsePayload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;

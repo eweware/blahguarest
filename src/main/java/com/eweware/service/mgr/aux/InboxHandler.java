@@ -1,16 +1,16 @@
-package main.java.com.eweware.service.mgr.aux;
+package com.eweware.service.mgr.aux;
 
 import com.mongodb.*;
-import main.java.com.eweware.service.base.CommonUtilities;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.BaseDAOConstants;
-import main.java.com.eweware.service.base.store.dao.BlahDAO;
-import main.java.com.eweware.service.base.store.dao.GroupDAO;
-import main.java.com.eweware.service.base.store.dao.InboxBlahDAOConstants;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.mgr.GroupManager;
+import com.eweware.service.base.CommonUtilities;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.BaseDAOConstants;
+import com.eweware.service.base.store.dao.BlahDAO;
+import com.eweware.service.base.store.dao.GroupDAO;
+import com.eweware.service.base.store.dao.InboxBlahDAOConstants;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.mgr.GroupManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class InboxHandler extends Thread {
      * @param localeId
      * @param blahDAO
      * @param groupId
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      */
     public void spreadBlahToRecents(LocaleId localeId, BlahDAO blahDAO, String groupId) throws SystemErrorException {
 
@@ -287,7 +287,7 @@ public class InboxHandler extends Thread {
 //     * @param localeId
 //     * @param blahDAO
 //     * @param groupId
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     * @throws com.eweware.service.base.error.SystemErrorException
 //     *
 //     */
 //    public void spreadBlahToRecents(LocaleId localeId, BlahDAO blahDAO, String groupId) throws SystemErrorException {

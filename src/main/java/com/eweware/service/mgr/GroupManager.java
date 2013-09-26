@@ -1,22 +1,22 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.ResourceNotFoundException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.payload.AuthorizedState;
-import main.java.com.eweware.service.base.payload.GroupPayload;
-import main.java.com.eweware.service.base.payload.GroupTypePayload;
-import main.java.com.eweware.service.base.store.StoreManager;
-import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.GroupDAO;
-import main.java.com.eweware.service.base.store.dao.GroupDAOConstants;
-import main.java.com.eweware.service.base.store.dao.GroupTypeDAO;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.payload.AuthorizedState;
+import com.eweware.service.base.payload.GroupPayload;
+import com.eweware.service.base.payload.GroupTypePayload;
+import com.eweware.service.base.store.StoreManager;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.eweware.service.base.store.dao.GroupDAO;
+import com.eweware.service.base.store.dao.GroupDAOConstants;
+import com.eweware.service.base.store.dao.GroupTypeDAO;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 
 import javax.xml.ws.WebServiceException;
 import java.util.*;
@@ -163,7 +163,7 @@ public final class GroupManager implements ManagerInterface {
 
     /**
      * @return List<GroupTypeDAOImpl>	Returns all group types or an empty list if there are none.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public List<GroupTypePayload> getGroupTypes(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
@@ -185,7 +185,7 @@ public final class GroupManager implements ManagerInterface {
     /**
      * @return GroupTypeDAOImpl Returns a group type by id or null if it doesn't exist.
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */
@@ -230,7 +230,7 @@ public final class GroupManager implements ManagerInterface {
      * @return List<GroupDAOImpl>	Returns a possibly empty list of groups of the
      *         given type and _state.
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public List<GroupPayload> getGroups(LocaleId localeId, String groupTypeId, String displayName, String state, Integer start, Integer count, String sortFieldName) throws SystemErrorException, InvalidRequestException {
@@ -283,7 +283,7 @@ public final class GroupManager implements ManagerInterface {
      * @param groupId  A group id
      * @return GroupDAOImpl    Returns a dao for the group or null if the group doesn't exist.
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */

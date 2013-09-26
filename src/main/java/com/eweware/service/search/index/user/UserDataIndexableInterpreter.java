@@ -1,7 +1,7 @@
-package main.java.com.eweware.service.search.index.user;
+package com.eweware.service.search.index.user;
 
 
-import main.java.com.eweware.service.base.store.dao.UserDAO;
+import com.eweware.service.base.store.dao.UserDAO;
 import proj.zoie.api.indexing.ZoieIndexable;
 import proj.zoie.api.indexing.ZoieIndexableInterpreter;
 

@@ -1,13 +1,13 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.store.dao.TrackerDAOConstants;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.store.dao.TrackerDAOConstants;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 
 import javax.xml.ws.WebServiceException;
 import java.util.Date;

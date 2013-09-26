@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.error;
+package com.eweware.service.base.error;
 
 
 public class InvalidUserValidationKey extends BaseException {

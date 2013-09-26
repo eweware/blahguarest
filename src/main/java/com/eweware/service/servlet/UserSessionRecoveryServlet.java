@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.servlet;
+package com.eweware.service.servlet;
 
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.mgr.UserManager;
-import main.java.com.eweware.service.rest.RestUtilities;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.mgr.UserManager;
+import com.eweware.service.rest.RestUtilities;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

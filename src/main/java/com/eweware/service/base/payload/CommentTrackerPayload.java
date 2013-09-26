@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.payload;
+package com.eweware.service.base.payload;
 
 import java.util.Map;
 

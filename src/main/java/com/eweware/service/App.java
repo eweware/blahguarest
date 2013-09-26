@@ -1,4 +1,4 @@
-package main.java.com.eweware.service;
+package com.eweware.service;
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
 
@@ -11,6 +11,6 @@ public class App extends PackagesResourceConfig {
 
 	public App() {
         // All REST resource classes must be in the following package:
-		super("main.java.com.eweware.service.rest.resource");
+		super("com.eweware.service.rest.resource");
 	}
 }

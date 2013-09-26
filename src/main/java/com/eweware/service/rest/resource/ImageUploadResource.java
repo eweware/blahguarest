@@ -1,24 +1,24 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import main.java.com.eweware.service.base.AWSUtilities;
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.store.StoreManager;
-import main.java.com.eweware.service.base.store.dao.BlahDAO;
-import main.java.com.eweware.service.base.store.dao.MediaDAO;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.mgr.MediaManager;
-import main.java.com.eweware.service.mgr.UserManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.AWSUtilities;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.store.StoreManager;
+import com.eweware.service.base.store.dao.BlahDAO;
+import com.eweware.service.base.store.dao.MediaDAO;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.base.store.dao.type.MediaReferendType;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.mgr.BlahManager;
+import com.eweware.service.mgr.MediaManager;
+import com.eweware.service.mgr.UserManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
@@ -248,7 +248,7 @@ public class ImageUploadResource {
     private MediaDAO makeMediaRecord(MediaReferendType referendType) throws SystemErrorException {
         final MediaDAO media = getStoreManager().createMedia();
         media.setReferendType(referendType.toString());
-        media.setType(main.java.com.eweware.service.base.store.dao.type.MediaType.I.toString());
+        media.setType(com.eweware.service.base.store.dao.type.MediaType.I.toString());
         media._insert();
         return media;
     }

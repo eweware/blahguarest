@@ -1,12 +1,12 @@
-package main.java.com.eweware.service.user.validation;
+package com.eweware.service.user.validation;
 
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidUserValidationKey;
-import main.java.com.eweware.service.base.error.InvalidUserValidationMethodParameters;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.AuthorizedState;
-import main.java.com.eweware.service.mgr.MailManager;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidUserValidationKey;
+import com.eweware.service.base.error.InvalidUserValidationMethodParameters;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.AuthorizedState;
+import com.eweware.service.mgr.MailManager;
 
 import java.util.regex.Pattern;
 
@@ -123,7 +123,7 @@ public class EmailUserValidationMethod extends UserValidationMethod {
      * @param groupId      In case it is needed
      * @param emailAddress In case it is needed
      * @return String   A "unique" validation code
-     * @throws main.java.com.eweware.service.base.error.InvalidUserValidationKey
+     * @throws com.eweware.service.base.error.InvalidUserValidationKey
      */
     private String makeValidationCode(String userId, String groupId, String emailAddress) throws SystemErrorException {
         return SystemManager.getInstance().makeShortRandomCode();   // TODO localize here?

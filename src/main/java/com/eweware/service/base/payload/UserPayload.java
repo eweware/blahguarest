@@ -1,9 +1,9 @@
-package main.java.com.eweware.service.base.payload;
+package com.eweware.service.base.payload;
 
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.UserSchema;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.UserDAOConstants;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.UserSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public final class UserPayload extends BasePayload implements UserDAOConstants {
      * Actual password and all other sensitive user information is stored in
      * a separate user account record.
      * It's sole use is to transmit the password from the client to the server. A string.</p>
-     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
+     * @see com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     public static final String PASSWORD = "pwd";
 

@@ -1,11 +1,11 @@
-package main.java.com.eweware.service.base.store.dao.schema;
+package com.eweware.service.base.store.dao.schema;
 
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants;
-import main.java.com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.UserProfileDAOConstants;
+import com.eweware.service.base.store.dao.schema.type.FieldDescriptor;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
 
 import java.util.LinkedHashMap;
 

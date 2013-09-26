@@ -1,15 +1,15 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.BlahPayload;
-import main.java.com.eweware.service.base.payload.UserBlahInfoPayload;
-import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.mgr.type.PredictionExpirationType;
-import main.java.com.eweware.service.mgr.type.PredictionVote;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.BlahPayload;
+import com.eweware.service.base.payload.UserBlahInfoPayload;
+import com.eweware.service.mgr.BlahManager;
+import com.eweware.service.mgr.type.PredictionExpirationType;
+import com.eweware.service.mgr.type.PredictionVote;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -59,7 +59,7 @@ public class BlahsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see main.java.com.eweware.service.base.store.dao.UserDAOConstants
+     * @see com.eweware.service.base.store.dao.UserDAOConstants
      */
     @POST
     @Path("/author")
@@ -100,7 +100,7 @@ public class BlahsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -147,7 +147,7 @@ public class BlahsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @PUT
     @Path("/{blahId}/pollVote/{pollOptionIndex}")
@@ -192,7 +192,7 @@ public class BlahsResource {
      *         user has voted and the time of the vote. Returns empty object
      *         if the user has not voted on this poll.
      *         If the user is not authorized to vote, returns status 401.
-     * @see main.java.com.eweware.service.base.payload.UserBlahInfoPayload
+     * @see com.eweware.service.base.payload.UserBlahInfoPayload
      */
     @GET
     @Path("/{blahId}/pollVote")
@@ -286,7 +286,7 @@ public class BlahsResource {
      *         the user's votes, if any, for the prediction. The appropriate fields of
      *         this entity are specified in UserBlahInfoPayload.
      *         If the user is not authorized to vote, returns status 401.
-     * @see main.java.com.eweware.service.base.payload.UserBlahInfoPayload
+     * @see com.eweware.service.base.payload.UserBlahInfoPayload
      */
     @GET
     @Path("/{blahId}/predicts")
@@ -326,7 +326,7 @@ public class BlahsResource {
      *         If there is an error in the request, returns status 400.
      *         If the referenced blah or author can't be found, returns status 404.
      *         If a conflict would arise from satisfying the request, returns status 409.
-     * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @PUT
     @Path("/{blahId}")
@@ -413,7 +413,7 @@ public class BlahsResource {
      *
      * @return An http status of 200 with a JSON entity that is a list
      *         of BlahTypePayload entities.
-     * @see main.java.com.eweware.service.base.store.dao.BlahTypeDAOConstants
+     * @see com.eweware.service.base.store.dao.BlahTypeDAOConstants
      */
     @GET
     @Path("/types")
@@ -449,7 +449,7 @@ public class BlahsResource {
      *         If the blah doesn't exist, returns status 404.
      *         If there is an error in the request, returns status 400.
      *         On error, a JSON entity will be returned containing detailed error information.
-     * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @GET
     @Path("/{blahId}")
@@ -488,7 +488,7 @@ public class BlahsResource {
      * @param start (Optional): The starting index to fetch when paging
      * @param count (Optional): The max number of blahs to fetch
      * @return An array of blahs.
-     * @see main.java.com.eweware.service.base.store.dao.BlahDAOConstants
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

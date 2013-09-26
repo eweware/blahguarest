@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 import java.util.Date;
 
@@ -24,9 +24,13 @@ public interface UserGroupDAO extends BaseDAO, UserGroupDAOConstants {
 
     public void setUserId(String userId);
 
-//    public String getValidationCode();
-//
-//    public void setValidationCode(String validationCode);
+    public Integer getFirstInboxNumber();
+
+    public void setFirstInboxNumber(Integer number);
+
+    public Integer getLastInboxNumber();
+
+    public void setLastInboxNumber(Integer number);
 
     public Date getCreated();
 

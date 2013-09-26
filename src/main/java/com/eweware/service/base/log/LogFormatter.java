@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.log;
+package com.eweware.service.base.log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

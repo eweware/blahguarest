@@ -1,8 +1,8 @@
-package main.java.com.eweware.service.base.store.dao.type;
+package com.eweware.service.base.store.dao.type;
 
 /**
  * <p>Represents the possible states of a BadgeDAO</p>
- * @see main.java.com.eweware.service.base.store.dao.BadgeDAO
+ * @see com.eweware.service.base.store.dao.BadgeDAO
  *
  * @author rk@post.harvard.edu
  *         Date: 3/22/13 Time: 3:04 PM

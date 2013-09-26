@@ -1,33 +1,33 @@
-package main.java.com.eweware.service.mgr;
+package com.eweware.service.mgr;
 
-import main.java.com.eweware.service.base.CommonUtilities;
-import main.java.com.eweware.service.base.date.DateUtils;
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.ManagerInterface;
-import main.java.com.eweware.service.base.mgr.ManagerState;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.*;
-import main.java.com.eweware.service.base.store.StoreManager;
-import main.java.com.eweware.service.base.store.dao.*;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema;
-import main.java.com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.base.store.dao.type.MediaReferendType;
-import main.java.com.eweware.service.base.store.dao.type.RecoveryMethodType;
-import main.java.com.eweware.service.base.store.dao.type.UserAccountType;
-import main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
-import main.java.com.eweware.service.base.type.TrackerType;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
-import main.java.com.eweware.service.search.index.common.BlahguaFilterIndexReader;
-import main.java.com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
-import main.java.com.eweware.service.search.index.user.UserDataIndexable;
-import main.java.com.eweware.service.search.index.user.UserDataIndexableInterpreter;
-import main.java.com.eweware.service.user.validation.Login;
-import main.java.com.eweware.service.user.validation.RecoveryCode;
-import main.java.com.eweware.service.user.validation.RecoveryCodeComponents;
-import main.java.com.eweware.service.user.validation.UserValidationMethod;
+import com.eweware.service.base.CommonUtilities;
+import com.eweware.service.base.date.DateUtils;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.ManagerInterface;
+import com.eweware.service.base.mgr.ManagerState;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.*;
+import com.eweware.service.base.store.StoreManager;
+import com.eweware.service.base.store.dao.*;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.dao.schema.UserProfileSchema;
+import com.eweware.service.base.store.dao.schema.type.UserProfilePermissions;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.base.store.dao.type.MediaReferendType;
+import com.eweware.service.base.store.dao.type.RecoveryMethodType;
+import com.eweware.service.base.store.dao.type.UserAccountType;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.type.TrackerType;
+import com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.search.index.common.BlahguaFilterIndexReader;
+import com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
+import com.eweware.service.search.index.user.UserDataIndexable;
+import com.eweware.service.search.index.user.UserDataIndexableInterpreter;
+import com.eweware.service.user.validation.Login;
+import com.eweware.service.user.validation.RecoveryCode;
+import com.eweware.service.user.validation.RecoveryCodeComponents;
+import com.eweware.service.user.validation.UserValidationMethod;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -624,7 +624,7 @@ public class UserManager implements ManagerInterface {
      * @param groupId       The he group into which the user will be entered in a pending _state
      * @return UserPayload  If userId is provided, returns null; else returns a payload with the user's id, displayName, and groupId
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws StateConflictException
      */
@@ -678,7 +678,7 @@ public class UserManager implements ManagerInterface {
      * @param localeId
      * @param request
      * @param newUsername
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      */
@@ -740,7 +740,7 @@ public class UserManager implements ManagerInterface {
      * @param statsStartDate if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
      * @param statsEndDate   if stats is true, format is yymmdd (e.g., August 27, 2012 is 120827
      * @return
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
@@ -1050,7 +1050,7 @@ public class UserManager implements ManagerInterface {
      * @param statsEndDate   Optional end date.
      * @param userDAO        The user dao to which the tracker(s) will be added.
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     private void fetchAndAddUserTrackers(final String userId, final String statsStartDate, final String statsEndDate, final UserDAO userDAO) throws InvalidRequestException, SystemErrorException {
@@ -1093,7 +1093,7 @@ public class UserManager implements ManagerInterface {
      *
      * @param userId The user id
      * @param entity Any entity to pass in a resource not found exception
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException Thrown when the user can't be found
      */
@@ -1197,7 +1197,7 @@ public class UserManager implements ManagerInterface {
      *                 //     * @param validationCode Validation code for user (needed when user is in P (pending) or S (suspended) _state.
      *                 //     *                       If not null, this is simply inserted into the DB for future reference.
      * @throws InvalidRequestException
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws StateConflictException
      */
@@ -1547,7 +1547,7 @@ public class UserManager implements ManagerInterface {
 //     *                     "r": request recovery by recovery code. The methodKey must be null and the recovery code must be provided.
 //     * @param methodKey    Required if operation is "e": this should be the email address.
 //     * @param recoveryCode Required if operation is "r": this should be the recovery code
-//     * @see #recoverUserNew(main.java.com.eweware.service.base.i18n.LocaleId, javax.servlet.http.HttpServletRequest, String)
+//     * @see #recoverUserNew(com.eweware.service.base.i18n.LocaleId, javax.servlet.http.HttpServletRequest, String)
 //     */
 //    public UserProfilePayload recoverUser(LocaleId localeId, String operation, String methodKey, String recoveryCode) throws InvalidRequestException, StateConflictException, SystemErrorException {
 //        if (operation == null) {
@@ -1645,7 +1645,7 @@ public class UserManager implements ManagerInterface {
 //     * @param count         Optional max number of users to return
 //     * @param sortFieldName
 //     * @return Object  Returns list of users
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     * @throws com.eweware.service.base.error.SystemErrorException
 //     *
 //     */
 //    public List<UserPayload> getUsers(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {

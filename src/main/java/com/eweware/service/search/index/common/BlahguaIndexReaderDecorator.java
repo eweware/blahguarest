@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.search.index.common;
+package com.eweware.service.search.index.common;
 
 import org.apache.lucene.search.DocIdSet;
 import proj.zoie.api.ZoieIndexReader;

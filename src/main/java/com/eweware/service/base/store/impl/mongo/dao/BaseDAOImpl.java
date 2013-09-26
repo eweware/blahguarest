@@ -1,17 +1,17 @@
-package main.java.com.eweware.service.base.store.impl.mongo.dao;
+package com.eweware.service.base.store.impl.mongo.dao;
 
 import com.mongodb.*;
-import main.java.com.eweware.service.base.error.DuplicateKeyException;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.BaseDAO;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.SchemaSpec;
-import main.java.com.eweware.service.base.store.dao.schema.type.FieldValidator;
-import main.java.com.eweware.service.base.store.dao.schema.type.SchemaDataType;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
-import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import com.eweware.service.base.error.DuplicateKeyException;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.SchemaSpec;
+import com.eweware.service.base.store.dao.schema.type.FieldValidator;
+import com.eweware.service.base.store.dao.schema.type.SchemaDataType;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 import org.bson.types.ObjectId;
 
 import java.lang.reflect.Constructor;
@@ -57,7 +57,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
      * Constructor for a dao with known id.
      *
      * @param id The id.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     BaseDAOImpl(String id) throws SystemErrorException {
@@ -72,7 +72,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
      * @param validateAndConvert If true, the map's entries will be validated
      *                           against the schema and the field values converted
      *                           to the DB internal data type format when necessary.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     BaseDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
@@ -213,7 +213,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
      *
      * @param id A UUID string uniquely identifying this object. If null,
      *           the id is removed.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     @Override
@@ -275,7 +275,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
      *
      * @param id The id as a string
      * @return Object   A mongo ObjectId for the specified id
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *          Thrown if the specified id
      *          is invalid.
      */
@@ -294,14 +294,14 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
     /**
      * @return String                                Returns the name of the collection for the db object.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     protected abstract String _getCollectionName() throws SystemErrorException;
 
     /**
      * @return DBCollection                              Returns the collection for the db object.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     protected abstract DBCollection _getCollection() throws SystemErrorException;

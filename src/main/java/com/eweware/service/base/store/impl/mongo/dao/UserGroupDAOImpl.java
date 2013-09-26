@@ -1,16 +1,17 @@
-package main.java.com.eweware.service.base.store.impl.mongo.dao;
+package com.eweware.service.base.store.impl.mongo.dao;
+
+import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.payload.AuthorizedState;
-import main.java.com.eweware.service.base.store.dao.UserGroupDAO;
-import main.java.com.eweware.service.base.store.dao.schema.BaseSchema;
-import main.java.com.eweware.service.base.store.dao.schema.UserGroupSchema;
-import main.java.com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.payload.AuthorizedState;
+import com.eweware.service.base.store.dao.UserGroupDAO;
+import com.eweware.service.base.store.dao.schema.BaseSchema;
+import com.eweware.service.base.store.dao.schema.UserGroupSchema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_ID, MongoFieldTypes.STRING);
 //        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(VALIDATION_CODE, MongoFieldTypes.STRING);
         UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
+        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(FIRST_INBOX_NUMBER, MongoFieldTypes.NUMBER);
+        UserGroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX_NUMBER, MongoFieldTypes.NUMBER);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -58,6 +61,26 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
             }
         }
         return UserGroupDAOImpl.collection;
+    }
+
+    @Override
+    public Integer getFirstInboxNumber() {
+        return (Integer) get(FIRST_INBOX_NUMBER);
+    }
+
+    @Override
+    public void setFirstInboxNumber(Integer number) {
+        put(FIRST_INBOX_NUMBER, number);
+    }
+
+    @Override
+    public Integer getLastInboxNumber() {
+        return (Integer) get(LAST_INBOX_NUMBER);
+    }
+
+    @Override
+    public void setLastInboxNumber(Integer number) {
+        put(LAST_INBOX_NUMBER, number);
     }
 
     UserGroupDAOImpl() {
@@ -131,7 +154,7 @@ public class UserGroupDAOImpl extends BaseDAOImpl implements UserGroupDAO {
      * @param userId
      * @param state  A state or null if any state.
      * @return List<String> A possibly empty list of group ids matching the description
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public static List<String> findUserGroupIds(DBCollection col, String userId, AuthorizedState state) throws SystemErrorException {

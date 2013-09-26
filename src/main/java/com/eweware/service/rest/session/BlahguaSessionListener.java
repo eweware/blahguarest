@@ -1,6 +1,6 @@
-package main.java.com.eweware.service.rest.session;
+package com.eweware.service.rest.session;
 
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.error.SystemErrorException;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;

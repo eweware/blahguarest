@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.type;
+package com.eweware.service.base.type;
 
 /**
  * @author rk@post.harvard.edu

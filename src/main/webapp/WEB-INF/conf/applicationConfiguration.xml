@@ -9,7 +9,7 @@
 
 	<import resource="applicationPropertiesLoader.xml" />
 
-    <bean id="systemManager" class="main.java.com.eweware.service.base.mgr.SystemManager"
+    <bean id="systemManager" class="com.eweware.service.base.mgr.SystemManager"
           init-method="start" destroy-method="shutdown">
         <constructor-arg value="${blagua.run.mode}" />
         <constructor-arg value="${blahgua.prod.rest.version}" />
@@ -42,7 +42,7 @@
         <property name="devBadgeAuthorityPort" value="${blahgua.sys.dev.badge.authority.port}"/>
     </bean>
 
-    <bean id="mongoStoreManager" class="main.java.com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
+    <bean id="mongoStoreManager" class="com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager"
     init-method="start" destroy-method="shutdown">
 
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.hostnames}" />
@@ -78,11 +78,11 @@
         <property name="demographicsCollectionName" value="${blahgua.store.mongo.userdb.collection.demographics}"/>
     </bean>
 
-    <bean id="badgesManager" class="main.java.com.eweware.service.mgr.BadgesManager"
+    <bean id="badgesManager" class="com.eweware.service.mgr.BadgesManager"
           init-method="start" destroy-method="shutdown" />
 
     <!-- MAINTAIN BEAN ORDER -->
-    <bean id="mailManager" class="main.java.com.eweware.service.mgr.MailManager"
+    <bean id="mailManager" class="com.eweware.service.mgr.MailManager"
           init-method="start" destroy-method="shutdown">
         <constructor-arg value="${blahgua.mail.smtp.do.not.use}" />
         <constructor-arg value="${blahgua.mail.smtp.auth}" />
@@ -94,12 +94,12 @@
         <constructor-arg value="${blahgua.mail.smtp.replyto.address}" />
     </bean>
 
-    <bean id="groupManager" class="main.java.com.eweware.service.mgr.GroupManager"
+    <bean id="groupManager" class="com.eweware.service.mgr.GroupManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Integer" value="${blahgua.maximum.returned.object.limit}" />
     </bean>
 
-    <bean id="userManager" class="main.java.com.eweware.service.mgr.UserManager"
+    <bean id="userManager" class="com.eweware.service.mgr.UserManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Boolean" value="${blahgua.index.doIndex}" />
         <constructor-arg value="${blahgua.user.index.dir}" />
@@ -109,16 +109,16 @@
     </bean>
 
     <!-- Old tracking manager -->
-    <bean id="trackingManager" class="main.java.com.eweware.service.mgr.TrackingManager"
+    <bean id="trackingManager" class="com.eweware.service.mgr.TrackingManager"
           init-method="start" destroy-method="shutdown">
     </bean>
 
     <!-- New tracking manager -->
-    <bean id="trackingMgr" class="main.java.com.eweware.service.mgr.TrackingMgr"
+    <bean id="trackingMgr" class="com.eweware.service.mgr.TrackingMgr"
           init-method="start" destroy-method="shutdown">
     </bean>
 
-    <bean id="blahManager" class="main.java.com.eweware.service.mgr.BlahManager"
+    <bean id="blahManager" class="com.eweware.service.mgr.BlahManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Boolean" value="${blahgua.index.doIndex}" />
         <constructor-arg value="${blahgua.blah.index.dir}" />
@@ -129,10 +129,10 @@
         <constructor-arg type="java.lang.Integer" value="${blahgua.maximum.returned.object.limit}" />
     </bean>
 
-    <bean id="statisticsManager" class="main.java.com.eweware.service.mgr.StatisticsManager"
+    <bean id="statisticsManager" class="com.eweware.service.mgr.StatisticsManager"
           init-method="start" destroy-method="shutdown" />
 
-    <bean id="mediaManager" class="main.java.com.eweware.service.mgr.MediaManager"
+    <bean id="mediaManager" class="com.eweware.service.mgr.MediaManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg  type="java.lang.String" value="${blahgua.media.images.s3pathname}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.media.images.bucket.name}" />
@@ -140,7 +140,7 @@
         <constructor-arg  type="java.lang.String" value="${blahgua.media.images.bucket.original.dirpath}" />
 	</bean>
 
- 	<bean id="testManager" class="main.java.com.eweware.service.mgr.TestManager"
+ 	<bean id="testManager" class="com.eweware.service.mgr.TestManager"
  		init-method="start" destroy-method="shutdown"> 
  	</bean> 
 </beans>

@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.rest.filter;
+package com.eweware.service.rest.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ TODO: this should be added to web.xml:
 <filter>
     <filter-name>OptionsMethodFilter</filter-name>
     <filter-class>
-main.java.com.eweware.service.rest.filter.OptionsMethodFilter
+com.eweware.service.rest.filter.OptionsMethodFilter
     </filter-class>
     <init-param>
     </init-param>

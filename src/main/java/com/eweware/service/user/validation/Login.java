@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.user.validation;
+package com.eweware.service.user.validation;
 
 
-import main.java.com.eweware.service.base.CommonUtilities;
-import main.java.com.eweware.service.base.error.ErrorCodes;
-import main.java.com.eweware.service.base.error.InvalidRequestException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.CommonUtilities;
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.SystemErrorException;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;

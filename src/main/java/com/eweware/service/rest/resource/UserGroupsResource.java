@@ -1,13 +1,13 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.AuthorizedState;
-import main.java.com.eweware.service.base.payload.UserGroupPayload;
-import main.java.com.eweware.service.mgr.UserManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.AuthorizedState;
+import com.eweware.service.base.payload.UserGroupPayload;
+import com.eweware.service.mgr.UserManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -50,7 +50,7 @@ public class UserGroupsResource {
      *         If the user is not authorized to access this method, returns status 401.
      *         If there is a state conflict in satisfying this request, returns status 409.
      *         On error, a JSON entity detailing the error will be returned.
-     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
+     * @see com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -98,7 +98,7 @@ public class UserGroupsResource {
      *         If there's a state conflict in the update, returns status 409.
      *         If the user or group is not found, returns status 404.
      *         On error, details are provided in a JSON entity.
-     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
+     * @see com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
@@ -140,7 +140,7 @@ public class UserGroupsResource {
      *         If the request is invalid, returns status 400.
      *         If the user or group is not found, returns status 404.
      *         On error, details are provided in a JSON entity.
-     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
+     * @see com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @GET
     @Path("/{groupId}")
@@ -185,7 +185,7 @@ public class UserGroupsResource {
      *         On error, a JSON entity detailing the error will be returned.
      * @see UserGroupsResource
      * @see AuthorizedState
-     * @see main.java.com.eweware.service.base.store.dao.UserGroupDAOConstants
+     * @see com.eweware.service.base.store.dao.UserGroupDAOConstants
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao.schema.type;
+package com.eweware.service.base.store.dao.schema.type;
 
 /**
  * <p>Specifies a permission on a ProfileDAO datum (e.g., date of birth).</p>

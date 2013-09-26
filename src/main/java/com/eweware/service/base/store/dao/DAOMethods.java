@@ -1,10 +1,10 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 import com.mongodb.DBObject;
-import main.java.com.eweware.service.base.error.DuplicateKeyException;
-import main.java.com.eweware.service.base.error.SystemErrorException;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.store.dao.type.DAOUpdateType;
+import com.eweware.service.base.error.DuplicateKeyException;
+import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.store.dao.type.DAOUpdateType;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,7 @@ public interface DAOMethods {
      * <p/>
      *
      * @param updateType The type of update (see enum for documentation)
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract void _updateByPrimaryId(DAOUpdateType updateType) throws SystemErrorException, DuplicateKeyException;
@@ -64,7 +64,7 @@ public interface DAOMethods {
      *
      * @param updateType The type of update (see enum for documentation)
      * @param ids        The compound key ids.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract void _updateByCompoundId(DAOUpdateType updateType, String... ids) throws SystemErrorException, DuplicateKeyException;
@@ -76,7 +76,7 @@ public interface DAOMethods {
      * <p/>
      * TODO throw AlreadyExistsInDBException
      *
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract void _insert() throws SystemErrorException, DuplicateKeyException;
@@ -84,7 +84,7 @@ public interface DAOMethods {
     /**
      * Deletes dao in database. This dao must have a primary id value.
      *
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract void _deleteByPrimaryId() throws SystemErrorException;
@@ -95,7 +95,7 @@ public interface DAOMethods {
      * @param idFieldNames Names of fields that make up the composite id. Left-to-right
      *                     order of the listed id names might be important in the underlying
      *                     implementation if the fields are indexed.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract void _deleteByCompositeId(String... idFieldNames) throws SystemErrorException;
@@ -105,14 +105,14 @@ public interface DAOMethods {
      * This method does not side-effect this instance's data.
      *
      * @return boolean  True if the object exists in the database
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract boolean _exists() throws SystemErrorException;
 
     /**
      * @return int  Returns number of records that match this object.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract long _count() throws SystemErrorException;
@@ -147,7 +147,7 @@ public interface DAOMethods {
      * @param count         Optional max number of items to get (ignored if start is null)
      * @param sortFieldName Optional    If non-null, this is the name of a field to sort by
      * @return List<BaseDAO>    Returns possibly empty list of daos.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *          TODO should also support fields to return hint
      */
     public abstract List<? extends BaseDAO> _findMany(Integer start, Integer count, String sortFieldName) throws SystemErrorException;
@@ -158,7 +158,7 @@ public interface DAOMethods {
 //     *
 //     * @param primaryIds List of primary key id values
 //     * @return List<BaseDAO>    Returns possibly empty list of daos.
-//     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+//     * @throws com.eweware.service.base.error.SystemErrorException
 //     *          TODO should also support fields to return hint
 //     */
 //    public abstract List<? extends BaseDAO> _findManyByPrimaryIds(String[] primaryIds) throws SystemErrorException;
@@ -176,7 +176,7 @@ public interface DAOMethods {
      *                           order of the listed id names might be important in the underlying
      *                           implementation if the fields are indexed.
      * @return List<BaseDAO>    Returns possibly empty list of daos.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *          TODO should also support fields to return hint
      */
     public abstract List<? extends BaseDAO> _findManyByCompositeId(Integer start, Integer count, String sortFieldName, String[] fieldsToReturnHint, String... idFieldNames) throws SystemErrorException;
@@ -191,7 +191,7 @@ public interface DAOMethods {
      *                           order of the listed id names might be important in the underlying
      *                           implementation if the fields are indexed.
      * @return BaseDAO  Returns the first object found, or null if there is none.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *          TODO should also support fields to return hint
      */
     public abstract BaseDAO _findByCompositeId(String[] fieldsToReturnHint, String... idFieldNames) throws SystemErrorException;
@@ -203,7 +203,7 @@ public interface DAOMethods {
      *                           the implementation will exclude all other fields from the returned dao.
      * @return BaseDAO  Returns unique object or null if it can't be found. Note that the
      *         client should only expect the fields enumerated in fieldsToReturnHint.
-     * @throws main.java.com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      */
     public abstract BaseDAO _findByPrimaryId(String... fieldsToReturnHint) throws SystemErrorException;

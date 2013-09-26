@@ -1,16 +1,16 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
-import main.java.com.eweware.service.base.error.*;
-import main.java.com.eweware.service.base.i18n.LocaleId;
-import main.java.com.eweware.service.base.mgr.SystemManager;
-import main.java.com.eweware.service.base.payload.UserAccountPayload;
-import main.java.com.eweware.service.base.payload.UserPayload;
-import main.java.com.eweware.service.base.payload.UserProfilePayload;
-import main.java.com.eweware.service.base.store.dao.UserDAOConstants;
-import main.java.com.eweware.service.mgr.BlahManager;
-import main.java.com.eweware.service.mgr.UserManager;
-import main.java.com.eweware.service.rest.RestUtilities;
-import main.java.com.eweware.service.rest.session.BlahguaSession;
+import com.eweware.service.base.error.*;
+import com.eweware.service.base.i18n.LocaleId;
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.UserAccountPayload;
+import com.eweware.service.base.payload.UserPayload;
+import com.eweware.service.base.payload.UserProfilePayload;
+import com.eweware.service.base.store.dao.UserDAOConstants;
+import com.eweware.service.mgr.BlahManager;
+import com.eweware.service.mgr.UserManager;
+import com.eweware.service.rest.RestUtilities;
+import com.eweware.service.rest.session.BlahguaSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -148,8 +148,8 @@ public class UsersResource {
      *         the request was invalid or the user is not authorized to login),
      *         or 404 (user resource does not exist). In either case a JSON
      *         error message will specify more details.
-     * @see main.java.com.eweware.service.user.validation.Login#ensureUsernameString(String)
-     * @see main.java.com.eweware.service.user.validation.Login#ensurePasswordString(String)
+     * @see com.eweware.service.user.validation.Login#ensureUsernameString(String)
+     * @see com.eweware.service.user.validation.Login#ensurePasswordString(String)
      * @see UserDAOConstants
      * @see UserPayload
      */
@@ -264,9 +264,9 @@ public class UsersResource {
      *         If the request is invalid, it will return 400 (BAD REQUEST).
      *         If the user is not authorized to access this method, returns 401.
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see com.eweware.service.base.store.dao.UserProfileDAOConstants
      * @see UserProfilePayload
-     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @POST
     @Path("/profile/info")
@@ -388,7 +388,7 @@ public class UsersResource {
      *
      * @see #setAccountInfo(java.util.Map, javax.servlet.http.HttpServletRequest)
      * @see UserDAOConstants
-     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
+     * @see com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     @PUT
     @Path("/account")
@@ -419,7 +419,7 @@ public class UsersResource {
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         If the user may not access this method, returns 401 (UNAUTHORIZED).
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see com.eweware.service.base.store.dao.UserProfileDAOConstants
      * @see UserProfilePayload
      */
     @PUT
@@ -645,8 +645,8 @@ public class UsersResource {
      *
      * @return Returns a user profile schema JSON entity (a UserProfileSchema)
      *         with an http status of 200.
-     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
-     * @see main.java.com.eweware.service.base.store.dao.schema.UserProfileSchema
+     * @see com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see com.eweware.service.base.store.dao.schema.UserProfileSchema
      */
     @GET
     @Path("/profile/schema")
@@ -679,7 +679,7 @@ public class UsersResource {
      *         containing the user profile settings. This entity might be an empty map.
      *         If the request is invalid, returns 400 (BAD REQUEST).
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.store.dao.UserProfileDAOConstants
+     * @see com.eweware.service.base.store.dao.UserProfileDAOConstants
      */
     @GET
     @Path("/profile/info")
@@ -719,7 +719,7 @@ public class UsersResource {
      *         If the input is invalid, returns 400 (BAD REQUEST).
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.user.validation.Login#ensureUsernameString(String)
+     * @see com.eweware.service.user.validation.Login#ensureUsernameString(String)
      */
     @PUT
     @Path("/update/username")
@@ -767,7 +767,7 @@ public class UsersResource {
      *         If the input is invalid, returns 400 (BAD REQUEST).
      *         If username is already taken, returns 409 (CONFLICT).
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.user.validation.Login#ensurePasswordString(String)
+     * @see com.eweware.service.user.validation.Login#ensurePasswordString(String)
      */
     @PUT
     @Path("/update/password")
@@ -819,7 +819,7 @@ public class UsersResource {
      *         user account record, returns http status 409 (CONFLICT).
      *         Never returns a payload.
      * @see UserDAOConstants
-     * @see main.java.com.eweware.service.base.store.dao.UserAccountDAOConstants
+     * @see com.eweware.service.base.store.dao.UserAccountDAOConstants
      */
     @POST
     @Path("/recover/user")
@@ -877,7 +877,7 @@ public class UsersResource {
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
      *         first inbox when the maximum inbox number has been reached.
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.store.dao.InboxBlahDAOConstants
+     * @see com.eweware.service.base.store.dao.InboxBlahDAOConstants
      */
     @GET
     @Path("/inbox")
@@ -968,8 +968,8 @@ public class UsersResource {
      *         If there is no user with the specified identifier, the code 404 (NOT FOUND) is sent.
      *         If the user is not authorized to access this method, returns 401.
      *         On error conditions, a JSON object is returned with details.
-     * @see main.java.com.eweware.service.base.payload.UserBlahInfoPayload
-     * @see main.java.com.eweware.service.base.store.dao.UserBlahInfoDAOConstants
+     * @see com.eweware.service.base.payload.UserBlahInfoPayload
+     * @see com.eweware.service.base.store.dao.UserBlahInfoDAOConstants
      */
     @GET
     @Path("info/{blahId}")

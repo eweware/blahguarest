@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.rest.resource;
+package com.eweware.service.rest.resource;
 
 import javax.ws.rs.Path;
 

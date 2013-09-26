@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 /**
  * <p>Field names and value data types for all entities.</p>
@@ -22,14 +22,14 @@ public interface BaseDAOConstants {
 
     /**
      * <p>Datetime this object was created in UTC.</p>
-     * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_insert()
+     * @see com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_insert()
      */
     static final String CREATED = "c";  // responsibility of _insert to create this
 
     /**
      * <p>Datetime this object was last updated in UTC.</p>
-     * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_updateByPrimaryId(main.java.com.eweware.service.base.store.dao.type.DAOUpdateType)
-     * @see main.java.com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_updateByCompoundId(main.java.com.eweware.service.base.store.dao.type.DAOUpdateType, String...)
+     * @see com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_updateByPrimaryId(com.eweware.service.base.store.dao.type.DAOUpdateType)
+     * @see com.eweware.service.base.store.impl.mongo.dao.BaseDAOImpl#_updateByCompoundId(com.eweware.service.base.store.dao.type.DAOUpdateType, String...)
      */
     static final String UPDATED = "u";  // responsibility of _insert and _update to create this
 

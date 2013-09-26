@@ -1,8 +1,8 @@
-package main.java.com.eweware.service.user.validation;
+package com.eweware.service.user.validation;
 
-import main.java.com.eweware.service.base.error.InvalidUserValidationKey;
-import main.java.com.eweware.service.base.error.InvalidUserValidationMethodParameters;
-import main.java.com.eweware.service.base.payload.AuthorizedState;
+import com.eweware.service.base.error.InvalidUserValidationKey;
+import com.eweware.service.base.error.InvalidUserValidationMethodParameters;
+import com.eweware.service.base.payload.AuthorizedState;
 
 /**
  * @author rk@post.harvard.edu

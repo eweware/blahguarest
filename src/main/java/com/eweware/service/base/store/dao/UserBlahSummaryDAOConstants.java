@@ -1,4 +1,4 @@
-package main.java.com.eweware.service.base.store.dao;
+package com.eweware.service.base.store.dao;
 
 /**
  * <p>Fields and corresponding data types for entity holding information about a user's activity with respect to blahs.</p>
