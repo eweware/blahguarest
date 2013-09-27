@@ -1,4 +1,4 @@
-package com.eweware.service.mgr.aux;
+package com.eweware.service.mgr.auxiliary;
 
 import java.util.List;
 import java.util.Map;
