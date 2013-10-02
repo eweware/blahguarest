@@ -330,6 +330,19 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 
+    private void verifyCommentBadges(CommentPayload entity) throws SystemErrorException, InvalidRequestException {
+        final List<String> badgeIds = entity.getBadgeIds();
+        if (badgeIds != null && badgeIds.size() > 0) {
+            final BadgeDAO badge = _storeManager.createBadge();
+            for (String badgeId : badgeIds) {
+                badge.setId(badgeId);
+                if (badge._count() == 0L) {
+                    throw new InvalidRequestException("badge id '" + badgeId + "' is invalid", ErrorCodes.INVALID_INPUT);
+                }
+            }
+        }
+    }
+
     /**
      * Checks and adds prediction-related data to a blah.
      *
@@ -1471,7 +1484,8 @@ public final class BlahManager implements ManagerInterface {
 
         // Create comment
         CommentDAO commentDAO = getStoreManager().createComment();
-        commentDAO.initToDefaultValues(localeId);
+        commentDAO.addFromMap(entity, true);
+        verifyCommentBadges(entity);
         commentDAO.setBlahId(blahId);
         commentDAO.setText(text);
         commentDAO.setAuthorId(commentAuthorId);
@@ -1482,6 +1496,7 @@ public final class BlahManager implements ManagerInterface {
             commentDAO.setBlahVote(blahVote);
         }
         commentDAO.setStrength(0.0);
+
         commentDAO.setCreated(new Date());
         commentDAO._insert();
 
