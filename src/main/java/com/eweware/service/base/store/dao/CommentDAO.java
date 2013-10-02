@@ -17,6 +17,10 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
 
     public void setBlahId(String blahId);
 
+    public String getParentId();
+
+    public void setParentId(String blahId);
+
     public String getText();
 
     public void setText(String text);
@@ -28,6 +32,21 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
     public Long getBlahVote();
 
     public void setBlahVote(Long vote);
+
+    /**
+     * Returns whether the comment is anonymous.
+     *
+     * @return Boolean   Returns whether the blah is anonymous
+     */
+    public Boolean getAnonymous();
+
+    /**
+     * Sets whether the comment is anonymous
+     *
+     * @param anon true if the blah is anonymous
+     */
+    public void setAnonymous(Boolean anon);
+
 
     public Long getCommentUpVotes();
 

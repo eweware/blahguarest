@@ -60,6 +60,24 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
         put(AUTHOR_ID, authorId);
     }
 
+
+    public String getParentId() {
+        return (String) get(PARENT_ID);
+    }
+
+    public void setParentId(String authorId) {
+        put(PARENT_ID, authorId);
+    }
+
+    public Boolean getAnonymous() {
+        return (Boolean) get(ANONYMOUS);
+    }
+
+
+    public void setAnonymous(Boolean anon) {
+        put(ANONYMOUS, anon);
+    }
+
     public Long getBlahVote() {
         return CommonUtilities.getValueAsLong(get(BLAH_VOTE), null);
     }

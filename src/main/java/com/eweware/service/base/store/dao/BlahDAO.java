@@ -336,6 +336,20 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setStats(List<BlahTrackerDAO> stats);
 
     /**
+     * Returns whether the blah is anonymous.
+     *
+     * @return Boolean   Returns whether the blah is anonymous
+     */
+    public Boolean getAnonymous();
+
+    /**
+     * Sets whether the blah is anonymous
+     *
+     * @param anon true if the blah is anonymous
+     */
+    public void setAnonymous(Boolean anon);
+
+    /**
      * Returns the blah's all-time strength.
      *
      * @return Double   Returns the blah's strength

@@ -16,9 +16,20 @@ public interface CommentDAOConstants {
     static final String BLAH_ID = "B";
 
     /**
+     * <p>The comment's comment ID, if any.</p>
+     */
+    static final String PARENT_ID = "CID";
+
+    /**
      * <p>The comments text. A string.</p>
      */
     static final String TEXT = "T";
+
+    /**
+     * <p>Whether or not this comment is anonymous.
+     * A boolean.</p>
+     */
+    static final String ANONYMOUS = "XX";
 
     /**
      * <p>The comment's author's user id. A string.</p>
@@ -80,13 +91,16 @@ public interface CommentDAOConstants {
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    BLAH_ID, TEXT, AUTHOR_ID
+                    BLAH_ID, TEXT, AUTHOR_ID, PARENT_ID
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{
                     BLAH_VOTE, COMMENT_VOTES, COMMENT_UP_VOTES, COMMENT_DOWN_VOTES, VIEWS, OPENS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{
                     COMMENT_STRENGTH
+            }),
+            new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
+                    ANONYMOUS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS

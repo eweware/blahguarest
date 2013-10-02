@@ -32,7 +32,7 @@ import java.util.Map;
 public class BlahsResource {
 
     private static final String CREATE_BLAH_OPERATION = "createBlah";
-    private static final String UPDATE_BLAH_OPERATION = "updateBlah";
+    private static final String UPDATE_BLAH_STATS_OPERATION = "updateBlahStats";
     private static final String GET_BLAH_TYPES_OPERATION = "getBlahTypes";
     private static final String GET_BLAH_BY_ID_OPERATION = "getBlahById";
     private static final String GET_BLAHS_OPERATION = "getBlahs";
@@ -41,6 +41,8 @@ public class BlahsResource {
     private static final String POLL_VOTE_OPERATION = "pollVote";
     private static final String GET_POLL_VOTE_INFO_OPERATION = "getPollVoteInfo";
     private static final String GET_PREDICTION_VOTE_OPERATION = "getPredictionVote";
+    private static final String DELETE_BLAH_OPERATION = "deleteBlah";
+    private static final String UPDATE_BLAH_OPERATION = "updateBlah";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;
@@ -332,7 +334,7 @@ public class BlahsResource {
     @Path("/{blahId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateBlahPromotionViewOrOpens(
+    public Response updateBlah(
             BlahPayload entity,
             @PathParam("blahId") String blahId,
             @Context HttpServletRequest request) {
@@ -341,9 +343,7 @@ public class BlahsResource {
             final String userId = BlahguaSession.getUserId(request);
             if (userId != null) { // authenticated user
                 entity.setAuthorId(userId);
-                getBlahManager().updateBlahPromotionViewOrOpens(LocaleId.en_us, entity, blahId);
-            } else { // anonymous user
-                getBlahManager().updateBlahViewsOrOpensByAnonymousUser(LocaleId.en_us, entity, blahId);
+                getBlahManager().updateBlah(LocaleId.en_us, entity, blahId);
             }
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
@@ -360,6 +360,61 @@ public class BlahsResource {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
+
+
+    /**
+     * <p>Updates a blah's view, open, and or promotion counts.
+     * Any other update requests in the payload are ignored.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> PUT</div>
+     * <div><b>URL:</b> blahs/{blahId}</div>
+     *
+     * @param entity A JSON entity with one or more of the following
+     *               fields to update: vote, views, opens. (Other fields are ignored
+     *               and might result in a status 400 response.)
+     * @param blahId <i>Path Parameter</i>. The blah's id
+     * @return An update response without content.
+     *         If the user is not authorized to vote, returns status 401.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
+     */
+    @PUT
+    @Path("/stats/{blahId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateBlahPromotionViewOrOpens(
+            BlahPayload entity,
+            @PathParam("blahId") String blahId,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.getUserId(request);
+            if (userId != null) { // authenticated user
+                entity.setAuthorId(userId);
+                getBlahManager().updateBlahPromotionViewOrOpens(LocaleId.en_us, entity, blahId);
+            } else { // anonymous user
+                getBlahManager().updateBlahViewsOrOpensByAnonymousUser(LocaleId.en_us, entity, blahId);
+            }
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            getSystemManager().setResponseTime(UPDATE_BLAH_STATS_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+
 
     /**
      * <p>Updates view and/or open counts for a set of blahs.</p>
@@ -390,7 +445,7 @@ public class BlahsResource {
             final Map<String, Long> opensArray = entity.get(BlahPayload.OPENS);
             getBlahManager().updateBlahCounts(LocaleId.en_us, userId, viewsArray, opensArray);
             final Response response = RestUtilities.make202AcceptedResponse();
-            getSystemManager().setResponseTime(UPDATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            getSystemManager().setResponseTime(UPDATE_BLAH_STATS_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (ResourceNotFoundException e) {
             return RestUtilities.make404ResourceNotFoundResponse(request, e);
@@ -525,31 +580,33 @@ public class BlahsResource {
         }
         return systemManager;
     }
+
+    /**
+     * Deletes the blah.
+     *
+     * @param blahId The blah's id
+     * @return The response without content.
+     */
+    @DELETE
+    @Path("/{blahId}")
+    public Response deleteBlah(@PathParam("blahId") String blahId,
+                               @Context HttpServletRequest req) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(req, true);
+            getBlahManager().deleteBlah(LocaleId.en_us, blahId, userId);
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            getSystemManager().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(req, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(req, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(req, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(req, e);
+        }
+    }
 }
 
-
-/**
- * Deletes the blah.
- *
- * @param blahId The blah's id
- * @return The response without content.
- */
-//    @DELETE
-//    @Path("/{blahId}")
-//    public Response deleteBlah(@PathParam("blahId") String blahId,
-//                               @Context HttpServletRequest request) {
-//        try {
-//            final long start = System.currentTimeMillis();
-//            blahId = BlahguaSession.getInternalBlahId(blahId, request.getSession(true));
-//            getBlahManager(.deleteBlah(LocaleId.en_us, blahId);
-//            final Response response = RestUtilities.make204OKNoContentResponse();
-//            getSystemManager().setResponseTime(DELETE_BLAH_OPERATION, (System.currentTimeMillis() - start));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make400InvalidRequestResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }

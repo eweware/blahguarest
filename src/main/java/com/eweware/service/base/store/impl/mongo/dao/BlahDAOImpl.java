@@ -34,6 +34,7 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(TYPE_ID, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(TEXT, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(BODY, MongoFieldTypes.STRING);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(ANONYMOUS, MongoFieldTypes.BOOLEAN);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ID, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_ID, MongoFieldTypes.STRING);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(PROMOTED_COUNT, MongoFieldTypes.NUMBER);
@@ -115,6 +116,16 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     @Override
     public void setText(String text) {
         put(TEXT, text);
+    }
+
+    @Override
+    public Boolean getAnonymous() {
+        return (Boolean) get(ANONYMOUS);
+    }
+
+    @Override
+    public void setAnonymous(Boolean anon) {
+        put(ANONYMOUS, anon);
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.UserSchema;
 import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     static {  // TODO should be derived from schema
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USERNAME, MongoFieldTypes.STRING);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_STRENGTH, MongoFieldTypes.NUMBER);
+        UserDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_LOGIN, MongoFieldTypes.DATE);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(USER_CONTROVERSY_STRENGTH, MongoFieldTypes.NUMBER);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
@@ -99,6 +101,17 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     public void setStrength(Double strength) {
         put(USER_STRENGTH, strength);
     }
+
+    @Override
+    public Date getLastSignInDate() {
+        return (Date) get(LAST_LOGIN);
+    }
+
+    @Override
+    public void setLastSignInDate(Date lastLogin) {
+        put(LAST_LOGIN, lastLogin);
+    }
+
 
     @Override
     public Double getControversyStrength() {

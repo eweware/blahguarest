@@ -58,6 +58,8 @@ public class UsersResource {
     private static final String DELETE_USER_IMAGES = "deleteUserImages";
     private static final String GET_USER_IMAGES_OPERATION = "getUserImages";
     private static final String SET_USER_IMAGE_OPERATION = "setUserImage";
+    private static final String GET_USER_RANKING_OPERATION = "getUserRanking";
+
 
     private UserManager userManager;
     private SystemManager systemManager;

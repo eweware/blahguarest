@@ -36,4 +36,18 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
     public List<String> getImageids();
 
     public void setImageIds(List<String> imageIds);
+
+    /**
+     * <p>Returns the last signin date for the user</p>
+     *
+     * @return The expiration date or null if none.
+     */
+    public Date getLastSignInDate();
+
+    /**
+     * <p>Sets the last signin date for the user.</p>
+     *
+     * @param date The expiration date
+     */
+    public void setLastSignInDate(Date date);
 }

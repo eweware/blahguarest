@@ -298,6 +298,8 @@ public final class BlahManager implements ManagerInterface {
         return new BlahPayload(blahDAO);
     }
 
+
+
     /**
      * <p>If there is no text, it returns an empty string; else it cleans up
      * the text by scraping off any possible HTML markup</p>
@@ -767,6 +769,48 @@ public final class BlahManager implements ManagerInterface {
      * @param blahId
      * @throws InvalidRequestException
      * @throws com.eweware.service.base.error.SystemErrorException
+     * @throws com.eweware.service.base.error.InvalidAuthorizedStateException
+     *
+     * @throws ResourceNotFoundException
+     */
+    public void updateBlah(LocaleId localeId, BlahPayload entity, String blahId) throws InvalidRequestException, InvalidAuthorizedStateException, StateConflictException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
+
+        if (CommonUtilities.isEmptyString(blahId)) {
+            throw new InvalidRequestException("missing blah id", entity, ErrorCodes.MISSING_BLAH_ID);
+        }
+        final String userId = entity.getAuthorId();
+        if (CommonUtilities.isEmptyString(userId)) {
+            throw new InvalidRequestException("missing update user id", entity, ErrorCodes.MISSING_AUTHOR_ID);
+        }
+
+        if (!getStoreManager().createUser(userId)._exists()) {
+            throw new ResourceNotFoundException("user not found; userId=" + userId, ErrorCodes.NOT_FOUND_USER_ID);
+        }
+
+        final boolean createdComment = false;
+        final BlahDAO updateBlahDAO = updateBlahInternal(LocaleId.en_us, blahId, userId, entity);
+
+        // Track it
+        final boolean isBlah = true;
+        final boolean isNewObject = false;
+        final String objectId = blahId;
+        final String subObjectId = null;
+
+        if (doIndex()) {
+            indexBlah(updateBlahDAO);
+        }
+    }
+
+    /**
+     * Allows a user to update a blah's vote, views, and/or opens, in any combination.
+     * Ignored if there is no promotion/demotion, views or opens in request.
+     *
+     * @param localeId
+     * @param entity
+     * @param blahId
+     * @throws InvalidRequestException
+     * @throws com.eweware.service.base.error.SystemErrorException
      *
      * @throws ResourceNotFoundException
      */
@@ -797,7 +841,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         final boolean createdComment = false;
-        final BlahDAO updateBlahDAO = updateBlahInternal(LocaleId.en_us, blahId, userId, promotionOrDemotion, viewCount, openCount, createdComment);
+        final BlahDAO updateBlahDAO = updateBlahStatsInternal(LocaleId.en_us, blahId, userId, promotionOrDemotion, viewCount, openCount, createdComment);
 
         // Track it
         final boolean isBlah = true;
@@ -929,7 +973,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      * @throws InvalidRequestException
      */
-    private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, Long promotionOrDemotion,
+    private BlahDAO updateBlahStatsInternal(LocaleId localeId, String blahId, String userId, Long promotionOrDemotion,
                                        Long viewCount, Long openCount, boolean creatingComment)
             throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidRequestException {
         final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
@@ -997,6 +1041,107 @@ public final class BlahManager implements ManagerInterface {
         blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         blah.setAuthorId(authorId);
+
+        return blah;
+    }
+
+    /**
+     * Called when updating a blah's votes|opens|views or when creating a comment.
+     * Updates userBlahInfoDAO and blahDAOs.
+     *
+     * @param localeId
+     * @param blahId              The blah's id
+     * @param userId              The user's id
+     * @param entity             The blah payload to update
+     * @return BlahDAO  The blah DAO including the updates plus the author id
+     * @throws SystemErrorException
+     * @throws ResourceNotFoundException
+     * @throws StateConflictException
+     * @throws InvalidAuthorizedStateException
+     * @throws InvalidRequestException
+     */
+    private BlahDAO updateBlahInternal(LocaleId localeId, String blahId, String userId, BlahPayload entity)
+            throws SystemErrorException, ResourceNotFoundException, StateConflictException, InvalidAuthorizedStateException, InvalidRequestException {
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID, BlahDAO.TYPE_ID);
+        if (blahDAO == null) {
+            throw new ResourceNotFoundException("blah not found; blahId=" + blahId, ErrorCodes.NOT_FOUND_BLAH_ID);
+        }
+        if (CommonUtilities.isEmptyString(userId)) {
+            throw new InvalidRequestException("userId is missing", ErrorCodes.MISSING_USER_ID);
+        }
+        final String authorId = blahDAO.getAuthorId();
+        final boolean userIsBlahAuthor = userId.equals(authorId);
+        if (!userIsBlahAuthor) {
+            throw new InvalidAuthorizedStateException("userId=" + userId + " may not edit blahId=" + blahId, ErrorCodes.UNAUTHORIZED_USER);
+        }
+
+        final String typeId = entity.getTypeId();
+        if (!isTypeIdValid(typeId)) {
+            throw new InvalidRequestException("invalid blah type id '" + typeId + "'", ErrorCodes.MISSING_BLAH_TYPE_ID);
+        }
+        final boolean isPoll = isBlahTypeCategory(typeId, BlahTypeCategoryType.POLL);
+        final boolean isPrediction = (!isPoll && isBlahTypeCategory(typeId, BlahTypeCategoryType.PREDICTION));
+        String text = entity.getText();
+        if ((isPoll || isPrediction) && CommonUtilities.isEmptyString(text)) {
+            throw new InvalidRequestException("Blah text line required for polls and predictions", ErrorCodes.MISSING_TEXT);
+        }
+
+        final List<String> mediaIds = entity.getImageIds();
+        final boolean hasMedia = (mediaIds != null && mediaIds.size() > 0);
+        if (hasMedia) {
+            final String mediaId = mediaIds.get(0);
+            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+            if (!mediaDAO._exists()) {
+                throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+            }
+            mediaDAO.setReferendType(MediaReferendType.B.toString());
+            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        }
+
+        text = cleanupBlahTextString(text);
+        if (!CommonUtilities.isEmptyString(text)) {
+            if (text.length() > MAXIMUM_BLAH_HEADLINE_LENGTH) {
+                throw new InvalidRequestException("Blah text line cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
+            }
+            entity.setText(text);
+        }
+        String body = entity.getBody();
+        if (!CommonUtilities.isEmptyString(body)) {
+            body = cleanupBlahTextString(body);
+            if (body.length() > MAXIMUM_BLAH_BODY_LENGTH) {
+                throw new InvalidRequestException("Blah body text cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
+            }
+            entity.setBody(body);
+        }
+
+        final String groupId = entity.getGroupId();
+        if (CommonUtilities.isEmptyString(groupId)) {
+            throw new InvalidRequestException("missing field groupId=" + groupId, ErrorCodes.MISSING_GROUP_ID);
+        }
+
+        // Ensure user is active in group
+        ensureUserActiveInGroup(authorId, groupId);
+
+        verifyBadges(entity);
+
+        // Create fresh blah to prevent injection
+        final BlahDAO blah = getStoreManager().createBlah(blahId);
+
+        blah.addFromMap(entity, true); // removes fields not in schema
+
+        if (hasMedia) {
+            blah.setImageIds(mediaIds);
+        }
+        if (isPoll) {
+            addPollData(text, blah);
+        } else {
+            if (isPrediction) {
+                addPredictionData(blah, entity.getExpirationDate());
+            }
+        }
+
+
+        blah._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         return blah;
     }
@@ -1343,7 +1488,7 @@ public final class BlahManager implements ManagerInterface {
         final long viewCount = 0L;
         final long openCount = 0L;
         final boolean createdComment = true;
-        updateBlahInternal(LocaleId.en_us, blahId, commentAuthorId, blahVote, viewCount, openCount, createdComment);
+        updateBlahStatsInternal(LocaleId.en_us, blahId, commentAuthorId, blahVote, viewCount, openCount, createdComment);
 
         final boolean isBlah = false;
         final boolean isNewObject = true;
@@ -1625,6 +1770,37 @@ public final class BlahManager implements ManagerInterface {
 
         return inbox.getInboxItems();
     }
+
+
+
+    /**
+     * Deletes a blah.
+     *
+     * @param en_us
+     * @param blahId
+     * @param userId
+     */
+    public void deleteBlah(LocaleId en_us, String blahId, String userId) throws InvalidRequestException, SystemErrorException, InvalidAuthorizedStateException {
+        ensureReady();
+
+
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId);
+        if (!blahDAO._exists()) {
+            throw new InvalidRequestException("Invalid blah '" + blahId + "'", ErrorCodes.INVALID_INPUT);
+        }
+
+        if (!blahDAO.getAuthorId().equals(userId)) {
+            throw new InvalidAuthorizedStateException("Unauthorized attempt to delete other user's blah", ErrorCodes.UNAUTHORIZED_USER);
+        }
+
+        blahDAO.setStrength(-1.0);
+
+        blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+    }
+
+
+
 
     /**
      * <p>Associates an image with a comment.</p>

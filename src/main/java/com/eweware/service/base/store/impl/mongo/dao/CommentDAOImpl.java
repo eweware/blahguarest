@@ -26,6 +26,7 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     private static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
     static {   // TODO should be derived from schema
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_ID, MongoFieldTypes.STRING);
+        CommentDAOImpl.FIELD_TO_TYPE_MAP.put(PARENT_ID, MongoFieldTypes.STRING);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(TEXT, MongoFieldTypes.STRING);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_ID, MongoFieldTypes.STRING);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_VOTE, MongoFieldTypes.NUMBER);
@@ -91,6 +92,17 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     }
 
     @Override
+    public Boolean getAnonymous() {
+        return (Boolean) get(ANONYMOUS);
+    }
+
+    @Override
+    public void setAnonymous(Boolean anon) {
+        put(ANONYMOUS, anon);
+    }
+
+
+    @Override
     public List<String> getImageIds() {
         return (List<String>) get(IMAGE_IDS);
     }
@@ -119,6 +131,17 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     public void setBlahId(String id) {
         put(BLAH_ID, id);
     }
+
+    @Override
+    public String getParentId() {
+        return (String) get(PARENT_ID);
+    }
+
+    @Override
+    public void setParentId(String id) {
+        put(PARENT_ID, id);
+    }
+
 
     @Override
     public Long getBlahVote() {
