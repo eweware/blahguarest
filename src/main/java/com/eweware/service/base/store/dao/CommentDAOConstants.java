@@ -73,6 +73,11 @@ public interface CommentDAOConstants {
     static final String OPENS = "O";
 
     /**
+     * <p>A set of badges associated with this comment.</p>
+     */
+    static final String BADGE_IDS = "BD";
+
+    /**
      * <p>Optional stats entity for this comment. <b>TODO: need better doc for this.</b></p>
      */
     static final String STATS = "L";
@@ -106,7 +111,7 @@ public interface CommentDAOConstants {
                     STATS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {
-                    IMAGE_IDS
+                    IMAGE_IDS, BADGE_IDS
             }),
     };
 }

@@ -48,6 +48,19 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
     public void setAnonymous(Boolean anon);
 
 
+    /**
+     * <p>Returns the badge ids associated with this comment or null if there are none.</p>
+     * @return List of comment ids or null.
+     */
+    public List<String> getBadgeIds();
+
+    /**
+     * <p>Sets this cpmment's badge ids.</p>
+     * @param badgeIds
+     */
+    public void setBadgeIds(List<String> badgeIds);
+
+
     public Long getCommentUpVotes();
 
     public void setCommentUpVotes(Long votes);

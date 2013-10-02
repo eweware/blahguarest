@@ -78,6 +78,24 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
         put(ANONYMOUS, anon);
     }
 
+    /**
+     * <p>Returns the list of badge ids associated with this blah.</p>
+     * @return  List of badge ids or null if there are none.
+     */
+    public List<String> getBadgeIds() {
+        return (List<String>) get(BADGE_IDS);
+    }
+
+    /**
+     * <p>Sets the list of badge ids associated with this blah.</p>
+     * @param badgeIds
+     */
+    public void setBadgeIds(List<String> badgeIds) {
+        put(BADGE_IDS, badgeIds);
+    }
+
+
+
     public Long getBlahVote() {
         return CommonUtilities.getValueAsLong(get(BLAH_VOTE), null);
     }

@@ -37,6 +37,7 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(VIEWS, MongoFieldTypes.NUMBER);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(OPENS, MongoFieldTypes.NUMBER);
         CommentDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
+        CommentDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -110,6 +111,16 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     @Override
     public void setImageIds(List<String> imageIds) {
         put(IMAGE_IDS, imageIds);
+    }
+
+    @Override
+    public List<String> getBadgeIds() {
+        return (List<String>) get(BADGE_IDS);
+    }
+
+    @Override
+    public void setBadgeIds(List<String> badgeIds) {
+        put(BADGE_IDS, badgeIds);
     }
 
     @Override
