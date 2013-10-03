@@ -1799,9 +1799,12 @@ public final class BlahManager implements ManagerInterface {
         ensureReady();
 
 
-        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId);
-        if (!blahDAO._exists()) {
-            throw new InvalidRequestException("Invalid blah '" + blahId + "'", ErrorCodes.INVALID_INPUT);
+
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId)._findByPrimaryId(BlahDAO.AUTHOR_ID);   // Get blah's author id
+
+        if (blahDAO == null) {
+            logger.warning("Blah id '" + blahId + "' referenced but not found in deleteBlah");
+            return;
         }
 
         if (!blahDAO.getAuthorId().equals(userId)) {
@@ -1810,7 +1813,7 @@ public final class BlahManager implements ManagerInterface {
 
         blahDAO.setStrength(-1.0);
 
-        blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+        blahDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
 
     }
 
