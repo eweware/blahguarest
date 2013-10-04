@@ -119,13 +119,23 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     }
 
     @Override
-    public Boolean getAnonymous() {
+     public Boolean getAnonymous() {
         return (Boolean) get(ANONYMOUS);
     }
 
     @Override
     public void setAnonymous(Boolean anon) {
         put(ANONYMOUS, anon);
+    }
+
+    @Override
+    public Integer getFlagged() {
+        return (Integer) get(FLAGGEDCONTENT);
+    }
+
+    @Override
+    public void setFlagged(Integer anon) {
+        put(FLAGGEDCONTENT, anon);
     }
 
     @Override

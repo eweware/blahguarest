@@ -118,6 +118,16 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
         put(ANONYMOUS, anon);
     }
 
+
+    public Boolean getFlagged() {
+        return (Boolean) get(FLAGGEDCONTENT);
+    }
+
+
+    public void SetFlagged(Boolean anon) {
+        put(FLAGGEDCONTENT, anon);
+    }
+
     /**
      * <p>Returns the blah's body. This is additional text
      * and it may be up to 1024 characters in length.</p>

@@ -773,6 +773,25 @@ public final class BlahManager implements ManagerInterface {
         _trackingMgr.trackBlahUpdate(blahId, null, null, viewCount, openCount, null);
     }
 
+
+    /**
+     * Simply logs views and opens for anonymous users.
+     *
+     * @param en_us
+     */
+    public void updateBlahFlag(LocaleId en_us, String blahId) throws InvalidRequestException, SystemErrorException {
+        ensureReady();
+
+        final BlahDAO blahDAO = (BlahDAO) getStoreManager().createBlah(blahId);
+        if (!blahDAO._exists()) {
+            throw new InvalidRequestException("Invalid blah '" + blahId + "'", ErrorCodes.INVALID_INPUT);
+        }
+
+        blahDAO.setFlagged(1);
+
+        blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+    }
     /**
      * Allows a user to update a blah's vote, views, and/or opens, in any combination.
      * Ignored if there is no promotion/demotion, views or opens in request.
