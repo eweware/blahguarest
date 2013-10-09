@@ -382,7 +382,7 @@ public class BlahsResource {
      * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @PUT
-    @Path("/stats/{blahId}")
+    @Path("/{blahId}/stats")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateBlahPromotionViewOrOpens(
