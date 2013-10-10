@@ -349,6 +349,24 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      */
     public void setAnonymous(Boolean anon);
 
+
+    /**
+     * Returns whether the blah is flagged.
+     *
+     * @return Integer   Returns the flags for this blah
+     */
+    public Integer getFlagged();
+
+    /**
+     * Sets whether the blah is flagged
+     *
+     * @param flagVal = the flags for this blah
+     */
+    public void setFlagged(Integer flagVal);
+
+
+
+
     /**
      * Returns the blah's all-time strength.
      *

@@ -20,7 +20,7 @@
     <build>
         <resources>
             <resource>
-                <targetPath>main/java/com/eweware/service/base</targetPath>
+                <targetPath>com/eweware/service/base</targetPath>
                 <directory> ${basedir}/src/main/resources</directory>
                 <includes><include>**/AwsCredentials.properties</include></includes>
             </resource>

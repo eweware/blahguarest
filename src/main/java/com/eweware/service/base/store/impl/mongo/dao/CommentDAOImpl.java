@@ -104,6 +104,18 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
 
 
     @Override
+    public Integer getFlagged() {
+        return (Integer) get(FLAGGEDCONTENT);
+    }
+
+    @Override
+    public void setFlagged(Integer anon) {
+        put(FLAGGEDCONTENT, anon);
+    }
+
+
+
+    @Override
     public List<String> getImageIds() {
         return (List<String>) get(IMAGE_IDS);
     }

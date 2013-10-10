@@ -79,6 +79,15 @@ public interface BlahDAOConstants {
      */
     static final String ANONYMOUS = "XX";
 
+
+
+    /**
+     * <p>Whether or not this blah is anonymous.
+     * A boolean.</p>
+     */
+    static final String FLAGGEDCONTENT = "XXX";
+
+
     /**
      * <p>The blah's all-time strength.
      * A float between 0 and 1, inclusive.</p>
@@ -225,6 +234,9 @@ public interface BlahDAOConstants {
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
                     ANONYMOUS
+            }),
+            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
+                    FLAGGEDCONTENT
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{
                     IMAGE_IDS, BADGE_IDS

@@ -47,6 +47,22 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
      */
     public void setAnonymous(Boolean anon);
 
+    /**
+     * Returns whether the comment is flagged.
+     *
+     * @return Integer   Returns the flags for this blah
+     */
+    public Integer getFlagged();
+
+    /**
+     * Sets whether the comment is flagged
+     *
+     * @param flagVal = the flags for this blah
+     */
+    public void setFlagged(Integer flagVal);
+
+
+
 
     /**
      * <p>Returns the badge ids associated with this comment or null if there are none.</p>

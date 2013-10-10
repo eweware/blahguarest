@@ -32,6 +32,12 @@ public interface CommentDAOConstants {
     static final String ANONYMOUS = "XX";
 
     /**
+     * <p>Whether or not this comment is flagged for profanity, etc.
+     * A boolean.</p>
+     */
+    static final String FLAGGEDCONTENT = "XXX";
+
+    /**
      * <p>The comment's author's user id. A string.</p>
      */
     static final String AUTHOR_ID = "A";
@@ -106,6 +112,9 @@ public interface CommentDAOConstants {
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
                     ANONYMOUS
+            }),
+            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
+                    FLAGGEDCONTENT
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS

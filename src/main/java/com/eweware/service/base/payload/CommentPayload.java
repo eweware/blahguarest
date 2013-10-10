@@ -78,6 +78,16 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
         put(ANONYMOUS, anon);
     }
 
+
+    public Integer getFlagged() {
+        return (Integer) get(FLAGGEDCONTENT);
+    }
+
+
+    public void SetFlagged(Integer anon) {
+        put(FLAGGEDCONTENT, anon);
+    }
+
     /**
      * <p>Returns the list of badge ids associated with this blah.</p>
      * @return  List of badge ids or null if there are none.

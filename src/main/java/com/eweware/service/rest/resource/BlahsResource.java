@@ -382,7 +382,7 @@ public class BlahsResource {
      * @see com.eweware.service.base.store.dao.BlahDAOConstants
      */
     @PUT
-    @Path("/stats/{blahId}")
+    @Path("/{blahId}/stats")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateBlahPromotionViewOrOpens(
@@ -580,6 +580,35 @@ public class BlahsResource {
         }
         return systemManager;
     }
+
+    /**
+     * Flags the blah.
+     *
+     * @param blahId The blah's id
+     * @return The response without content.
+     */
+    @POST
+    @Path("/flag/{blahId}")
+    public Response flagBlah(
+            BlahPayload entity,
+            @PathParam("blahId") String blahId,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            getBlahManager().updateBlahFlag(LocaleId.en_us, blahId);
+
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            getSystemManager().setResponseTime(UPDATE_BLAH_STATS_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
 
     /**
      * Deletes the blah.
