@@ -1028,8 +1028,8 @@ public final class BlahManager implements ManagerInterface {
             userBlahInfoDAO.setComments(1L);
         }
 
+        userBlahInfoDAO.setGroupId(blahDAO.getGroupId()); // original group id
         if (insert) {
-            userBlahInfoDAO.setGroupId(blahDAO.getGroupId()); // original group id
             setRequiredFieldsForUserBlahInfo(userBlahInfoDAO, userId, blahId, authorId, blahDAO.getTypeId());
             userBlahInfoDAO._insert();
         } else {
