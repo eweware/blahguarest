@@ -45,8 +45,8 @@ public final class MediaManager implements ManagerInterface {
         MediaManager.singleton = this;
         try {
             final RunMode runMode = SystemManager.getInstance().getRunMode();
-            _imagePathname = (runMode == RunMode.QA) ? "qa." + imagePathname : ((runMode == RunMode.DEV) ? "dev." + imagePathname : imagePathname);
-            _imageBucketName = (runMode == RunMode.QA) ? "qa." + imageBucketName : ((runMode == RunMode.DEV) ? "dev." + imageBucketName : imageBucketName);
+            _imagePathname = imagePathname;
+            _imageBucketName =  imageBucketName;
             _bucketImageDir = imagesDir;
             _bucketOriginalDir = originalsDir;
             _state = ManagerState.INITIALIZED;
