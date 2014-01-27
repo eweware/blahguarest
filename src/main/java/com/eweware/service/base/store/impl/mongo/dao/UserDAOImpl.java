@@ -142,4 +142,9 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
     public void setImageIds(List<String> imageIds) {
         put(IMAGE_IDS, imageIds);
     }
+
+    @Override
+    public Boolean getIsAdmin() {
+        return (Boolean) get(IS_ADMIN);
+    }
 }

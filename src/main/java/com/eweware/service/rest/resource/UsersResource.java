@@ -59,6 +59,7 @@ public class UsersResource {
     private static final String GET_USER_IMAGES_OPERATION = "getUserImages";
     private static final String SET_USER_IMAGE_OPERATION = "setUserImage";
     private static final String GET_USER_RANKING_OPERATION = "getUserRanking";
+    private static final String GET_WHATS_NEW_OPERATION = "getWhatsNew";
 
 
     private UserManager userManager;
@@ -697,6 +698,55 @@ public class UsersResource {
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    /**
+     * <p>Returns information about what is new.</p>
+     * <p><i>User must be logged in to get custom info.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> whatsnew</div>
+     *
+     * @return If successful, returns an http code of 200 (OK) with a JSON entity (a UserProfilePayload)
+     *         containing the user profile settings. This entity might be an empty map.
+     *         If the request is invalid, returns 400 (BAD REQUEST).
+     *         On error conditions, a JSON object is returned with details.
+     * @see com.eweware.service.base.store.dao.UserProfileDAOConstants
+     */
+    @GET
+    @Path("/whatsnew")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWhatsNew(
+            @Context HttpServletRequest request) {
+        try {
+            class WhatsNewClass {
+                public String text;
+            }
+
+            WhatsNewClass   whatsNew = new WhatsNewClass();
+            Response response;
+            final long s = System.currentTimeMillis();
+            if (BlahguaSession.isAuthenticated(request))
+            {
+                final String userId = BlahguaSession.ensureAuthenticated(request, true);
+                // return authenticated info
+                response = RestUtilities.make200OkResponse("{'text':'You are logged in!  Here is what is new'}");
+            }
+            else
+            {
+                // return generic info
+                response = RestUtilities.make200OkResponse("{'text':'You are not logged in.'}");
+            }
+
+            getSystemManager().setResponseTime(GET_WHATS_NEW_OPERATION, (System.currentTimeMillis() - s));
+            return response;
         } catch (InvalidAuthorizedStateException e) {
             return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {

@@ -31,6 +31,7 @@ import com.eweware.service.search.index.blah.BlahDataIndexable;
 import com.eweware.service.search.index.blah.BlahDataIndexableInterpreter;
 import com.eweware.service.search.index.common.BlahguaFilterIndexReader;
 import com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
+import com.mongodb.MongoException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -1770,20 +1771,26 @@ public final class BlahManager implements ManagerInterface {
 
         ensureReady();
 
-        if (groupId == null) {
-            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+        try {
+            if (groupId == null) {
+                throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+            }
+
+            checkGroupAccess(request, groupId);
+
+            final Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId) : null;
+
+            final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null);
+
+            BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
+
+            return inbox.getInboxItems();
         }
-
-        checkGroupAccess(request, groupId);
-
-        final Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId) : null;
-
-        final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null);
-
-        BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
-
-        return inbox.getInboxItems();
+        catch (com.mongodb.MongoException.Network exp) {
+            return null;
+        }
     }
+
 
     public List<Map<String, Object>> getRecentsInbox(String groupId, HttpServletRequest request)
             throws SystemErrorException, InvalidRequestException, InvalidAuthorizedStateException, StateConflictException, ResourceNotFoundException {

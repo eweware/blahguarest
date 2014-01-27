@@ -352,7 +352,7 @@ public final class BlahguaSession {
         } else {
             setInboxInfo(request, groupId, lastInboxNumber);
         }
-        setCurrentlyViewedGroup(request, groupId);
+        //setCurrentlyViewedGroup(request, groupId);
     }
 
     /**
@@ -426,16 +426,7 @@ public final class BlahguaSession {
             String groupId = null;
             try {
                 groupId = (String) session.getAttribute(BlahguaSession.VIEWING_GROUP_ID_ATTRIBUTE);
-                if (groupId != null) {
-                    try {
-                        decrementViewerCount(groupId);
-                    } catch (SystemErrorException e) {
-                        throw e;
-                    } catch (ResourceNotFoundException e) {
-                        logger.log(Level.WARNING, "Tried to decrement view count for a non-existent channel", e);
-                        // fall through
-                    }
-                }
+
                 if (!login) {
                     final String userId = (String) session.getAttribute(BlahguaSession.USER_ID_ATTRIBUTE);
                     final String username = (String) session.getAttribute(BlahguaSession.USERNAME_ATTRIBUTE);

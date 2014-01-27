@@ -46,6 +46,19 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
     public void setAuthorId(String authorId);
 
     /**
+     * <p>Returns the id of the user this blah is intended for.</p>
+     * @return String   Returns the blah target's id
+     */
+    public String getTargetUserId();
+
+    /**
+     * Sets the blah's author id.
+     *
+     * @param userId The blah's target id
+     */
+    public void setTargetUserId(String userId);
+
+    /**
      * <p>Returns the blah's text (tagline).</p>
      * @return String   Returns the blah's text
      */

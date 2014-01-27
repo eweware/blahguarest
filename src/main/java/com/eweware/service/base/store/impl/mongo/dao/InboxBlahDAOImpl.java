@@ -235,4 +235,15 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     public void setAuthorNickname(String nickname) {
         put(AUTHOR_NICKNAME, nickname);
     }
+
+    @Override
+    public Boolean getBlahIsRecent() {
+        return (Boolean) get(RECENTLY_ACTIVE);
+    }
+
+    @Override
+    public void setBlahIsRecent(Boolean isRecent) {
+        put(RECENTLY_ACTIVE, isRecent);
+    }
+
 }

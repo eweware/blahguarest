@@ -211,13 +211,18 @@ public interface BlahDAOConstants {
     static final String IMAGE_IDS = "M";
 
     /**
+     * <p>The id of the user who this blah is intended for</p>
+     */
+    static final String TARGET_USER_ID = "TU";
+
+    /**
      * <p>A set of badges associated with this blah.</p>
      */
     static final String BADGE_IDS = "B";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                    TYPE_ID, TEXT, BODY, GROUP_ID, AUTHOR_ID}),
+                    TYPE_ID, TEXT, BODY, GROUP_ID, AUTHOR_ID, TARGET_USER_ID}),
 
             new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{
                     PREDICTION_RESULT_CORRECT_COUNT, PREDICTION_RESULT_INCORRECT_COUNT, PREDICTION_RESULT_UNCLEAR_COUNT,

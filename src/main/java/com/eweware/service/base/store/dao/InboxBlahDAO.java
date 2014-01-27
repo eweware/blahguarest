@@ -71,4 +71,7 @@ public interface InboxBlahDAO extends BaseDAO, InboxBlahDAOConstants {
     public String getAuthorNickname();
 
     public void setAuthorNickname(String nickname);
+
+    public Boolean  getBlahIsRecent();
+    public void     setBlahIsRecent(Boolean isRecent);
 }

@@ -70,6 +70,7 @@
         <property name="mediaCollectionName" value="${blahgua.store.mongo.blahdb.collection.media}"/>
         <property name="blahCollectionName" value="${blahgua.store.mongo.blahdb.collection.blahs}"/>
         <property name="blahTypeCollectionName" value="${blahgua.store.mongo.blahdb.collection.blahTypes}"/>
+        <property name="whatsNewCollectionName" value="${blahgua.store.mongo.userdb.collection.whatsNew}"/>
         <property name="commentCollectionName" value="${blahgua.store.mongo.blahdb.collection.comments}"/>
         <property name="userBlahInfoCollectionName" value="${blahgua.store.mongo.userdb.collection.userBlahInfo}"/>
         <property name="userCommentInfoCollectionName" value="${blahgua.store.mongo.userdb.collection.userCommentInfo}"/>

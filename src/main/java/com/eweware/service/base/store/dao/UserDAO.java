@@ -37,6 +37,9 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
 
     public void setImageIds(List<String> imageIds);
 
+    public Boolean getIsAdmin();
+
+
     /**
      * <p>Returns the last signin date for the user</p>
      *

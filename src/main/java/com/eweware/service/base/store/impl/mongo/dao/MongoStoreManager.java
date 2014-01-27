@@ -59,6 +59,7 @@ public final class MongoStoreManager implements StoreManager {
     private String mediaCollectionName;
     private String blahCollectionName;
     private String blahTypeCollectionName;
+    private String whatsNewCollectionName;
     private String groupCollectionName;
     private String groupTypeCollectionName;
     private String userCollectionName;
@@ -155,6 +156,13 @@ public final class MongoStoreManager implements StoreManager {
         blahCollectionName = name;
     }
 
+    public String getWhatsNewCollectionName() {
+        return whatsNewCollectionName;
+    }
+
+    public void setWhatsNewCollectionName(String name) {
+        whatsNewCollectionName = name;
+    }
     public String getBlahTypeCollectionName() {
         return blahTypeCollectionName;
     }
@@ -429,6 +437,9 @@ public final class MongoStoreManager implements StoreManager {
 
             checkCollection(collectionNameToCollectionMap, blahTypeCollectionName);
             collectionNameToCollectionMap.put(blahTypeCollectionName, getBlahDb().getCollection(blahTypeCollectionName));
+
+            checkCollection(collectionNameToCollectionMap, whatsNewCollectionName);
+            collectionNameToCollectionMap.put(whatsNewCollectionName, getUserDb().getCollection(whatsNewCollectionName));
 
             checkCollection(collectionNameToCollectionMap, commentCollectionName);
             collectionNameToCollectionMap.put(commentCollectionName, getBlahDb().getCollection(commentCollectionName));
