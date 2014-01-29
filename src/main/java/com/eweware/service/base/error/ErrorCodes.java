@@ -473,4 +473,9 @@ public final class ErrorCodes {
      * USER_LOGIN_FAILED = 92
      */
     public static final Integer USER_LOGIN_FAILED = 92;
+
+    /**
+     * NOT_FOUND_USER_ID = 14
+     */
+    public static final Integer NOT_FOUND_WHATS_NEW = 93;
 }

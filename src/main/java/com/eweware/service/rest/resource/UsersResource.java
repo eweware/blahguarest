@@ -6,6 +6,7 @@ import com.eweware.service.base.mgr.SystemManager;
 import com.eweware.service.base.payload.UserAccountPayload;
 import com.eweware.service.base.payload.UserPayload;
 import com.eweware.service.base.payload.UserProfilePayload;
+import com.eweware.service.base.payload.WhatsNewPayload;
 import com.eweware.service.base.store.dao.UserDAOConstants;
 import com.eweware.service.mgr.BlahManager;
 import com.eweware.service.mgr.UserManager;
@@ -733,17 +734,28 @@ public class UsersResource {
             WhatsNewClass   whatsNew = new WhatsNewClass();
             Response response;
             final long s = System.currentTimeMillis();
+
+            WhatsNewPayload newObj = null;
+
             if (BlahguaSession.isAuthenticated(request))
             {
-                final String userId = BlahguaSession.ensureAuthenticated(request, true);
+                String userId = BlahguaSession.ensureAuthenticated(request, true);
                 // return authenticated info
-                response = RestUtilities.make200OkResponse("{'text':'You are logged in!  Here is what is new'}");
+
+                try {
+                    newObj = getUserManager().getWhatsNewForID(userId);
+                }
+                catch (ResourceNotFoundException exp)
+                {
+                    // do nothing - it is OK.
+                    newObj = null;
+                }
             }
-            else
-            {
-                // return generic info
-                response = RestUtilities.make200OkResponse("{'text':'You are not logged in.'}");
-            }
+            if (newObj == null)
+                newObj = getUserManager().getWhatsNewForID("0");
+
+            response = RestUtilities.make200OkResponse(newObj);
+
 
             getSystemManager().setResponseTime(GET_WHATS_NEW_OPERATION, (System.currentTimeMillis() - s));
             return response;

@@ -1,5 +1,6 @@
 package com.eweware.service.base.store.impl.mongo.dao;
 
+import com.eweware.service.base.store.dao.WhatsNewDAO;
 import com.mongodb.*;
 import com.eweware.service.base.error.DuplicateKeyException;
 import com.eweware.service.base.error.ErrorCodes;
@@ -31,6 +32,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
     /** Attack check: will not store a string longer than this */
     private static final int MAXIMUM_STRING_LENGTH = 4000;
+    private static final int MAX_RETRIES = 100;
 
     // MongoException error code for duplicate keys
 //    private static final int MONGO_DUPLICATE_KEY_ERROR_CODE = 11001;
@@ -332,14 +334,33 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         }
     }
 
+
+
+    protected   DBObject findRecentRetry(DBObject criteria, DBObject fields, DBObject orderBy, DBCollection collection) throws SystemErrorException {
+        DBObject obj = null;
+        for (int attempt = 1; attempt < MAX_RETRIES; attempt++) {
+            try {
+                obj = collection.findOne(criteria, fields, orderBy);
+                return obj;
+            } catch (Exception e) {
+                if (attempt > MAX_RETRIES) {
+                    throw new SystemErrorException(makeErrorMessage("findRecentRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
+                } else {
+                    logger.warning(getClass().getName() + ": findRecentRetry failed and will retry in attempt #" + attempt + " in collection " + _getCollection());
+                }
+            }
+        }
+        return obj;
+    }
+
     private DBObject findOneRetry(DBObject criteria, DBObject fields, DBCollection collection) throws SystemErrorException {
         DBObject obj = null;
-        for (int attempt = 1; attempt < 5; attempt++) {
+        for (int attempt = 1; attempt < MAX_RETRIES; attempt++) {
             try {
                 obj = collection.findOne(criteria, fields);  // getting SocketException inside here
                 return obj;
             } catch (Exception e) {
-                if (attempt > 3) {
+                if (attempt > MAX_RETRIES) {
                     throw new SystemErrorException(makeErrorMessage("findOneRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
                 } else {
                     logger.warning(getClass().getName() + ": findOneRetry failed and will retry in attempt #" + attempt + " in collection " + _getCollection());
@@ -377,7 +398,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
     private DBCursor findManyRetry(Integer start, Integer count, String sortFieldName) throws SystemErrorException {
         DBCursor cursor = null;
-        for (int attempt = 1; attempt < 5; attempt++) {
+        for (int attempt = 1; attempt < MAX_RETRIES; attempt++) {
             try {
                 if (sortFieldName == null) {
                     cursor = ((start != null && count != null) ? _getCollection().find(this).skip(start).limit(count) :
@@ -393,7 +414,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 }
                 return cursor;
             } catch (Exception e) {
-                if (attempt > 3) {
+                if (attempt > MAX_RETRIES) {
                     throw new SystemErrorException(makeErrorMessage("findManyRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
                 } else {
                     logger.warning(getClass().getSimpleName() + ": findManyRetry failed in attempt # " + attempt + " in collection " + _getCollection());
@@ -406,7 +427,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
 
     private DBCursor findManyByCriteriaRetry(Integer start, Integer count, String sortFieldName, DBObject criteria, DBObject fields) throws SystemErrorException {
         DBCursor cursor = null;
-        for (int attempt = 1; attempt < 5; attempt++) {
+        for (int attempt = 1; attempt < MAX_RETRIES; attempt++) {
             try {
                 if (sortFieldName == null) {
                     cursor = (start != null && count != null) ? _getCollection().find(criteria, fields).skip(start).limit(count) :
@@ -422,7 +443,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 }
                 return cursor;
             } catch (Exception e) {
-                if (attempt > 3) {
+                if (attempt > MAX_RETRIES) {
                     throw new SystemErrorException(makeErrorMessage("findManyByCriteriaRetry", "find", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
                 } else {
                     logger.warning(getClass().getSimpleName() + ": findManyByCriteriaRetry failed in attempt #" + attempt + " in collection '" + _getCollection() + "'");
@@ -645,7 +666,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
     }
 
     private void updateRetry(DAOUpdateType updateType, DBObject criteria) throws SystemErrorException {
-        for (int attempt = 1; attempt < 5; attempt++) {
+        for (int attempt = 1; attempt < MAX_RETRIES; attempt++) {
             try {
                 final WriteResult result = _getCollection().update(
                         criteria,
@@ -658,7 +679,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 }
                 return;
             } catch (Exception e) {
-                if (attempt > 3) {
+                if (attempt > MAX_RETRIES) {
                     throw new SystemErrorException(makeErrorMessage("updateRetry", "update", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
                 } else {
                     logger.warning("updateRetry failed in attempt #" + attempt + " in collection '" + _getCollectionName() + "'");
@@ -672,7 +693,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         if (this.getId() == null) {
             throw new SystemErrorException(makeErrorMessage("_deleteByPrimaryId", "delete", null, null, "Missing primary id"));
         }
-        for (int attempt = 1; attempt < 5; attempt++) {
+        for (int attempt = 1; attempt < MAX_RETRIES; attempt++) {
             try {
                 final WriteResult result = _getCollection().remove(new BasicDBObject(ID, makeMongoId(this.getId()))
 //                        , WRITE_CONCERN
@@ -682,7 +703,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
                 }
                 return;
             } catch (Exception e) {
-                if (attempt > 3) {
+                if (attempt > MAX_RETRIES) {
                     throw new SystemErrorException(makeErrorMessage("_deleteByPrimaryId", "delete", attempt, e, null), e, ErrorCodes.SERVER_DB_ERROR);
                 } else {
                     logger.warning("_deleteByPrimaryId failed in attempt #" + attempt + " in collection '" + _getCollectionName() + "'");
@@ -723,7 +744,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         }
     }
 
-    private String makeErrorMessage(String method, String action, Integer attempt, Exception exception, String suffixMessage) throws SystemErrorException {
+    protected String makeErrorMessage(String method, String action, Integer attempt, Exception exception, String suffixMessage) throws SystemErrorException {
         final StringBuilder b = new StringBuilder(getClass().getSimpleName());
         b.append(": ");
         b.append(method);
@@ -863,7 +884,7 @@ abstract class BaseDAOImpl extends BasicDBObject implements BaseDAO {
         return fieldsToReturn;
     }
 
-    private Constructor<? extends BaseDAOImpl> findDAOConstructor() throws NoSuchMethodException {
+    protected Constructor<? extends BaseDAOImpl> findDAOConstructor() throws NoSuchMethodException {
         final Class<? extends BaseDAOImpl> c = getClass();
         Constructor<? extends BaseDAOImpl> constructor = classToConstructorMap.get(c);
         if (constructor == null) {

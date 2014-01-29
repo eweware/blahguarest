@@ -10,6 +10,7 @@ import com.eweware.service.base.store.dao.*;
 import com.eweware.service.base.type.RunMode;
 import org.bson.types.ObjectId;
 
+import javax.net.SocketFactory;
 import javax.xml.ws.WebServiceException;
 import java.util.*;
 import java.util.logging.Level;
@@ -383,6 +384,11 @@ public final class MongoStoreManager implements StoreManager {
             } else {
                 throw new WebServiceException("Neither using replica nor using standalone DB");
             }
+            builder.autoConnectRetry(true)
+                    .connectTimeout(30000)
+                    .socketKeepAlive(true);
+
+
             this.mongo = new MongoClient(serverAddresses, builder.build());
 
 
@@ -571,6 +577,12 @@ public final class MongoStoreManager implements StoreManager {
     public UserProfileDAO createUserProfile() {
         return new UserProfileDAOImpl();
     }
+
+    @Override
+    public WhatsNewDAO createWhatsNew(String userId) throws SystemErrorException {
+        return new WhatsNewDAOImpl(userId);
+    }
+
 
     @Override
     public UserProfileDAO createUserProfile(Map<String, Object> map) throws SystemErrorException {

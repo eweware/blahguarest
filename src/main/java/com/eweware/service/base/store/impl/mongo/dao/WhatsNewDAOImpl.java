@@ -1,5 +1,8 @@
 package com.eweware.service.base.store.impl.mongo.dao;
 
+import com.eweware.service.base.error.ErrorCodes;
+import com.eweware.service.base.store.dao.BaseDAO;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.eweware.service.base.error.SystemErrorException;
 import com.eweware.service.base.i18n.LocaleId;
@@ -7,6 +10,7 @@ import com.eweware.service.base.store.dao.WhatsNewDAO;
 import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.WhatsNewSchema;
 import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import com.mongodb.DBObject;
 import org.omg.CORBA.MARSHAL;
 
 import java.util.HashMap;
@@ -63,7 +67,9 @@ public class WhatsNewDAOImpl extends BaseDAOImpl implements WhatsNewDAO {
     }
 
     WhatsNewDAOImpl(String id) throws SystemErrorException {
-        super(id);
+        super();
+
+        setTargetUser(id);
     }
 
     WhatsNewDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
@@ -142,6 +148,26 @@ public class WhatsNewDAOImpl extends BaseDAOImpl implements WhatsNewDAO {
     @Override
     public void setNewMessages(Integer theMessage) {
         put(NEW_MESSAGES, theMessage);
+    }
+
+    public WhatsNewDAO _findNewestInfoByTargetID(String theId) throws SystemErrorException {
+        try {
+            final DBObject id = new BasicDBObject(WhatsNewDAO.TARGET_USER, theId);
+            DBObject fields = null;
+            DBObject orderBy = new BasicDBObject(BaseDAO.CREATED, -1);
+            final DBCollection collection = _getCollection();
+            DBObject dao = null;
+            try {
+                dao = findRecentRetry(id, fields, orderBy, collection);
+            } catch (SystemErrorException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new SystemErrorException("Failed to find newest for object=" + this, e, ErrorCodes.SERVER_DB_ERROR);
+            }
+            return (dao == null) ? null : (WhatsNewDAO)findDAOConstructor().newInstance(dao, false);
+        } catch (Exception e) {
+            throw new SystemErrorException(makeErrorMessage("_findNewestInfoByID", "find", null, e, null), e, ErrorCodes.SERVER_SEVERE_ERROR);
+        }
     }
 
 

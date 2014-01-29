@@ -207,4 +207,5 @@ public interface DAOMethods {
      *
      */
     public abstract BaseDAO _findByPrimaryId(String... fieldsToReturnHint) throws SystemErrorException;
+
 }

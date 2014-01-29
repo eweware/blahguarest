@@ -13,7 +13,7 @@ public class WhatsNewSchema extends BaseSchema implements SchemaConstants, Whats
 
     public static final WhatsNewSchema getSchema(LocaleId localeId) {
 
-        WhatsNewSchema schema = (WhatsNewSchema) WhatsNewSchema.getCachedSchema(BlahSchema.class, localeId);
+        WhatsNewSchema schema = (WhatsNewSchema) WhatsNewSchema.getCachedSchema(WhatsNewSchema.class, localeId);
         if (schema != null) {
             return schema;
         }

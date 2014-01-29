@@ -18,6 +18,7 @@ import com.eweware.service.base.store.dao.type.MediaReferendType;
 import com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import com.eweware.service.base.store.dao.type.UserAccountType;
 import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.store.impl.mongo.dao.WhatsNewDAOImpl;
 import com.eweware.service.base.type.TrackerType;
 import com.eweware.service.rest.session.BlahguaSession;
 import com.eweware.service.search.index.common.BlahguaFilterIndexReader;
@@ -761,6 +762,17 @@ public class UserManager implements ManagerInterface {
         }
 
         return new UserPayload(userDAO);
+    }
+
+    public WhatsNewPayload getWhatsNewForID(String userId)  throws InvalidRequestException, SystemErrorException, ResourceNotFoundException  {
+        ensureReady();
+        final WhatsNewDAO dao = getStoreManager().createWhatsNew(userId)._findNewestInfoByTargetID(userId);
+        if (dao == null) {
+            throw new ResourceNotFoundException("what's new not found", "userId=" + userId, ErrorCodes.NOT_FOUND_WHATS_NEW);
+        }
+        final WhatsNewPayload entity = new WhatsNewPayload(dao);
+
+        return entity;
     }
 
     public UserBlahInfoPayload getUserInfoForBlah(String userId, String blahId) throws SystemErrorException, InvalidRequestException {

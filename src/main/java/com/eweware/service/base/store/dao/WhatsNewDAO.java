@@ -1,5 +1,7 @@
 package com.eweware.service.base.store.dao;
 
+import com.eweware.service.base.error.SystemErrorException;
+
 /**
  * Created by Dave on 1/25/14.
  */
@@ -25,6 +27,8 @@ public interface WhatsNewDAO extends BaseDAO, WhatsNewDAOConstants {
 
     public Integer getNewMessages();
     public void setNewMessages(Integer newCount);
+
+    public WhatsNewDAO _findNewestInfoByTargetID(String userId) throws SystemErrorException;
 
 
 }
