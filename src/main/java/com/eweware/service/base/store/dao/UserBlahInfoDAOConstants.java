@@ -32,6 +32,7 @@ public interface UserBlahInfoDAOConstants {
 
     /**
      * <p>Id of group into which blah was introduced.
+     *
      * This is used by stats.
      * A string.</p>
      */

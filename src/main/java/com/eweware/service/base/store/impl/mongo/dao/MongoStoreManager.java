@@ -43,7 +43,7 @@ public final class MongoStoreManager implements StoreManager {
 
     private ManagerState status = ManagerState.UNKNOWN;
     private int mongoDbPort;
-    private Integer connectionsPerHost = 10; // default
+    private Integer connectionsPerHost = 100; // default
     private MongoClient mongo;
     private Map<String, DB> dbNameToDbMap;
 
@@ -356,7 +356,7 @@ public final class MongoStoreManager implements StoreManager {
 
             // Set up connections per host
             if (runMode != RunMode.PROD) {
-                this.connectionsPerHost = 3;
+                this.connectionsPerHost = 10;
                 logger.info("*** MongoDB hostname: " + (runMode == RunMode.QA ? qaMongoDbHostname : devMongoDbHostname) + " port " + this.mongoDbPort);
             } else {
                 logger.info("MongoDB hostnames '" + this.hostnames + "' port '" + this.mongoDbPort + "'");
@@ -374,12 +374,12 @@ public final class MongoStoreManager implements StoreManager {
                 }
             }
             if (serverAddresses.size() == 1) {
-                builder.writeConcern(WriteConcern.FSYNCED);
+                builder.writeConcern(WriteConcern.SAFE);
                 logger.info("*** Connecting as a standalone hostname " + serverAddresses.get(0) + " at port " + mongoDbPort + " ***");
             } else if (serverAddresses.size() > 0) {
                 builder
                         .readPreference(ReadPreference.primaryPreferred()) // tries to read from primary
-                        .writeConcern(WriteConcern.MAJORITY);      // Writes to secondaries before returning
+                        .writeConcern(WriteConcern.SAFE);      // Writes to secondaries before returning
                 logger.info("*** Connecting to hostnames in replica set: " + serverAddresses + " at port " + mongoDbPort + " ***");
             } else {
                 throw new WebServiceException("Neither using replica nor using standalone DB");

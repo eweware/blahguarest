@@ -40,6 +40,7 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_INDICATOR, MongoFieldTypes.STRING);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_NICKNAME, MongoFieldTypes.STRING);
+        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(RECENTLY_ACTIVE, MongoFieldTypes.BOOLEAN);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
