@@ -1016,7 +1016,7 @@ public class UserManager implements ManagerInterface {
             }
         }
         if (descriptor.length() == 0) {
-            descriptor.append("An anonymous person.");
+            descriptor.append("An unidentified person.");
         } else if (shownRace && count == 1) {
             descriptor.append(" person");
         }
