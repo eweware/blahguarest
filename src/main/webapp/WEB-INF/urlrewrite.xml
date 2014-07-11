@@ -12,7 +12,7 @@
 
     <rule>
         <condition type="scheme" operator="notequal">https</condition>
-        <condition name="host" operator="equal">app.goheard.com</condition>
+        <condition name="host" operator="equal">app2.goheard.com</condition>
         <!--<condition name="port" operator="equal">(80|443)</condition>-->
         <from>^/(.*)</from>
         <to type="permanent-redirect">http://app.goheard.com/$1</to>
