@@ -768,11 +768,20 @@ public class UserManager implements ManagerInterface {
         ensureReady();
         final WhatsNewDAO dao = getStoreManager().createWhatsNew(userId)._findNewestInfoByTargetID(userId);
         if (dao == null) {
-            throw new ResourceNotFoundException("what's new not found", "userId=" + userId, ErrorCodes.NOT_FOUND_WHATS_NEW);
+            if (!userId.equals("0"))
+                return getWhatsNewForID("0");
+            else {
+                ResourceNotFoundException exp = new ResourceNotFoundException("what's new not found", "userId=" + userId, com.eweware.service.base.error.ErrorCodes.NOT_FOUND_WHATS_NEW);
+                throw exp;
+            }
         }
-        final WhatsNewPayload entity = new WhatsNewPayload(dao);
+        else
+        {
+            final WhatsNewPayload entity = new WhatsNewPayload(dao);
+            return entity;
+        }
 
-        return entity;
+
     }
 
     public UserBlahInfoPayload getUserInfoForBlah(String userId, String blahId) throws SystemErrorException, InvalidRequestException {

@@ -145,7 +145,7 @@ public final class BadgesManager {
 
             // Set the entity
             final Map<String, Object> map = new HashMap<String, Object>(3);
-            final String applicationName = "blahgua.com";
+            final String applicationName = "goheard.com";
             final String password = "sheep";
             map.put("a", applicationName);
             map.put("p", password);
@@ -170,7 +170,10 @@ public final class BadgesManager {
 
             final DBObject transaction = new BasicDBObject(BadgeTransactionDAOConstants.ID, makeTransactionId(authorityId, txToken));
             transaction.put(BadgeTransactionDAOConstants.AUTHORITY_ID, authorityId);
-            transaction.put(BadgeTransactionDAOConstants.AUTHORITY_DISPLAY_NAME, authDAO.getDisplayName());
+            if (authDAO != null)
+                transaction.put(BadgeTransactionDAOConstants.AUTHORITY_DISPLAY_NAME, authDAO.getDisplayName());
+            else
+                transaction.put(BadgeTransactionDAOConstants.AUTHORITY_DISPLAY_NAME, "Heard");
             transaction.put(BadgeTransactionDAOConstants.STATE, BadgeTransactionState.PENDING.getCode());
             transaction.put(BadgeTransactionDAOConstants.USER_ID, userId);
             transaction.put(BadgeTransactionDAOConstants.CREATED, new Date());
