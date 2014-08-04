@@ -1,5 +1,8 @@
 package com.eweware.service.mgr.auxiliary;
 
+import com.eweware.service.base.error.InvalidRequestException;
+import com.eweware.service.base.error.ResourceNotFoundException;
+import com.eweware.service.base.payload.GroupPayload;
 import com.mongodb.*;
 import com.eweware.service.base.CommonUtilities;
 import com.eweware.service.base.error.ErrorCodes;
@@ -133,7 +136,7 @@ public class InboxHandler extends Thread {
      * @param limit
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
-    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit) throws SystemErrorException {
+    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
         final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group != null) {
             Integer first = group.getFirstInboxNumber();
@@ -160,7 +163,26 @@ public class InboxHandler extends Thread {
             } else {
                 nextBoxNumber = first;
             }
-            final List<Map<String, Object>> inboxItems = getInboxItems(CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber), false, limit);
+            String inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber);
+
+            if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
+                logger.warning("Inbox '" + inboxName + "' does not exist.");
+                final GroupPayload localGroup = GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId);
+                nextBoxNumber = localGroup.getFirstInboxNumber();
+                inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber);
+
+                if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
+                    logger.warning("First Inbox '" + inboxName + "' also does not exist - searching...");
+                    for (int i = nextBoxNumber - 1; i >= 1; i--) {
+                        inboxName = CommonUtilities.makeInboxCollectionName(groupId, i);
+                        if (_storeManager.getInboxDB().collectionExists(inboxName)) {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, limit);
 
             // TODO: remove experiment: adds some recents to the top
 //            final int maxRecentsToAdd = 10;
@@ -170,7 +192,7 @@ public class InboxHandler extends Thread {
 //            }
 
             if (inboxItems.size() == 0) {
-                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, inboxNumber) + "'");
+                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber) + "'");
             }
 
             return new InboxData(nextBoxNumber, inboxItems);
@@ -193,17 +215,26 @@ public class InboxHandler extends Thread {
      * @return  Returns the inbox items or an empty list if there are no items.
      */
     private List<Map<String, Object>> getInboxItems(String collectionName, boolean recents, Integer limit) {
-        final DBCollection col = _storeManager.getInboxDB().getCollection(collectionName);
-        DBCursor cursor = recents ? col.find().sort(REVERSED_NATURAL_SORT_ORDER) : col.find();
-        if (limit != null) {
-            cursor = cursor.limit(limit);
+        logger.warning("Fetching inbox:  '" + collectionName + "'");
+
+        if (_storeManager.getInboxDB().collectionExists(collectionName)) {
+            final List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+            final DBCollection col = _storeManager.getInboxDB().getCollection(collectionName);
+            DBCursor cursor = recents ? col.find().sort(REVERSED_NATURAL_SORT_ORDER) : col.find();
+            if (limit != null) {
+                cursor = cursor.limit(limit);
+            }
+
+            for (DBObject dao : cursor) {
+                dao.removeField(BaseDAOConstants.ID);
+                items.add((Map<String, Object>) dao);
+            }
+            return items;
+        } else {
+            logger.warning("Inbox '" + collectionName + "' does not exist.");
+            return null;
         }
-        final List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        for (DBObject dao : cursor) {
-            dao.removeField(BaseDAOConstants.ID);
-            items.add((Map<String, Object>) dao);
-        }
-        return items;
+
     }
 }
 
