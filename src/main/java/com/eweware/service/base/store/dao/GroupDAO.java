@@ -60,6 +60,14 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setLastInboxNumber(Integer number);
 
+    public Integer getFirstSafeInboxNumber();
+
+    public void setFirstSafeInboxNumber(Integer number);
+
+    public Integer getLastSafeInboxNumber();
+
+    public void setLastSafeInboxNumber(Integer number);
+
     public Date getLastInboxGenerated();
 
     public void setLastInboxGenerated(Date date);

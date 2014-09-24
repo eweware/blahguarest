@@ -38,6 +38,8 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CURRENT_VIEWER_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(FIRST_INBOX_NUMBER, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_INBOX_NUMBER, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(FIRST_SAFE_INBOX_NUMBER, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_SAFE_INBOX_NUMBER, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_TIME_INBOXES_GENERATED, MongoFieldTypes.DATE);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_GENERATION_DURATION, MongoFieldTypes.DATE);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
@@ -215,9 +217,31 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     }
 
     @Override
+    public Integer getFirstSafeInboxNumber() {
+        return (Integer) get(FIRST_SAFE_INBOX_NUMBER);
+    }
+
+    @Override
+    public void setFirstSafeInboxNumber(Integer number) {
+        put(FIRST_SAFE_INBOX_NUMBER, number);
+    }
+
+    @Override
+    public Integer getLastSafeInboxNumber() {
+        return (Integer) get(LAST_SAFE_INBOX_NUMBER);
+    }
+
+    @Override
+    public void setLastSafeInboxNumber(Integer number) {
+        put(LAST_SAFE_INBOX_NUMBER, number);
+    }
+
+    @Override
     public Date getLastInboxGenerated() {
         return (Date) get(LAST_TIME_INBOXES_GENERATED);
     }
+
+
 
     @Override
     public void setLastInboxGenerated(Date date) {

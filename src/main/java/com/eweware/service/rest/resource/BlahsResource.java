@@ -43,6 +43,7 @@ public class BlahsResource {
     private static final String GET_PREDICTION_VOTE_OPERATION = "getPredictionVote";
     private static final String DELETE_BLAH_OPERATION = "deleteBlah";
     private static final String UPDATE_BLAH_OPERATION = "updateBlah";
+    private static final String REPORT_BLAH_OPERATION = "reportBlah";
 
     private static BlahManager blahManager;
     private static SystemManager systemManager;
@@ -582,26 +583,42 @@ public class BlahsResource {
     }
 
     /**
-     * Flags the blah.
+     * <p>Posts a complaint about a blah</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> blah/(id)/report</div>
      *
-     * @param blahId The blah's id
-     * @return The response without content.
+     * @param entity The request entity. Requires a JSON entity with an
+     *               field named 'type' whose value is the report type.
+     * @return Returns an http status 200 with the author's data
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced commentr can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     *         If the user is not authorized to make this request, returns status 401.
+     * @see com.eweware.service.base.store.dao.UserDAOConstants
      */
     @POST
-    @Path("/flag/{blahId}")
-    public Response flagBlah(
-            BlahPayload entity,
+    @Path("/{blahId}/report")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reportBlah(
+            Map<String, String> entity,
             @PathParam("blahId") String blahId,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
-            getBlahManager().updateBlahFlag(LocaleId.en_us, blahId);
-
-            final Response response = RestUtilities.make204OKNoContentResponse();
-            getSystemManager().setResponseTime(UPDATE_BLAH_STATS_OPERATION, (System.currentTimeMillis() - start));
-            return response;
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            Integer reportType = Integer.getInteger(entity.get("type"));
+            getBlahManager().reportBlah(userId, blahId, reportType);
+            getSystemManager().setResponseTime(REPORT_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {

@@ -35,6 +35,7 @@ public class CommentsResource {
     private static final String GET_COMMENTS_OPERATION = "getComments";
     private static final String UPDATE_COMMENT_OPERATION = "updateComment";
     private static final String GET_COMMENT_AUTHOR_OPERATION = "getCommentAuthor";
+    private static final String REPORT_COMMENT_OPERATION = "reportComment";
     private static final String SET_COMMENT_IMAGE_OPERATION = "setCommentImage";
 
     private static BlahManager blahManager;
@@ -70,6 +71,50 @@ public class CommentsResource {
             final Response response = RestUtilities.make200OkResponse(getBlahManager().getAuthorFromComment(LocaleId.en_us, entity.get("I")));
             getSystemManager().setResponseTime(GET_COMMENT_AUTHOR_OPERATION, (System.currentTimeMillis() - start));
             return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    /**
+     * <p>Posts a complaint about a comment</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> comments/author</div>
+     *
+     * @param entity The request entity. Requires a JSON entity with an
+     *               field named 'type' whose value is the report type.
+     * @return Returns an http status 200 with the author's data
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced commentr can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     *         If the user is not authorized to make this request, returns status 401.
+     * @see com.eweware.service.base.store.dao.UserDAOConstants
+     */
+    @POST
+    @Path("/{commentId}/report")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reportComment(
+            Map<String, String> entity,
+            @PathParam("commentId") String commentId,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            Integer reportType = Integer.getInteger(entity.get("type"));
+            getBlahManager().reportComment(userId, commentId, reportType);
+            getSystemManager().setResponseTime(REPORT_COMMENT_OPERATION, (System.currentTimeMillis() - start));
+            return RestUtilities.make204OKNoContentResponse();
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (ResourceNotFoundException e) {
@@ -285,29 +330,3 @@ public class CommentsResource {
     }
 }
 
-
-//    /**
-//     *
-//     * <p></p>
-//     * <div><b>METHOD:</b> </div>
-//     * <div><b>URL:</b> </div>
-//     * @param commentId
-//     * @return
-//     */
-//    @DELETE
-//    @Path("/{commentId}")
-//    public Response deleteComment(@PathParam("commentId") String commentId) {
-//        try {
-//            final long start = System.currentTimeMillis();
-//            getBlahManager().deleteComment(LocaleId.en_us, commentId);
-//            final Response response = RestUtilities.make204OKNoContentResponse();
-//            getSystemManager().setResponseTime(DELETE_COMMENT_OPERATION, (System.currentTimeMillis() - start));
-//            return response;
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make400InvalidRequestResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }

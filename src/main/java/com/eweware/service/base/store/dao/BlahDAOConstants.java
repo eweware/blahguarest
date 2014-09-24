@@ -82,7 +82,7 @@ public interface BlahDAOConstants {
 
 
     /**
-     * <p>Whether or not this blah is anonymous.
+     * <p>Whether or not this blah is mature.
      * A boolean.</p>
      */
     static final String FLAGGEDCONTENT = "XXX";

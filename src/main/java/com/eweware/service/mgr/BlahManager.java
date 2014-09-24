@@ -1540,6 +1540,44 @@ public final class BlahManager implements ManagerInterface {
         return new CommentPayload(commentDAO);
     }
 
+    public void reportComment(String userId, String commentId, Integer reportType) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+        ensureReady();
+        if (CommonUtilities.isEmptyString(commentId)) {
+            throw new InvalidRequestException("missing comment id", null, ErrorCodes.MISSING_COMMENT_ID);
+        }
+
+        if (CommonUtilities.isEmptyString(userId)) {
+            throw new InvalidRequestException("missing user id", null, ErrorCodes.MISSING_AUTHOR_ID);
+        }
+
+        switch (reportType) {
+            case 1:
+                // offensive
+                break;
+            case 2:
+                //
+        }
+    }
+
+    public void reportBlah(String userId, String blahId, Integer reportType) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+        ensureReady();
+        if (CommonUtilities.isEmptyString(blahId)) {
+            throw new InvalidRequestException("missing blah id", null, ErrorCodes.MISSING_COMMENT_ID);
+        }
+
+        if (CommonUtilities.isEmptyString(userId)) {
+            throw new InvalidRequestException("missing user id", null, ErrorCodes.MISSING_AUTHOR_ID);
+        }
+
+        switch (reportType) {
+            case 1:
+                // offensive
+                break;
+            case 2:
+                //
+        }
+    }
+
     /**
      * The following fields are tracked: votes for comment (blah vote can't be changed after a comment is created),
      * and number of times comment was viewed or opened.
@@ -1766,7 +1804,7 @@ public final class BlahManager implements ManagerInterface {
         return comments;
     }
 
-    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber)
+    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber, Boolean safe)
             throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
         ensureReady();
@@ -1778,11 +1816,11 @@ public final class BlahManager implements ManagerInterface {
 
             checkGroupAccess(request, groupId);
 
-            final Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId) : null;
+            Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId, safe) : null;
 
-            final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null);
+            final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null, safe);
 
-            BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber());
+            BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber(), safe);
 
             return inbox.getInboxItems();
         }

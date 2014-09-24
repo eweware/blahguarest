@@ -51,6 +51,11 @@ public final class BlahguaSession {
     private static final String USERNAME_ATTRIBUTE = "U";
 
     /**
+     * If the user wants mature content
+     */
+    private static final String USER_WANTS_MATURE_CONTENT = "XXX";
+
+    /**
      * An InboxInfo instance.
      * This is the last inbox number that the session has seen.
      *
@@ -63,7 +68,8 @@ public final class BlahguaSession {
 //            AUTHENTICATION_STATE_ATTRIBUTE,
             VIEWING_GROUP_ID_ATTRIBUTE,
             USER_ID_ATTRIBUTE,
-            USERNAME_ATTRIBUTE
+            USERNAME_ATTRIBUTE,
+            USER_WANTS_MATURE_CONTENT
     };
 
     /**
@@ -75,9 +81,9 @@ public final class BlahguaSession {
      * @param accountType The account type. Currently is set only if it is an admin account. (unchecked!)
      * @param username    The username (unchecked!)
      */
-    public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username) throws SystemErrorException {
+    public static void markAuthenticated(HttpServletRequest request, String userId, String accountType, String username, Boolean wantsMature) throws SystemErrorException {
         final HttpSession session = request.getSession(true);
-        markAuthenticated(session, userId, accountType, username);
+        markAuthenticated(session, userId, accountType, username, wantsMature);
         final StringBuilder b = new StringBuilder("Authenticated username '");
         b.append(username);
         b.append("' (canonical name '");
@@ -97,11 +103,15 @@ public final class BlahguaSession {
      * @param username    The username (unchecked!)
      * @param accountType The account type. Currently is set only if it is an admin account
      */
-    private static void markAuthenticated(HttpSession session, String userId, String accountType, String username) throws SystemErrorException {
+    private static void markAuthenticated(HttpSession session, String userId, String accountType, String username, Boolean wantsMature) throws SystemErrorException {
         try {
             if (username != null) {
                 session.setAttribute(USERNAME_ATTRIBUTE, username);
             }
+            if (wantsMature != null)
+                session.setAttribute(USER_WANTS_MATURE_CONTENT, wantsMature);
+            else
+                session.setAttribute(USER_WANTS_MATURE_CONTENT, false);
             if (accountType != null && accountType.equals(UserAccountType.ADMIN.getCode())) {
                 session.setAttribute(ACCOUNT_TYPE_ATTRIBUTE, Boolean.TRUE);
             }
@@ -176,6 +186,44 @@ public final class BlahguaSession {
     }
 
     /**
+     * <p>Updates the mature flag</p>
+     *
+     * @param request  The request
+     * @param wantsMature true if the user wants mature content
+     */
+    public static void setWantsMature(HttpServletRequest request, Boolean wantsMature) throws SystemErrorException {
+        final HttpSession session = request.getSession();
+        if (session != null) {
+            try {
+                session.setAttribute(USER_WANTS_MATURE_CONTENT, wantsMature);
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Attempted to set mature flag attribute to an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+            }
+        }
+    }
+
+    /**
+     * <p>Returns the mature flag</p>
+     *
+     * @param request  The request
+     * @return true if this session has mature content
+
+     */
+    public static Boolean getWantsMature(HttpServletRequest request) throws SystemErrorException {
+        final HttpSession session = request.getSession();
+        if (session != null) {
+            try {
+                return (Boolean) session.getAttribute(USER_WANTS_MATURE_CONTENT);
+            } catch (IllegalStateException e) {
+                throw new SystemErrorException("Attempted to get mature flag attribute from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+            }
+        }
+        throw new SystemErrorException("Attempted to get mature flag attribute from a null session id", null, ErrorCodes.INVALID_SESSION_STATE);
+    }
+
+
+
+    /**
      * <p>Ensures that the session is authenticated and that the user is an administrator.</p>
      * <p>Check disabled if security is turned off!</p>
      *
@@ -217,6 +265,7 @@ public final class BlahguaSession {
             try {
                 session.removeAttribute(USER_ID_ATTRIBUTE);
                 session.removeAttribute(USERNAME_ATTRIBUTE);
+                session.setAttribute(USER_WANTS_MATURE_CONTENT, false);
             } catch (IllegalStateException e) {
                 throw new SystemErrorException("Failed to mark session anonymous because session id '" + session.getId() + "' was invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
             }
@@ -312,17 +361,28 @@ public final class BlahguaSession {
      */
     private static class InboxInfo {
         private final Map<String, Integer> groupIdToLastInboxNumberMap = new HashMap<String, Integer>(5);
+        private final Map<String, Integer> groupIdToLastSafeInboxNumberMap = new HashMap<String, Integer>(5);
 
-        private InboxInfo(String groupId, Integer lastInboxNumber) {
-            setLastInboxNumber(groupId, lastInboxNumber);
+        private InboxInfo(String groupId, Integer lastInboxNumber, Integer lastSafeInboxNumber) {
+            if (lastInboxNumber != null)
+                setLastInboxNumber(groupId, lastInboxNumber);
+            if (lastSafeInboxNumber != null)
+                setLastSafeInboxNumber(groupId, lastSafeInboxNumber);
         }
 
         private void setLastInboxNumber(String groupId, Integer lastInboxNumber) {
             groupIdToLastInboxNumberMap.put(groupId, lastInboxNumber);
         }
 
+        private void setLastSafeInboxNumber(String groupId, Integer lastInboxNumber) {
+            groupIdToLastSafeInboxNumberMap.put(groupId, lastInboxNumber);
+        }
+
         private Integer getLastInboxNumber(String groupId) {
             return groupIdToLastInboxNumberMap.get(groupId);
+        }
+        private Integer getLastSafeInboxNumber(String groupId) {
+            return groupIdToLastSafeInboxNumberMap.get(groupId);
         }
     }
 
@@ -333,9 +393,17 @@ public final class BlahguaSession {
      * @param groupId The group id of the inbox
      * @return The last inbox number or null if the inbox has not been visited during this session.
      */
-    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId) throws SystemErrorException {
+    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId, Boolean safe) throws SystemErrorException {
         final InboxInfo info = getInboxInfo(request);
-        return (info == null) ? null : info.getLastInboxNumber(groupId);
+
+        if (info == null) {
+            return null;
+        } else {
+            if (safe)
+                return info.getLastSafeInboxNumber(groupId);
+            else
+                return info.getLastInboxNumber(groupId);
+        }
     }
 
     /**
@@ -345,14 +413,22 @@ public final class BlahguaSession {
      * @param groupId         The group id (unchecked!)
      * @param lastInboxNumber The last inbox number in the group to have been fetched.
      */
-    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber) throws ResourceNotFoundException, SystemErrorException {
+    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber, Boolean safe) throws ResourceNotFoundException, SystemErrorException {
         final InboxInfo inboxInfo = getInboxInfo(request);
         if (inboxInfo != null) {
-            inboxInfo.setLastInboxNumber(groupId, lastInboxNumber);
+            if (safe)
+                inboxInfo.setLastSafeInboxNumber(groupId, lastInboxNumber);
+            else
+                inboxInfo.setLastInboxNumber(groupId, lastInboxNumber);
         } else {
-            setInboxInfo(request, groupId, lastInboxNumber);
+            Integer lastMature = null, lastSafe = null;
+            if (safe)
+                lastSafe = lastInboxNumber;
+            else
+                lastMature = lastInboxNumber;
+            setInboxInfo(request, groupId, lastMature, lastSafe);
         }
-        //setCurrentlyViewedGroup(request, groupId);
+
     }
 
     /**
@@ -544,10 +620,10 @@ public final class BlahguaSession {
     }
 
 
-    private static void setInboxInfo(HttpServletRequest request, String groupId, Integer lastInboxNumber) throws SystemErrorException {
+    private static void setInboxInfo(HttpServletRequest request, String groupId, Integer lastInboxNumber, Integer lastSafeInboxNumber) throws SystemErrorException {
         final HttpSession session = request.getSession();
         try {
-            session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber));
+            session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber, lastSafeInboxNumber));
         } catch (IllegalStateException e) {
             throw new SystemErrorException("Failed to set inbox info for channel id '" + groupId + "' because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
         }

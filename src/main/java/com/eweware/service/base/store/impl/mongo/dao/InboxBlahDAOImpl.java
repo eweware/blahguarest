@@ -41,6 +41,7 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_INDICATOR, MongoFieldTypes.STRING);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(AUTHOR_NICKNAME, MongoFieldTypes.STRING);
         InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(RECENTLY_ACTIVE, MongoFieldTypes.BOOLEAN);
+        InboxBlahDAOImpl.FIELD_TO_TYPE_MAP.put(FLAGGEDCONTENT, MongoFieldTypes.BOOLEAN);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -246,5 +247,13 @@ public class InboxBlahDAOImpl extends BaseDAOImpl implements InboxBlahDAO {
     public void setBlahIsRecent(Boolean isRecent) {
         put(RECENTLY_ACTIVE, isRecent);
     }
+
+    @Override
+    public Boolean getBlahIsFlagged() {
+        return (Boolean) get(FLAGGEDCONTENT);
+    }
+
+    @Override
+    public void setBlahIsFlagged(Boolean isRecent) { put(FLAGGEDCONTENT, isRecent); }
 
 }

@@ -364,7 +364,9 @@ public class UserManager implements ManagerInterface {
         BlahguaSession.destroySession(request, true);
 
         if (Login.authenticate(accountDAO.getDigest(), accountDAO.getSalt(), password)) {
-            BlahguaSession.markAuthenticated(request, accountDAO.getId(), accountDAO.getAccountType(), canonicalUsername);
+            UserDAO curUser = getStoreManager().createUser(accountDAO.getId());
+            Boolean wantsMature = curUser.getWantsMature();
+            BlahguaSession.markAuthenticated(request, accountDAO.getId(), accountDAO.getAccountType(), canonicalUsername, wantsMature);
         } else {
             BlahguaSession.markAnonymous(request);
             throw new InvalidAuthorizedStateException("User not authorized to log in", ErrorCodes.USER_LOGIN_FAILED);
@@ -509,7 +511,9 @@ public class UserManager implements ManagerInterface {
         }
 
         // Enable session!
-        BlahguaSession.markAuthenticated(request, userId, userAccountDAO.getAccountType(), canonicalUsername);
+        UserDAO curUser = getStoreManager().createUser(userAccountDAO.getId());
+        Boolean wantsMature = curUser.getWantsMature();
+        BlahguaSession.markAuthenticated(request, userId, userAccountDAO.getAccountType(), canonicalUsername, wantsMature);
 
         // redirect to blahgua
         return true;
@@ -703,6 +707,27 @@ public class UserManager implements ManagerInterface {
         BlahguaSession.setUsername(request, newUsername);
 
         maybeUpdateUserInIndex(userDAO);
+    }
+
+    /**
+     * Updates user's mature flag.
+     *
+     * @param localeId
+     * @param request
+     * @param wantsMature
+     * @throws com.eweware.service.base.error.SystemErrorException
+     *
+     * @throws InvalidRequestException
+     */
+    public void updateWantsMature(LocaleId localeId, HttpServletRequest request, String userId, Boolean wantsMature) throws InvalidRequestException,
+            StateConflictException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
+
+        final UserDAO userDAO = getStoreManager().createUser(userId);
+        userDAO.setWantsMature(wantsMature);
+        userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+        BlahguaSession.setWantsMature(request, wantsMature);
     }
 
     /**

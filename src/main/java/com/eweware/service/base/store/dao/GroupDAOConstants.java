@@ -98,6 +98,20 @@ public interface GroupDAOConstants {
     static final String LAST_INBOX_NUMBER = "L";
 
     /**
+     * <p>The number of the first active inbox of the group, an Integer.</p>
+     * <p>Each inbox is a collection whose name is the concatenation
+     * of the group id and the inbox number.</p>
+     */
+    static final String FIRST_SAFE_INBOX_NUMBER = "FS";
+
+    /**
+     * <p>The number of the last active inbox of the group, an Integer.</p>
+     * <p>Each inbox is a collection whose name is the concatenation
+     * of the group id and the inbox number.</p>
+     */
+    static final String LAST_SAFE_INBOX_NUMBER = "LS";
+
+    /**
      * <p>The last time that the inboxes for this group were generated, a Date.</p>
      * <p>Precisely, this is the generation completion time.</p>
      */

@@ -39,6 +39,10 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
 
     public Boolean getIsAdmin();
 
+    public Boolean getWantsMature();
+
+    public void setWantsMature(Boolean bool);
+
 
     /**
      * <p>Returns the last signin date for the user</p>

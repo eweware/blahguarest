@@ -74,4 +74,7 @@ public interface InboxBlahDAO extends BaseDAO, InboxBlahDAOConstants {
 
     public Boolean  getBlahIsRecent();
     public void     setBlahIsRecent(Boolean isRecent);
+
+    public Boolean  getBlahIsFlagged();
+    public void     setBlahIsFlagged(Boolean isFlagged);
 }

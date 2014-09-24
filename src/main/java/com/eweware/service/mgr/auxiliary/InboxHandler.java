@@ -136,14 +136,23 @@ public class InboxHandler extends Thread {
      * @param limit
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
-    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
+    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit, Boolean safe) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
         final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group != null) {
-            Integer first = group.getFirstInboxNumber();
+            Integer first;
+            if (safe)
+                first = group.getFirstSafeInboxNumber();
+            else
+                first = group.getFirstInboxNumber();
             if (first == null) {
                 first = 0;
             }
-            Integer last = group.getLastInboxNumber();
+            Integer last;
+
+            if (safe)
+                last = group.getLastSafeInboxNumber();
+            else
+                last = group.getLastInboxNumber();
             if (last == null) {
                 last = 0;
             }
@@ -163,18 +172,18 @@ public class InboxHandler extends Thread {
             } else {
                 nextBoxNumber = first;
             }
-            String inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber);
+            String inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe);
 
             if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
                 logger.warning("Inbox '" + inboxName + "' does not exist.");
                 final GroupPayload localGroup = GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId);
                 nextBoxNumber = localGroup.getFirstInboxNumber();
-                inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber);
+                inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe);
 
                 if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
                     logger.warning("First Inbox '" + inboxName + "' also does not exist - searching...");
                     for (int i = nextBoxNumber - 1; i >= 1; i--) {
-                        inboxName = CommonUtilities.makeInboxCollectionName(groupId, i);
+                        inboxName = CommonUtilities.makeInboxCollectionName(groupId, i, safe);
                         if (_storeManager.getInboxDB().collectionExists(inboxName)) {
                             break;
                         }
@@ -184,15 +193,9 @@ public class InboxHandler extends Thread {
 
             final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, limit);
 
-            // TODO: remove experiment: adds some recents to the top
-//            final int maxRecentsToAdd = 10;
-//            final List<Map<String, Object>> recentInboxItems = getInboxItems(CommonUtilities.makeRecentsInboxCollectionName(groupId), true, maxRecentsToAdd);
-//            if (recentInboxItems.size() > 0) {
-//                inboxItems.addAll(0, recentInboxItems);
-//            }
 
             if (inboxItems.size() == 0) {
-                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber) + "'");
+                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe) + "'");
             }
 
             return new InboxData(nextBoxNumber, inboxItems);
@@ -238,172 +241,3 @@ public class InboxHandler extends Thread {
     }
 }
 
-
-
-//    private BlahCache blahCache;
-//
-//    private BlahCache getBlahCache() {
-//        if (blahCache == null) {
-//            blahCache = BlahCache.getInstance();
-//        }
-//        return blahCache;
-//    }
-////
-////    /**
-////     * Maps a group id to the maximum number of inboxes in the group
-////     */
-////    private final java.util.Map<String, Integer> groupIdToMaxInbox = new HashMap<String, Integer>();
-//
-//    private Random random; // thread safe
-
-//
-//    /**
-//     * @param groupId The group id
-//     * @return Integer  Returns the maximum inbox number (zero-origin) or 0 (the
-//     *         minimum inbox number possible) if there are no known inboxes for this group.
-//     */
-//    public Integer getMaxInbox(String groupId) {
-//        synchronized (groupIdToMaxInbox) {
-//            final Integer maxInbox = groupIdToMaxInbox.get(groupId);
-//            if (maxInbox == null) {
-//                final Integer unknown = -1;
-////                groupIdToMaxInbox.put(groupId, unknown);
-//                return unknown;
-//            }
-//            return maxInbox;
-//        }
-//    }
-//
-//    /**
-//     * Sets the maximum inbox number for the group.
-//     *
-//     * @param groupId The group id
-//     * @param max     The maximum inbox number (zero-origin).
-//     */
-//    private void setMaxInbox(String groupId, Integer max) {
-//        synchronized (groupIdToMaxInbox) {
-//            groupIdToMaxInbox.put(groupId, max);
-//        }
-//    }
-//
-//    /**
-//     * Returns the specified group's inbox.
-//     *
-//     * @param groupId       The id of the group for this inbox
-//     * @param inbox         The inbox number
-//     * @param type          Optionally, the blah's type (default: any blah type)
-//     * @param start         Optionally the first index in the inbox
-//     * @param count         Optionally the number of items to retrieve.
-//     * @param sortFieldName Optionally the name of the field to sort against
-//     * @param sortDirection
-//     * @return Inbox    The inbox
-//     * @throws SystemErrorException
-//     */
-//    public Inbox getInboxFromCache(String groupId, Integer inbox, String type, Integer start, Integer count, String sortFieldName, Integer sortDirection) throws SystemErrorException {
-//        // TODO type parameter ignored!
-//        final Inbox box = getBlahCache().getInbox(groupId, inbox, start, count, sortFieldName, sortDirection);
-//        if (box != null) {
-//            setMaxInbox(groupId, box.getTopInbox()); // update the max inbox for this group
-//        }
-//        return box;
-//    }
-//
-//    /**
-//     * Spreads the blah within the specified group.
-//     * Places the blah in a random group input box.
-//     * <p/>
-//     * Blahs may be spread to other inboxes in this group
-//     * and to other groups' inboxes via a separate mechanism (more offline).
-//     *
-//     * @param localeId
-//     * @param blahDAO
-//     * @param groupId
-//     * @throws com.eweware.service.base.error.SystemErrorException
-//     *
-//     */
-//    public void spreadBlahToRecents(LocaleId localeId, BlahDAO blahDAO, String groupId) throws SystemErrorException {
-//
-//        // TODO need a static method in baselib for the inbox blah creation so that it's shared with stats app, see stats InboxBuilder.buildInboxes()
-//
-//        InboxBlahDAO dao = _storeManager.createInboxBlah();
-//        dao.initToDefaultValues(localeId);
-//
-//        dao.setBlahId(blahDAO.getId());
-//        dao.setBlahText(blahDAO.getText());
-//        dao.setType(blahDAO.getTypeId());
-//        dao.setGroupId(groupId);
-//        dao.setAuthorId(blahDAO.getAuthorId());
-//        Long tmp = blahDAO.getPromotedCount();
-//        if (tmp != null) {dao.setUpVotes(tmp);}
-//        tmp = blahDAO.getDemotedCount();
-//        if (tmp != null) {dao.setDownVotes(tmp);}
-//        tmp = blahDAO.getOpens();
-//        if (tmp != null) {dao.setOpens(tmp);}
-//        tmp = blahDAO.getViews();
-//        if (tmp != null) {dao.setViews(tmp);}
-//        List<String> tmpList = blahDAO.getImageIds();
-//        if (tmpList != null) {dao.setImageIds(tmpList);}
-//        tmpList = blahDAO.getBadgeIds();
-//        if (tmpList != null && tmpList.size() != 0) {dao.setBadgeIndicator("b");}
-//        final String nickname = CommonUtilities.maybeGetUserNickname(_storeManager, false, blahDAO.getAuthorId());
-//        if (nickname != null) {dao.setAuthorNickname(nickname);}
-//
-//        // TODO Speculative for now: put new ones in the 85 percentile
-//        dao.setStrength(0.85);
-//        dao.setRecentStrength(0.85);
-//
-//        final Integer maxInbox = getMaxInbox(groupId);
-//        // maxinbox of -1 is unknown and 0 means no inboxes: in that case, start inbox 0
-//        final Integer inbox = (maxInbox <= 0) ? 0 : random.nextInt(maxInbox + 1);
-//
-//        dao.setInboxNumber(inbox);
-//
-//        // Insert into db after state has been successfully updated
-//        dao._insert();
-//
-//        // Update inbox state in db
-//        updateInboxStateInDB(groupId, inbox, dao.getId());
-//
-//        // Insert into cache
-//        getBlahCache().addInboxItem(dao.getId(), dao, inbox, groupId);
-//    }
-//
-//    private void updateInboxStateInDB(String groupId, Integer inbox, String inboxItemId) throws SystemErrorException {
-//        int retryCount = 0;
-//        for (int i = 0; i < 4; i++) {
-//            try {
-//                updateInboxStateInDBTry(groupId, inbox, inboxItemId);
-//                return;
-//            } catch (SystemErrorException e) {
-//                if (i > 2) {
-//                    throw new SystemErrorException("Inbox #" + inbox + " for group id '" + groupId + "': failed to  update inbox state after retrying " + retryCount + " times", e, ErrorCodes.SERVER_DB_ERROR);
-//                }
-//                retryCount++;
-//            } finally {
-//                if (retryCount > 0) {
-//                    logger.warning("Inbox #" + inbox + " for group id '" + groupId + "': Retried updating inbox state " + retryCount + " times");
-//                }
-//            }
-//        }
-//    }
-//
-//    private void updateInboxStateInDBTry(String groupId, Integer inbox, String inboxItemId) throws SystemErrorException {
-//        try {
-//            final String stateId = getBlahCache().makeInboxStateKey(groupId, inbox);
-//            final DBObject query = new BasicDBObject(BaseDAOConstants.ID, stateId);
-//            final DBCollection stateCol = _storeManager.getCollection(_storeManager.getInboxStateCollectionName());
-//            final DBObject state = stateCol.findOne(query);
-//            if (state == null) {
-//                final DBObject insert = new BasicDBObject(BaseDAOConstants.ID, stateId);
-//                insert.put(InboxStateDAOConstants.INBOX_ITEM_IDS, Arrays.asList(new ObjectId[]{new ObjectId(inboxItemId)}));
-//                insert.put(InboxStateDAOConstants.INBOX_NUMBER_TOP, inbox);
-//                stateCol.insert(insert);
-//            } else {
-//                final DBObject push = new BasicDBObject(InboxStateDAOConstants.INBOX_ITEM_IDS, new ObjectId(inboxItemId));
-//                final BasicDBObject update = new BasicDBObject("$push", push);
-//                stateCol.update(new BasicDBObject(BaseDAOConstants.ID, stateId), update);
-//            }
-//        } catch (Exception e) {
-//            throw new SystemErrorException("Inbox #" + inbox + " for group id '" + groupId + "': Failed to update the inbox state for inbox item id '" + inboxItemId + "'", e, ErrorCodes.SERVER_DB_ERROR);
-//        }
-//    }

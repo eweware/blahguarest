@@ -53,8 +53,10 @@ public interface UserDAOConstants {
 
     static final String IS_ADMIN = "ad";
 
+    static final String WANTS_MATURE = "XXX";
+
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{IS_ADMIN}),
+            new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{IS_ADMIN, WANTS_MATURE}),
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{USERNAME}),
             new SchemaDataTypeFieldMap(SchemaDataType.R, new String[]{USER_STRENGTH, USER_CONTROVERSY_STRENGTH}),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{STATS}),

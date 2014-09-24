@@ -61,6 +61,7 @@ public class UsersResource {
     private static final String SET_USER_IMAGE_OPERATION = "setUserImage";
     private static final String GET_USER_RANKING_OPERATION = "getUserRanking";
     private static final String GET_WHATS_NEW_OPERATION = "getWhatsNew";
+    private static final String UPDATE_WANTS_MATURE_OPERATION = "updateWantsMature";
 
 
     private UserManager userManager;
@@ -859,6 +860,50 @@ public class UsersResource {
         }
     }
 
+
+    /**
+     * <p>User this method to update a user's mature flag.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> PUT</div>
+     * <div><b>URL:</b> users/update/mature/{mature}</div>
+     *
+     * @param entity Expects a JSON entity containing the preference
+     *               in a field named 'XXX'.
+     * @return Returns http status code 204 (NO CONTENT) on success.
+     *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
+     *         If the input is invalid, returns 400 (BAD REQUEST).
+     *         If username is already taken, returns 409 (CONFLICT).
+     *         On error conditions, a JSON object is returned with details.
+     * @see com.eweware.service.user.validation.Login#ensurePasswordString(String)
+     */
+    @PUT
+    @Path("/update/mature")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateWantsMature(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final Boolean wantsMature = Boolean.valueOf(entity.get("XXX"));
+            getUserManager().updateWantsMature(LocaleId.en_us, request, userId, wantsMature);
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            getSystemManager().setResponseTime(UPDATE_WANTS_MATURE_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+
     /**
      * <p>Use this method when the user forgets his password.</p>
      * <p>The user must have an email address in his profile. If so, the user
@@ -934,8 +979,6 @@ public class UsersResource {
      * @param groupId     <i>Query Parameter:</i> Required. The inbox group id.
      * @param inboxNumber <i>Query Parameter:</i> Optional. The inbox number to fetch. If not provided,
      *                    inboxes are fetched in sequential order within the group on each request.
-     * @param recentInbox <i>Query Parameter:</i> Optional. If set to true, an inbox with the
-     *                    most recent entries in the group is returned.
      * @return Returns an inbox JSON object as an array of inbox blah entities (InboxBlahPayload entities) with http code 200.
      *         If a group has no blahs, this will return an empty array. If the inbox number if not specified,
      *         inboxes are rotated in a monotonically increasing inbox number order, circling back to the
@@ -949,17 +992,14 @@ public class UsersResource {
     public Response getInbox(
             @QueryParam("groupId") String groupId,
             @QueryParam("in") Integer inboxNumber,
-            @QueryParam("r") boolean recentInbox,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             Response response;
-            if (recentInbox) {
-                response = RestUtilities.make200OkResponse(getBlahManager().getRecentsInbox(groupId, request));
-            } else {
-                response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber));
-            }
-//            final Response response = RestUtilities.make200OkResponse(getBlahManager().getInbox(LocaleId.en_us, groupId, request, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection));
+            Boolean safe = BlahguaSession.getWantsMature(request);
+
+            response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber, safe ));
+
             getSystemManager().setResponseTime(GET_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;
         } catch (SystemErrorException e) {
