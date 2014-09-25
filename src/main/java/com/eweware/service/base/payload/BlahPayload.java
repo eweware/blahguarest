@@ -124,8 +124,8 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     }
 
 
-    public void SetFlagged(Boolean anon) {
-        put(FLAGGEDCONTENT, anon);
+    public void setFlagged(Boolean flagged) {
+        put(FLAGGEDCONTENT, flagged);
     }
 
     /**

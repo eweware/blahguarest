@@ -216,6 +216,7 @@ public class UsersResource {
         }
     }
 
+
     /**
      * <p>Use this method to register a user.</p>
      * <p/>
@@ -996,7 +997,7 @@ public class UsersResource {
         try {
             final long s = System.currentTimeMillis();
             Response response;
-            Boolean safe = BlahguaSession.getWantsMature(request);
+            Boolean safe = !BlahguaSession.getWantsMature(request);
 
             response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber, safe ));
 

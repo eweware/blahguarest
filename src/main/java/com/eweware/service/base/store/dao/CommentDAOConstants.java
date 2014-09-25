@@ -111,10 +111,7 @@ public interface CommentDAOConstants {
                     COMMENT_STRENGTH
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
-                    ANONYMOUS
-            }),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
-                    FLAGGEDCONTENT
+                    ANONYMOUS, FLAGGEDCONTENT
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS

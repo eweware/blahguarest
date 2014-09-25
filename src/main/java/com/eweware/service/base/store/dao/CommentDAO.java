@@ -52,14 +52,14 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
      *
      * @return Integer   Returns the flags for this blah
      */
-    public Integer getFlagged();
+    public Boolean getFlagged();
 
     /**
      * Sets whether the comment is flagged
      *
      * @param flagVal = the flags for this blah
      */
-    public void setFlagged(Integer flagVal);
+    public void setFlagged(Boolean flagVal);
 
 
 

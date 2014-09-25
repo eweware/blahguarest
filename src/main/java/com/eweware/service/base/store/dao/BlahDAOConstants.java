@@ -238,10 +238,7 @@ public interface BlahDAOConstants {
                     STATS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
-                    ANONYMOUS
-            }),
-            new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{
-                    FLAGGEDCONTENT
+                    ANONYMOUS, FLAGGEDCONTENT
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{
                     IMAGE_IDS, BADGE_IDS

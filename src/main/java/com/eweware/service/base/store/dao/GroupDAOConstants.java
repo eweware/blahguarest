@@ -130,7 +130,7 @@ public interface GroupDAOConstants {
                 DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, USER_VALIDATION_METHOD, USER_VALIDATION_PARAMETERS, STATE
         }),
         new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT, INBOX_GENERATION_DURATION}),
-        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER}),
+        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER, FIRST_SAFE_INBOX_NUMBER, LAST_SAFE_INBOX_NUMBER}),
         new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_TIME_INBOXES_GENERATED})
     };
 

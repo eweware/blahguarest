@@ -265,6 +265,8 @@ public class UserManager implements ManagerInterface {
         if (setChallenge) {
             userAccountDAO.setSecurityChallengeAnswer1(challengeAnswer1);
         }
+
+
         if (update) {
             userAccountDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         } else {
@@ -510,6 +512,7 @@ public class UserManager implements ManagerInterface {
             throw new StateConflictException("Conflict: invalid recovery code", ErrorCodes.RECOVERY_CODE_INVALID);
         }
 
+        // Enable session!
         // Enable session!
         UserDAO curUser = getStoreManager().createUser(userAccountDAO.getId());
         Boolean wantsMature = curUser.getWantsMature();
