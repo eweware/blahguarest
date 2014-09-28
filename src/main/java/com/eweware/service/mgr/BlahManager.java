@@ -1550,9 +1550,24 @@ public final class BlahManager implements ManagerInterface {
             throw new InvalidRequestException("missing user id", null, ErrorCodes.MISSING_AUTHOR_ID);
         }
 
+        final CommentDAO commentDAO = (CommentDAO) getStoreManager().createComment(commentId)._findByPrimaryId(CommentDAO.AUTHOR_ID, CommentDAO.FLAGGEDCONTENT);
+        if (commentDAO == null) {
+            throw new ResourceNotFoundException("No commentId=" + commentId, reportType, ErrorCodes.NOT_FOUND_COMMENT_ID);
+        }
+
         switch (reportType) {
             case 1:
                 // offensive
+                String authorId = commentDAO.getAuthorId();
+                if (userId.compareToIgnoreCase(authorId) == 0) {
+                    // user is reporting their own comment - we believe them...
+                    final CommentDAO commentUpdateDAO = getStoreManager().createComment(commentId);
+                    commentUpdateDAO.setFlagged(true);
+                    commentUpdateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+                } else {
+                    // someone elses comment - we simply file the report
+                    getStoreManager().createContentReport(2, commentId, userId, reportType);
+                }
                 break;
             case 2:
                 //

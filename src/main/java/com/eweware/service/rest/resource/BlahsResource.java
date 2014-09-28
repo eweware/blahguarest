@@ -609,7 +609,7 @@ public class BlahsResource {
         try {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            Integer reportType = Integer.getInteger(entity.get("type"));
+            Integer reportType = Integer.parseInt(entity.get("type"));
             getBlahManager().reportBlah(userId, blahId, reportType);
             getSystemManager().setResponseTime(REPORT_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return RestUtilities.make204OKNoContentResponse();

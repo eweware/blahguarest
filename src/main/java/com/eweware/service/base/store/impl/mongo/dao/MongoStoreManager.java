@@ -1,5 +1,6 @@
 package com.eweware.service.base.store.impl.mongo.dao;
 
+import com.eweware.service.mgr.BlahManager;
 import com.mongodb.*;
 import com.eweware.service.base.error.ErrorCodes;
 import com.eweware.service.base.error.SystemErrorException;
@@ -650,6 +651,23 @@ public final class MongoStoreManager implements StoreManager {
     @Override
     public BadgeDAO createBadge() throws SystemErrorException {
         return new BadgeDAOImpl();
+    }
+
+    @Override
+    public String createContentReport(Integer contentType, String contentId, String reporterId, Integer reportType) throws SystemErrorException {
+        String reportId = "";
+        BasicDBObject document = new BasicDBObject();
+        document.put("contentType", contentType);
+        document.put("contentId", contentId);
+        document.put("reporterId", reporterId);
+        document.put("reportType", reportType);
+        document.put("status", "new");
+
+        DBCollection collection = getBlahDb().getCollection("reports");
+
+
+        collection.insert(document);
+        return reportId;
     }
 
     @Override

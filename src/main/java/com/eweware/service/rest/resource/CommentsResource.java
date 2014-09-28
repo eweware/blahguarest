@@ -111,7 +111,7 @@ public class CommentsResource {
         try {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
-            Integer reportType = Integer.getInteger(entity.get("type"));
+            Integer reportType = Integer.parseInt(entity.get("type"));
             getBlahManager().reportComment(userId, commentId, reportType);
             getSystemManager().setResponseTime(REPORT_COMMENT_OPERATION, (System.currentTimeMillis() - start));
             return RestUtilities.make204OKNoContentResponse();

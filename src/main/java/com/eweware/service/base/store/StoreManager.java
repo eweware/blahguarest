@@ -82,6 +82,7 @@ public interface StoreManager extends ManagerInterface {
     public abstract UserCommentInfoDAO createUserCommentInfo(Map<String, Object> map) throws SystemErrorException;
     public abstract CommentDAO createComment();
     public abstract CommentDAO createComment(String commentId) throws SystemErrorException;
+    public abstract String createContentReport(Integer contentType, String contentId, String reporterId, Integer reportType) throws SystemErrorException;
 
     public abstract CommentDAO createComment(Map<String, Object> map) throws SystemErrorException;
     public abstract UserTrackerDAO createUserTracker() throws SystemErrorException;
