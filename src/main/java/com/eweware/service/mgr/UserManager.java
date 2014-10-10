@@ -89,6 +89,7 @@ public class UserManager implements ManagerInterface {
     private StoreManager _storeManager;
     private SystemManager _systemManager;
     private MailManager _mailManager;
+    private TrackingManager _trackingManager;
     private ManagerState _state = ManagerState.UNKNOWN;
     private final File _indexDir;
     private final int _batchSize;
@@ -144,6 +145,7 @@ public class UserManager implements ManagerInterface {
             _storeManager = MongoStoreManager.getInstance();
             _systemManager = SystemManager.getInstance();
             _mailManager = MailManager.getInstance();
+            _trackingManager = TrackingManager.getInstance();
             InitializeUserSearch(); // TODO should be its own service
             _state = ManagerState.STARTED;
             System.out.println("*** UserManager started ***");
@@ -369,6 +371,7 @@ public class UserManager implements ManagerInterface {
             UserDAO curUser = getStoreManager().createUser(accountDAO.getId());
             Boolean wantsMature = curUser.getWantsMature();
             BlahguaSession.markAuthenticated(request, accountDAO.getId(), accountDAO.getAccountType(), canonicalUsername, wantsMature);
+            getTrackingManager().TrackUserLogin(accountDAO.getId());
         } else {
             BlahguaSession.markAnonymous(request);
             throw new InvalidAuthorizedStateException("User not authorized to log in", ErrorCodes.USER_LOGIN_FAILED);
@@ -1582,6 +1585,10 @@ public class UserManager implements ManagerInterface {
 
     private MailManager getMailManager() {
         return _mailManager;
+    }
+
+    private TrackingManager getTrackingManager() {
+        return _trackingManager;
     }
 }
 

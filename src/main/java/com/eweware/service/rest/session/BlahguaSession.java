@@ -7,6 +7,7 @@ import com.eweware.service.base.error.ResourceNotFoundException;
 import com.eweware.service.base.error.SystemErrorException;
 import com.eweware.service.base.store.dao.type.UserAccountType;
 import com.eweware.service.mgr.GroupManager;
+import com.eweware.service.mgr.TrackingManager;
 import com.eweware.service.rest.RestUtilities;
 import com.eweware.service.user.validation.Login;
 
@@ -611,6 +612,12 @@ public final class BlahguaSession {
      */
     private static void removeAllAttributes(HttpSession session) throws SystemErrorException {
         try {
+            String userId = (String) session.getAttribute(BlahguaSession.USER_ID_ATTRIBUTE);
+
+            if (userId != null) {
+                TrackingManager.getInstance().TrackUserLogout(userId);
+            }
+
             for (String attribute : ATTRIBUTE_NAMES) {
                 session.removeAttribute(attribute);
             }

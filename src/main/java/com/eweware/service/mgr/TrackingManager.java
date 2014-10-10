@@ -19,6 +19,12 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.microsoft.azure.storage.*;
+import com.microsoft.azure.storage.queue.*;
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+
+
 // TODO remove this dependency
 
 /**
@@ -62,6 +68,37 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         return _storeManager;
     }
 
+    private static final String storageConnectionString =
+            "DefaultEndpointsProtocol=http;" +
+            "AccountName=heardqueue;" +
+            "AccountKey=mBAdidz39VosggHzqVFtUJF5bLGPB6R+Kz99xuWRu5DO3m//FsIj0tZ8fKa/Isn1J9IaU5eMVK/e0ZWAIXvb9g==;";
+
+    private CloudQueue activityQueue = null;
+
+    private enum UserActivityType {
+        Login (1),
+        Logout(2),
+        ViewPost(3),
+        OpenPost(4),
+        VotePost(5),
+        VotePoll(6),
+        VotePrediction(7),
+        VoteExpiredPrediction(8),
+        VoteComment(9),
+        SubmitPost(10),
+        SubmitComment(11);
+
+        private int value;
+
+        private UserActivityType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+    }
     /**
      * Eventually, this object will be queued to the tracking service.
      */
@@ -78,6 +115,8 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         private final Long pollOptionIndex;
         private final Long viewCount;
         private final Long openCount;
+
+
 
         /**
          * Constructor for a tracker queue item.
@@ -134,7 +173,107 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     public TrackingManager() {
         TrackingManager.singleton = this;
         _state = ManagerState.INITIALIZED;
+        InitializeActivityQueue();
         System.out.println("*** TrackingManager initialized ***");
+    }
+
+    private void InitializeActivityQueue() {
+        try
+        {
+            // Retrieve storage account from connection-string.
+            CloudStorageAccount storageAccount =
+                    CloudStorageAccount.parse(storageConnectionString);
+
+            // Create the queue client.
+            CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
+
+            // Retrieve a reference to a queue.
+            activityQueue = queueClient.getQueueReference("activityqueue");
+
+            // Create the queue if it doesn't already exist.
+            activityQueue.createIfNotExists();
+        }
+        catch (Exception e)
+        {
+            // Output the stack trace.
+            e.printStackTrace();
+        }
+    }
+
+
+    private  void AddMessageToQueue(BSONObject theMessage) {
+        try
+        {
+            String msgStr = theMessage.toString();
+            // Create a message and add it to the queue.
+            CloudQueueMessage message = new CloudQueueMessage(msgStr);
+            activityQueue.addMessage(message);
+        }
+        catch (Exception e)
+        {
+            // Output the stack trace.
+            e.printStackTrace();
+        }
+    }
+
+    public  void LogActivity( UserActivityType activityType, String userId, String objectId, String dataStr) {
+        Calendar currentDate = Calendar.getInstance();
+        Date now = currentDate.getTime();
+        BSONObject theObject = new BasicBSONObject();
+        theObject.put("c", DateUtils.formatDateTime(now));
+        if (userId != null)
+            theObject.put("u", userId);
+        if (objectId != null)
+            theObject.put("o", objectId);
+        theObject.put("t", activityType.getValue());
+        if (dataStr != null)
+            theObject.put("d", dataStr);
+
+        AddMessageToQueue(theObject);
+    }
+
+    public void TrackUserLogin(String userId) {
+        LogActivity(UserActivityType.Login, userId, null, null);
+    }
+
+    public void TrackUserLogout(String userId) {
+        LogActivity(UserActivityType.Logout, userId, null, null);
+    }
+
+    public void TrackViewPost(String userId, String postId) {
+        LogActivity(UserActivityType.ViewPost, userId, postId, null);
+    }
+
+    public void TrackOpenPost(String userId, String postId) {
+        LogActivity(UserActivityType.OpenPost, userId, postId, null);
+    }
+
+    public void TrackVotePost(String userId, String postId, Long theVote) {
+        LogActivity(UserActivityType.VotePost, userId, postId, Long.toString(theVote) );
+    }
+
+    public void TrackVotePoll(String userId, String postId, Long theVote) {
+        LogActivity(UserActivityType.VotePoll, userId, postId, Long.toString(theVote));
+    }
+
+    public void TrackVotePredict(String userId, String postId, String theVote) {
+        LogActivity(UserActivityType.VotePrediction,  userId, postId, theVote);
+    }
+
+    public void TrackVoteExpPredict(String userId, String postId, String theVote) {
+        LogActivity(UserActivityType.VoteExpiredPrediction, userId, postId, theVote);
+    }
+
+    public void TrackVoteComment(String userId, String commentId, Long theVote) {
+        LogActivity(UserActivityType.VoteComment, userId, commentId, Long.toString(theVote));
+    }
+
+    public void TrackSubmitPost(String userId, String postId) {
+        LogActivity(UserActivityType.SubmitPost, userId, postId, null);
+    }
+
+    public void TrackSubmitComment(String userId, String commentId, String blahId) {
+        LogActivity(UserActivityType.SubmitComment, userId, commentId, blahId);
     }
 
     public ManagerState getState() {

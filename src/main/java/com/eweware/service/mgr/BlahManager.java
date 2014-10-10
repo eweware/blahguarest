@@ -284,7 +284,7 @@ public final class BlahManager implements ManagerInterface {
 
         // Track it
         trackBlah(authorId, blahDAO);
-
+        getTrackingManager().TrackSubmitPost(authorId, blahDAO.getId() );
 //        final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.CREATE_BLAH);
 //        tracker.setBlahId(blahDAO.getId());
 //        tracker.setUserId(authorId);
@@ -511,6 +511,7 @@ public final class BlahManager implements ManagerInterface {
         }
 
         getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, userId, true, false, blahId, null, false, false, pollOptionIndex, null, null);
+        getTrackingManager().TrackVotePoll(userId, blahId, pollOptionIndex);
     }
 
     public void predictionVote(String userId, String blahId, String preOrPostExpiration, String vote)
@@ -575,8 +576,10 @@ public final class BlahManager implements ManagerInterface {
         // Update Blah dao
         if (preExpirationVote) {
             userBlahInfoData._dao.setPredictionVote(vote);
+            getTrackingManager().TrackVotePredict(userId, blahId, predictionVote.getCode());
         } else {
             userBlahInfoData._dao.setPredictionResultVote(vote);
+            getTrackingManager().TrackVoteExpPredict(userId, blahId, predictionVote.getCode());
         }
         updateBlahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
@@ -772,6 +775,19 @@ public final class BlahManager implements ManagerInterface {
         blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
         _trackingMgr.trackBlahUpdate(blahId, null, null, viewCount, openCount, null);
+
+        if (viewCount != 0L) {
+            for (int i = 0; i < viewCount; i++) {
+                getTrackingManager().TrackViewPost("0", blahId);
+            }
+        }
+
+        if (openCount != 0L) {
+            for (int i = 0; i < openCount; i++) {
+                getTrackingManager().TrackOpenPost("0", blahId);
+            }
+        }
+
     }
 
 
@@ -885,6 +901,21 @@ public final class BlahManager implements ManagerInterface {
         final boolean demoted = (promotionOrDemotion.intValue() < 0L);
         getTrackingManager().trackObject(TrackerOperation.UPDATE_BLAH, userId, updateBlahDAO.getAuthorId(), isBlah, isNewObject, objectId, subObjectId, promoted, demoted, null, viewCount, openCount);
 
+        if (promotionOrDemotion != 0L)
+            getTrackingManager().TrackVotePost(userId, blahId, promotionOrDemotion);
+
+        if (viewCount != 0L) {
+            for (int i = 0; i < viewCount; i++) {
+                getTrackingManager().TrackViewPost(userId, blahId);
+            }
+        }
+
+        if (openCount != 0L) {
+            for (int i = 0; i < openCount; i++) {
+                getTrackingManager().TrackOpenPost(userId, blahId);
+            }
+        }
+
         if (doIndex()) {
             indexBlah(updateBlahDAO);
         }
@@ -916,9 +947,15 @@ public final class BlahManager implements ManagerInterface {
 
                 if (counts.opens > 0) {
                     blahDAO.put(BlahDAOConstants.OPENS, counts.opens);
+                    for (int i = 0; i < counts.opens; i++) {
+                        getTrackingManager().TrackOpenPost(userId, blahId );
+                    }
                 }
                 if (counts.views > 0) {
                     blahDAO.put(BlahDAOConstants.VIEWS, counts.views);
+                    for (int i = 0; i < counts.views; i++) {
+                        getTrackingManager().TrackViewPost(userId, blahId);
+                    }
                 }
                 blahDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
@@ -1532,7 +1569,7 @@ public final class BlahManager implements ManagerInterface {
         final boolean voteUp = (blahVote > 0L);
         final boolean voteDown = (blahVote < 0L);
         getTrackingManager().trackObject(TrackerOperation.CREATE_COMMENT, commentAuthorId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, entity.getViews(), entity.getOpens());
-
+        getTrackingManager().TrackSubmitComment(commentAuthorId, objectId, subObjectId);
         if (doIndex()) {
             indexComment(commentDAO); // index new comment
         }
@@ -1705,7 +1742,9 @@ public final class BlahManager implements ManagerInterface {
         final boolean voteUp = (voteForComment == 1L);
         final boolean voteDown = (voteForComment == -1L);
         getTrackingManager().trackObject(TrackerOperation.UPDATE_COMMENT, userId, commentAuthorId, isBlah, isNewObject, objectId, subObjectId, voteUp, voteDown, null, views, opens);
-
+        if (voteForComment != 0L) {
+            getTrackingManager().TrackVoteComment(userId, commentId, voteForComment);
+        }
         if (doIndex()) {
             indexComment(commentUpdateDAO);
         }
