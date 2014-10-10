@@ -82,6 +82,17 @@
     <bean id="badgesManager" class="com.eweware.service.mgr.BadgesManager"
           init-method="start" destroy-method="shutdown" />
 
+    <!-- Old tracking manager -->
+    <bean id="trackingManager" class="com.eweware.service.mgr.TrackingManager"
+          init-method="start" destroy-method="shutdown">
+    </bean>
+
+    <!-- New tracking manager -->
+    <bean id="trackingMgr" class="com.eweware.service.mgr.TrackingMgr"
+          init-method="start" destroy-method="shutdown">
+    </bean>
+
+
     <!-- MAINTAIN BEAN ORDER -->
     <bean id="mailManager" class="com.eweware.service.mgr.MailManager"
           init-method="start" destroy-method="shutdown">
@@ -100,6 +111,8 @@
         <constructor-arg type="java.lang.Integer" value="${blahgua.maximum.returned.object.limit}" />
     </bean>
 
+
+
     <bean id="userManager" class="com.eweware.service.mgr.UserManager"
 		init-method="start" destroy-method="shutdown">
         <constructor-arg type="java.lang.Boolean" value="${blahgua.index.doIndex}" />
@@ -109,15 +122,6 @@
         <constructor-arg type="java.lang.Integer" value="${blahgua.maximum.returned.object.limit}" />
     </bean>
 
-    <!-- Old tracking manager -->
-    <bean id="trackingManager" class="com.eweware.service.mgr.TrackingManager"
-          init-method="start" destroy-method="shutdown">
-    </bean>
-
-    <!-- New tracking manager -->
-    <bean id="trackingMgr" class="com.eweware.service.mgr.TrackingMgr"
-          init-method="start" destroy-method="shutdown">
-    </bean>
 
     <bean id="blahManager" class="com.eweware.service.mgr.BlahManager"
 		init-method="start" destroy-method="shutdown">
