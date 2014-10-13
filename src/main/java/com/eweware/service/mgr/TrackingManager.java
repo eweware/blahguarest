@@ -86,7 +86,8 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         VoteExpiredPrediction(8),
         VoteComment(9),
         SubmitPost(10),
-        SubmitComment(11);
+        SubmitComment(11),
+        FetchedWhatsNew(12);
 
         private int value;
 
@@ -238,6 +239,10 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
 
     public void TrackUserLogout(String userId) {
         LogActivity(UserActivityType.Logout, userId, null, null);
+    }
+
+    public void TrackFetchedWhatsNew(String userId) {
+        LogActivity(UserActivityType.FetchedWhatsNew, userId, null, null);
     }
 
     public void TrackViewPost(String userId, String postId) {

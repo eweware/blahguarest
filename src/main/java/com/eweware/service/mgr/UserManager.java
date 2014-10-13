@@ -809,6 +809,7 @@ public class UserManager implements ManagerInterface {
         else
         {
             final WhatsNewPayload entity = new WhatsNewPayload(dao);
+            getTrackingManager().TrackFetchedWhatsNew(userId);
             return entity;
         }
 

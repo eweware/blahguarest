@@ -28,10 +28,13 @@ public class WhatsNewDAOImpl extends BaseDAOImpl implements WhatsNewDAO {
 
     static {   // TODO should be derived from schema
         WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(MESSAGE, MongoFieldTypes.STRING);
-        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_COMMENTS, MongoFieldTypes.STRING);
-        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_OPENS, MongoFieldTypes.STRING);
-        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_UP_VOTES, MongoFieldTypes.STRING);
-        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_DOWN_VOTES, MongoFieldTypes.STRING);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_COMMENTS, MongoFieldTypes.NUMBER);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_OPENS, MongoFieldTypes.NUMBER);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_UP_VOTES, MongoFieldTypes.NUMBER);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_DOWN_VOTES, MongoFieldTypes.NUMBER);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_VIEWS, MongoFieldTypes.NUMBER);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_COMMENT_UP_VOTES, MongoFieldTypes.NUMBER);
+        WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_COMMENT_DOWN_VOTES, MongoFieldTypes.NUMBER);
         WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(TARGET_USER, MongoFieldTypes.STRING);
         WhatsNewDAOImpl.FIELD_TO_TYPE_MAP.put(NEW_MESSAGES, MongoFieldTypes.NUMBER);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
@@ -148,6 +151,36 @@ public class WhatsNewDAOImpl extends BaseDAOImpl implements WhatsNewDAO {
     @Override
     public void setNewMessages(Integer theMessage) {
         put(NEW_MESSAGES, theMessage);
+    }
+
+    @Override
+    public Integer getNewCommentUpVotes() {
+        return (Integer) get(NEW_COMMENT_UP_VOTES);
+    }
+
+    @Override
+    public void setNewCommentUpVotes(Integer theMessage) {
+        put(NEW_COMMENT_UP_VOTES, theMessage);
+    }
+
+    @Override
+    public Integer getNewCommentDownVotes() {
+        return (Integer) get(NEW_COMMENT_DOWN_VOTES);
+    }
+
+    @Override
+    public void setNewCommentDownVotes(Integer theMessage) {
+        put(NEW_COMMENT_DOWN_VOTES, theMessage);
+    }
+
+    @Override
+    public Integer getNewViews() {
+        return (Integer) get(NEW_VIEWS);
+    }
+
+    @Override
+    public void setNewViews(Integer theMessage) {
+        put(NEW_VIEWS, theMessage);
     }
 
     public WhatsNewDAO _findNewestInfoByTargetID(String theId) throws SystemErrorException {

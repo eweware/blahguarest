@@ -88,4 +88,28 @@ public final class WhatsNewPayload extends BasePayload implements WhatsNewDAOCon
         put(NEW_MESSAGES, theMessage);
     }
 
+    public Integer getNewCommentUpVotes() {
+        return (Integer) get(NEW_COMMENT_UP_VOTES);
+    }
+
+    public void setNewCommentUpVotes(Integer theMessage) {
+        put(NEW_COMMENT_UP_VOTES, theMessage);
+    }
+
+    public Integer getNewCommentDownVotes() {
+        return (Integer) get(NEW_COMMENT_DOWN_VOTES);
+    }
+
+    public void setNewCommentDownVotes(Integer theMessage) {
+        put(NEW_COMMENT_DOWN_VOTES, theMessage);
+    }
+
+    public Integer getNewViews() {
+        return (Integer) get(NEW_VIEWS);
+    }
+
+    public void setNewViews(Integer theMessage) {
+        put(NEW_VIEWS, theMessage);
+    }
+
 }

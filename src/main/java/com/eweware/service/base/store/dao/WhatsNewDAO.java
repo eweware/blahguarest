@@ -28,6 +28,15 @@ public interface WhatsNewDAO extends BaseDAO, WhatsNewDAOConstants {
     public Integer getNewMessages();
     public void setNewMessages(Integer newCount);
 
+    public Integer getNewCommentUpVotes();
+    public void setNewCommentUpVotes(Integer newCount);
+
+    public Integer getNewCommentDownVotes();
+    public void setNewCommentDownVotes(Integer newCount);
+
+    public Integer getNewViews();
+    public void setNewViews(Integer newCount);
+
     public WhatsNewDAO _findNewestInfoByTargetID(String userId) throws SystemErrorException;
 
 
