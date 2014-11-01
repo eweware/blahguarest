@@ -1,6 +1,8 @@
 package com.eweware.service.mgr;
 
 
+import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.type.RunMode;
 import com.mongodb.*;
 import com.eweware.service.base.date.DateUtils;
 import com.eweware.service.base.error.ErrorCodes;
@@ -68,10 +70,15 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         return _storeManager;
     }
 
-    private static final String storageConnectionString =
+    private static final String prodConnectionString =
             "DefaultEndpointsProtocol=http;" +
             "AccountName=heardqueue;" +
             "AccountKey=mBAdidz39VosggHzqVFtUJF5bLGPB6R+Kz99xuWRu5DO3m//FsIj0tZ8fKa/Isn1J9IaU5eMVK/e0ZWAIXvb9g==;";
+
+    private static final String qaConnectionString =
+            "DefaultEndpointsProtocol=http;" +
+                    "AccountName=heardqueueqa;" +
+                    "AccountKey=dr3XhxQEKlwqSGPe9+YJiwCUZ2v7izLOR31xED66joJcyUWJoDU9A1Hl0HzlXa/WsLorEYEpscNU06p0TYGcjA==;";
 
     private CloudQueue activityQueue = null;
 
@@ -181,9 +188,17 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
     private void InitializeActivityQueue() {
         try
         {
+            final SystemManager mgr = SystemManager.getInstance();
+            final RunMode runMode = mgr.getRunMode();
             // Retrieve storage account from connection-string.
-            CloudStorageAccount storageAccount =
-                    CloudStorageAccount.parse(storageConnectionString);
+            String connString;
+
+            if (runMode == RunMode.PROD)
+                connString = prodConnectionString;
+            else
+                connString = qaConnectionString;
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.parse(connString);
 
             // Create the queue client.
             CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
