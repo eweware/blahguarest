@@ -352,8 +352,10 @@ public final class CommonUtilities {
      * @param inboxNumber The inbox number
      * @return  Returns the collection name of the inbox
      */
-    public static String makeInboxCollectionName(String groupId, Integer inboxNumber, Boolean safe) {
+    public static String makeInboxCollectionName(String groupId, String cohortid, Integer inboxNumber, Boolean safe) {
         final StringBuilder inboxCollectionName = new StringBuilder(groupId);
+        inboxCollectionName.append("-");
+        inboxCollectionName.append(cohortid);
         inboxCollectionName.append("-");
         if (safe)
             inboxCollectionName.append("safe-");

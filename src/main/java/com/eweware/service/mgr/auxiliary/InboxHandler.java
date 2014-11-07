@@ -14,6 +14,7 @@ import com.eweware.service.base.store.dao.GroupDAO;
 import com.eweware.service.base.store.dao.InboxBlahDAOConstants;
 import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import com.eweware.service.mgr.GroupManager;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,69 +137,79 @@ public class InboxHandler extends Thread {
      * @param limit
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
-    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit, Boolean safe) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
+    public InboxData getNextInbox(String groupId, String cohortId, Integer inboxNumber, Integer lastInboxNumber, Integer limit, Boolean safe) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
         final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group != null) {
-            Integer first;
-            if (safe)
-                first = group.getFirstSafeInboxNumber();
-            else
-                first = group.getFirstInboxNumber();
-            if (first == null) {
-                first = 0;
-            }
-            Integer last;
+            String generationId = group.getCurrentGenerationId();
+            if (generationId != null) {
 
-            if (safe)
-                last = group.getLastSafeInboxNumber();
-            else
-                last = group.getLastInboxNumber();
-            if (last == null) {
-                last = 0;
-            }
-            Integer nextBoxNumber = null;
-            if (inboxNumber != null) {
-                if (inboxNumber >= first && inboxNumber <= last) {
-                    nextBoxNumber = inboxNumber;
+                // TODO ad hoc for generationInfo DB
+                DBCollection generationInfoCol = MongoStoreManager.getInstance().getCollection("generationInfo");
+                BasicDBObject generationInfo = (BasicDBObject) generationInfoCol.findOne(new BasicDBObject("_id", new ObjectId(generationId)));
+
+
+                BasicDBObject cohortInfo = (BasicDBObject) generationInfo.get("CHI");
+                BasicDBObject cohort = (BasicDBObject) cohortInfo.get(cohortId);
+
+                Integer first;
+                first = cohort.getInt("F");
+                if (first == null) {
+                    first = 0;
+                }
+
+                Integer last;
+                last = cohort.getInt("L");
+                if (last == null) {
+                    last = 0;
+                }
+
+                Integer nextBoxNumber;
+                if (inboxNumber != null) {
+                    if (inboxNumber >= first && inboxNumber <= last) {
+                        nextBoxNumber = inboxNumber;
+                    } else {
+                        nextBoxNumber = first;
+                    }
+                } else if (lastInboxNumber != null) {
+                    if (lastInboxNumber >= first && lastInboxNumber < last) {
+                        nextBoxNumber = lastInboxNumber + 1;
+                    } else {
+                        nextBoxNumber = first; // wrap around
+                    }
                 } else {
                     nextBoxNumber = first;
                 }
-            } else if (lastInboxNumber != null) {
-                if (lastInboxNumber >= first && lastInboxNumber < last) {
-                    nextBoxNumber = lastInboxNumber + 1;
-                } else {
-                    nextBoxNumber = first; // wrap around
-                }
-            } else {
-                nextBoxNumber = first;
-            }
-            String inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe);
-
-            if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
-                logger.warning("Inbox '" + inboxName + "' does not exist.");
-                final GroupPayload localGroup = GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId);
-                nextBoxNumber = localGroup.getFirstInboxNumber();
-                inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe);
+                String inboxName = CommonUtilities.makeInboxCollectionName(groupId, cohortId, nextBoxNumber, safe);
 
                 if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
-                    logger.warning("First Inbox '" + inboxName + "' also does not exist - searching...");
-                    for (int i = nextBoxNumber - 1; i >= 1; i--) {
-                        inboxName = CommonUtilities.makeInboxCollectionName(groupId, i, safe);
-                        if (_storeManager.getInboxDB().collectionExists(inboxName)) {
-                            break;
+                    logger.warning("Inbox '" + inboxName + "' does not exist.");
+                    final GroupPayload localGroup = GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId);
+                    nextBoxNumber = localGroup.getFirstInboxNumber();
+                    inboxName = CommonUtilities.makeInboxCollectionName(groupId, cohortId, nextBoxNumber, safe);
+
+                    if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
+                        logger.warning("First Inbox '" + inboxName + "' also does not exist - searching...");
+                        for (int i = nextBoxNumber - 1; i >= 1; i--) {
+                            inboxName = CommonUtilities.makeInboxCollectionName(groupId, cohortId, i, safe);
+                            if (_storeManager.getInboxDB().collectionExists(inboxName)) {
+                                break;
+                            }
                         }
                     }
                 }
+
+                final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, limit);
+
+
+                if (inboxItems.size() == 0) {
+                    logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, cohortId, nextBoxNumber, safe) + "'");
+                }
+
+                return new InboxData(nextBoxNumber, inboxItems);
             }
-
-            final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, limit);
-
-
-            if (inboxItems.size() == 0) {
-                logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe) + "'");
+            else {
+                throw new SystemErrorException("No generation id found in group id '" + groupId + "'", ErrorCodes.SERVER_SEVERE_ERROR);
             }
-
-            return new InboxData(nextBoxNumber, inboxItems);
         } else {
             throw new SystemErrorException("Invalid group id '" + groupId + "' (uncached)", ErrorCodes.SERVER_SEVERE_ERROR);
         }

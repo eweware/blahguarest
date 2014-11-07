@@ -1858,7 +1858,7 @@ public final class BlahManager implements ManagerInterface {
         return comments;
     }
 
-    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber, Boolean safe)
+    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, String cohortId, HttpServletRequest request, Integer inboxNumber, Boolean safe)
             throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
         ensureReady();
@@ -1870,11 +1870,11 @@ public final class BlahManager implements ManagerInterface {
 
             checkGroupAccess(request, groupId);
 
-            Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId, safe) : null;
+            Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId, cohortId, safe) : null;
 
-            final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null, safe);
+            final InboxData inbox = _inboxHandler.getNextInbox(groupId, cohortId, inboxNumber, lastInboxNumber, null, safe);
 
-            BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber(), safe);
+            BlahguaSession.setLastInboxNumber(request, groupId, cohortId, inbox.getInboxNumber(), safe);
 
             return inbox.getInboxItems();
         }

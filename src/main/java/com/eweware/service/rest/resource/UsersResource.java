@@ -993,13 +993,14 @@ public class UsersResource {
     public Response getInbox(
             @QueryParam("groupId") String groupId,
             @QueryParam("in") Integer inboxNumber,
+            @QueryParam("cohortId") String cohortId,
             @Context HttpServletRequest request) {
         try {
             final long s = System.currentTimeMillis();
             Response response;
-            Boolean safe = !BlahguaSession.getWantsMature(request);
 
-            response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, request, inboxNumber, safe ));
+//            Boolean safe = !BlahguaSession.getWantsMature(request); // deprecated
+            response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, cohortId, request, inboxNumber, false )); // safe inbox is deprecated
 
             getSystemManager().setResponseTime(GET_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;

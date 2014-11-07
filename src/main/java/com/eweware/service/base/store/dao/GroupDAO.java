@@ -79,4 +79,6 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
     public Date getCreated();
 
     public void setCreated(Date created);
+
+    public String getCurrentGenerationId();
 }

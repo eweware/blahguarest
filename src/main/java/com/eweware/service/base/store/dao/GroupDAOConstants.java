@@ -123,7 +123,7 @@ public interface GroupDAOConstants {
      */
     static final String INBOX_GENERATION_DURATION = "I";
 
-
+    static final String CURRENT_GENERATION_ID = "CG";
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{

@@ -7,6 +7,7 @@ import com.eweware.service.base.store.dao.GroupDAO;
 import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.GroupSchema;
 import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import org.bson.types.ObjectId;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -257,4 +258,7 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     public void setLastInboxGeneratedDuration(Long duration) {
         put(INBOX_GENERATION_DURATION, duration);
     }
+
+    @Override
+    public String getCurrentGenerationId() { return (get(CURRENT_GENERATION_ID)).toString(); }
 }

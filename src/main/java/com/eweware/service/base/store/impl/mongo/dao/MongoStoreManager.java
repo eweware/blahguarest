@@ -53,6 +53,7 @@ public final class MongoStoreManager implements StoreManager {
     private String blahDbName;
     private String trackerDbName;
     private String inboxDbName;
+    private String infoDbName;
 
     private String badgeAuthorityCollectionName;
     private String badgeTransactionCollectionName;
@@ -77,6 +78,7 @@ public final class MongoStoreManager implements StoreManager {
     private String trackUserCollectionName;
     private String blahInboxCollectionName;
     private String demographicsCollectionName;
+    private String generationInfoCollectionName;
 
     Map<String, DBCollection> collectionNameToCollectionMap = new HashMap<String, DBCollection>();
 
@@ -101,12 +103,13 @@ public final class MongoStoreManager implements StoreManager {
             String blahDbName,
             String inboxDbName,
             String trackerDbName,
+            String infoDbName,
 
             Integer connectionsPerHost
     ) {
         this.qaMongoDbHostname = qaMongoDbHostname;
         this.devMongoDbHostname = devMongoDbHostname;
-        doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, inboxDbName,trackerDbName, connectionsPerHost);
+        doInitialize(hostnames, mongoDbPort, userDbName, blahDbName, inboxDbName,trackerDbName, infoDbName, connectionsPerHost);
     }
 
 
@@ -293,6 +296,9 @@ public final class MongoStoreManager implements StoreManager {
         demographicsCollectionName = name;
     }
 
+    public String getGenerationInfoCollectionName() { return generationInfoCollectionName; }
+
+    public void setGenerationInfoCollectionName(String name) { generationInfoCollectionName = name; }
 
     /**
      * Initializes the store manager. This method is public to allow
@@ -306,7 +312,7 @@ public final class MongoStoreManager implements StoreManager {
      * @param connectionsPerHost
      */
     public void doInitialize(String hostnames, String port, String userDbName, String blahDbName,
-                             String inboxDbName, String trackerDbName, Integer connectionsPerHost) {
+                             String inboxDbName, String trackerDbName, String infoDbName, Integer connectionsPerHost) {
 
         if (hostnames == null || hostnames.length() == 0) {
             throw new WebServiceException("Failed to initialize store manager: missing hostnames");
@@ -322,6 +328,7 @@ public final class MongoStoreManager implements StoreManager {
         this.blahDbName = blahDbName;
         this.trackerDbName = trackerDbName;
         this.inboxDbName = inboxDbName;
+        this.infoDbName = infoDbName;
 
         dbNameToDbMap.put(sysDbName, null);
         dbNameToDbMap.put(userDbName, null);
@@ -329,6 +336,7 @@ public final class MongoStoreManager implements StoreManager {
         dbNameToDbMap.put(blahDbName, null);
         dbNameToDbMap.put(trackerDbName, null);
         dbNameToDbMap.put(inboxDbName, null);
+        dbNameToDbMap.put(infoDbName, null);
 
         System.out.println("*** STORE MGR: known databases: " + dbNameToDbMap.keySet());
         MongoStoreManager.singleton = this;
@@ -475,6 +483,9 @@ public final class MongoStoreManager implements StoreManager {
             checkCollection(collectionNameToCollectionMap, trackerCollectionName);
             collectionNameToCollectionMap.put(trackerCollectionName, getTrackerDb().getCollection(trackerCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, generationInfoCollectionName);
+            collectionNameToCollectionMap.put(generationInfoCollectionName, getInfoDb().getCollection(generationInfoCollectionName));
+
             this.status = ManagerState.STARTED;
 
             System.out.println("*** MongoStoreManager started *** (connected to MongoDB using hostnames " + serverAddresses + ":" + mongoDbPort +
@@ -532,6 +543,8 @@ public final class MongoStoreManager implements StoreManager {
     public DB getTrackerDb() {
         return dbNameToDbMap.get(trackerDbName);
     }
+
+    public DB getInfoDb() { return dbNameToDbMap.get(infoDbName); }
 
     public DBCollection getCollection(String name) {
         return collectionNameToCollectionMap.get(name);

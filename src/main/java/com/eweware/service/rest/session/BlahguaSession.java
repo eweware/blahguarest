@@ -361,26 +361,34 @@ public final class BlahguaSession {
      * Maps each groupId to the last inbox number fetched within that group.
      */
     private static class InboxInfo {
-        private final Map<String, Integer> groupIdToLastInboxNumberMap = new HashMap<String, Integer>(5);
+        private final Map<String, HashMap<String, Integer>> groupIdToLastInboxNumberMap = new HashMap<String, HashMap<String, Integer>>();
         private final Map<String, Integer> groupIdToLastSafeInboxNumberMap = new HashMap<String, Integer>(5);
 
-        private InboxInfo(String groupId, Integer lastInboxNumber, Integer lastSafeInboxNumber) {
+        private InboxInfo(String groupId, String cohortId, Integer lastInboxNumber, Integer lastSafeInboxNumber) {
             if (lastInboxNumber != null)
-                setLastInboxNumber(groupId, lastInboxNumber);
+                setLastInboxNumber(groupId, cohortId, lastInboxNumber);
             if (lastSafeInboxNumber != null)
                 setLastSafeInboxNumber(groupId, lastSafeInboxNumber);
         }
 
-        private void setLastInboxNumber(String groupId, Integer lastInboxNumber) {
-            groupIdToLastInboxNumberMap.put(groupId, lastInboxNumber);
+        private void setLastInboxNumber(String groupId, String cohortId, Integer lastInboxNumber) {
+            HashMap<String, Integer> cohortInboxNumberMap = groupIdToLastInboxNumberMap.get(groupId);
+            if (cohortInboxNumberMap == null) {
+                cohortInboxNumberMap = new HashMap<String, Integer>(5);
+                cohortInboxNumberMap.put(cohortId, lastInboxNumber);
+                groupIdToLastInboxNumberMap.put(groupId, cohortInboxNumberMap);
+            }
+            else {
+                cohortInboxNumberMap.put(cohortId, lastInboxNumber);
+            }
         }
 
         private void setLastSafeInboxNumber(String groupId, Integer lastInboxNumber) {
             groupIdToLastSafeInboxNumberMap.put(groupId, lastInboxNumber);
         }
 
-        private Integer getLastInboxNumber(String groupId) {
-            return groupIdToLastInboxNumberMap.get(groupId);
+        private Integer getLastInboxNumber(String groupId, String cohortId) {
+            return groupIdToLastInboxNumberMap.get(groupId).get(cohortId);
         }
         private Integer getLastSafeInboxNumber(String groupId) {
             return groupIdToLastSafeInboxNumberMap.get(groupId);
@@ -394,7 +402,7 @@ public final class BlahguaSession {
      * @param groupId The group id of the inbox
      * @return The last inbox number or null if the inbox has not been visited during this session.
      */
-    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId, Boolean safe) throws SystemErrorException {
+    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId, String cohortId, Boolean safe) throws SystemErrorException {
         final InboxInfo info = getInboxInfo(request);
 
         if (info == null) {
@@ -403,7 +411,7 @@ public final class BlahguaSession {
             if (safe)
                 return info.getLastSafeInboxNumber(groupId);
             else
-                return info.getLastInboxNumber(groupId);
+                return info.getLastInboxNumber(groupId, cohortId);
         }
     }
 
@@ -414,20 +422,20 @@ public final class BlahguaSession {
      * @param groupId         The group id (unchecked!)
      * @param lastInboxNumber The last inbox number in the group to have been fetched.
      */
-    public static void setLastInboxNumber(HttpServletRequest request, String groupId, Integer lastInboxNumber, Boolean safe) throws ResourceNotFoundException, SystemErrorException {
+    public static void setLastInboxNumber(HttpServletRequest request, String groupId, String cohortId, Integer lastInboxNumber, Boolean safe) throws ResourceNotFoundException, SystemErrorException {
         final InboxInfo inboxInfo = getInboxInfo(request);
         if (inboxInfo != null) {
             if (safe)
                 inboxInfo.setLastSafeInboxNumber(groupId, lastInboxNumber);
             else
-                inboxInfo.setLastInboxNumber(groupId, lastInboxNumber);
+                inboxInfo.setLastInboxNumber(groupId, cohortId, lastInboxNumber);
         } else {
             Integer lastMature = null, lastSafe = null;
             if (safe)
                 lastSafe = lastInboxNumber;
             else
                 lastMature = lastInboxNumber;
-            setInboxInfo(request, groupId, lastMature, lastSafe);
+            setInboxInfo(request, groupId, cohortId, lastMature, lastSafe);
         }
 
     }
@@ -627,10 +635,10 @@ public final class BlahguaSession {
     }
 
 
-    private static void setInboxInfo(HttpServletRequest request, String groupId, Integer lastInboxNumber, Integer lastSafeInboxNumber) throws SystemErrorException {
+    private static void setInboxInfo(HttpServletRequest request, String groupId, String cohortId, Integer lastInboxNumber, Integer lastSafeInboxNumber) throws SystemErrorException {
         final HttpSession session = request.getSession();
         try {
-            session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, lastInboxNumber, lastSafeInboxNumber));
+            session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, cohortId, lastInboxNumber, lastSafeInboxNumber));
         } catch (IllegalStateException e) {
             throw new SystemErrorException("Failed to set inbox info for channel id '" + groupId + "' because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
         }

@@ -53,6 +53,7 @@
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.blahDBName}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.inboxDBName}" />
         <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.trackerDBName}" />
+        <constructor-arg  type="java.lang.String" value="${blahgua.store.mongo.infoDBName}" />
         <constructor-arg  type="java.lang.Integer" value="${blahgua.store.mongo.connectionsPerHost}" />
         <property name="badgeAuthorityCollectionName" value="${blahgua.store.mongo.userdb.collection.badgeauthorities}"/>
         <property name="badgeTransactionCollectionName" value="${blahgua.store.mongo.userdb.collection.badgetransaction}"/>
@@ -77,6 +78,7 @@
         <property name="inboxStateCollectionName" value="${blahgua.store.mongo.blahdb.collection.inboxstate}"/>
         <property name="blahInboxCollectionName" value="${blahgua.store.mongo.blahdb.collection.blahInbox}"/>
         <property name="demographicsCollectionName" value="${blahgua.store.mongo.userdb.collection.demographics}"/>
+        <property name="generationInfoCollectionName" value="${blahgua.store.mongo.infodb.collection.generationInfo}"/>
     </bean>
 
     <bean id="badgesManager" class="com.eweware.service.mgr.BadgesManager"
