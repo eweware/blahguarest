@@ -79,6 +79,8 @@
         <property name="blahInboxCollectionName" value="${blahgua.store.mongo.blahdb.collection.blahInbox}"/>
         <property name="demographicsCollectionName" value="${blahgua.store.mongo.userdb.collection.demographics}"/>
         <property name="generationInfoCollectionName" value="${blahgua.store.mongo.infodb.collection.generationInfo}"/>
+        <property name="userGroupInfoCollectionName" value="${blahgua.store.mongo.infodb.collection.userGroupInfo}"/>
+        <property name="cohortInfoCollectionName" value="${blahgua.store.mongo.infodb.collection.cohortInfo}"/>
     </bean>
 
     <bean id="badgesManager" class="com.eweware.service.mgr.BadgesManager"

@@ -31,6 +31,7 @@ import com.eweware.service.search.index.blah.BlahDataIndexable;
 import com.eweware.service.search.index.blah.BlahDataIndexableInterpreter;
 import com.eweware.service.search.index.common.BlahguaFilterIndexReader;
 import com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -43,6 +44,7 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.util.Version;
+import org.bson.types.ObjectId;
 import proj.zoie.api.DataConsumer.DataEvent;
 import proj.zoie.api.DefaultDirectoryManager;
 import proj.zoie.api.ZoieException;
@@ -1866,6 +1868,10 @@ public final class BlahManager implements ManagerInterface {
         try {
             if (groupId == null) {
                 throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+            }
+
+            if (cohortId == null) {
+                throw new InvalidRequestException("Missing cohort id", ErrorCodes.MISSING_COHORT_ID);
             }
 
             checkGroupAccess(request, groupId);

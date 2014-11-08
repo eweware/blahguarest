@@ -478,4 +478,10 @@ public final class ErrorCodes {
      * NOT_FOUND_USER_ID = 14
      */
     public static final Integer NOT_FOUND_WHATS_NEW = 93;
+
+    /**
+     * MISSING_COHORT_ID = 94
+     */
+
+    public static final Integer MISSING_COHORT_ID = 94;
 }

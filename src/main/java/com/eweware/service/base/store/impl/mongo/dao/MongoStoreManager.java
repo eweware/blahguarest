@@ -79,6 +79,8 @@ public final class MongoStoreManager implements StoreManager {
     private String blahInboxCollectionName;
     private String demographicsCollectionName;
     private String generationInfoCollectionName;
+    private String cohortInfoCollectionName;
+    private String userGroupInfoCollectionName;
 
     Map<String, DBCollection> collectionNameToCollectionMap = new HashMap<String, DBCollection>();
 
@@ -300,6 +302,14 @@ public final class MongoStoreManager implements StoreManager {
 
     public void setGenerationInfoCollectionName(String name) { generationInfoCollectionName = name; }
 
+    public String getCohortInfoCollectionName() { return cohortInfoCollectionName; }
+
+    public void setCohortInfoCollectionName(String name) { cohortInfoCollectionName = name; }
+
+    public String getUserGroupInfoCollectionName() { return userGroupInfoCollectionName; }
+
+    public void setUserGroupInfoCollectionName(String name) { userGroupInfoCollectionName = name; }
+
     /**
      * Initializes the store manager. This method is public to allow
      * test units to initialize it outside the context of the web server.
@@ -485,6 +495,12 @@ public final class MongoStoreManager implements StoreManager {
 
             checkCollection(collectionNameToCollectionMap, generationInfoCollectionName);
             collectionNameToCollectionMap.put(generationInfoCollectionName, getInfoDb().getCollection(generationInfoCollectionName));
+
+            checkCollection(collectionNameToCollectionMap, cohortInfoCollectionName);
+            collectionNameToCollectionMap.put(cohortInfoCollectionName, getInfoDb().getCollection(cohortInfoCollectionName));
+
+            checkCollection(collectionNameToCollectionMap, userGroupInfoCollectionName);
+            collectionNameToCollectionMap.put(userGroupInfoCollectionName, getInfoDb().getCollection(userGroupInfoCollectionName));
 
             this.status = ManagerState.STARTED;
 

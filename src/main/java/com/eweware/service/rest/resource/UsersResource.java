@@ -7,11 +7,17 @@ import com.eweware.service.base.payload.UserAccountPayload;
 import com.eweware.service.base.payload.UserPayload;
 import com.eweware.service.base.payload.UserProfilePayload;
 import com.eweware.service.base.payload.WhatsNewPayload;
+import com.eweware.service.base.store.dao.GroupDAO;
 import com.eweware.service.base.store.dao.UserDAOConstants;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import com.eweware.service.mgr.BlahManager;
+import com.eweware.service.mgr.GroupManager;
 import com.eweware.service.mgr.UserManager;
 import com.eweware.service.rest.RestUtilities;
 import com.eweware.service.rest.session.BlahguaSession;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import org.bson.types.ObjectId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -62,6 +68,7 @@ public class UsersResource {
     private static final String GET_USER_RANKING_OPERATION = "getUserRanking";
     private static final String GET_WHATS_NEW_OPERATION = "getWhatsNew";
     private static final String UPDATE_WANTS_MATURE_OPERATION = "updateWantsMature";
+    private static final String GET_COHORT_LIST = "getCohortList";
 
 
     private UserManager userManager;
@@ -249,6 +256,64 @@ public class UsersResource {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (StateConflictException e) {
             return RestUtilities.make409StateConflictResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+
+    @GET
+    @Path("/cohort")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getCohortList(
+            @QueryParam("groupId") String groupId,
+            @Context HttpServletRequest request) {
+        try {
+            if (groupId == null) {
+                throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
+            }
+            final long s = System.currentTimeMillis();
+
+            Response response;
+
+            // get current generation for this group
+            GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
+            String generationId = group.getCurrentGenerationId();
+
+            // if user is logged in, get his cohort list
+            if (BlahguaSession.isAuthenticated(request)) {
+                String userId = BlahguaSession.ensureAuthenticated(request, true);
+                DBCollection userGroupInfoCol = MongoStoreManager.getInstance().getCollection("userGroupInfo");
+                BasicDBObject userGroupInfo = (BasicDBObject) userGroupInfoCol.findOne(new BasicDBObject("U", new ObjectId(userId)).append("G", new ObjectId(groupId)));
+                BasicDBObject cohortGenerations = (BasicDBObject) userGroupInfo.get("CHG");
+                List<ObjectId> cohortIdObjList = (List<ObjectId>) cohortGenerations.get(generationId);
+
+                // convert to list of String
+                List<String> cohortList = new ArrayList<String>();
+                for (ObjectId cohortIdObj : cohortIdObjList) {
+                    cohortList.add(cohortIdObj.toString());
+                }
+                BlahguaSession.setUserCohort(request, groupId, cohortList);
+                HashMap<String, List<String>> map = BlahguaSession.getUserCohort(request);
+                response = RestUtilities.make200OkResponse(cohortList);
+            }
+            // if not logged in, get default cohort id
+            else {
+                DBCollection generationInfoCol = MongoStoreManager.getInstance().getCollection("generationInfo");
+                BasicDBObject generationInfo = (BasicDBObject) generationInfoCol.findOne(new BasicDBObject("_id", new ObjectId(generationId)));
+
+                String cohortId = generationInfo.getObjectId("D").toString();
+
+                BlahguaSession.setDefaultCohort(request, groupId, cohortId);
+                HashMap<String, String> map = BlahguaSession.getDefaultCohort(request);
+                response = RestUtilities.make200OkResponse(cohortId);
+            }
+
+            getSystemManager().setResponseTime(GET_COHORT_LIST, (System.currentTimeMillis() - s));
+            return response;
         } catch (SystemErrorException e) {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         } catch (Exception e) {
@@ -999,8 +1064,8 @@ public class UsersResource {
             final long s = System.currentTimeMillis();
             Response response;
 
-//            Boolean safe = !BlahguaSession.getWantsMature(request); // deprecated
-            response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, cohortId, request, inboxNumber, false )); // safe inbox is deprecated
+            Boolean safe = !BlahguaSession.getWantsMature(request);
+            response = RestUtilities.make200OkResponse(getBlahManager().getInboxNew(LocaleId.en_us, groupId, cohortId, request, inboxNumber, safe ));
 
             getSystemManager().setResponseTime(GET_INBOX_OPERATION, (System.currentTimeMillis() - s));
             return response;
