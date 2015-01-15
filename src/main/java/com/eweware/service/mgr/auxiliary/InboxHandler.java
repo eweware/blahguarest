@@ -177,7 +177,10 @@ public class InboxHandler extends Thread {
             if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
                 logger.warning("Inbox '" + inboxName + "' does not exist.");
                 final GroupPayload localGroup = GroupManager.getInstance().getGroupById(LocaleId.en_us, groupId);
-                nextBoxNumber = localGroup.getFirstInboxNumber();
+                if (safe)
+                    nextBoxNumber = localGroup.getFirstSafeInboxNumber();
+                else
+                    nextBoxNumber = localGroup.getFirstInboxNumber();
                 inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe);
 
                 if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
