@@ -426,8 +426,16 @@ public class BlahsResource {
      * @param entity A JSON entity containing a map. The following key values
      *               are accepted: 'V' and 'O' (letter O). The value of either
      *               key must be a map from a blah id to an integer with the
-     *               corresponding count increment. For example, {'V': {{'someBlahId': 1},
-     *               {'someOtherBlahId': 2}}, 'O': {{'aBlahId': 2}}}
+     *               corresponding count increment. For example,
+     *               {
+     *                  'V': {
+     *                     'someBlahId': 1,
+     *                     'someOtherBlahId': 2
+     *                  },
+     *                  'O': {
+     *                     'aBlahId': 2
+     *                  }
+     *               }
      * @return Returns http status 202 (ACCEPTED) on success.
      * Returns http 404 (NOT FOUND) if a user is in session and for some reason the user doesn't exist
      * Returns http 400 if the request is invalid (e.g., there are no view or open updates.

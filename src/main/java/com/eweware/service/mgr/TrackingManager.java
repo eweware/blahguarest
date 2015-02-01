@@ -204,7 +204,8 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
             CloudQueueClient queueClient = storageAccount.createCloudQueueClient();
 
             // Retrieve a reference to a queue.
-            activityQueue = queueClient.getQueueReference("activityqueue");
+//            activityQueue = queueClient.getQueueReference("activityqueue");
+            activityQueue = queueClient.getQueueReference("devactivityqueue");
 
             // Create the queue if it doesn't already exist.
             activityQueue.createIfNotExists();
