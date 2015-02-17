@@ -141,7 +141,7 @@ public class InboxHandler extends Thread {
         final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group != null) {
 
-            // TODO ad hoc for cohortInfo collection
+            // TODO ad hoc for cohortInfo collection, use DAO to access cohortInfo
             DBCollection cohortInfoCol = MongoStoreManager.getInstance().getCollection("cohortInfo");
             BasicDBObject cohortInfo = (BasicDBObject) cohortInfoCol.findOne(new BasicDBObject("_id", new ObjectId(cohortId)));
 

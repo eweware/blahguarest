@@ -1860,7 +1860,7 @@ public final class BlahManager implements ManagerInterface {
         return comments;
     }
 
-    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, String cohortId, HttpServletRequest request, Integer inboxNumber, Boolean safe)
+    public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber, Boolean safe)
             throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 
         ensureReady();
@@ -1870,17 +1870,25 @@ public final class BlahManager implements ManagerInterface {
                 throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
             }
 
-            if (cohortId == null) {
-                throw new InvalidRequestException("Missing cohort id", ErrorCodes.MISSING_COHORT_ID);
-            }
-
             checkGroupAccess(request, groupId);
 
-            Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId, cohortId, safe) : null;
+            // get current generation for this group
+            GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
+            String generationId = group.getCurrentGenerationId();
+
+            Integer lastInboxNumber = null;
+            String cohortId = null;
+            if (BlahguaSession.sameGeneration(request, groupId, generationId)) {
+                cohortId = BlahguaSession.getCohortId(request, groupId);
+                lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId, safe) : null;
+            } else {
+                cohortId = BlahguaSession.newGeneration(request, groupId, generationId);
+                inboxNumber = null;
+            }
 
             final InboxData inbox = _inboxHandler.getNextInbox(groupId, cohortId, inboxNumber, lastInboxNumber, null, safe);
 
-            BlahguaSession.setLastInboxNumber(request, groupId, cohortId, inbox.getInboxNumber(), safe);
+            BlahguaSession.setLastInboxNumber(request, cohortId, inbox.getInboxNumber(), safe);
 
             return inbox.getInboxItems();
         }

@@ -6,10 +6,14 @@ import com.eweware.service.base.error.InvalidAuthorizedStateException;
 import com.eweware.service.base.error.ResourceNotFoundException;
 import com.eweware.service.base.error.SystemErrorException;
 import com.eweware.service.base.store.dao.type.UserAccountType;
+import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import com.eweware.service.mgr.GroupManager;
 import com.eweware.service.mgr.TrackingManager;
 import com.eweware.service.rest.RestUtilities;
 import com.eweware.service.user.validation.Login;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import org.bson.types.ObjectId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -373,45 +377,64 @@ public final class BlahguaSession {
      * Maps each groupId to the last inbox number fetched within that group.
      */
     private static class InboxInfo {
-        private final Map<String, HashMap<String, Integer>> groupIdToLastInboxNumberMap = new HashMap<String, HashMap<String, Integer>>();
-        private final Map<String, HashMap<String, Integer>> groupIdToLastSafeInboxNumberMap = new HashMap<String, HashMap<String, Integer>>();
+        private final Map<String, String> groupIdToGenerationIdMap = new HashMap<String, String>();
+        private final Map<String, String> groupIdToCohortIdMap = new HashMap<String, String>();
+        private final Map<String, Integer> cohortIdToLastInboxNumberMap = new HashMap<String, Integer>();
+        private final Map<String, Integer> cohortIdToLastSafeInboxNumberMap = new HashMap<String, Integer>();
 
-        private InboxInfo(String groupId, String cohortId, Integer lastInboxNumber, Integer lastSafeInboxNumber) {
+        private InboxInfo() {
+        }
+        /*
+        private InboxInfo(String groupId, String generationId, Integer lastInboxNumber, Integer lastSafeInboxNumber) {
             if (lastInboxNumber != null)
-                setLastInboxNumber(groupId, cohortId, lastInboxNumber);
+                setLastInboxNumber(groupId, generationId, lastInboxNumber);
             if (lastSafeInboxNumber != null)
-                setLastSafeInboxNumber(groupId, cohortId, lastSafeInboxNumber);
+                setLastSafeInboxNumber(groupId, generationId, lastSafeInboxNumber);
+        }
+        */
+
+        private String getGenerationId(String groupId) {
+            if (groupIdToGenerationIdMap.containsKey(groupId))
+                return groupIdToGenerationIdMap.get(groupId);
+            else return null;
         }
 
-        private void setLastInboxNumber(String groupId, String cohortId, Integer lastInboxNumber) {
-            HashMap<String, Integer> cohortInboxNumberMap = groupIdToLastInboxNumberMap.get(groupId);
-            if (cohortInboxNumberMap == null) {
-                cohortInboxNumberMap = new HashMap<String, Integer>(5);
-                cohortInboxNumberMap.put(cohortId, lastInboxNumber);
-                groupIdToLastInboxNumberMap.put(groupId, cohortInboxNumberMap);
-            }
-            else {
-                cohortInboxNumberMap.put(cohortId, lastInboxNumber);
-            }
+        private String getCohortId(String groupId) {
+            if (groupIdToCohortIdMap.containsKey(groupId))
+                return groupIdToCohortIdMap.get(groupId);
+            else return null;
         }
 
-        private void setLastSafeInboxNumber(String groupId, String cohortId, Integer lastInboxNumber) {
-            HashMap<String, Integer> cohortInboxNumberMap = groupIdToLastSafeInboxNumberMap.get(groupId);
-            if (cohortInboxNumberMap == null) {
-                cohortInboxNumberMap = new HashMap<String, Integer>(5);
-                cohortInboxNumberMap.put(cohortId, lastInboxNumber);
-                groupIdToLastSafeInboxNumberMap.put(groupId, cohortInboxNumberMap);
-            }
-            else {
-                cohortInboxNumberMap.put(cohortId, lastInboxNumber);
-            }
+        private void setNewGenerationAndCohortId(String groupId, String generationId, String cohortId) {
+            groupIdToGenerationIdMap.put(groupId, generationId);
+            groupIdToCohortIdMap.put(groupId, cohortId);
+            cohortIdToLastInboxNumberMap.put(cohortId, -1); // will be updated after the inbox is generated
+            cohortIdToLastSafeInboxNumberMap.put(cohortId, -1); // will be updated after the inbox is generated
         }
 
-        private Integer getLastInboxNumber(String groupId, String cohortId) {
-            return groupIdToLastInboxNumberMap.get(groupId).get(cohortId);
+        private void setLastInboxNumber(String cohortId, Integer lastInboxNumber) {
+            cohortIdToLastInboxNumberMap.put(cohortId, lastInboxNumber);
         }
-        private Integer getLastSafeInboxNumber(String groupId, String cohortId) {
-            return groupIdToLastSafeInboxNumberMap.get(groupId).get(cohortId);
+
+        private void setLastSafeInboxNumber(String cohortId, Integer lastInboxNumber) {
+            cohortIdToLastSafeInboxNumberMap.put(cohortId, lastInboxNumber);
+        }
+
+        private Integer getLastInboxNumber(String groupId) {
+            if (groupIdToCohortIdMap.containsKey(groupId)) {
+                String cohortId = groupIdToCohortIdMap.get(groupId);
+                if (cohortIdToLastInboxNumberMap.containsKey(cohortId))
+                    return cohortIdToLastInboxNumberMap.get(cohortId);
+                else return null;
+            } else return null;
+        }
+        private Integer getLastSafeInboxNumber(String groupId) {
+            if (groupIdToCohortIdMap.containsKey(groupId)) {
+                String cohortId = groupIdToCohortIdMap.get(groupId);
+                if (cohortIdToLastSafeInboxNumberMap.containsKey(cohortId))
+                    return cohortIdToLastSafeInboxNumberMap.get(cohortId);
+                else return null;
+            } else return null;
         }
     }
 
@@ -422,42 +445,28 @@ public final class BlahguaSession {
      * @param groupId The group id of the inbox
      * @return The last inbox number or null if the inbox has not been visited during this session.
      */
-    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId, String cohortId, Boolean safe) throws SystemErrorException {
+    public static Integer getLastInboxNumber(HttpServletRequest request, String groupId, Boolean safe) throws SystemErrorException {
         final InboxInfo info = getInboxInfo(request);
-
-        if (info == null) {
-            return null;
-        } else {
-            if (safe)
-                return info.getLastSafeInboxNumber(groupId, cohortId);
-            else
-                return info.getLastInboxNumber(groupId, cohortId);
-        }
+        if (safe)
+            return info.getLastSafeInboxNumber(groupId);
+        else
+            return info.getLastInboxNumber(groupId);
     }
 
     /**
      * <p>Sets the last inbox number fetched for the specified group.</p>
      *
      * @param request         The http request (unchecked!)
-     * @param groupId         The group id (unchecked!)
+     * @param cohortId         The cohort id (unchecked!)
      * @param lastInboxNumber The last inbox number in the group to have been fetched.
+     * @param safe Wether the inbox is safe
      */
-    public static void setLastInboxNumber(HttpServletRequest request, String groupId, String cohortId, Integer lastInboxNumber, Boolean safe) throws ResourceNotFoundException, SystemErrorException {
+    public static void setLastInboxNumber(HttpServletRequest request, String cohortId, Integer lastInboxNumber, Boolean safe) throws ResourceNotFoundException, SystemErrorException {
         final InboxInfo inboxInfo = getInboxInfo(request);
-        if (inboxInfo != null) {
-            if (safe)
-                inboxInfo.setLastSafeInboxNumber(groupId, cohortId, lastInboxNumber);
-            else
-                inboxInfo.setLastInboxNumber(groupId, cohortId, lastInboxNumber);
-        } else {
-            Integer lastMature = null, lastSafe = null;
-            if (safe)
-                lastSafe = lastInboxNumber;
-            else
-                lastMature = lastInboxNumber;
-            setInboxInfo(request, groupId, cohortId, lastMature, lastSafe);
-        }
-
+        if (safe)
+            inboxInfo.setLastSafeInboxNumber(cohortId, lastInboxNumber);
+        else
+            inboxInfo.setLastInboxNumber(cohortId, lastInboxNumber);
     }
 
     /**
@@ -654,25 +663,58 @@ public final class BlahguaSession {
         }
     }
 
+    public static boolean sameGeneration(HttpServletRequest request, String groupId, String generationId) throws SystemErrorException {
+        final InboxInfo info = getInboxInfo(request);
+        return generationId.equals(info.getGenerationId(groupId));
+    }
 
-    private static void setInboxInfo(HttpServletRequest request, String groupId, String cohortId, Integer lastInboxNumber, Integer lastSafeInboxNumber) throws SystemErrorException {
-        final HttpSession session = request.getSession();
-        try {
-            session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo(groupId, cohortId, lastInboxNumber, lastSafeInboxNumber));
-        } catch (IllegalStateException e) {
-            throw new SystemErrorException("Failed to set inbox info for channel id '" + groupId + "' because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
+    public static String newGeneration(HttpServletRequest request, String groupId, String generationId) throws SystemErrorException, InvalidAuthorizedStateException {
+        final InboxInfo info = getInboxInfo(request);
+
+        // if user is logged in, get his cohort for this generation of this group
+        // for now, we only use 1 cohort for each group
+        // TODO use DAO to access userGroupInfo
+        if (isAuthenticated(request)) {
+            String userId = ensureAuthenticated(request, true);
+            DBCollection userGroupInfoCol = MongoStoreManager.getInstance().getCollection("userGroupInfo");
+            BasicDBObject userGroupInfo = (BasicDBObject) userGroupInfoCol.findOne(new BasicDBObject("U", new ObjectId(userId)).append("G", new ObjectId(groupId)));
+            BasicDBObject cohortGenerations = (BasicDBObject) userGroupInfo.get("CHG");
+            List<ObjectId> cohortIdObjList = (List<ObjectId>) cohortGenerations.get(generationId);
+            String cohortId = cohortIdObjList.get(0).toString();
+
+            info.setNewGenerationAndCohortId(groupId, generationId, cohortId);
+            return cohortId;
+        }
+        // if not logged in, get default cohort id
+        else {
+            DBCollection generationInfoCol = MongoStoreManager.getInstance().getCollection("generationInfo");
+            BasicDBObject generationInfo = (BasicDBObject) generationInfoCol.findOne(new BasicDBObject("_id", new ObjectId(generationId)));
+            String cohortId = generationInfo.getObjectId("D").toString();
+
+            info.setNewGenerationAndCohortId(groupId, generationId, cohortId);
+            return cohortId;
         }
     }
 
     private static InboxInfo getInboxInfo(HttpServletRequest request) throws SystemErrorException {
         final HttpSession session = request.getSession(true);
         try {
-            return (InboxInfo) session.getAttribute(INBOX_INFO_ATTRIBUTE);
+            InboxInfo inboxInfo = (InboxInfo) session.getAttribute(INBOX_INFO_ATTRIBUTE);
+            if (inboxInfo == null) {
+                session.setAttribute(INBOX_INFO_ATTRIBUTE, new InboxInfo());
+            }
+            return inboxInfo;
         } catch (IllegalStateException e) {
             throw new SystemErrorException("Failed to get inbox info attribute because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
         }
     }
 
+    public static String getCohortId(HttpServletRequest request, String groupId) throws SystemErrorException {
+        final InboxInfo info = getInboxInfo(request);
+        return info.getCohortId(groupId);
+    }
+
+    /*
     public static HashMap<String, String> getDefaultCohort(HttpServletRequest request) throws SystemErrorException {
         final HttpSession session = request.getSession();
         try {
@@ -698,14 +740,6 @@ public final class BlahguaSession {
         }
     }
 
-    public static HashMap<String, List<String>> getUserCohort(HttpServletRequest request) throws SystemErrorException {
-        final HttpSession session = request.getSession();
-        try {
-            return (HashMap<String, List<String>>) session.getAttribute(USER_COHORT_ATTRIBUTE);
-        } catch (IllegalStateException e) {
-            throw new SystemErrorException("Failed to get default cohort attribute because session id '" + session.getId() + "' was already invalidated", e, ErrorCodes.INVALID_SESSION_STATE);
-        }
-    }
 
     public static void setUserCohort(HttpServletRequest request, String groupId, List<String> cohortList) throws SystemErrorException {
         final HttpSession session = request.getSession();
@@ -723,4 +757,5 @@ public final class BlahguaSession {
         }
     }
 
+    */
 }
