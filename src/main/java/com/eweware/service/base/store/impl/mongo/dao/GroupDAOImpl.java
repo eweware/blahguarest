@@ -10,6 +10,7 @@ import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,8 +31,6 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DESCRIPTION, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(DESCRIPTOR, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_VALIDATION_METHOD, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_VALIDATION_PARAMETERS, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(STATE, MongoFieldTypes.STRING);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(USER_COUNT, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(BLAH_COUNT, MongoFieldTypes.NUMBER);
@@ -42,6 +41,15 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_SAFE_INBOX_NUMBER, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_TIME_INBOXES_GENERATED, MongoFieldTypes.DATE);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(INBOX_GENERATION_DURATION, MongoFieldTypes.DATE);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(ADMIN, MongoFieldTypes.ARRAY);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(HEADER_IMAGE, MongoFieldTypes.STRING);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(AD_BLAH_ID, MongoFieldTypes.STRING);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(JOIN_BADGE_LIST, MongoFieldTypes.ARRAY);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(COMMENT_BADGE_LIST, MongoFieldTypes.ARRAY);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(POST_BADGE_LIST, MongoFieldTypes.ARRAY);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CONTENT_EXPIRATION_DAYS, MongoFieldTypes.NUMBER);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(POSTS_MODERATION_BADGE_LIST, MongoFieldTypes.ARRAY);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(MODERATED, MongoFieldTypes.BOOLEAN);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -176,25 +184,6 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         put(CURRENT_VIEWER_COUNT, currentViewerCount);
     }
 
-    @Override
-    public String getValidationMethod() {
-        return (String) get(USER_VALIDATION_METHOD);
-    }
-
-    @Override
-    public void setValidationMethod(String method) {
-        put(USER_VALIDATION_METHOD, method);
-    }
-
-    @Override
-    public String getValidationParameters() {
-        return (String) get(USER_VALIDATION_PARAMETERS);
-    }
-
-    @Override
-    public void setValidationParameters(String params) {
-        put(USER_VALIDATION_PARAMETERS, params);
-    }
 
     @Override
     public Integer getFirstInboxNumber() {
@@ -257,4 +246,60 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     public void setLastInboxGeneratedDuration(Long duration) {
         put(INBOX_GENERATION_DURATION, duration);
     }
+
+    @Override
+    public List<String> getAdmin() { return (List<String>) get(ADMIN); }
+
+    @Override
+    public void setAdmin(List<String> adminIDs) { put(ADMIN, adminIDs); }
+
+    @Override
+    public String getHeaderImage() { return (String) get(HEADER_IMAGE); }
+
+    @Override
+    public void setHeaderImage(String headerImage) { put(HEADER_IMAGE, headerImage); }
+
+    @Override
+    public String getAdBlahID() { return (String) get(AD_BLAH_ID); }
+
+    @Override
+    public void setAdBlahID(String adBlahId) { put (AD_BLAH_ID, adBlahId); }
+
+    @Override
+    public List<String> getJoinBadgeList() { return (List<String>) get(JOIN_BADGE_LIST); }
+
+    @Override
+    public void setJoinBadgeList(List<String> badgeList) { put(JOIN_BADGE_LIST, badgeList); }
+
+    @Override
+    public List<String> getCommentBadgeList() { return (List<String>) get(COMMENT_BADGE_LIST); }
+
+    @Override
+    public void setCommentBadgeList(List<String> badgeList) { put(COMMENT_BADGE_LIST, badgeList); }
+
+    @Override
+    public List<String> getPostBadgeList() { return (List<String>) get(POST_BADGE_LIST); }
+
+    @Override
+    public void setPostBadgeList(List<String> badgeList) { put(POST_BADGE_LIST, badgeList); }
+
+    @Override
+    public List<String> getModerateBadgeList() { return (List<String>) get(POSTS_MODERATION_BADGE_LIST); }
+
+    @Override
+    public void setModerateBadgeList(List<String> badgeList) { put(POSTS_MODERATION_BADGE_LIST, badgeList); }
+
+    @Override
+    public int getContextExpirationDays() { return (Integer) get(CONTENT_EXPIRATION_DAYS); }
+
+    @Override
+    public void setContentExpirationDays(int numDays) { put(JOIN_BADGE_LIST, numDays); }
+
+    @Override
+    public Boolean getModerated() { return (Boolean) get(MODERATED); }
+
+    @Override
+    public void setModerated(Boolean isModerated) { put(JOIN_BADGE_LIST, isModerated); }
+
+
 }

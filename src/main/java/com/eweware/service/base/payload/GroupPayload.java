@@ -80,22 +80,6 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
         put(STATE, state);
     }
 
-    public String getValidationMethod() {
-        return (String) get(USER_VALIDATION_METHOD);
-    }
-
-    public void setValidationMethod(String method) {
-        put(USER_VALIDATION_METHOD, method);
-    }
-
-    public String getValidationParameters() {
-        return (String) get(USER_VALIDATION_PARAMETERS);
-    }
-
-    public void setValidationParameters(String params) {
-        put(USER_VALIDATION_PARAMETERS, params);
-    }
-
     public Long getUserCount() {
         return (Long) get(USER_COUNT);
     }

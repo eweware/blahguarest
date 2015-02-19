@@ -639,7 +639,7 @@ public class UserManager implements ManagerInterface {
      *
      * @throws StateConflictException
      */
-    public UserGroupPayload registerUserInGroup(LocaleId localeId, String userId, String validationKey, String groupId) throws InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException, InvalidUserValidationKey {
+    public UserGroupPayload registerUserInGroup(LocaleId localeId, String userId, String validationKey, String groupId) throws InvalidAuthorizedStateException, InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException, InvalidUserValidationKey {
         ensureReady();
         if (CommonUtilities.isEmptyString(groupId)) {
             throw new InvalidRequestException("groupId required to join user to a group", ErrorCodes.MISSING_GROUP_ID);
@@ -647,36 +647,55 @@ public class UserManager implements ManagerInterface {
         if (CommonUtilities.isEmptyString(userId)) {
             throw new InvalidRequestException("userId required to join user to a group", ErrorCodes.MISSING_USER_ID);
         }
-        if (!getStoreManager().createUser(userId)._exists()) {
+
+        final UserDAO userDAO = getStoreManager().createUser(userId);
+        if (userDAO == null) {
             throw new InvalidRequestException("userId=" + userId + " does not exist", ErrorCodes.NOT_FOUND_USER_ID);
         }
-        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.USER_VALIDATION_METHOD, GroupDAO.USER_VALIDATION_PARAMETERS);
+        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.DISPLAY_NAME);
         if (groupDAO == null) {
             throw new ResourceNotFoundException("no group exists with groupId=" + groupId, ErrorCodes.NOT_FOUND_GROUP_ID);
         }
-
-        final UserValidationMethod vmeth = UserValidationMethod.getValidationMethod(groupDAO.getValidationMethod());
-        if (vmeth == null) {
-            throw new InvalidRequestException("group validation method is obsolete or invalid; groupId=" + groupId + " method='" + groupDAO.getValidationMethod() + "'");
-        }
-//        vmeth.validateKey(validationKey, groupDAO.getValidationParameters());
 
         if (getStoreManager().createUserGroup(userId, groupId)._exists()) {
             throw new InvalidRequestException("userId=" + userId + " has already joined groupId=" + groupId, ErrorCodes.USER_ALREADY_JOINED_GROUP);
         }
 
-        final AuthorizedState defaultState = vmeth.getDefaultAuthorizationState();
-//        final String validationCode = vmeth.startValidation(userId, groupId, groupDAO.getDisplayName(), validationKey);
-//        final String validationCode = AuthorizedState.A.toString();  // TODO now carte blanche authorization as we don't have any way to change it
+        // Check for badges before letting the person join the state
+        List<String> badgeList = groupDAO.getJoinBadgeList();
+
+        if ((badgeList != null) && (badgeList.size() > 0)) {
+            // see if the user has the needed badges
+            Boolean hasBadge = false;
+            Date currentTime = new Date();
+            List<String> userBadges = userDAO.getBadgeIds();
+
+            for (String curBadge : badgeList) {
+                for (String curUserBadgeId : userBadges) {
+                    BadgeDAO curUserBadge = getStoreManager().createBadge(curUserBadgeId);
+                    if ((curUserBadge != null) &&
+                            (curUserBadge.getExpirationDate().after(currentTime)) &&
+                            (curUserBadge.getBadgeType().equalsIgnoreCase(curBadge))) {
+                        hasBadge = true;
+                        break;
+                    }
+                }
+
+                if(hasBadge)
+                    break;
+            }
+
+            if (!hasBadge) {
+                throw new InvalidAuthorizedStateException("userId=" + userId + " is not badged to join groupId=" + groupId, ErrorCodes.UNAUTHORIZED_USER);
+            }
+        }
+
+
+        final AuthorizedState defaultState = AuthorizedState.A;
 
         // Add user to the group with authorized _state
         updateUserStatus(LocaleId.en_us, userId, groupId, defaultState.toString());
 
-//        final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
-//        tracker.setUserId(userId);
-//        tracker.setGroupId(groupId);
-//        tracker.setState(defaultState.toString());
-//        TrackingManager.getInstance().track(LocaleId.en_us, tracker);
 
         final UserGroupPayload payload = new UserGroupPayload(userId, groupId);
         payload.setState(defaultState.toString());

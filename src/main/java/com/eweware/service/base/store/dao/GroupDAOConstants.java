@@ -64,17 +64,6 @@ public interface GroupDAOConstants {
      */
     static final String CURRENT_VIEWER_COUNT = "V";
 
-    /**
-     * <p> This group's validation method. A string</p>
-     * <p><b>TODO Was in use in alpha but is no longer supported.</b></p>
-     */
-    static final String USER_VALIDATION_METHOD = "M";
-
-    /**
-     * <p> This group's validation method parameters. </p>
-     * <p><b>TODO Was in use in alpha but is no longer supported.</b></p>
-     */
-    static final String USER_VALIDATION_PARAMETERS = "P";
 
     /**
      * <p>Group state information.
@@ -123,14 +112,26 @@ public interface GroupDAOConstants {
      */
     static final String INBOX_GENERATION_DURATION = "I";
 
+    static final String ADMIN = "GA";
+    static final String HEADER_IMAGE = "GHI";
+    static final String AD_BLAH_ID = "GAB";
+    static final String JOIN_BADGE_LIST = "PJ";
+    static final String COMMENT_BADGE_LIST = "PC";
+    static final String POST_BADGE_LIST = "PB";
+    static final String CONTENT_EXPIRATION_DAYS = "CE";
+    static final String POSTS_MODERATION_BADGE_LIST = "PM";
+    static final String MODERATED = "MX";
 
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
-                DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, USER_VALIDATION_METHOD, USER_VALIDATION_PARAMETERS, STATE
+                DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, STATE
         }),
         new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT, INBOX_GENERATION_DURATION}),
-        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER, FIRST_SAFE_INBOX_NUMBER, LAST_SAFE_INBOX_NUMBER}),
+        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{CONTENT_EXPIRATION_DAYS, RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER, FIRST_SAFE_INBOX_NUMBER, LAST_SAFE_INBOX_NUMBER}),
+            new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {ADMIN, JOIN_BADGE_LIST, COMMENT_BADGE_LIST, POST_BADGE_LIST, POSTS_MODERATION_BADGE_LIST}),
+            new SchemaDataTypeFieldMap(SchemaDataType.B, new String[] {MODERATED}),
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[] {HEADER_IMAGE,AD_BLAH_ID}),
         new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_TIME_INBOXES_GENERATED})
     };
 

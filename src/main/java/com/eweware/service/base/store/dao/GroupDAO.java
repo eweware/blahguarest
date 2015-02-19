@@ -1,6 +1,9 @@
 package com.eweware.service.base.store.dao;
 
+import org.apache.xpath.operations.Bool;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author rk@post.harvard.edu
@@ -44,14 +47,6 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setCurrentViewerCount(Long activeViewerCount);
 
-    public String getValidationMethod();
-
-    public void setValidationMethod(String method);
-
-    public String getValidationParameters();
-
-    public void setValidationParameters(String parameters);
-
     public Integer getFirstInboxNumber();
 
     public void setFirstInboxNumber(Integer number);
@@ -79,4 +74,43 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
     public Date getCreated();
 
     public void setCreated(Date created);
+
+    public List<String> getAdmin();
+
+    public void setAdmin(List<String> adminID);
+
+    public String getHeaderImage();
+
+    public void setHeaderImage(String headerImage);
+
+    public String getAdBlahID();
+
+    public void setAdBlahID(String adBlahId);
+
+    public List<String> getJoinBadgeList();
+
+    public void setJoinBadgeList(List<String> badgeList);
+
+    public List<String> getCommentBadgeList();
+
+    public void setCommentBadgeList(List<String> badgeList);
+
+    public List<String> getPostBadgeList();
+
+    public void setPostBadgeList(List<String> badgeList);
+
+    public List<String> getModerateBadgeList();
+
+    public void setModerateBadgeList(List<String> badgeList);
+
+    public int getContextExpirationDays();
+
+    public void setContentExpirationDays(int numDays);
+
+    public Boolean getModerated();
+
+    public void setModerated(Boolean isModerated);
+
+
+
 }
