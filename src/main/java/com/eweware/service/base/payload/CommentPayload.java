@@ -209,4 +209,8 @@ public final class CommentPayload extends BasePayload implements CommentDAOConst
     public void setImageIds(List<String> imageIds) {
         put(IMAGE_IDS, imageIds);
     }
+
+    public Boolean getNeedsModeration() { return (Boolean) get(NEEDS_MODERATION); }
+
+    public void setNeedsModeration(Boolean needsModeration) { put(NEEDS_MODERATION, needsModeration); }
 }

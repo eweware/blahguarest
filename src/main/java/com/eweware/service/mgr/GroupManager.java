@@ -10,11 +10,9 @@ import com.eweware.service.base.mgr.ManagerState;
 import com.eweware.service.base.payload.AuthorizedState;
 import com.eweware.service.base.payload.GroupPayload;
 import com.eweware.service.base.payload.GroupTypePayload;
+import com.eweware.service.base.payload.UserPayload;
 import com.eweware.service.base.store.StoreManager;
-import com.eweware.service.base.store.dao.BaseDAO;
-import com.eweware.service.base.store.dao.GroupDAO;
-import com.eweware.service.base.store.dao.GroupDAOConstants;
-import com.eweware.service.base.store.dao.GroupTypeDAO;
+import com.eweware.service.base.store.dao.*;
 import com.eweware.service.base.store.dao.type.DAOUpdateType;
 import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 
@@ -33,6 +31,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class GroupManager implements ManagerInterface {
 
     private static GroupManager singleton;
+
+    public static enum GroupAction {
+        ACTION_JOIN,
+        ACTION_COMMENT,
+        ACTION_POST,
+        ACTION_MODERATE
+    };
 
     private final Integer _returnedObjectLimit;
 
@@ -333,6 +338,135 @@ public final class GroupManager implements ManagerInterface {
         groupPayload.setCurrentViewerCount(groupDAO.getCurrentViewerCount());
         return groupPayload;
     }
+
+
+    public Boolean PostNeedsModeration(String groupId, String userId) throws SystemErrorException {
+        final GroupPayload groupPayload = new GroupPayload(groupId);
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
+
+        if (groupPayload.getModerated()) {
+            // group is moderated
+            List<String> adminList = groupPayload.getAdmin();
+
+            if ((adminList != null) && (adminList.size() > 0) && (userDAO.getIsAdmin() == false)) {
+                // the group has an admin list and the user is not a global admin.
+                if (adminList.contains(userId))
+                    return false; // admins can post anything
+                else
+                    return true;
+            } else {
+                // the group has no admin - still open
+                return false;
+            }
+        }
+        else {
+            // group is not moderated
+            return false;
+        }
+
+    }
+
+    public Boolean CommentNeedsModeration(String groupId, String userId, String authorId) throws SystemErrorException {
+        final GroupPayload groupPayload = new GroupPayload(groupId);
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
+
+        Integer modStyle = groupPayload.getCommentModerationStyle();
+
+        if ((userDAO.getIsAdmin() == true) || (modStyle == null) || (modStyle == GroupDAO.CommentModerationStyle.NO_MODERATION.getValue()))
+            return  false;
+        else {  // group is moderated for comments - only an admin can post directly
+            // see if user is an admin
+            List<String> adminList = groupPayload.getAdmin();
+
+            if ((adminList != null) && (adminList.size() > 0)
+                // the group has an admin list and the user is not a global admin.
+                if (adminList.contains(userId))
+                    return false; // admins can post anything
+                else if ((modStyle == GroupDAO.CommentModerationStyle.AUTHOR_MODERATION.getValue()) && userId.equalsIgnoreCase(authorId))
+                    return false; // user is the author of an author-moderated post
+                else
+                    return true; // otherwise, this should be moderated
+            } else
+
+            }
+
+
+
+    /** Given a group and a user and an action, returns TRUE if the user is allowed to perform
+     * the action in the group.  Permission is granted if the group is not an admin group, or if
+     * the user is either a group or system admin, or if the user has the needed badge(s) for the
+     * action
+     *
+     * @param groupId the ID of the group
+     * @param userId  the ID of the user
+     * @param action the Action to perform
+     * @return true if the action is allowed, otherwise false
+     * @throws SystemErrorException
+     */
+    public Boolean CheckPermissions(String groupId, String userId, GroupAction action) throws SystemErrorException {
+        final GroupPayload groupPayload = new GroupPayload(groupId);
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
+
+        List<String> adminList = groupPayload.getAdmin();
+
+        if ((adminList != null) && (adminList.size() > 0) && (userDAO.getIsAdmin() == false)) {
+            // this channel is administrated, check permissions
+
+            if (adminList.contains(userId))
+                return true; // admins can do anything
+            else {
+                // if the user is not an admin, we should check permission
+                List<String> badgeList = null;
+
+                switch (action) {
+                    case ACTION_JOIN:
+                        badgeList = groupPayload.getJoinBadgeList();
+                        break;
+                    case ACTION_COMMENT:
+                        badgeList = groupPayload.getCommentBadgeList();
+                        break;
+                    case ACTION_MODERATE:
+                        badgeList = groupPayload.getModerateBadgeList();
+                        break;
+                    case ACTION_POST:
+                        badgeList = groupPayload.getPostBadgeList();
+                        break;
+                }
+
+                if (badgeList == null)
+                    return true;    // no restrictions, anyone can do it
+                else if (badgeList.size() == 0)
+                    return false;  // locked down - only admins allowed
+                else {
+                    // see if the user has the needed badges
+                    Boolean hasBadge = false;
+                    Date currentTime = new Date();
+                    List<String> userBadges = userDAO.getBadgeIds();
+
+                    for (String curBadge : badgeList) {
+                        for (String curUserBadgeId : userBadges) {
+                            BadgeDAO curUserBadge = (BadgeDAO)getStoreManager().createBadge(curUserBadgeId)._findByPrimaryId();
+                            if ((curUserBadge != null) &&
+                                    (curUserBadge.getExpirationDate().after(currentTime)) &&
+                                    (curUserBadge.getBadgeType().equalsIgnoreCase(curBadge))) {
+                                hasBadge = true;
+                                break;
+                            }
+                        }
+
+                        if(hasBadge)
+                            break;
+                    }
+
+                    return hasBadge;
+                }
+            }
+        } else {
+            // user is authorized
+            return true;
+        }
+    }
+
 
     private boolean isEmptyString(String string) {
         return (string == null || string.length() == 0);

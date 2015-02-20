@@ -8,6 +8,7 @@ import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.GroupSchema;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -143,6 +144,46 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
     public void setLastInboxGeneratedDuration(Long duration) {
         put(INBOX_GENERATION_DURATION, duration);
     }
+
+    public List<String> getAdmin() { return (List<String>) get(ADMIN); }
+
+    public void setAdmin(List<String> adminIDs) { put(ADMIN, adminIDs); }
+
+    public String getHeaderImage() { return (String) get(HEADER_IMAGE); }
+
+    public void setHeaderImage(String headerImage) { put(HEADER_IMAGE, headerImage); }
+
+    public String getAdBlahID() { return (String) get(AD_BLAH_ID); }
+
+    public void setAdBlahID(String adBlahId) { put (AD_BLAH_ID, adBlahId); }
+
+    public List<String> getJoinBadgeList() { return (List<String>) get(JOIN_BADGE_LIST); }
+
+    public void setJoinBadgeList(List<String> badgeList) { put(JOIN_BADGE_LIST, badgeList); }
+
+    public List<String> getCommentBadgeList() { return (List<String>) get(COMMENT_BADGE_LIST); }
+
+    public void setCommentBadgeList(List<String> badgeList) { put(COMMENT_BADGE_LIST, badgeList); }
+
+    public List<String> getPostBadgeList() { return (List<String>) get(POST_BADGE_LIST); }
+
+    public void setPostBadgeList(List<String> badgeList) { put(POST_BADGE_LIST, badgeList); }
+
+    public List<String> getModerateBadgeList() { return (List<String>) get(POSTS_MODERATION_BADGE_LIST); }
+
+    public void setModerateBadgeList(List<String> badgeList) { put(POSTS_MODERATION_BADGE_LIST, badgeList); }
+
+    public int getContextExpirationDays() { return (Integer) get(CONTENT_EXPIRATION_DAYS); }
+
+    public void setContentExpirationDays(int numDays) { put(JOIN_BADGE_LIST, numDays); }
+
+    public Boolean getModerated() { return (Boolean) get(MODERATED); }
+
+    public void setModerated(Boolean isModerated) { put(MODERATED, isModerated); }
+
+    public Integer getCommentModerationStyle() { return (Integer) get(COMMENT_MODERATION_STYLE); }
+
+    public void setCommentModerationStyle(Integer isModerated) { put(COMMENT_MODERATION_STYLE, isModerated); }
 
 
 }

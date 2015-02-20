@@ -33,6 +33,9 @@ import com.eweware.service.search.index.common.BlahguaFilterIndexReader;
 import com.eweware.service.search.index.common.BlahguaIndexReaderDecorator;
 import com.mongodb.MongoException;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.http.client.*;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -57,6 +60,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -204,7 +208,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws InvalidRequestException
      * @throws ResourceNotFoundException
      */
-    public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload entity) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+    public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload entity) throws InvalidAuthorizedStateException, SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
         ensureReady();
         // Check required fields
         if (CommonUtilities.isEmptyString(authorId)) {
@@ -258,7 +262,17 @@ public final class BlahManager implements ManagerInterface {
         // Ensure user is active in group
         ensureUserActiveInGroup(authorId, groupId);
 
-        verifyBadges(entity);
+        // ensure user has permissions to post
+        if (!_groupManager.CheckPermissions(groupId,  authorId, GroupManager.GroupAction.ACTION_POST)) {
+            throw new InvalidAuthorizedStateException("userId=" + authorId + " is not badged to post in groupId=" + groupId, ErrorCodes.UNAUTHORIZED_USER);
+
+        }
+
+        if (_groupManager.PostNeedsModeration(groupId, authorId)) {
+            entity.setNeedsModeration(true);
+        }
+
+            verifyBadges(entity);
 
         // Create fresh blah to prevent injection
         final BlahDAO blahDAO = getStoreManager().createBlah();
@@ -1490,7 +1504,7 @@ public final class BlahManager implements ManagerInterface {
      * @throws StateConflictException
      */
     public CommentPayload
-    createComment(LocaleId localeId, String commentAuthorId, CommentPayload entity) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
+    createComment(LocaleId localeId, String commentAuthorId, CommentPayload entity) throws InvalidAuthorizedStateException, InvalidRequestException, SystemErrorException, ResourceNotFoundException, StateConflictException {
         ensureReady();
 
         // Check parameters
@@ -1531,12 +1545,24 @@ public final class BlahManager implements ManagerInterface {
 
         // Check that blah exists and if this comment includes a vote that the comment author is not the blah's author
         final BlahDAO blahDAO = getStoreManager().createBlah(blahId);
-        final BlahDAO blah = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID);
+        final BlahDAO blah = (BlahDAO) blahDAO._findByPrimaryId(BlahDAO.AUTHOR_ID, BlahDAO.GROUP_ID);
         if (blah == null) {
             throw new InvalidRequestException("no blahId=" + blahId + " exists", entity, ErrorCodes.INVALID_INPUT);
         }
-        if (votedForBlah && blah.getAuthorId().equals(commentAuthorId)) { // Check if comment author is also blah author: voting not allowed
+
+        final String blahAuthorId = blah.getAuthorId();
+        if (votedForBlah && blahAuthorId.equals(commentAuthorId)) { // Check if comment author is also blah author: voting not allowed
             throw new InvalidRequestException("authorId=" + commentAuthorId + " (author of the blahId=" + blahId + ") cannot vote on own blah", entity, ErrorCodes.USER_CANNOT_UPDATE_ON_OWN_BLAH);
+        }
+
+        final String blahGroupId = blah.getGroupId();
+        if (!_groupManager.CheckPermissions(blahGroupId,  commentAuthorId, GroupManager.GroupAction.ACTION_COMMENT)) {
+            throw new InvalidAuthorizedStateException("userId=" + commentAuthorId + " is not badged to comment in groupId=" + blahGroupId, ErrorCodes.UNAUTHORIZED_USER);
+
+        }
+
+        if (_groupManager.CommentNeedsModeration(blahGroupId, commentAuthorId, blahAuthorId)) {
+            entity.setNeedsModeration(true);
         }
 
         // Create comment
@@ -2128,21 +2154,6 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 
-//    /**
-//     * Deletes the blah from the index.
-//     *
-//     * @param commentId The comment's id.
-//     * @throws com.eweware.service.base.error.SystemErrorException
-//     *
-//     */
-//    private void deleteCommentFromIndex(String commentId) throws SystemErrorException {
-//        if (CommonUtilities.isEmptyString(commentId)) {
-//            throw new SystemErrorException("missing comment id in " + this, ErrorCodes.SERVER_INDEXING_ERROR);
-//        }
-//        final CommentDAO comment = _storeManager.createComment(commentId);
-//        comment.setDeleted(Boolean.TRUE);
-//        indexComment(comment);
-//    }
 
     /**
      * Gets all documents from the index
@@ -2393,47 +2404,3 @@ public final class BlahManager implements ManagerInterface {
         }
     }
 }
-
-
-//    public List<InboxBlahPayload> getInbox(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber,
-//                                           String blahTypeId, Integer start, Integer count, String sortFieldName, Integer sortDirection)
-//            throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
-//        ensureReady();
-//        if (groupId == null) {
-//            throw new InvalidRequestException("Missing group id", ErrorCodes.MISSING_GROUP_ID);
-//        }
-//
-//        count = ensureCount(count);
-//        if (sortDirection == null || (sortDirection != 1 && sortDirection != -1)) {
-//            sortDirection = -1;
-//        }
-//
-//        checkGroupAccess(request, groupId);
-//
-//        // Cycle through inboxes
-//        final Integer maxInbox = _inboxHandler.getMaxInbox(groupId);
-//        final Integer unknown = -1;
-//        if (maxInbox == unknown) {
-//            // we don't know the max: attempt to get the first inbox (getting an inbox from the inbox cache retrieves the max, if any)
-//            inboxNumber = 0;
-//        } else {
-//            if (inboxNumber == null) { // if no inbox number is requested, find last
-//                Integer lastInbox = BlahguaSession.getLastInboxNumber(request, groupId);
-//                inboxNumber = (lastInbox == null) ? 0 : (++lastInbox);  // if we have last, increment it; else start at first inbox
-//                if (inboxNumber >= maxInbox) { // rewind if past the maximum number of inboxes; else go to next
-//                    inboxNumber = 0;
-//                }
-//            }
-//        }
-//        final Inbox inbox = _inboxHandler.getInboxFromCache(groupId, inboxNumber, blahTypeId, start, count, sortFieldName, sortDirection);
-//
-//        BlahguaSession.setLastInboxNumber(request, groupId, inboxNumber);
-//
-//        if (inbox == null) {
-//            logger.warning("Got no mailbox for groupId '" + groupId + "' inbox #" + inboxNumber + " when maxInbox=" + maxInbox);
-//            return new ArrayList<InboxBlahPayload>(0);
-//        }
-//
-//
-//        return inbox.getItems();
-//    }

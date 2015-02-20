@@ -122,20 +122,40 @@ public interface GroupDAOConstants {
     static final String POSTS_MODERATION_BADGE_LIST = "PM";
     static final String MODERATED = "MX";
 
+    /**
+     * <p>How comments are moderated.</p>
+     * <p>0 or missing = not moderated</p>
+     * <p>1 = moderated by group admin</p>
+     * <p>2 = moderated by post author</p>
+     */
+    static final String COMMENT_MODERATION_STYLE = "CMX";
+
 
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{
                 DISPLAY_NAME, DESCRIPTION, DESCRIPTOR, GROUP_TYPE_ID, STATE
         }),
         new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT, INBOX_GENERATION_DURATION}),
-        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{CONTENT_EXPIRATION_DAYS, RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER, FIRST_SAFE_INBOX_NUMBER, LAST_SAFE_INBOX_NUMBER}),
+        new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{COMMENT_MODERATION_STYLE, CONTENT_EXPIRATION_DAYS, RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER, FIRST_SAFE_INBOX_NUMBER, LAST_SAFE_INBOX_NUMBER}),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {ADMIN, JOIN_BADGE_LIST, COMMENT_BADGE_LIST, POST_BADGE_LIST, POSTS_MODERATION_BADGE_LIST}),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[] {MODERATED}),
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[] {HEADER_IMAGE,AD_BLAH_ID}),
         new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_TIME_INBOXES_GENERATED})
     };
 
+    public static enum CommentModerationStyle {
+        NO_MODERATION(0),
+        AUTHOR_MODERATION(1),
+        ADMIN_MODERATION(2);
 
+        private final Integer code;
+
+        CommentModerationStyle(Integer theCode) { this.code = theCode; }
+
+        public Integer getValue() {
+            return code;
+        }
+    }
 
     /**
      * <p>Enumerates the single-character codes for the values for each kind of group descriptor.

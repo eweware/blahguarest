@@ -108,4 +108,8 @@ public interface CommentDAO extends BaseDAO, CommentDAOConstants {
     public Date getCreated();
 
     public void setCreated(Date created);
+
+    public Boolean getNeedsModeration();
+
+    public void setNeedsModeration(Boolean needsModeration);
 }

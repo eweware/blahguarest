@@ -20,6 +20,8 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
 
     private static final long serialVersionUID = 1L;
 
+
+
     private static String collectionName;
     private static DBCollection collection;
 
@@ -299,7 +301,16 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     public Boolean getModerated() { return (Boolean) get(MODERATED); }
 
     @Override
-    public void setModerated(Boolean isModerated) { put(JOIN_BADGE_LIST, isModerated); }
+    public void setModerated(Boolean isModerated) { put(MODERATED, isModerated); }
+
+    @Override
+    public Integer getCommentModerationStyle() { return (Integer) get(COMMENT_MODERATION_STYLE); }
+
+    @Override
+    public void setCommentModerationStyle(Integer modStyle) { put(COMMENT_MODERATION_STYLE, modStyle); }
+
+
+    // permission helpers
 
 
 }

@@ -12,6 +12,7 @@ import com.eweware.service.base.store.dao.PollOptionTextDAO;
 import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.BlahSchema;
 import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
+import org.apache.xpath.operations.Bool;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -61,6 +62,8 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(CREATED, MongoFieldTypes.DATE);
         BlahDAOImpl.FIELD_TO_TYPE_MAP.put(UPDATED, MongoFieldTypes.DATE);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(URLS, MongoFieldTypes.ARRAY);
+        BlahDAOImpl.FIELD_TO_TYPE_MAP.put(NEEDS_MODERATION, MongoFieldTypes.BOOLEAN);
     }
 
     @Override
@@ -400,4 +403,17 @@ public class BlahDAOImpl extends BaseDAOImpl implements BlahDAO {
     public void setPredictionResultUnclearCount(Long count) {
         put(PREDICTION_RESULT_UNCLEAR_COUNT, count);
     }
+
+    @Override
+    public List<String> getURLs() { return (List<String>) get(URLS); }
+
+    @Override
+    public void setURLs(List<String> urlList) { put (URLS, urlList); }
+
+    @Override
+    public Boolean getNeedsModeration() { return (Boolean) get(NEEDS_MODERATION); }
+
+    @Override
+    public void setNeedsModeration(Boolean needsModeration) { put (NEEDS_MODERATION, needsModeration); }
+
 }

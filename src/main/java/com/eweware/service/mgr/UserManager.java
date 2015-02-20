@@ -17,6 +17,7 @@ import com.eweware.service.base.store.dao.type.DAOUpdateType;
 import com.eweware.service.base.store.dao.type.MediaReferendType;
 import com.eweware.service.base.store.dao.type.RecoveryMethodType;
 import com.eweware.service.base.store.dao.type.UserAccountType;
+import com.eweware.service.base.store.impl.mongo.dao.GroupDAOImpl;
 import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import com.eweware.service.base.store.impl.mongo.dao.WhatsNewDAOImpl;
 import com.eweware.service.base.type.TrackerType;
@@ -56,6 +57,7 @@ import javax.xml.ws.WebServiceException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.acl.Group;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -91,6 +93,7 @@ public class UserManager implements ManagerInterface {
     private MailManager _mailManager;
     private TrackingManager _trackingManager;
     private ManagerState _state = ManagerState.UNKNOWN;
+    private GroupManager _groupManager;
     private final File _indexDir;
     private final int _batchSize;
     private final long _batchDelay;
@@ -146,6 +149,7 @@ public class UserManager implements ManagerInterface {
             _systemManager = SystemManager.getInstance();
             _mailManager = MailManager.getInstance();
             _trackingManager = TrackingManager.getInstance();
+            _groupManager = GroupManager.getInstance();
             InitializeUserSearch(); // TODO should be its own service
             _state = ManagerState.STARTED;
             System.out.println("*** UserManager started ***");
@@ -595,7 +599,7 @@ public class UserManager implements ManagerInterface {
 
     private void contactUser(RecoveryCode recoveryCode, String emailAddress, String nonCryptoUrlEncodedBase64RecoveryCode) throws SystemErrorException {
         try {
-            getMailManager().send(emailAddress, "Blahgua Account Recovery", makeAccountRecoveryBody(recoveryCode, nonCryptoUrlEncodedBase64RecoveryCode));
+            getMailManager().send(emailAddress, "Heard Account Recovery", makeAccountRecoveryBody(recoveryCode, nonCryptoUrlEncodedBase64RecoveryCode));
         } catch (MessagingException e) {
             throw new SystemErrorException("unable to recover account due to email system error", e, ErrorCodes.EMAIL_SYSTEM_ERROR);
         } catch (UnsupportedEncodingException e) {
@@ -605,7 +609,7 @@ public class UserManager implements ManagerInterface {
 
     private String makeAccountRecoveryBody(RecoveryCode recoveryCode, String nonCryptoUrlEncodedBase64RecoveryCode) throws UnsupportedEncodingException, SystemErrorException {
         final StringBuilder msg = new StringBuilder("Hi there!");
-        msg.append("<p>Someone requested an account recovery for your email address on Blahgua.</p>");
+        msg.append("<p>Someone requested an account recovery for your email address on Heard.</p>");
         msg.append("<p>If you did not request this, just ignore this email. Your account is safe!</p>");
         msg.append("<p>If you do want to reset your password, ");
         final SystemManager sysMgr = getSystemManager();
@@ -619,7 +623,7 @@ public class UserManager implements ManagerInterface {
             msg.append(URLEncoder.encode(recoveryCode.makeRecoveryCodeString(), "UTF-8"));
         }
         msg.append("'>just follow this link</a> within the next 24 hours. We'll show you what to do.</p>");
-        msg.append("<div>Thanks!</div><div>The Blahgua Team</div>");
+        msg.append("<div>Thanks!</div><div>The Heard Team</div>");
         return msg.toString();
     }
 
@@ -661,35 +665,9 @@ public class UserManager implements ManagerInterface {
             throw new InvalidRequestException("userId=" + userId + " has already joined groupId=" + groupId, ErrorCodes.USER_ALREADY_JOINED_GROUP);
         }
 
-        // Check for badges before letting the person join the state
-        List<String> badgeList = groupDAO.getJoinBadgeList();
-
-        if ((badgeList != null) && (badgeList.size() > 0)) {
-            // see if the user has the needed badges
-            Boolean hasBadge = false;
-            Date currentTime = new Date();
-            List<String> userBadges = userDAO.getBadgeIds();
-
-            for (String curBadge : badgeList) {
-                for (String curUserBadgeId : userBadges) {
-                    BadgeDAO curUserBadge = getStoreManager().createBadge(curUserBadgeId);
-                    if ((curUserBadge != null) &&
-                            (curUserBadge.getExpirationDate().after(currentTime)) &&
-                            (curUserBadge.getBadgeType().equalsIgnoreCase(curBadge))) {
-                        hasBadge = true;
-                        break;
-                    }
-                }
-
-                if(hasBadge)
-                    break;
-            }
-
-            if (!hasBadge) {
-                throw new InvalidAuthorizedStateException("userId=" + userId + " is not badged to join groupId=" + groupId, ErrorCodes.UNAUTHORIZED_USER);
-            }
+        if (!_groupManager.CheckPermissions(groupId, userId, GroupManager.GroupAction.ACTION_JOIN)) {
+            throw new InvalidAuthorizedStateException("userId=" + userId + " is not badged to join groupId=" + groupId, ErrorCodes.UNAUTHORIZED_USER);
         }
-
 
         final AuthorizedState defaultState = AuthorizedState.A;
 

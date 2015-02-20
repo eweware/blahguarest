@@ -259,4 +259,10 @@ public class CommentDAOImpl extends BaseDAOImpl implements CommentDAO {
     public void setStats(List<CommentTrackerDAO> stats) {
         put(STATS, stats);
     }
+
+    @Override
+    public Boolean getNeedsModeration() { return (Boolean) get(NEEDS_MODERATION); }
+
+    @Override
+    public void setNeedsModeration(Boolean needsModeration) { put(NEEDS_MODERATION, needsModeration); }
 }

@@ -89,6 +89,11 @@ public interface CommentDAOConstants {
     static final String STATS = "L";
 
     /**
+     * <p>optional if this comment needs moderation.  Only for posts in moderated groups</p>
+     */
+    static final String NEEDS_MODERATION = "MM";
+
+    /**
      * <p>An optional array of image ids for the comment. The semantics
      * of the array are currently not well-defined, subject to
      * experimentation. The image id points to the metadata for
@@ -111,7 +116,7 @@ public interface CommentDAOConstants {
                     COMMENT_STRENGTH
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
-                    ANONYMOUS, FLAGGEDCONTENT
+                    ANONYMOUS, FLAGGEDCONTENT, NEEDS_MODERATION
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new String[]{
                     STATS

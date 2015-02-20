@@ -527,4 +527,12 @@ public final class BlahPayload extends BasePayload implements BlahDAOConstants {
     public void setStats(List<BlahTrackerPayload> stats) {
         put(STATS, stats);
     }
+
+    public List<String> getURLs() { return (List<String>) get(URLS); }
+
+    public void setURLs(List<String> urlList) { put (URLS, urlList); }
+
+    public Boolean getNeedsModeration() { return (Boolean) get(NEEDS_MODERATION); }
+
+    public void setNeedsModeration(Boolean needsModeration) { put (NEEDS_MODERATION, needsModeration); }
 }

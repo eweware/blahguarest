@@ -210,6 +210,10 @@ public interface BlahDAOConstants {
      */
     static final String IMAGE_IDS = "M";
 
+    static final String URLS = "URLS";
+
+    static final String NEEDS_MODERATION = "MM";
+
     /**
      * <p>The id of the user who this blah is intended for</p>
      */
@@ -238,10 +242,10 @@ public interface BlahDAOConstants {
                     STATS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{
-                    ANONYMOUS, FLAGGEDCONTENT
+                    ANONYMOUS, FLAGGEDCONTENT, NEEDS_MODERATION
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[]{
-                    IMAGE_IDS, BADGE_IDS
+                    IMAGE_IDS, BADGE_IDS, URLS
             }),
             new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{EXPIRATION_DATE}),
             new SchemaDataTypeFieldMap(SchemaDataType.E, new FieldDescriptor[]{

@@ -408,4 +408,12 @@ public interface BlahDAO extends BaseDAO, BlahDAOConstants {
      * @param strength
      */
     public void setRecentStrength(Double strength);
+
+    public List<String> getURLs();
+
+    public void setURLs(List<String> urlList);
+
+    public Boolean getNeedsModeration();
+
+    public void setNeedsModeration(Boolean needsModeration);
 }
