@@ -230,12 +230,16 @@ public final class BlahManager implements ManagerInterface {
         final boolean hasMedia = (mediaIds != null && mediaIds.size() > 0);
         if (hasMedia) {
             final String mediaId = mediaIds.get(0);
-            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
-            if (!mediaDAO._exists()) {
-                throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+            if (!mediaId.contains("http")) {
+                // it is an image ID, not a URL
+                final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+                if (!mediaDAO._exists()) {
+                    throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+                }
+                mediaDAO.setReferendType(MediaReferendType.B.toString());
+                mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
             }
-            mediaDAO.setReferendType(MediaReferendType.B.toString());
-            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
         }
 
         text = cleanupBlahTextString(text);
@@ -1531,12 +1535,15 @@ public final class BlahManager implements ManagerInterface {
         final boolean hasMedia = (mediaIds != null && mediaIds.size() > 0);
         if (hasMedia) {
             final String mediaId = mediaIds.get(0); // assumption: should only have one
-            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
-            if (!mediaDAO._exists()) {
-                throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+            if (!mediaId.contains("http")) {
+                final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+
+                if (!mediaDAO._exists()) {
+                    throw new ResourceNotFoundException("Media id '" + mediaId + "' not found", ErrorCodes.MEDIA_NOT_FOUND);
+                }
+                mediaDAO.setReferendType(MediaReferendType.C.toString());
+                mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
             }
-            mediaDAO.setReferendType(MediaReferendType.C.toString());
-            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
         }
 
         getUserManager().checkUserById(commentAuthorId, entity);

@@ -344,7 +344,9 @@ public final class GroupManager implements ManagerInterface {
         final GroupPayload groupPayload = new GroupPayload(groupId);
         final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
 
-        if (groupPayload.getModerated()) {
+        Boolean moderated = groupPayload.getModerated();
+
+        if ((moderated != null) && moderated) {
             // group is moderated
             List<String> adminList = groupPayload.getAdmin();
 
@@ -373,23 +375,22 @@ public final class GroupManager implements ManagerInterface {
         Integer modStyle = groupPayload.getCommentModerationStyle();
 
         if ((userDAO.getIsAdmin() == true) || (modStyle == null) || (modStyle == GroupDAO.CommentModerationStyle.NO_MODERATION.getValue()))
-            return  false;
+            return false;
         else {  // group is moderated for comments - only an admin can post directly
-            // see if user is an admin
-            List<String> adminList = groupPayload.getAdmin();
 
-            if ((adminList != null) && (adminList.size() > 0)
-                // the group has an admin list and the user is not a global admin.
-                if (adminList.contains(userId))
-                    return false; // admins can post anything
-                else if ((modStyle == GroupDAO.CommentModerationStyle.AUTHOR_MODERATION.getValue()) && userId.equalsIgnoreCase(authorId))
-                    return false; // user is the author of an author-moderated post
+            if ((modStyle == GroupDAO.CommentModerationStyle.AUTHOR_MODERATION.getValue()) && userId.equalsIgnoreCase(authorId))
+                return false; // author is the blah author
+            else {
+                // see if user is an admin
+                List<String> adminList = groupPayload.getAdmin();
+
+                if ((adminList == null) || (adminList.size() > 0))
+                    return false; // no admin set
                 else
-                    return true; // otherwise, this should be moderated
-            } else
-
+                    return !adminList.contains(userId); // non-admins need moderation
             }
-
+        }
+    }
 
 
     /** Given a group and a user and an action, returns TRUE if the user is allowed to perform

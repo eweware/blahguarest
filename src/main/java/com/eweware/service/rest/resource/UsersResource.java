@@ -1143,21 +1143,23 @@ public class UsersResource {
      * <div><b>METHOD: </b>POST</div>
      * <div><b>URL: </b>users/image/{mediaId}</div>
      *
-     * @param mediaId The media id (this is returned by the image uploader)
+
      * @return Returns a response with http status 202 (ACCEPTED) when it succeeds.
      *         Returns 404 (NOT FOUND) if the user or media object are not found.
      *         Returns 401 (UNAUTHORIZED) if the user is not authorized (not logged in).
      *         On error conditions, a JSON object is returned with details.
      */
     @POST
-    @Path("/image/{mediaId}")
+    @Path("/image")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response setUserImage(
-            @PathParam("mediaId") String mediaId,
+            Map<String, String> entity,
             @Context HttpServletRequest request) {
         try {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String mediaId = entity.get("url");
             getUserManager().setUserImage(userId, mediaId);
             final Response response = RestUtilities.make202AcceptedResponse();
             getSystemManager().setResponseTime(SET_USER_IMAGE_OPERATION, (System.currentTimeMillis() - start));

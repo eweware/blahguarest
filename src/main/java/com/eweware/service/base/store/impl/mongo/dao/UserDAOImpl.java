@@ -146,7 +146,11 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
     @Override
     public Boolean getIsAdmin() {
-        return (Boolean) get(IS_ADMIN);
+        Boolean isAdmin = (Boolean) get(IS_ADMIN);
+        if (isAdmin == null)
+            return false;
+        else
+            return isAdmin;
     }
 
     @Override

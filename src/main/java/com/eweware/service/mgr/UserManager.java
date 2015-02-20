@@ -1401,12 +1401,15 @@ public class UserManager implements ManagerInterface {
             throw new ResourceNotFoundException("No user id '" + userId + "'", ErrorCodes.NOT_FOUND_USER_ID);
         }
         if (updateMediaReferendType) { // prevent it from being garbage collected
-            final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
-            if (!mediaDAO._exists()) {
-                throw new ResourceNotFoundException("No media id '" + mediaId + "'", ErrorCodes.MEDIA_NOT_FOUND);
+            if (!mediaId.contains("http")) {
+                final MediaDAO mediaDAO = getStoreManager().createMedia(mediaId);
+                if (!mediaDAO._exists()) {
+                    throw new ResourceNotFoundException("No media id '" + mediaId + "'", ErrorCodes.MEDIA_NOT_FOUND);
+                }
+                mediaDAO.setReferendType(MediaReferendType.U.toString());
+                mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
             }
-            mediaDAO.setReferendType(MediaReferendType.U.toString());
-            mediaDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
         }
         final List<String> existingImageIds = user.getImageids();
         // TODO Calling following method updates the user dao, which makes it two updates on the same record because the update will do a push--not replacement
@@ -1436,16 +1439,19 @@ public class UserManager implements ManagerInterface {
         ensureReady();
         if (mediaIds != null && mediaIds.size() > 0) {
             for (String mediaId : mediaIds) {
-                final MediaDAO media = _storeManager.createMedia(mediaId);
-                if (media._exists()) { // ignore missing media dao: it might have been deleted in a previous broken attempt
-                    media.setDeleted(true); // soft-delete
-                    try {
-                        media._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-                    } catch (Exception e) {
-                        // reference to media id will remain in user dao, so we can consistently recover
-                        throw new SystemErrorException("Failed to delete media id '" + mediaId + "' for user id '" + userId + "'", e, ErrorCodes.FAILED_TO_DELETE_IMAGE);
+                if (!mediaId.contains("http")) {
+                    final MediaDAO media = _storeManager.createMedia(mediaId);
+                    if (media._exists()) { // ignore missing media dao: it might have been deleted in a previous broken attempt
+                        media.setDeleted(true); // soft-delete
+                        try {
+                            media._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+                        } catch (Exception e) {
+                            // reference to media id will remain in user dao, so we can consistently recover
+                            throw new SystemErrorException("Failed to delete media id '" + mediaId + "' for user id '" + userId + "'", e, ErrorCodes.FAILED_TO_DELETE_IMAGE);
+                        }
                     }
                 }
+
             }
             userDAO.setImageIds(null); // all successful: break the bonds
             userDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
