@@ -197,7 +197,7 @@ public class InboxHandler extends Thread {
             final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, limit);
 
 
-            if (inboxItems.size() == 0) {
+            if ((inboxItems == null) || (inboxItems.size() == 0)) {
                 logger.warning("Empty inbox '" + CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe) + "'");
             }
 

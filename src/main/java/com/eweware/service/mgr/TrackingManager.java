@@ -814,12 +814,16 @@ public final class TrackingManager implements ManagerInterface, UserTrackerDAOCo
         if (trackerData.openCount != null && trackerData.openCount > 0) {
             map.put(BT_OPENS, trackerData.openCount);
         }
-        inc.putAll(map);
 
-        final WriteResult result = collection.update(new BasicDBObject(BaseDAO.ID, trackerId), updates);
-        if (result.getError() != null) {
-            throw new SystemErrorException("failed to insert tracker " + updates + "; error=" + result.getError(), ErrorCodes.FAILED_TRACKER_INSERT);
+        if (map.size() > 0) {
+            inc.putAll(map);
+
+            final WriteResult result = collection.update(new BasicDBObject(BaseDAO.ID, trackerId), updates);
+            if (result.getError() != null) {
+                throw new SystemErrorException("failed to insert tracker " + updates + "; error=" + result.getError(), ErrorCodes.FAILED_TRACKER_INSERT);
+            }
         }
+
     }
 
     private String maybeAllocateTracker(DBCollection collection, TrackerType trackerType, TrackerQueueItem trackerData, String id) throws SystemErrorException {
