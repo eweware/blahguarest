@@ -24,6 +24,7 @@ public class GroupTypeDAOImpl extends BaseDAOImpl implements GroupTypeDAO {
     static {  // TODO should be derived from schema
         GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(DISPLAY_NAME, MongoFieldTypes.STRING);
         GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_COUNT, MongoFieldTypes.NUMBER);
+        GroupTypeDAOImpl.FIELD_TO_TYPE_MAP.put(GROUP_ADMIN, MongoFieldTypes.BOOLEAN);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -83,4 +84,10 @@ public class GroupTypeDAOImpl extends BaseDAOImpl implements GroupTypeDAO {
     public void setGroupCount(Long groupCount) {
         put(GROUP_COUNT, groupCount);
     }
+
+    @Override
+    public Boolean getIsAdmin() { return (Boolean) get (GROUP_ADMIN);}
+
+    @Override
+    public void setIsAdmin(Boolean isAdmin)  { put(GROUP_ADMIN, isAdmin); }
 }

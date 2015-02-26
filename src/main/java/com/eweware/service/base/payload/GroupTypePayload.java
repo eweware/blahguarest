@@ -44,4 +44,8 @@ public final class GroupTypePayload extends BasePayload implements GroupTypeDAOC
     public void setGroupCount(Long groupCount) {
         put(GROUP_COUNT, groupCount);
     }
+
+    public Boolean getIsAdmin() { return (Boolean) get (GROUP_ADMIN);}
+    
+    public void setIsAdmin(Boolean isAdmin)  { put(GROUP_ADMIN, isAdmin); }
 }

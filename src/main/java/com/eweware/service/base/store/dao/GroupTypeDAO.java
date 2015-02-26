@@ -1,5 +1,7 @@
 package com.eweware.service.base.store.dao;
 
+import com.eweware.service.base.store.dao.schema.type.BooleanDataTypeValidator;
+
 import java.util.Date;
 
 /**
@@ -19,4 +21,8 @@ public interface GroupTypeDAO extends BaseDAO, GroupTypeDAOConstants {
     public Date getCreated();
 
     public void setCreated(Date created);
+
+    public Boolean getIsAdmin();
+
+    public void setIsAdmin(Boolean isAdmin);
 }

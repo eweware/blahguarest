@@ -20,8 +20,12 @@ public interface GroupTypeDAOConstants {
      */
     static final String GROUP_COUNT = "C";
 
+    static final String GROUP_ADMIN = "ad";
+
+
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
           new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{DISPLAY_NAME}),
+          new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{GROUP_ADMIN}),
           new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{GROUP_COUNT})
     };
 }
