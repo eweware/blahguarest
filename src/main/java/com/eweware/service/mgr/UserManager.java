@@ -1270,9 +1270,7 @@ public class UserManager implements ManagerInterface {
             }
         }
 
-        final boolean join = newState.equals(AuthorizedState.P.toString());
-        final boolean activate = newState.equals(AuthorizedState.A.toString());
-        final boolean suspend = newState.equals(AuthorizedState.S.toString());
+        final boolean join = newState.equals(AuthorizedState.A.toString());
         final boolean delete = newState.equals(AuthorizedState.D.toString());
         if (!getStoreManager().createUser(userId)._exists()) {
             throw new ResourceNotFoundException("not found user with userId=" + userId, ErrorCodes.NOT_FOUND_USER_ID);
@@ -1281,70 +1279,26 @@ public class UserManager implements ManagerInterface {
         if (groupDAO == null) {
             throw new ResourceNotFoundException("not found group with groupId=" + groupId, ErrorCodes.NOT_FOUND_GROUP_ID);
         }
-        if ((join || activate) && !(groupDAO.getState().equals(AuthorizedState.A.toString()))) {
-            throw new StateConflictException("groupId " + groupId + " is inactive. A group must be active for a user to join or become active in it", "groupId=" + groupId,
-                    ErrorCodes.INVALID_STATE_USER_CANNOT_JOIN_INACTIVE_GROUP);
-        }
-        // TODO 1. use composite _find instead, and 2. assuming here that DB is fully consistent: if not, also check the groupId:
+
         final UserGroupDAO found = (UserGroupDAO) getStoreManager().createUserGroup(userId, groupId)._findByCompositeId(null, UserGroupDAO.USER_ID, UserGroupDAO.GROUP_ID);
         if (found != null) { // user in group
             final String userGroupId = found.getId();
             final Object state = found.getState();
             if (join) { // but user already joined
                 throw new StateConflictException("userId=" + userId + " already joined groupId=" + groupId, ErrorCodes.USER_ALREADY_JOINED_GROUP);
-            } else if (activate) {
-                if (state.equals(AuthorizedState.P.toString()) || state.equals(AuthorizedState.S.toString())) {
-
-                    // Mark user as active
-                    final UserGroupDAO userGroup = getStoreManager().createUserGroup(userGroupId);
-                    userGroup.setState(AuthorizedState.A.toString());
-                    userGroup._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-                } else {
-                    throw new StateConflictException("user cannot be activated when its state is '" + state + "'; userId " + userId + " groupId " + groupId, ErrorCodes.USER_CANNOT_BE_ACTIVATED_WHEN_STATE_IS_NOT_P_OR_S);
-                }
-            } else if (suspend) {
-                if (state.equals(AuthorizedState.A.toString())) {
-
-                    // Mark user as suspended
-                    final UserGroupDAO userGroup = getStoreManager().createUserGroup(userGroupId);
-                    userGroup.setState(AuthorizedState.S.toString());
-                    userGroup._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-
-//                    final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
-//                    tracker.setUserId(userId);
-//                    tracker.setGroupId(groupId);
-//                    tracker.setState(AuthorizedState.S.toString());
-//                    TrackingManager.getInstance().track(LocaleId.en_us, tracker);
-
-                } else {
-                    throw new StateConflictException("user in state '" + state + "' cannot be suspended; userId " + userId + " groupId " + groupId, ErrorCodes.USER_CANNOT_BE_SUSPENDED_IN_STATE_OTHER_THAN_A);
-                }
             } else if (delete) {  // hard delete!
                 // TODO should we change _state to DT (and register and other methods would need to be aware of this)?
                 getStoreManager().createUserGroup(userGroupId)._deleteByPrimaryId();
-
-//                final TrackerDAO tracker = _storeManager.createTracker(TrackerOperation.USER_TO_GROUP_STATE_CHANGE);
-//                tracker.setUserId(userId);
-//                tracker.setGroupId(groupId);
-//                tracker.setState(AuthorizedState.D.toString());
-//                TrackingManager.getInstance().track(LocaleId.en_us, tracker);
             }
         } else { // no user/group obj
-            if (join || activate) {
+            if (join) {
                 final UserGroupDAO userGroup = getStoreManager().createUserGroup();
                 userGroup.initToDefaultValues(localeId);
                 userGroup.setUserId(userId);
                 userGroup.setGroupId(groupId);
-//                if (validationCode != null) {
-//                    userGroup.setValidationCode(validationCode);
-//                }
                 userGroup.setState(newState);
                 userGroup._insert();
 
-                if (activate) {
-                    groupDAO.setUserCount(1L);
-                    groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
-                }
             } else {
                 throw new StateConflictException("requested action=" + newState + ", but user id=" + userId + " is not joined to groupId=" + groupId, ErrorCodes.USER_MUST_INITIALLY_JOIN_GROUP_IN_STATE_P);
             }

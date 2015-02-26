@@ -1,9 +1,7 @@
 package com.eweware.service.mgr;
 
-import com.eweware.service.base.error.ErrorCodes;
-import com.eweware.service.base.error.InvalidRequestException;
-import com.eweware.service.base.error.ResourceNotFoundException;
-import com.eweware.service.base.error.SystemErrorException;
+import com.eweware.service.base.CommonUtilities;
+import com.eweware.service.base.error.*;
 import com.eweware.service.base.i18n.LocaleId;
 import com.eweware.service.base.mgr.ManagerInterface;
 import com.eweware.service.base.mgr.ManagerState;
@@ -13,8 +11,11 @@ import com.eweware.service.base.payload.GroupTypePayload;
 import com.eweware.service.base.payload.UserPayload;
 import com.eweware.service.base.store.StoreManager;
 import com.eweware.service.base.store.dao.*;
+import com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import com.eweware.service.base.store.dao.type.DAOUpdateType;
 import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
+import com.eweware.service.base.CommonUtilities.*;
+import com.eweware.service.user.validation.DefaultUserValidationMethod;
 
 import javax.xml.ws.WebServiceException;
 import java.util.*;
@@ -145,7 +146,7 @@ public final class GroupManager implements ManagerInterface {
      */
     private void doRefreshGroupCache() throws SystemErrorException {
         final GroupDAO groupDAO = getStoreManager().createGroup();
-        groupDAO.setState(AuthorizedState.A.toString());
+        //groupDAO.setState(AuthorizedState.A.toString());
         final List<GroupDAO> groups = (List<GroupDAO>) groupDAO._findMany();
         for (GroupDAO group : groups) {
             final Long duration = group.getLastInboxGeneratedDuration();
@@ -467,6 +468,99 @@ public final class GroupManager implements ManagerInterface {
             return true;
         }
     }
+
+
+    /**
+      *
+      * @return GroupDAOImpl    Creates a group and returns the dao.
+      * @throws InvalidRequestException
+      * @throws SystemErrorException
+      *
+      */
+    public GroupPayload createGroup(LocaleId localeId,  GroupPayload groupPayload ) throws InvalidRequestException, SystemErrorException {
+      final String groupTypeId = groupPayload.getGroupTypeId();
+      final String displayName = groupPayload.getDisplayName();
+      final String description = groupPayload.getDescription();
+
+      if (isEmptyString(displayName)) {
+          throw new InvalidRequestException("missing display name", ErrorCodes.MISSING_USERNAME);
+      }
+      if (isEmptyString(groupTypeId)) {
+          throw new InvalidRequestException("missing group type id", ErrorCodes.MISSING_GROUP_TYPE_ID);
+      }
+
+      final GroupTypeDAO groupTypeDAO = getStoreManager().createGroupType(groupTypeId);
+      if (!groupTypeDAO._exists()) {
+          throw new InvalidRequestException("no group type exists with groupTypeId=", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
+      }
+      //todo need to check validations, etc.
+      // 1.  Is this type protected?
+      // 2.  Make sure that the admins are real and convert to ids
+      // 3.  Make sure that all of the badges are real and convert to...??
+
+      final GroupDAO dao = getStoreManager().createGroup();
+      dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+      dao.setGroupTypeId(groupTypeId);
+      if (dao._exists()) {
+          throw new InvalidRequestException("a group with this name already exists in the given display name and group type", dao, ErrorCodes.ALREADY_EXISTS_GROUP_WITH_DISPLAY_NAME);
+      }
+      dao.setGroupTypeId(groupTypeId);
+      dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+      if (description != null && description.length() != 0) {
+          dao.setDescription(CommonUtilities.scrapeMarkup(description));
+      }
+
+      dao._insert();
+      // Bump group type count
+      final GroupTypeDAO groupType = getStoreManager().createGroupType(groupTypeId);
+      groupType.setGroupCount(1L);
+      groupType._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+      final GroupPayload returnPayload = new GroupPayload(dao);
+      // Updates local cache
+      maybeRefreshGroupCache(true);
+      return returnPayload;
+  }
+
+  /**
+   * Used to update a group's display name, description, or state.
+   *
+   * @param localeId
+   * @param groupId     The group id
+   * @param displayName The display name
+   * @param description The group description
+   * @param state       The new group state
+   * @throws InvalidRequestException
+   * @throws main.java.com.eweware.service.base.error.SystemErrorException
+   *
+   * @throws ResourceNotFoundException
+   * @throws StateConflictException
+   */
+  /*
+  public void updateGroup(LocaleId localeId, String groupId, String displayName, String description, String state) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+      if (groupId == null) {
+          throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
+      }
+      if (state != null && AuthorizedState.find(state) == null) { // TODO should check for valid state transition
+          throw new InvalidRequestException("requested an invalid group state", ErrorCodes.INVALID_STATE_CODE);
+      }
+      final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId);
+      if (!groupDAO._exists()) {
+          throw new ResourceNotFoundException("no group exists with requested id", ErrorCodes.NOT_FOUND_GROUP_ID);
+      }
+      final GroupDAO updateDAO = getStoreManager().createGroup(groupId);
+      if (displayName != null && displayName.length() != 0) {
+          updateDAO.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
+      }
+      if (description != null && description.length() != 0) {
+          updateDAO.setDescription(CommonUtilities.scrapeMarkup(description));
+      }
+      if (state != null) {
+          updateDAO.setState(state);
+      }
+      updateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+  }
+    */
 
 
     private boolean isEmptyString(String string) {

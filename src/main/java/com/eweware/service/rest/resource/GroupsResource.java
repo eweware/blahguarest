@@ -6,6 +6,7 @@ import com.eweware.service.base.error.ResourceNotFoundException;
 import com.eweware.service.base.error.SystemErrorException;
 import com.eweware.service.base.i18n.LocaleId;
 import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.GroupPayload;
 import com.eweware.service.mgr.GroupManager;
 import com.eweware.service.rest.RestUtilities;
 import com.eweware.service.rest.session.BlahguaSession;
@@ -15,6 +16,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 /**
  * <p>Group-specific API methods.</p>
@@ -184,7 +187,6 @@ public class GroupsResource {
         }
         return systemManager;
     }
-}
 
 //    /**
 //     * <p>Use this method to update a group.</p>
@@ -237,43 +239,42 @@ public class GroupsResource {
 //    }
 
 
-//    /**
-//     * <p><Use this method to create a group./p>
-//     * <p><i>User must be logged in to use this method.</i></p>
-//     * <p/>
-//     * <div><b>METHOD:</b> POST</div>
-//     * <div><b>URL:</b> groups</div>
-//     *
-//     * @param entity A JSON entity (a GroupPayload) requiring the group type's id, the group's display name,
-//     *               a group descriptor, a description, and a validation method.
-//     * @see com.eweware.service.base.store.dao.GroupDAOConstants
-//     * @see com.eweware.service.user.validation.DefaultUserValidationMethod
-//     * @see com.eweware.service.user.validation.DefaultUserValidationMethod
-//     * @see com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
-//     */
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response createGroup(GroupPayload entity,
-//                                @Context UriInfo uri,
-//                                @Context HttpServletRequest request) {
-//        try {
-//            BlahguaSession.ensureAuthenticated(request); // TODO register user who created group?
-//            final String groupTypeId = entity.getGroupTypeId();
-//            final String displayName = entity.getDisplayName();
-//            final String description = entity.getDescription();
-//            final String descriptor = entity.getDescriptor();
-//            final String validationMethod = entity.getValidationMethod();
-//            GroupPayload g = getGroupManager().createGroup(LocaleId.en_us,
-//                    groupTypeId,  displayName, description,  descriptor, validationMethod);
-//            return RestUtilities.make201CreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
-//        } catch (InvalidRequestException e) {
-//            return RestUtilities.make400InvalidRequestResponse(e);
-//        } catch (InvalidAuthorizedStateException e) {
-//            return RestUtilities.make401UnauthorizedRequestResponse(e);
-//        } catch (SystemErrorException e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        } catch (Exception e) {
-//            return RestUtilities.make500AndLogSystemErrorResponse(e);
-//        }
-//    }
+    /**
+     * <p><Use this method to create a group./p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> groups</div>
+     *
+     * @param entity A JSON entity (a GroupPayload) requiring the group type's id, the group's display name,
+     *               a group descriptor, a description, and a validation method.
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants
+     * @see com.eweware.service.user.validation.DefaultUserValidationMethod
+     * @see com.eweware.service.user.validation.DefaultUserValidationMethod
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants.GroupDescriptor
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createGroup(GroupPayload entity,
+                                @Context UriInfo uri,
+                                @Context HttpServletRequest request) {
+        try {
+            BlahguaSession.ensureAuthenticated(request); // TODO register user who created group?
+
+            final long start = System.currentTimeMillis();
+
+
+            GroupPayload g = getGroupManager().createGroup(LocaleId.en_us, entity);
+            return RestUtilities.make201CreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+}

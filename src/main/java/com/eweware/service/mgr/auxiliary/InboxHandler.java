@@ -137,7 +137,11 @@ public class InboxHandler extends Thread {
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
     public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit, Boolean safe) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
-        final GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
+        GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
+        if (group == null) {
+            GroupManager.getInstance().maybeRefreshGroupCache(true);
+            group = GroupManager.getInstance().getCachedGroup(groupId);
+        }
         if (group != null) {
             Integer first;
             if (safe)
