@@ -15,6 +15,7 @@ import com.eweware.service.base.store.dao.tracker.TrackerOperation;
 import com.eweware.service.base.store.dao.type.DAOUpdateType;
 import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import com.eweware.service.base.CommonUtilities.*;
+import com.eweware.service.rest.session.BlahguaSession;
 import com.eweware.service.user.validation.DefaultUserValidationMethod;
 
 import javax.xml.ws.WebServiceException;
@@ -393,6 +394,130 @@ public final class GroupManager implements ManagerInterface {
         }
     }
 
+    /** check if the user has a badge in the badgeList
+     *
+     * @param userId the id of the user to check
+     * @param badgeList  the list of badge names to change
+     * @return true if the user has a matching badge, false otherwise
+     * @throws SystemErrorException
+     */
+
+    public Boolean userHasBadges(String userId, List<String> badgeList) throws SystemErrorException {
+        final UserDAO userDAO = (UserDAO)getStoreManager().createUser(userId)._findByPrimaryId();
+        List<String>    userBadgeList = userDAO.getBadgeIds();
+
+        if (userBadgeList != null) {
+            Date    curDate = new Date();
+            for (String curBadgeId : userBadgeList) {
+                final BadgeDAO curBadgeDAO = (BadgeDAO)getStoreManager().createBadge(curBadgeId)._findByPrimaryId();
+                if ((curBadgeDAO != null) &&
+                        (curBadgeDAO.getExpirationDate().after(curDate)) &&
+                        (badgeList.contains(curBadgeDAO.getDisplayName())))
+                    return true;
+            }
+        }
+
+
+        return false;
+    }
+
+
+    public Map<String, Boolean> getGroupPermissionById(String groupId, String userId) throws SystemErrorException {
+        Map<String, Boolean> resultMap = new HashMap<String, Boolean>();
+        UserDAO userDAO = null;
+        Boolean isAdmin = false;
+
+        if (userId != null) {
+            userDAO = (UserDAO)getStoreManager().createUser(userId)._findByPrimaryId();
+            isAdmin = userDAO.getIsAdmin();
+            if (isAdmin == null)
+                isAdmin = false;
+        }
+
+        // defaults
+        Boolean canJoin = true;
+        Boolean canPost = true;
+        Boolean canComment = true;
+        Boolean canModerate = false;
+        Boolean canAdmin = false;
+
+        if (isAdmin) {
+            // user is admin, they can do anything
+            canJoin = true;
+            canPost = true;
+            canComment = true;
+            canModerate = true;
+            canAdmin = true;
+        } else if (userId == null) {
+            // signed out
+            canJoin = false;
+            canPost = false;
+            canComment = false;
+            canModerate = false;
+            canAdmin = false;
+        }
+        else {
+            // not an admin - need to check the group
+            final GroupDAO groupDAO = (GroupDAO)getStoreManager().createGroup(groupId)._findByPrimaryId();
+
+            List<String>    adminList = groupDAO.getAdmin();
+
+            if ((adminList != null) && (adminList.size() > 0)) {
+                // admined group
+                if (adminList.contains(userId)) {
+                    canJoin = true;
+                    canPost = true;
+                    canModerate = true;
+                    canComment = true;
+                    canAdmin = true;
+                } else {
+                    // check individual permissions
+                    final List<String> joinList = groupDAO.getJoinBadgeList();
+                    if ((joinList == null) || userHasBadges(userId, joinList))
+                        canJoin = true;
+                    else
+                        canJoin = false;
+
+                    final List<String> postList = groupDAO.getPostBadgeList();
+                    if ((postList == null) || userHasBadges(userId, postList))
+                        canPost = true;
+                    else
+                        canPost = false;
+
+                    final List<String> commentList = groupDAO.getCommentBadgeList();
+                    if ((commentList == null) || userHasBadges(userId, commentList))
+                        canComment = true;
+                    else
+                        canComment = false;
+
+                    Boolean isModerated = groupDAO.getModerated();
+                    if (isModerated != null && isModerated) {
+                        final List<String> moderateList = groupDAO.getModerateBadgeList();
+                        if ((moderateList == null) || userHasBadges(userId, moderateList))
+                            canModerate = true;
+                        else
+                            canModerate = false;
+                    } else canModerate = false;
+
+                }
+            } else {
+                canJoin = true;
+                canPost = true;
+                canComment = true;
+                canModerate = false;
+                canAdmin = false;
+            }
+
+        }
+
+        resultMap.put("join", canJoin);
+        resultMap.put("post", canPost);
+        resultMap.put("comment", canComment);
+        resultMap.put("moderate", canModerate);
+        resultMap.put("admin", canAdmin);
+
+        return resultMap;
+    }
 
     /** Given a group and a user and an action, returns TRUE if the user is allowed to perform
      * the action in the group.  Permission is granted if the group is not an admin group, or if
@@ -406,7 +531,7 @@ public final class GroupManager implements ManagerInterface {
      * @throws SystemErrorException
      */
     public Boolean CheckPermissions(String groupId, String userId, GroupAction action) throws SystemErrorException {
-        final GroupPayload groupPayload = new GroupPayload(groupId);
+        final GroupDAO groupPayload = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId();
         final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
 
         List<String> adminList = groupPayload.getAdmin();
@@ -477,7 +602,7 @@ public final class GroupManager implements ManagerInterface {
       * @throws SystemErrorException
       *
       */
-    public GroupPayload createGroup(LocaleId localeId,  GroupPayload groupPayload ) throws InvalidRequestException, SystemErrorException {
+    public GroupPayload createGroup(LocaleId localeId,  String userId, GroupPayload groupPayload ) throws InvalidRequestException, SystemErrorException {
       final String groupTypeId = groupPayload.getGroupTypeId();
       final String displayName = groupPayload.getDisplayName();
       final String description = groupPayload.getDescription();
@@ -493,22 +618,78 @@ public final class GroupManager implements ManagerInterface {
       if (!groupTypeDAO._exists()) {
           throw new InvalidRequestException("no group type exists with groupTypeId=", groupTypeId, ErrorCodes.NOT_FOUND_GROUP_TYPE_ID);
       }
-      //todo need to check validations, etc.
-      // 1.  Is this type protected?
-      // 2.  Make sure that the admins are real and convert to ids
-      // 3.  Make sure that all of the badges are real and convert to...??
+
+
+        List<String>    adminList = new ArrayList<String>();
+        adminList.add(userId);
+        List<String> otherAdmins = groupPayload.getAdmin();
+        if ((otherAdmins != null) && (otherAdmins.size() > 0)) {
+            for(String curAdminName : otherAdmins) {
+                final UserDAO curUser = getStoreManager().createUser();
+                curUser.setUsername(curAdminName);
+                final UserDAO curUserDAO = (UserDAO)curUser._findByCompositeId(new String[] {UserDAO.ID}, UserDAO.USERNAME);
+                if (curUserDAO == null)
+                    throw new InvalidRequestException("admin user does not exist", ErrorCodes.INVALID_USER_ID);
+                final String curUserId = curUserDAO.getId();
+                if (!adminList.contains(curUserId))
+                    adminList.add(curUserId);
+            }
+        }
+
+        // 3.  Make sure that all of the badges are real and convert to...??
+        final List<String>  joinBadgeIdList = VerifyBadgeList(groupPayload.getJoinBadgeList());
+        final List<String>  postBadgeIdList = VerifyBadgeList(groupPayload.getPostBadgeList());
+        final List<String>  commentBadgeIdList = VerifyBadgeList(groupPayload.getCommentBadgeList());
+        final List<String>  moderateIdList = VerifyBadgeList(groupPayload.getModerateBadgeList());
 
       final GroupDAO dao = getStoreManager().createGroup();
       dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
       dao.setGroupTypeId(groupTypeId);
+
       if (dao._exists()) {
           throw new InvalidRequestException("a group with this name already exists in the given display name and group type", dao, ErrorCodes.ALREADY_EXISTS_GROUP_WITH_DISPLAY_NAME);
       }
-      dao.setGroupTypeId(groupTypeId);
-      dao.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
-      if (description != null && description.length() != 0) {
+        dao.setRank(1000); // all user channels are low rank
+        dao.setUserCount(0L);
+        dao.setBlahCount(0L);
+        final Boolean isPrivate = groupPayload.getIsPrivate();
+        final Boolean isMature = groupPayload.getIsMature();
+        final Boolean isModerated = groupPayload.getModerated();
+        final String adId = groupPayload.getAdBlahID();
+        final String headerImage = groupPayload.getHeaderImage();
+
+        if (description != null && description.length() != 0)
           dao.setDescription(CommonUtilities.scrapeMarkup(description));
-      }
+
+        if (isPrivate != null && isPrivate)
+            dao.setIsPrivate(true);
+        if (isMature != null && isMature)
+            dao.setIsMature(true);
+        dao.setAdmin(adminList);
+        if (joinBadgeIdList != null)
+            dao.setJoinBadgeList(joinBadgeIdList);
+        if (postBadgeIdList != null)
+            dao.setPostBadgeList(postBadgeIdList);
+        if (commentBadgeIdList != null)
+            dao.setCommentBadgeList(commentBadgeIdList);
+        if (isModerated != null && isModerated) {
+            dao.setModerated(true);
+            if (moderateIdList != null)
+                dao.setModerateBadgeList(moderateIdList);
+            Integer commentStyle = groupPayload.getCommentModerationStyle();
+            if (commentStyle == null)
+                commentStyle = 0;
+            dao.setCommentModerationStyle(commentStyle);
+        }
+
+        if (adId != null && (!adId.isEmpty())) {
+            // todo:  make sure blah exists
+            dao.setAdBlahID(adId);
+        }
+
+        if (headerImage != null && (!headerImage.isEmpty()))
+            dao.setHeaderImage(headerImage);
+
 
       dao._insert();
       // Bump group type count
@@ -520,6 +701,20 @@ public final class GroupManager implements ManagerInterface {
       maybeRefreshGroupCache(true);
       return returnPayload;
   }
+
+    private List<String>    VerifyBadgeList(List<String> badgeNameList) {
+        if (badgeNameList == null) {
+            return null;
+        }
+        List<String>    badgeIdList = new ArrayList<String>();
+
+        for (String badgeName : badgeNameList) {
+            // todo:  verify that the badge exists
+            badgeIdList.add(badgeName.trim());
+        }
+
+        return badgeIdList;
+    }
 
   /**
    * Used to update a group's display name, description, or state.

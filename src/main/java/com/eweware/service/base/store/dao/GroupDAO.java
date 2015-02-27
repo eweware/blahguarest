@@ -115,5 +115,13 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setCommentModerationStyle(Integer isModerated);
 
+    public Boolean getIsMature();
+
+    public void setIsMature(Boolean isMature);
+
+    public Boolean getIsPrivate();
+
+    public void setIsPrivate(Boolean isPrivate);
+
 
 }

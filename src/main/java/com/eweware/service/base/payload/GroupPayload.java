@@ -185,5 +185,14 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
 
     public void setCommentModerationStyle(Integer isModerated) { put(COMMENT_MODERATION_STYLE, isModerated); }
 
+    public Boolean getIsMature() { return (Boolean) get(IS_MATURE); }
+
+    public void setIsMature(Boolean isMature) { put(IS_MATURE, isMature); }
+
+    public Boolean getIsPrivate() { return (Boolean) get(IS_PRIVATE); }
+
+    public void setIsPrivate(Boolean isPrivate) { put(IS_PRIVATE, isPrivate); }
+
+
 
 }

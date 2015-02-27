@@ -52,6 +52,8 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(CONTENT_EXPIRATION_DAYS, MongoFieldTypes.NUMBER);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(POSTS_MODERATION_BADGE_LIST, MongoFieldTypes.ARRAY);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(MODERATED, MongoFieldTypes.BOOLEAN);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IS_MATURE, MongoFieldTypes.BOOLEAN);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IS_PRIVATE, MongoFieldTypes.BOOLEAN);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -308,6 +310,18 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
 
     @Override
     public void setCommentModerationStyle(Integer modStyle) { put(COMMENT_MODERATION_STYLE, modStyle); }
+
+    @Override
+    public Boolean getIsMature() { return (Boolean) get(IS_MATURE); }
+
+    @Override
+    public void setIsMature(Boolean isMature) { put(IS_MATURE, isMature); }
+
+    @Override
+    public Boolean getIsPrivate() { return (Boolean) get(IS_PRIVATE); }
+
+    @Override
+    public void setIsPrivate(Boolean isPrivate) { put(IS_PRIVATE, isPrivate); }
 
 
     // permission helpers

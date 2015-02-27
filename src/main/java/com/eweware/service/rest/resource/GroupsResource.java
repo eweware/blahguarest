@@ -32,6 +32,7 @@ public class GroupsResource {
     private static final String GET_OPEN_GROUPS_OPERATION = "getOpenGroups";
     private static final String GET_GROUPS_OPERATION = "getGroups";
     private static final String GET_GROUP_BY_ID_OPERATION = "getGroupById";
+    private static final String GET_GROUP_PERMISSION_BY_ID_OPERATION = "getGroupPermissionById";
     private static GroupManager groupManager;
     private static SystemManager systemManager;
 
@@ -174,6 +175,38 @@ public class GroupsResource {
         }
     }
 
+
+    /**
+     * <p>Use this method to get permission details about a group id.</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> groups/{groupId}</div>
+     *
+     * @param groupId <i>Path Parameter:</i> The group's id
+     * @return If successful, returns http status 200 with a JSON entity
+     *         (a GroupPayload) containing the group's info.
+     * @see com.eweware.service.base.store.dao.GroupDAOConstants
+     */
+    @GET
+    @Path("/{groupId}/permission")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupPermissionById(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
+        try {
+            String userId = null;
+
+            if (BlahguaSession.isAuthenticated(request))
+                userId = BlahguaSession.ensureAuthenticated(request, true);
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getGroupPermissionById(groupId, userId));
+            getSystemManager().setResponseTime(GET_GROUP_PERMISSION_BY_ID_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
     private GroupManager getGroupManager() throws SystemErrorException {
         if (groupManager == null) {
             groupManager = GroupManager.getInstance();
@@ -260,12 +293,11 @@ public class GroupsResource {
                                 @Context UriInfo uri,
                                 @Context HttpServletRequest request) {
         try {
-            BlahguaSession.ensureAuthenticated(request); // TODO register user who created group?
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
 
             final long start = System.currentTimeMillis();
 
-
-            GroupPayload g = getGroupManager().createGroup(LocaleId.en_us, entity);
+            GroupPayload g = getGroupManager().createGroup(LocaleId.en_us, userId, entity);
             return RestUtilities.make201CreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
