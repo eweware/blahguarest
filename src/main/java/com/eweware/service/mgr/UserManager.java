@@ -1210,7 +1210,7 @@ public class UserManager implements ManagerInterface {
 
         final List<GroupPayload> payload = new ArrayList<GroupPayload>(groupCount);
         for (UserGroupDAO ug : userGroupDAOs) {
-            final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(ug.getGroupId())._findByPrimaryId(GroupDAO.DISPLAY_NAME, GroupDAO.DESCRIPTION, GroupDAO.RANK, GroupDAO.FIRST_INBOX_NUMBER, GroupDAO.LAST_INBOX_NUMBER);
+            final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(ug.getGroupId())._findByPrimaryId();
             if (groupDAO != null) {
                 final GroupPayload group = new GroupPayload(groupDAO);
                 group.addFromMap(ug);
