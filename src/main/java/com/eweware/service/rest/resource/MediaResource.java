@@ -7,10 +7,7 @@ import com.eweware.service.mgr.MediaManager;
 import com.eweware.service.rest.RestUtilities;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -43,4 +40,16 @@ public class MediaResource {
 			return RestUtilities.make500AndLogSystemErrorResponse(request, e);
 		}
 	}
+
+    @POST
+    @Path("/{url}")
+    @Produces("text/plain")
+    public Response convertURLToImage(@PathParam("url") String oldURL, @Context HttpServletRequest request) {
+        try {
+            return MediaManager.getInstance().convertURL(oldURL);
+
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
 }

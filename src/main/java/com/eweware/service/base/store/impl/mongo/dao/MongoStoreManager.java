@@ -77,6 +77,7 @@ public final class MongoStoreManager implements StoreManager {
     private String trackUserCollectionName;
     private String blahInboxCollectionName;
     private String demographicsCollectionName;
+    private String channelImportCollectionName;
 
     Map<String, DBCollection> collectionNameToCollectionMap = new HashMap<String, DBCollection>();
 
@@ -158,13 +159,18 @@ public final class MongoStoreManager implements StoreManager {
         blahCollectionName = name;
     }
 
-    public String getWhatsNewCollectionName() {
-        return whatsNewCollectionName;
-    }
+    public String getWhatsNewCollectionName() { return whatsNewCollectionName; }
 
     public void setWhatsNewCollectionName(String name) {
         whatsNewCollectionName = name;
     }
+
+    public String getChannelImportCollectionName() {  return channelImportCollectionName; }
+
+    public void setChannelImportCollectionName(String name) {
+        channelImportCollectionName = name;
+    }
+
     public String getBlahTypeCollectionName() {
         return blahTypeCollectionName;
     }
@@ -448,6 +454,9 @@ public final class MongoStoreManager implements StoreManager {
             checkCollection(collectionNameToCollectionMap, whatsNewCollectionName);
             collectionNameToCollectionMap.put(whatsNewCollectionName, getUserDb().getCollection(whatsNewCollectionName));
 
+            checkCollection(collectionNameToCollectionMap, channelImportCollectionName);
+            collectionNameToCollectionMap.put(channelImportCollectionName, getUserDb().getCollection(channelImportCollectionName));
+
             checkCollection(collectionNameToCollectionMap, commentCollectionName);
             collectionNameToCollectionMap.put(commentCollectionName, getBlahDb().getCollection(commentCollectionName));
 
@@ -582,6 +591,11 @@ public final class MongoStoreManager implements StoreManager {
     @Override
     public WhatsNewDAO createWhatsNew(String userId) throws SystemErrorException {
         return new WhatsNewDAOImpl(userId);
+    }
+
+    @Override
+    public ChannelImportDAO createChannelImport(String groupId) throws SystemErrorException {
+        return new ChannelImportDAOImpl(groupId);
     }
 
 

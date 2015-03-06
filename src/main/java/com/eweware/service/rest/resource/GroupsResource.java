@@ -6,6 +6,7 @@ import com.eweware.service.base.error.ResourceNotFoundException;
 import com.eweware.service.base.error.SystemErrorException;
 import com.eweware.service.base.i18n.LocaleId;
 import com.eweware.service.base.mgr.SystemManager;
+import com.eweware.service.base.payload.ChannelImportPayload;
 import com.eweware.service.base.payload.GroupPayload;
 import com.eweware.service.mgr.GroupManager;
 import com.eweware.service.rest.RestUtilities;
@@ -33,6 +34,11 @@ public class GroupsResource {
     private static final String GET_GROUPS_OPERATION = "getGroups";
     private static final String GET_GROUP_BY_ID_OPERATION = "getGroupById";
     private static final String GET_GROUP_PERMISSION_BY_ID_OPERATION = "getGroupPermissionById";
+    private static final String GET_GROUP_IMPORTERS = "getGroupImporters";
+    private static final String ADD_GROUP_IMPORTER = "addGroupImporter";
+    private static final String UPDATE_GROUP_IMPORTER = "updateGroupImporter";
+    private static final String DELETE_GROUP_IMPORTER = "deleteGroupImporter";
+
     private static GroupManager groupManager;
     private static SystemManager systemManager;
 
@@ -206,6 +212,94 @@ public class GroupsResource {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
+
+    @GET
+    @Path("/{groupId}/importers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroupImporters(@PathParam("groupId") String groupId, @Context HttpServletRequest request) {
+        try {
+            String userId = null;
+
+            if (BlahguaSession.isAuthenticated(request))
+                userId = BlahguaSession.ensureAuthenticated(request, true);
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().getImportRecords(userId, groupId));
+            getSystemManager().setResponseTime(GET_GROUP_IMPORTERS, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @POST
+    @Path("/{groupId}/importers")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addGroupImporter(ChannelImportPayload importPayload,
+                                      @PathParam("groupId") String groupId,
+                                      @Context HttpServletRequest request) {
+        try {
+            String userId = null;
+
+            if (BlahguaSession.isAuthenticated(request))
+                userId = BlahguaSession.ensureAuthenticated(request, true);
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().addImportRecord(userId, importPayload));
+            getSystemManager().setResponseTime(ADD_GROUP_IMPORTER, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @PUT
+    @Path("/importers/{importerid}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateGroupImporter(ChannelImportPayload importPayload,
+                                      @PathParam("importerid") String importerid,
+                                      @Context HttpServletRequest request) {
+        try {
+            String userId = null;
+
+            if (BlahguaSession.isAuthenticated(request))
+                userId = BlahguaSession.ensureAuthenticated(request, true);
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().updateImportRecord(userId, importPayload));
+            getSystemManager().setResponseTime(UPDATE_GROUP_IMPORTER, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @DELETE
+    @Path("/importers/{importerid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteGroupImporter(@PathParam("importerid") String importerid,
+                                      @Context HttpServletRequest request) {
+        try {
+            String userId = null;
+
+            if (BlahguaSession.isAuthenticated(request))
+                userId = BlahguaSession.ensureAuthenticated(request, true);
+            final long s = System.currentTimeMillis();
+            final Response response = RestUtilities.make200OkResponse(getGroupManager().deleteImportRecord(userId, importerid));
+            getSystemManager().setResponseTime(DELETE_GROUP_IMPORTER, (System.currentTimeMillis() - s));
+            return response;
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
 
     private GroupManager getGroupManager() throws SystemErrorException {
         if (groupManager == null) {

@@ -73,6 +73,7 @@ public interface StoreManager extends ManagerInterface {
     public abstract UserBlahInfoDAO createUserBlahInfo();
     public abstract UserBlahInfoDAO createUserBlahInfo(String userId, String blahId);
     public abstract WhatsNewDAO createWhatsNew(String userId)  throws SystemErrorException ;
+    public abstract ChannelImportDAO createChannelImport(String groupId)  throws SystemErrorException ;
 
     public abstract UserBlahInfoDAO createUserBlahInfo(Map<String, Object> map) throws SystemErrorException;
 

@@ -5,10 +5,7 @@ import com.eweware.service.base.error.*;
 import com.eweware.service.base.i18n.LocaleId;
 import com.eweware.service.base.mgr.ManagerInterface;
 import com.eweware.service.base.mgr.ManagerState;
-import com.eweware.service.base.payload.AuthorizedState;
-import com.eweware.service.base.payload.GroupPayload;
-import com.eweware.service.base.payload.GroupTypePayload;
-import com.eweware.service.base.payload.UserPayload;
+import com.eweware.service.base.payload.*;
 import com.eweware.service.base.store.StoreManager;
 import com.eweware.service.base.store.dao.*;
 import com.eweware.service.base.store.dao.tracker.TrackerOperation;
@@ -419,6 +416,153 @@ public final class GroupManager implements ManagerInterface {
 
 
         return false;
+    }
+
+    public List<ChannelImportDAO>   getImportRecords(String userId, String groupId) throws SystemErrorException {
+        final GroupDAO groupDAO = (GroupDAO)getStoreManager().createGroup(groupId)._findByPrimaryId();
+        if (groupDAO == null)
+            return null;
+
+        Map<String, Boolean> perm = getGroupPermissionById(groupId, userId);
+
+        if (!perm.get("admin"))
+            return null;    // only admins can mess with import records
+
+        // find if there are any records
+        final ChannelImportDAO searchImport = getStoreManager().createChannelImport(groupId);
+        final List<ChannelImportDAO> channelImportDAOs;
+
+        channelImportDAOs = (List<ChannelImportDAO>) searchImport._findManyByCompositeId(null, null, null, null, ChannelImportDAO.TARGET_GROUP);
+
+        return channelImportDAOs;
+    }
+
+
+    public ChannelImportDAO addImportRecord(String userId, ChannelImportPayload importRecord) throws SystemErrorException {
+        final String groupId = importRecord.getTargetGroup();
+        final GroupDAO groupDAO = (GroupDAO)getStoreManager().createGroup(groupId)._findByPrimaryId();
+        if (groupDAO == null)
+            return null;
+
+        Map<String, Boolean> perm = getGroupPermissionById(groupId, userId);
+
+        if (!perm.get("admin"))
+            return null;    // only admins can mess with import records
+
+        final ChannelImportDAO importDAO = getStoreManager().createChannelImport(groupId);
+        importDAO.addFromMap(importRecord, true);
+
+        importDAO._insert();
+
+        return importDAO;
+
+    }
+
+    public Boolean deleteImportRecord(String userId, String importRecordId) throws SystemErrorException {
+        final ChannelImportDAO importDAO = (ChannelImportDAO)getStoreManager().createChannelImport(importRecordId)._findByPrimaryId();
+        if (importDAO == null)
+            return false;
+
+        final String groupId = importDAO.getTargetGroup();
+        final GroupDAO groupDAO = (GroupDAO)getStoreManager().createGroup(groupId)._findByPrimaryId();
+        if (groupDAO == null)
+            return false;
+
+        Map<String, Boolean> perm = getGroupPermissionById(groupId, userId);
+
+        if (!perm.get("admin"))
+            return false;    // only admins can mess with import records
+
+        // ok, we are good, actually delete it
+        importDAO._deleteByPrimaryId();
+
+        return true;
+
+    }
+
+    public ChannelImportDAO updateImportRecord(String userId, ChannelImportPayload importPayload) throws SystemErrorException {
+        final String importRecordId = importPayload.getId();
+        final ChannelImportDAO importDAO = (ChannelImportDAO)getStoreManager().createChannelImport(importRecordId)._findByPrimaryId();
+        if (importDAO == null)
+            return null;
+
+        final String groupId = importDAO.getTargetGroup();
+        final GroupDAO groupDAO = (GroupDAO)getStoreManager().createGroup(groupId)._findByPrimaryId();
+        if (groupDAO == null)
+            return null;
+
+        Map<String, Boolean> perm = getGroupPermissionById(groupId, userId);
+
+        if (!perm.get("admin"))
+            return null;    // only admins can mess with import records
+
+        // ok, we are good, actually do the update;
+        final Integer feedType = importPayload.getFeedType();
+
+        if (feedType != null)
+            importDAO.setFeedType(importPayload.getFeedType());
+
+        // import the general fields
+        Boolean autoImport = importPayload.getAutoImport();
+        if (autoImport != null)
+            importDAO.setAutoImport(autoImport);
+
+        Integer importFrequency = importPayload.getImportFrequency();
+        if (importFrequency != null)
+            importDAO.setImportFrequency(importFrequency);
+
+        Date lastImportDate = importPayload.getLastImportDate();
+        if (lastImportDate != null)
+            importDAO.setLastImportDate(lastImportDate);
+
+        String importUsername = importPayload.getImportUsername();
+        if (importUsername != null)
+            importDAO.setImportUsername(importUsername);
+
+        String importPassword = importPayload.getImportPassword();
+        if (importPassword != null)
+            importDAO.setImportPassword(importPassword);
+
+        Boolean importAsUser = importPayload.getImportAsUser();
+        if (importAsUser != null)
+            importDAO.setImportAsUser(importAsUser);
+
+
+        if (importDAO.getFeedType() == ChannelImportDAOConstants.ImportFeedType.RSS_FEED.getValue()) {
+            // import the RSS feed fields
+            String rssurl = importPayload.getRSSURL();
+            if (rssurl != null)
+                importDAO.setRSSURL(rssurl);
+
+            Boolean summarizeURLPage = importPayload.getSummarizeURLPage();
+            if (summarizeURLPage != null)
+                importDAO.setSummarizeURLPage(summarizeURLPage);
+
+            String titleField = importPayload.getTitleField();
+            if (titleField != null)
+                importDAO.setTitleField(titleField);
+
+            String imageField = importPayload.getImageField();
+            if (imageField != null)
+                importDAO.setImageField(imageField);
+
+            String bodyField = importPayload.getBodyField();
+            if (bodyField != null)
+                importDAO.setBodyField(bodyField);
+
+            String urlField = importPayload.getURLField();
+            if (urlField != null)
+                importDAO.setURLField(urlField);
+
+            Boolean appendURL = importPayload.getAppendURL();
+            if (appendURL != null)
+                importDAO.setAppendURL(appendURL);
+
+        }
+
+        importDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+
+        return importDAO;
     }
 
 

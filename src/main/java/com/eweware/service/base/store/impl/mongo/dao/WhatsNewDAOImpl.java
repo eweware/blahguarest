@@ -80,7 +80,7 @@ public class WhatsNewDAOImpl extends BaseDAOImpl implements WhatsNewDAO {
     }
 
     public static BaseSchema getSchema(LocaleId localeId) throws SystemErrorException {
-        return WhatsNewDAOImpl.getSchema(localeId);
+        return WhatsNewSchema.getSchema(localeId);
     }
 
     @Override

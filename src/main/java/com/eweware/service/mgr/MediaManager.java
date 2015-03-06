@@ -124,6 +124,17 @@ public final class MediaManager implements ManagerInterface {
         return Response.noContent().build();
     }
 
+    public Response convertURL(String oldURL) throws ResourceNotFoundException, SystemErrorException {
+        ensureReady();
+        Response theResponse;
+
+        String outputURL = "https://s3.amazonaws.com/uploads.hipchat.com/22845/124000/hsz2uQeXDvJFCtd/heard.png";
+
+        theResponse = Response.ok(outputURL).build();
+
+        return theResponse;
+    }
+
     private void ensureReady() throws SystemErrorException {
         if (_state != ManagerState.STARTED) {
             throw new SystemErrorException("System not ready", ErrorCodes.SERVER_NOT_INITIALIZED);
