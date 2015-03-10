@@ -123,5 +123,19 @@ public interface GroupDAO extends BaseDAO, GroupDAOConstants {
 
     public void setIsPrivate(Boolean isPrivate);
 
+    public Boolean getShowsAuthorDesc();
 
+    public void setShowsAuthorDesc(Boolean showsDesc);
+
+    public Boolean getShowsSpeechActs();
+
+    public void setShowsSpeechActs(Boolean showsSpeechActs);
+
+    public List<String> getShowBadgeList();
+
+    public void setShowBadgeList(List<String> badgeList);
+
+    public List<String> getProfileQuestions() ;
+
+    public void setProfileQuestions(List<String> questionList) ;
 }

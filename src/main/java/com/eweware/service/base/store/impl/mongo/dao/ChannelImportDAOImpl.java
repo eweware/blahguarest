@@ -50,7 +50,7 @@ public class ChannelImportDAOImpl extends BaseDAOImpl implements ChannelImportDA
     @Override
     protected String _getCollectionName() throws SystemErrorException {
         if (ChannelImportDAOImpl.collectionName == null) {
-            ChannelImportDAOImpl.collectionName = MongoStoreManager.getInstance().getWhatsNewCollectionName();
+            ChannelImportDAOImpl.collectionName = MongoStoreManager.getInstance().getChannelImportCollectionName();
         }
         return ChannelImportDAOImpl.collectionName;
     }
@@ -67,15 +67,35 @@ public class ChannelImportDAOImpl extends BaseDAOImpl implements ChannelImportDA
         return ChannelImportDAOImpl.collection;
     }
 
+    ChannelImportDAOImpl() {
+        super();
+    }
+
     ChannelImportDAOImpl(String groupId) throws SystemErrorException {
         super();
 
         setTargetGroup(groupId);
     }
 
+    ChannelImportDAOImpl(Map<String, Object> map, boolean validateAndConvert) throws SystemErrorException {
+        super(map, validateAndConvert);
+    }
+
     public static BaseSchema getSchema(LocaleId localeId) throws SystemErrorException {
         return ChannelImportSchema.getSchema(localeId);
     }
+
+    @Override
+    public String getFeedName() {
+        return (String) get(FEED_NAME);
+    }
+
+    @Override
+    public void setFeedName(String theName) {
+        put(FEED_NAME, theName);
+    }
+
+
 
     @Override
     public String getTargetGroup() {

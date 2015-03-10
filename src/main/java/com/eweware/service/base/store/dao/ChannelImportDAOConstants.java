@@ -9,6 +9,7 @@ import com.eweware.service.base.store.dao.schema.type.SchemaDataTypeFieldMap;
 public interface ChannelImportDAOConstants {
 
     // for all feeds
+    static final String FEED_NAME = "feedname";
     static final String TARGET_GROUP = "channel";
     static final String FEED_TYPE = "feedtype";
     static final String AUTO_IMPORT = "autoimport";
@@ -35,7 +36,7 @@ public interface ChannelImportDAOConstants {
     // schema
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
             new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{AUTO_IMPORT, IMPORT_AS_USER, APPEND_URL, SUMMARIZE_URL_PAGE}),
-            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{TARGET_GROUP, IMPORT_USERNAME, IMPORT_PASSWORD, RSS_URL, TITLE_FIELD, BODY_FIELD, IMAGE_FIELD, URL_FIELD}),
+            new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{FEED_NAME, TARGET_GROUP, IMPORT_USERNAME, IMPORT_PASSWORD, RSS_URL, TITLE_FIELD, BODY_FIELD, IMAGE_FIELD, URL_FIELD}),
             new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_IMPORT_DATE}),
             new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{IMPORT_FREQUENCY, FEED_TYPE})
     };

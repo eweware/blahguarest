@@ -14,6 +14,9 @@ public interface ChannelImportDAO  extends BaseDAO, ChannelImportDAOConstants {
     public String getTargetGroup();
     public void setTargetGroup(String groupId);
 
+    public String getFeedName();
+    public void setFeedName(String theName);
+
     public Integer getFeedType();
     public void setFeedType(Integer theType);
 

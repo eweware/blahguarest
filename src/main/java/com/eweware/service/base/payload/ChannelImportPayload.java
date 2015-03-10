@@ -17,6 +17,15 @@ public class ChannelImportPayload extends BasePayload implements ChannelImportDA
         return ChannelImportSchema.getSchema(LocaleId.en_us);
     }
 
+    public String getFeedName() {
+        return (String) get(FEED_NAME);
+    }
+    public void setFeedName(String theName) {
+        put(FEED_NAME, theName);
+    }
+
+
+
     public String getTargetGroup() { return (String) get(TARGET_GROUP);  }
     public void setTargetGroup(String theMessage) {
         put(TARGET_GROUP, theMessage);

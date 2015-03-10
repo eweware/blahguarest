@@ -54,6 +54,10 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(MODERATED, MongoFieldTypes.BOOLEAN);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IS_MATURE, MongoFieldTypes.BOOLEAN);
         GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IS_PRIVATE, MongoFieldTypes.BOOLEAN);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(SHOWS_AUTHOR_DESC, MongoFieldTypes.BOOLEAN);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(SHOWS_SPEECH_ACTS, MongoFieldTypes.BOOLEAN);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(SHOW_BADGE_LIST, MongoFieldTypes.ARRAY);
+        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(PROFILE_QUESTIONS, MongoFieldTypes.ARRAY);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -323,6 +327,29 @@ public class GroupDAOImpl extends BaseDAOImpl implements GroupDAO {
     @Override
     public void setIsPrivate(Boolean isPrivate) { put(IS_PRIVATE, isPrivate); }
 
+    @Override
+    public Boolean getShowsAuthorDesc() { return (Boolean) get(SHOWS_AUTHOR_DESC); }
+
+    @Override
+    public void setShowsAuthorDesc(Boolean showsAuthorDesc) { put(SHOWS_AUTHOR_DESC, showsAuthorDesc); }
+
+    @Override
+    public Boolean getShowsSpeechActs() { return (Boolean) get(SHOWS_SPEECH_ACTS); }
+
+    @Override
+    public void setShowsSpeechActs(Boolean showsSpeechActs) { put(SHOWS_SPEECH_ACTS, showsSpeechActs); }
+
+    @Override
+    public List<String> getShowBadgeList() { return (List<String>) get(SHOW_BADGE_LIST); }
+
+    @Override
+    public void setShowBadgeList(List<String> badgeList) { put(SHOW_BADGE_LIST, badgeList); }
+
+    @Override
+    public List<String> getProfileQuestions() { return (List<String>) get(PROFILE_QUESTIONS); }
+
+    @Override
+    public void setProfileQuestions(List<String> questionList) { put(PROFILE_QUESTIONS, questionList); }
 
     // permission helpers
 

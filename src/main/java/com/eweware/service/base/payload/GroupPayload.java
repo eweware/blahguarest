@@ -193,6 +193,20 @@ public final class GroupPayload extends BasePayload implements GroupDAOConstants
 
     public void setIsPrivate(Boolean isPrivate) { put(IS_PRIVATE, isPrivate); }
 
+    public Boolean getShowsAuthorDesc() { return (Boolean) get(SHOWS_AUTHOR_DESC); }
 
+    public void setShowsAuthorDesc(Boolean showsAuthorDesc) { put(SHOWS_AUTHOR_DESC, showsAuthorDesc); }
+
+    public Boolean getShowsSpeechActs() { return (Boolean) get(SHOWS_SPEECH_ACTS); }
+
+    public void setShowsSpeechActs(Boolean showsSpeechActs) { put(SHOWS_SPEECH_ACTS, showsSpeechActs); }
+
+    public List<String> getShowBadgeList() { return (List<String>) get(SHOW_BADGE_LIST); }
+
+    public void setShowBadgeList(List<String> badgeList) { put(SHOW_BADGE_LIST, badgeList); }
+
+    public List<String> getProfileQuestions() { return (List<String>) get(PROFILE_QUESTIONS); }
+
+    public void setProfileQuestions(List<String> questionList) { put(PROFILE_QUESTIONS, questionList); }
 
 }

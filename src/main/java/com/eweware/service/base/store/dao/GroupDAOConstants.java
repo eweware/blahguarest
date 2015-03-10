@@ -123,6 +123,10 @@ public interface GroupDAOConstants {
     static final String MODERATED = "MX";
     static final String IS_MATURE = "XXX";
     static final String IS_PRIVATE = "PP";
+    static final String SHOWS_AUTHOR_DESC = "SAD";
+    static final String SHOWS_SPEECH_ACTS = "SSA";
+    static final String SHOW_BADGE_LIST = "SBL";
+    static final String PROFILE_QUESTIONS = "PQ";
 
     /**
      * <p>How comments are moderated.</p>
@@ -139,8 +143,8 @@ public interface GroupDAOConstants {
         }),
         new SchemaDataTypeFieldMap(SchemaDataType.L, new String[]{USER_COUNT, BLAH_COUNT, CURRENT_VIEWER_COUNT, INBOX_GENERATION_DURATION}),
         new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{COMMENT_MODERATION_STYLE, CONTENT_EXPIRATION_DAYS, RANK, FIRST_INBOX_NUMBER, LAST_INBOX_NUMBER, FIRST_SAFE_INBOX_NUMBER, LAST_SAFE_INBOX_NUMBER}),
-        new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {ADMIN, JOIN_BADGE_LIST, COMMENT_BADGE_LIST, POST_BADGE_LIST, POSTS_MODERATION_BADGE_LIST}),
-        new SchemaDataTypeFieldMap(SchemaDataType.B, new String[] {MODERATED, IS_MATURE, IS_PRIVATE}),
+        new SchemaDataTypeFieldMap(SchemaDataType.ILS, new String[] {PROFILE_QUESTIONS, SHOW_BADGE_LIST, ADMIN, JOIN_BADGE_LIST, COMMENT_BADGE_LIST, POST_BADGE_LIST, POSTS_MODERATION_BADGE_LIST}),
+        new SchemaDataTypeFieldMap(SchemaDataType.B, new String[] {SHOWS_AUTHOR_DESC, SHOWS_SPEECH_ACTS, IS_MATURE, IS_PRIVATE}),
         new SchemaDataTypeFieldMap(SchemaDataType.S, new String[] {HEADER_IMAGE,AD_BLAH_ID}),
         new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_TIME_INBOXES_GENERATED})
     };

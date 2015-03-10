@@ -245,7 +245,7 @@ public final class BlahManager implements ManagerInterface {
         text = cleanupBlahTextString(text);
         if (!CommonUtilities.isEmptyString(text)) {
             if (text.length() > MAXIMUM_BLAH_HEADLINE_LENGTH) {
-                throw new InvalidRequestException("Blah text line cannot exceed 1024 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
+                throw new InvalidRequestException("Blah text line cannot exceed 64 chars", ErrorCodes.MAXIMUM_TEXT_FIELD_LENGTH_EXCEEDED);
             }
             entity.setText(text);
         }
