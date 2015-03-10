@@ -799,8 +799,10 @@ public class UserManager implements ManagerInterface {
             if (!userId.equals("0"))
                 return getWhatsNewForID("0");
             else {
-                ResourceNotFoundException exp = new ResourceNotFoundException("what's new not found", "userId=" + userId, com.eweware.service.base.error.ErrorCodes.NOT_FOUND_WHATS_NEW);
-                throw exp;
+                final WhatsNewPayload entity = new WhatsNewPayload();
+                entity.setMessage("");
+                getTrackingManager().TrackFetchedWhatsNew(userId);
+                return entity;
             }
         }
         else

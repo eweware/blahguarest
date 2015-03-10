@@ -10,8 +10,15 @@ import com.eweware.service.base.mgr.ManagerState;
 import com.eweware.service.base.mgr.SystemManager;
 import com.eweware.service.base.type.RunMode;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author rk@post.harvard.edu
@@ -113,7 +120,8 @@ public final class MediaManager implements ManagerInterface {
     }
 
 	/** TODO add if-modified support */
-	public Response getImage(LocaleId localeId, String filename) throws ResourceNotFoundException, SystemErrorException {
+	public Response getImage(LocaleId localeId, String filename)
+            throws ResourceNotFoundException, SystemErrorException {
 //        final GridFSDBFile file = gridFS.findOne(new BasicDBObject("filename", filename));
 //		if (file == null) {
 //			throw new ResourceNotFoundException("Image '"+filename+"' not found", filename, ErrorCodes.MEDIA_NOT_FOUND);
@@ -124,16 +132,33 @@ public final class MediaManager implements ManagerInterface {
         return Response.noContent().build();
     }
 
-    public Response convertURL(String oldURL) throws ResourceNotFoundException, SystemErrorException {
-        ensureReady();
-        Response theResponse;
 
-        String outputURL = "https://s3.amazonaws.com/uploads.hipchat.com/22845/124000/hsz2uQeXDvJFCtd/heard.png";
+    public String getUploadURL()
+    throws IOException {
+        String uploadServerURL = "http://heard-test-001.appspot.com/api/image";
+        URL imageURL = new URL(uploadServerURL);
+        HttpURLConnection imageConnection = (HttpURLConnection)imageURL.openConnection();
+        imageConnection.setRequestMethod("GET");
+        imageConnection.setDoOutput(true);
+        imageConnection.setUseCaches(false);
+        imageConnection.setRequestProperty("Connection", "Keep-Alive");
+        imageConnection.setRequestProperty("Cache-Control", "no-cache");
 
-        theResponse = Response.ok(outputURL).build();
+        InputStream responseStream = new BufferedInputStream(imageConnection.getInputStream());
+        String finalURL = "";
 
-        return theResponse;
+
+        BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(responseStreamReader.readLine());
+        responseStreamReader.close();
+
+        finalURL = stringBuilder.toString();
+
+        return finalURL;
     }
+
+
 
     private void ensureReady() throws SystemErrorException {
         if (_state != ManagerState.STARTED) {

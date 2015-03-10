@@ -5,10 +5,12 @@ import com.eweware.service.base.error.SystemErrorException;
 import com.eweware.service.base.i18n.LocaleId;
 import com.eweware.service.mgr.MediaManager;
 import com.eweware.service.rest.RestUtilities;
+import com.sun.jersey.multipart.FormDataParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -41,15 +43,5 @@ public class MediaResource {
 		}
 	}
 
-    @POST
-    @Path("/{url}")
-    @Produces("text/plain")
-    public Response convertURLToImage(@PathParam("url") String oldURL, @Context HttpServletRequest request) {
-        try {
-            return MediaManager.getInstance().convertURL(oldURL);
 
-        } catch (Exception e) {
-            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
-        }
-    }
 }
