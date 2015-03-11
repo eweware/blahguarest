@@ -5,7 +5,9 @@ import com.eweware.service.base.store.dao.ChannelImportDAOConstants;
 import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.ChannelImportSchema;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -49,10 +51,51 @@ public class ChannelImportPayload extends BasePayload implements ChannelImportDA
     public Boolean getAutoImport() { return (Boolean) get(AUTO_IMPORT); }
     public void setAutoImport(Boolean bAutoImport){ put(AUTO_IMPORT, bAutoImport) ; }
 
-    public Integer getImportFrequency() { return (Integer) get(IMPORT_FREQUENCY); }
+    public Integer getImportFrequency() {
+        Integer theInt;
+        final Object theVal = get(IMPORT_FREQUENCY);
+
+        try {
+            if (!(theVal instanceof Integer )) {
+                String intStr = theVal.toString();
+                theInt = Integer.parseInt(intStr);
+            } else {
+                theInt = (Integer) theVal;
+            }
+        }
+        catch (Exception exp) {
+            theInt = null;
+        }
+
+
+        return theInt;
+    }
+
     public void setImportFrequency(Integer importFrequency){ put(IMPORT_FREQUENCY, importFrequency) ; }
 
-    public Date getLastImportDate() { return (Date) get(LAST_IMPORT_DATE); }
+    public Date getLastImportDate()
+    {
+        Date theDate;
+        final Object theVal = get(LAST_IMPORT_DATE);
+
+        try {
+            if (!(theVal instanceof Date )) {
+                String dateString = theVal.toString();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+                theDate = dateFormat.parse(dateString);
+            } else {
+                theDate = (Date)theVal;
+            }
+        }
+        catch (Exception exp) {
+            theDate = null;
+        }
+
+
+        return theDate;
+    }
+
+
     public void setLastImportDate(Date importDate){ put(LAST_IMPORT_DATE, importDate) ; }
 
     public String getImportUsername() { return (String) get(IMPORT_USERNAME); }

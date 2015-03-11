@@ -22,22 +22,23 @@ public class ChannelImportDAOImpl extends BaseDAOImpl implements ChannelImportDA
     public static final Map<String, MongoFieldTypes> FIELD_TO_TYPE_MAP = new HashMap<String, MongoFieldTypes>();
 
     static {   // TODO should be derived from schema
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(TARGET_GROUP, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(FEED_TYPE, MongoFieldTypes.NUMBER);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(AUTO_IMPORT, MongoFieldTypes.BOOLEAN);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_FREQUENCY, MongoFieldTypes.NUMBER);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_IMPORT_DATE, MongoFieldTypes.DATE);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_USERNAME, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_PASSWORD, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_AS_USER, MongoFieldTypes.BOOLEAN);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(FEED_NAME, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(TARGET_GROUP, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(FEED_TYPE, MongoFieldTypes.NUMBER);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(AUTO_IMPORT, MongoFieldTypes.BOOLEAN);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_FREQUENCY, MongoFieldTypes.NUMBER);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(LAST_IMPORT_DATE, MongoFieldTypes.DATE);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_USERNAME, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_PASSWORD, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(IMPORT_AS_USER, MongoFieldTypes.BOOLEAN);
 
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(RSS_URL, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(SUMMARIZE_URL_PAGE, MongoFieldTypes.BOOLEAN);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(TITLE_FIELD, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_FIELD, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(BODY_FIELD, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(URL_FIELD, MongoFieldTypes.STRING);
-        GroupDAOImpl.FIELD_TO_TYPE_MAP.put(APPEND_URL, MongoFieldTypes.BOOLEAN);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(RSS_URL, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(SUMMARIZE_URL_PAGE, MongoFieldTypes.BOOLEAN);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(TITLE_FIELD, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_FIELD, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(BODY_FIELD, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(URL_FIELD, MongoFieldTypes.STRING);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(APPEND_URL, MongoFieldTypes.BOOLEAN);
 
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }

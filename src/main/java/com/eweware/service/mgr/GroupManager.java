@@ -487,7 +487,10 @@ public final class GroupManager implements ManagerInterface {
 
     public ChannelImportDAO updateImportRecord(String userId, ChannelImportPayload importPayload) throws SystemErrorException {
         final String importRecordId = importPayload.getId();
-        final ChannelImportDAO importDAO = (ChannelImportDAO)getStoreManager().createChannelImport(importRecordId)._findByPrimaryId();
+        final ChannelImportDAO searchDAO = getStoreManager().createChannelImport("");
+        searchDAO.setId(importRecordId);
+        final ChannelImportDAO importDAO = (ChannelImportDAO)searchDAO._findByPrimaryId();
+
         if (importDAO == null)
             return null;
 
