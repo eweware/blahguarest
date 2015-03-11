@@ -418,7 +418,7 @@ public final class GroupManager implements ManagerInterface {
         return false;
     }
 
-    public List<ChannelImportDAO>   getImportRecords(String userId, String groupId) throws SystemErrorException {
+    public List<ChannelImportPayload>   getImportRecords(String userId, String groupId) throws SystemErrorException {
         final GroupDAO groupDAO = (GroupDAO)getStoreManager().createGroup(groupId)._findByPrimaryId();
         if (groupDAO == null)
             return null;
@@ -434,7 +434,12 @@ public final class GroupManager implements ManagerInterface {
 
         channelImportDAOs = (List<ChannelImportDAO>) searchImport._findManyByCompositeId(null, null, null, null, ChannelImportDAO.TARGET_GROUP);
 
-        return channelImportDAOs;
+        final List<ChannelImportPayload> importers = new ArrayList<ChannelImportPayload>(channelImportDAOs.size());
+        for (ChannelImportDAO dao : channelImportDAOs) {
+            final ChannelImportPayload importPayload = new ChannelImportPayload(dao);
+            importers.add(importPayload);
+        }
+        return importers;
     }
 
 

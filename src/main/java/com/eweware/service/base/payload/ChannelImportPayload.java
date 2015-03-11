@@ -6,6 +6,7 @@ import com.eweware.service.base.store.dao.schema.BaseSchema;
 import com.eweware.service.base.store.dao.schema.ChannelImportSchema;
 
 import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -13,6 +14,17 @@ import java.util.Date;
  */
 public class ChannelImportPayload extends BasePayload implements ChannelImportDAOConstants {
 
+    public ChannelImportPayload() {
+        super();
+    }
+
+    public ChannelImportPayload(String id) {
+        super(id);
+    }
+
+    public ChannelImportPayload(Map<String, Object> map) {
+        super(map);
+    }
     protected static final BaseSchema getSchema() {
         return ChannelImportSchema.getSchema(LocaleId.en_us);
     }
