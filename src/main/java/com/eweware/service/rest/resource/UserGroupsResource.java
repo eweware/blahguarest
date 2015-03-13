@@ -30,8 +30,9 @@ public class UserGroupsResource {
     private static final String GET_USER_GROUPS_OPERATION = "getUserGroups";
     private static final String GET_USER_GROUP_OPERATION = "getUserGroup";
     private static final String REMOVE_USER_FROM_GROUP_OPERATION = "removeUserFromGroup";
-    private static final String REGISTER_USER_IN_GROUP_OPERATION = "registerUserInGroup";
+    private static final String REGISTER_ALL_USERS_IN_GROUP_OPERATION = "registerAllUsersInGroup";
 
+    private static final String REGISTER_USER_IN_GROUP_OPERATION = "registerUserInGroup";
     private UserManager userManager;
     private SystemManager systemManager;
 
@@ -66,6 +67,39 @@ public class UserGroupsResource {
             final UserGroupPayload userGroup = getUserManager().registerUserInGroup(LocaleId.en_us, userId, null, groupId);
             final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath().toString()));
             getSystemManager().setResponseTime(REGISTER_USER_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (InvalidUserValidationKey e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @POST
+    @Path("/all")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerAllUsersInGroup(
+            Map<String, String> entity,
+            @Context UriInfo uri,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String groupId = entity.get("G");
+            final UserGroupPayload userGroup = getUserManager().registerAllUsersInGroup(LocaleId.en_us, userId, null, groupId);
+            final Response response = RestUtilities.make201CreatedResourceResponse(userGroup, new URI(uri.getAbsolutePath().toString()));
+            getSystemManager().setResponseTime(REGISTER_ALL_USERS_IN_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);

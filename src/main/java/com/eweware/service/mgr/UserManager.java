@@ -680,6 +680,48 @@ public class UserManager implements ManagerInterface {
         return payload;
     }
 
+    public UserGroupPayload registerAllUsersInGroup(LocaleId localeId, String userId, String validationKey, String groupId) throws InvalidAuthorizedStateException, InvalidRequestException, StateConflictException, ResourceNotFoundException, SystemErrorException, InvalidUserValidationKey {
+        ensureReady();
+        if (CommonUtilities.isEmptyString(groupId)) {
+            throw new InvalidRequestException("groupId required to join user to a group", ErrorCodes.MISSING_GROUP_ID);
+        }
+        if (CommonUtilities.isEmptyString(userId)) {
+            throw new InvalidRequestException("userId required to join user to a group", ErrorCodes.MISSING_USER_ID);
+        }
+
+        final UserDAO userSearcDAO = getStoreManager().createUser(userId);
+        final UserDAO userDAO = (UserDAO)userSearcDAO._findByPrimaryId();
+
+        if (userDAO == null) {
+            throw new InvalidRequestException("userId=" + userId + " does not exist", ErrorCodes.NOT_FOUND_USER_ID);
+        }
+        if ((userDAO.getIsAdmin() == null) || (userDAO.getIsAdmin() == false)) {
+            throw new InvalidRequestException("userId=" + userId + " is not an admin", ErrorCodes.UNAUTHORIZED_USER);
+        }
+        final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId(GroupDAO.DISPLAY_NAME);
+        if (groupDAO == null) {
+            throw new ResourceNotFoundException("no group exists with groupId=" + groupId, ErrorCodes.NOT_FOUND_GROUP_ID);
+        }
+
+
+        final UserDAO searchUserDAO = getStoreManager().createUser();
+
+        final List<UserDAO> userDAOs = (List<UserDAO>)searchUserDAO._findMany();
+
+        for (UserDAO curUserDAO : userDAOs) {
+            try {
+                registerUserInGroup(localeId, curUserDAO.getId(), validationKey, groupId);
+            } catch (Exception e)
+            {
+                /// do nothing
+                System.out.println(e.getLocalizedMessage());
+            }
+        }
+
+
+        return null;
+    }
+
     /**
      * Updates username.
      *
