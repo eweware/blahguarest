@@ -8,8 +8,10 @@ import com.eweware.service.base.store.dao.schema.ChannelImportSchema;
 import com.eweware.service.base.store.impl.mongo.MongoFieldTypes;
 import com.mongodb.DBCollection;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -125,9 +127,37 @@ public class ChannelImportDAOImpl extends BaseDAOImpl implements ChannelImportDA
     public void setImportFrequency(Integer importFrequency){ put(IMPORT_FREQUENCY, importFrequency) ; }
 
     @Override
-    public Date getLastImportDate() { return (Date) get(LAST_IMPORT_DATE); }
+    public Date getLastImportDate() {
+        Date theDate;
+        final Object theVal = get(LAST_IMPORT_DATE);
+
+        try {
+            if (!(theVal instanceof Date )) {
+                String dateString = theVal.toString();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+                theDate = dateFormat.parse(dateString);
+            } else {
+                theDate = (Date)theVal;
+            }
+        }
+        catch (Exception exp) {
+            theDate = null;
+        }
+
+
+        return theDate;
+    }
+
     @Override
-    public void setLastImportDate(Date importDate){ put(LAST_IMPORT_DATE, importDate) ; }
+    public void setLastImportDate(Date importDate){
+        String dateStr;
+        try {
+            dateStr = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).format(importDate);
+        } catch (Exception exp) {
+            dateStr = null;
+        }
+        put(LAST_IMPORT_DATE, dateStr) ;
+    }
 
     @Override
     public String getImportUsername() { return (String) get(IMPORT_USERNAME); }

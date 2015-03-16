@@ -96,7 +96,15 @@ public class ChannelImportPayload extends BasePayload implements ChannelImportDA
     }
 
 
-    public void setLastImportDate(Date importDate){ put(LAST_IMPORT_DATE, importDate) ; }
+    public void setLastImportDate(Date importDate){
+        String dateStr;
+        try {
+            dateStr = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).format(importDate);
+        } catch (Exception exp) {
+            dateStr = null;
+        }
+        put(LAST_IMPORT_DATE, dateStr) ;
+    }
 
     public String getImportUsername() { return (String) get(IMPORT_USERNAME); }
     public void setImportUsername(String username){ put(IMPORT_USERNAME, username) ; }
