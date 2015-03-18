@@ -75,9 +75,9 @@ public final class BlahManager implements ManagerInterface {
     private static final long TEN_MINUTES_BLAH_TYPE_CACHE_REFRESH_IN_MILLIS = 1000l * 60 * 10;
     private static final long THIRTY_MINUTES_IN_MILLIS = 1000l * 60 * 30;
     private static final String EMPTY_STRING = "";
-    private static final int MAXIMUM_BLAH_BODY_LENGTH = 2000;
-    private static final int MAXIMUM_COMMENT_LENGTH = 1500;
-    private static final int MAXIMUM_BLAH_HEADLINE_LENGTH = 64;
+    private static final int MAXIMUM_BLAH_BODY_LENGTH = 2500;
+    private static final int MAXIMUM_COMMENT_LENGTH = 2500;
+    private static final int MAXIMUM_BLAH_HEADLINE_LENGTH = 256;
 
     private final boolean _doIndex;
     private final File _blahIndexDir;
@@ -293,6 +293,17 @@ public final class BlahManager implements ManagerInterface {
                 addPredictionData(blahDAO, entity.getExpirationDate());
             }
         }
+
+        // check for duplicate blah
+        BlahDAO blahSearchRecord = getStoreManager().createBlah();
+        blahSearchRecord.setGroupId(blahDAO.getGroupId());
+        blahSearchRecord.setText(blahDAO.getText());
+        blahSearchRecord.setBody(blahDAO.getBody());
+        BlahDAO foundBlah = (BlahDAO)blahSearchRecord._findByCompositeId(new String[] {BaseDAOConstants.ID}, BlahDAOConstants.GROUP_ID, BlahDAOConstants.TEXT, BlahDAOConstants.BODY);
+        if (foundBlah != null) {
+            throw new InvalidRequestException("blah is a duplicate of blahId=" + foundBlah.getId(), ErrorCodes.UNAUTHORIZED_USER);
+        }
+
         blahDAO._insert();
 
         updateGroupBlahCount(groupId, true);
