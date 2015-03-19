@@ -298,9 +298,10 @@ public final class BlahManager implements ManagerInterface {
         BlahDAO blahSearchRecord = getStoreManager().createBlah();
         blahSearchRecord.setGroupId(blahDAO.getGroupId());
         blahSearchRecord.setText(blahDAO.getText());
-        blahSearchRecord.setBody(blahDAO.getBody());
-        BlahDAO foundBlah = (BlahDAO)blahSearchRecord._findByCompositeId(new String[] {BaseDAOConstants.ID}, BlahDAOConstants.GROUP_ID, BlahDAOConstants.TEXT, BlahDAOConstants.BODY);
-        if (foundBlah != null) {
+
+        List<BlahDAO> foundBlahs = (List<BlahDAO>)blahSearchRecord._findMany(null, 1, null);
+        if ((foundBlahs != null) && (foundBlahs.size()> 0)) {
+            BlahDAO foundBlah = foundBlahs.get(0);
             throw new InvalidRequestException("blah is a duplicate of blahId=" + foundBlah.getId(), ErrorCodes.UNAUTHORIZED_USER);
         }
 

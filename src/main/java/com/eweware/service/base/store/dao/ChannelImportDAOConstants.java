@@ -21,6 +21,7 @@ public interface ChannelImportDAOConstants {
 
     // for RSS feeds
     static final String RSS_URL = "RSSurl";
+    static final String RSS_USE_FEED_IMAGE = "usefeedimage";
     static final String SUMMARIZE_URL_PAGE = "summarizepage";
     static final String TITLE_FIELD = "titlefield";
     static final String IMAGE_FIELD = "imagefield";
@@ -35,7 +36,7 @@ public interface ChannelImportDAOConstants {
 
     // schema
     static final SchemaDataTypeFieldMap[] SIMPLE_FIELD_TYPES = new SchemaDataTypeFieldMap[]{
-            new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{AUTO_IMPORT, IMPORT_AS_USER, APPEND_URL, SUMMARIZE_URL_PAGE}),
+            new SchemaDataTypeFieldMap(SchemaDataType.B, new String[]{AUTO_IMPORT, IMPORT_AS_USER, APPEND_URL, SUMMARIZE_URL_PAGE, RSS_USE_FEED_IMAGE}),
             new SchemaDataTypeFieldMap(SchemaDataType.S, new String[]{FEED_NAME, TARGET_GROUP, IMPORT_USERNAME, IMPORT_PASSWORD, RSS_URL, TITLE_FIELD, BODY_FIELD, IMAGE_FIELD, URL_FIELD}),
             new SchemaDataTypeFieldMap(SchemaDataType.DT, new String[]{LAST_IMPORT_DATE}),
             new SchemaDataTypeFieldMap(SchemaDataType.I, new String[]{IMPORT_FREQUENCY, FEED_TYPE})

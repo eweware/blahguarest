@@ -36,6 +36,7 @@ public class ChannelImportDAOImpl extends BaseDAOImpl implements ChannelImportDA
 
         ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(RSS_URL, MongoFieldTypes.STRING);
         ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(SUMMARIZE_URL_PAGE, MongoFieldTypes.BOOLEAN);
+        ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(RSS_USE_FEED_IMAGE, MongoFieldTypes.BOOLEAN);
         ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(TITLE_FIELD, MongoFieldTypes.STRING);
         ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_FIELD, MongoFieldTypes.STRING);
         ChannelImportDAOImpl.FIELD_TO_TYPE_MAP.put(BODY_FIELD, MongoFieldTypes.STRING);
@@ -184,6 +185,12 @@ public class ChannelImportDAOImpl extends BaseDAOImpl implements ChannelImportDA
     public Boolean getSummarizeURLPage() { return (Boolean) get(SUMMARIZE_URL_PAGE); }
     @Override
     public void setSummarizeURLPage(Boolean summarizeURLPage){ put(SUMMARIZE_URL_PAGE, summarizeURLPage) ; }
+
+    @Override
+    public Boolean getUseFeedImage() { return (Boolean) get(RSS_USE_FEED_IMAGE); }
+    @Override
+    public void setUseFeedImage(Boolean useFeedImage){ put(RSS_USE_FEED_IMAGE, useFeedImage) ; }
+
 
     @Override
     public String getTitleField() { return (String) get(TITLE_FIELD); }

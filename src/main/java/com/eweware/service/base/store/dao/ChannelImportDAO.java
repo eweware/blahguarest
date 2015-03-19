@@ -45,6 +45,9 @@ public interface ChannelImportDAO  extends BaseDAO, ChannelImportDAOConstants {
     public Boolean getSummarizeURLPage();
     public void setSummarizeURLPage(Boolean summarizeURLPage);
 
+    public Boolean getUseFeedImage();
+    public void setUseFeedImage(Boolean useFeedImage);
+
     public String getTitleField();
     public void setTitleField(String titleField);
 

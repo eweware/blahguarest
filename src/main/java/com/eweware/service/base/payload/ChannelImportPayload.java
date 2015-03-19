@@ -136,4 +136,8 @@ public class ChannelImportPayload extends BasePayload implements ChannelImportDA
 
     public Boolean getAppendURL() { return (Boolean) get(APPEND_URL); }
     public void setAppendURL(Boolean appendURL){ put(APPEND_URL, appendURL) ; }
+
+
+    public Boolean getUseFeedImage() { return (Boolean) get(RSS_USE_FEED_IMAGE); }
+    public void setUseFeedImage(Boolean useFeedImage){ put(RSS_USE_FEED_IMAGE, useFeedImage) ; }
 }
