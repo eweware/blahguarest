@@ -136,7 +136,7 @@ public class InboxHandler extends Thread {
      * @param limit
      * @return  An inbox or null if there is no inbox matching the criteria.
      */
-    public InboxData getNextInbox(String groupId, Integer inboxNumber, Integer lastInboxNumber, Integer limit, Boolean safe) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
+    public InboxData getNextInbox(String groupId, Integer prevInboxNumber, Boolean safe) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException {
         GroupDAO group = GroupManager.getInstance().getCachedGroup(groupId);
         if (group == null) {
             GroupManager.getInstance().maybeRefreshGroupCache(true);
@@ -148,11 +148,12 @@ public class InboxHandler extends Thread {
                 first = group.getFirstSafeInboxNumber();
             else
                 first = group.getFirstInboxNumber();
+
             if (first == null) {
                 first = 0;
             }
-            Integer last;
 
+            Integer last;
             if (safe)
                 last = group.getLastSafeInboxNumber();
             else
@@ -160,22 +161,28 @@ public class InboxHandler extends Thread {
             if (last == null) {
                 last = 0;
             }
+
             Integer nextBoxNumber = null;
-            if (inboxNumber != null) {
-                if (inboxNumber >= first && inboxNumber <= last) {
-                    nextBoxNumber = inboxNumber;
-                } else {
-                    nextBoxNumber = first;
-                }
-            } else if (lastInboxNumber != null) {
-                if (lastInboxNumber >= first && lastInboxNumber < last) {
-                    nextBoxNumber = lastInboxNumber + 1;
-                } else {
-                    nextBoxNumber = first; // wrap around
-                }
-            } else {
+
+            if (prevInboxNumber == null)
                 nextBoxNumber = first;
+            else {
+                nextBoxNumber = prevInboxNumber + 1;
+                if (nextBoxNumber < first)
+                    nextBoxNumber = first;
+                else if (nextBoxNumber > last) {
+                    // wrap around
+                    GroupManager.getInstance().maybeRefreshGroupCache(true);
+                    group = GroupManager.getInstance().getCachedGroup(groupId);
+                    if (safe)
+                        nextBoxNumber = group.getFirstSafeInboxNumber();
+                    else
+                        nextBoxNumber = group.getFirstInboxNumber();
+                }
             }
+
+            logger.log(Level.INFO, "Using inbox " + nextBoxNumber.toString());
+
             String inboxName = CommonUtilities.makeInboxCollectionName(groupId, nextBoxNumber, safe);
 
             if (!_storeManager.getInboxDB().collectionExists(inboxName)) {
@@ -198,7 +205,7 @@ public class InboxHandler extends Thread {
                 }
             }
 
-            final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, limit);
+            final List<Map<String, Object>> inboxItems = getInboxItems(inboxName, false, null);
 
 
             if ((inboxItems == null) || (inboxItems.size() == 0)) {

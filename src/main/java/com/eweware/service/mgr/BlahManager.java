@@ -1915,9 +1915,9 @@ public final class BlahManager implements ManagerInterface {
 
             checkGroupAccess(request, groupId);
 
-            Integer lastInboxNumber = (inboxNumber == null) ? BlahguaSession.getLastInboxNumber(request, groupId, safe) : null;
+            Integer lastInboxNumber = BlahguaSession.getLastInboxNumber(request, groupId, safe);
 
-            final InboxData inbox = _inboxHandler.getNextInbox(groupId, inboxNumber, lastInboxNumber, null, safe);
+            final InboxData inbox = _inboxHandler.getNextInbox(groupId, lastInboxNumber, safe);
 
             BlahguaSession.setLastInboxNumber(request, groupId, inbox.getInboxNumber(), safe);
 
