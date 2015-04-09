@@ -1903,6 +1903,92 @@ public final class BlahManager implements ManagerInterface {
         return comments;
     }
 
+    public List<CommentPayload> getTopComments(LocaleId localeId, boolean authenticated, String blahId, String userId) throws InvalidRequestException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
+
+        final boolean forBlah = !CommonUtilities.isEmptyString(blahId);
+        if (forBlah) {
+            checkBlahById(blahId, blahId);
+        }
+        final CommentDAO commentDAO = getStoreManager().createComment();
+        if (forBlah) {
+            commentDAO.setBlahId(blahId);
+        }
+
+        final List<CommentDAO> commentDAOs  = (List<CommentDAO>) commentDAO._findManyByCompositeId(null, null, null, null, CommentDAO.BLAH_ID);
+        Collections.sort(commentDAOs, Collections.reverseOrder(new CommentStrengthComparator()));
+
+        final List<CommentPayload> comments = new ArrayList<CommentPayload>(commentDAOs.size());
+
+        if (commentDAO.size() > 0) {
+            for (CommentDAO dao : commentDAOs) {
+                final CommentPayload commentPayload = new CommentPayload(dao);
+                // TODO expensive! see WRS-252
+                CommonUtilities.maybeAddUserNickname(_storeManager, authenticated, dao.getAuthorId(), commentPayload);
+                comments.add(commentPayload);
+                if (comments.size() == 5)
+                    break;
+            }
+
+            // make the most recent comment at the top - always
+            Collections.sort(commentDAOs, Collections.reverseOrder(new CommentDateComparator()));
+            CommentDAO newest = commentDAOs.get(0);
+            CommentPayload newPayload = null;
+            Boolean foundIt = false;
+
+            for (CommentPayload payload : comments) {
+                if (payload.getId() == newest.getId()) {
+                    foundIt = true;
+                    newPayload = payload;
+                    comments.remove(payload);
+                    break;
+                }
+            }
+
+            if (!foundIt) {
+                newPayload = new CommentPayload(newest);
+                comments.remove(comments.size()-1);
+            }
+            comments.add(0, newPayload);
+
+
+            if (!CommonUtilities.isEmptyString(userId)) {
+                for (CommentPayload comment : comments) {
+                    addUserCommentInfoToPayload(comment, comment.getId(), userId);
+                }
+            }
+
+
+        }
+
+        return comments;
+    }
+
+    public class CommentStrengthComparator implements Comparator<CommentDAO> {
+        @Override
+        public int compare(CommentDAO o1, CommentDAO o2) {
+            Long v1 = o1.getCommentUpVotes();
+            if (v1 == null)
+                v1 = 0L;
+            Long v2 = o2.getCommentUpVotes();
+            if (v2 == null)
+                v2 = 0L;
+
+            if (v1 == v2)
+                return o1.getCreated().compareTo(o2.getCreated());
+            else
+                return v1.compareTo(v2);
+        }
+
+    }
+
+    public class CommentDateComparator implements Comparator<CommentDAO> {
+        @Override
+        public int compare(CommentDAO o1, CommentDAO o2) {
+            return o1.getCreated().compareTo(o2.getCreated());
+        }
+    }
+
     public List<Map<String, Object>> getInboxNew(LocaleId localeId, String groupId, HttpServletRequest request, Integer inboxNumber, Boolean safe)
             throws SystemErrorException, InvalidAuthorizedStateException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
 

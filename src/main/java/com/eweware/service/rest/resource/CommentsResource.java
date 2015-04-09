@@ -315,6 +315,44 @@ public class CommentsResource {
         }
     }
 
+    /**
+     * <p>Use this method to get the comments for a blah.</p>
+     * <p/>
+     * <div><b>METHOD:</b> GET</div>
+     * <div><b>URL:</b> comments</div>
+     *
+     * @param blahId        <i>Path Parameter:</i> The blah id
+
+     * @return Returns http status 200 with a list of top 5 comment entities.
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     * @see com.eweware.service.base.store.dao.CommentDAOConstants
+     */
+    @GET
+    @Path("/hot")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTopCommentsForBlah(
+            @QueryParam("blahId") String blahId,
+            @Context HttpServletRequest request
+    ) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.getUserId(request);
+            final Response response = RestUtilities.make200OkResponse(getBlahManager().getTopComments(LocaleId.en_us, BlahguaSession.isAuthenticated(request), blahId, userId));
+            getSystemManager().setResponseTime(GET_COMMENTS_OPERATION, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
 
     private BlahManager getBlahManager() throws SystemErrorException {
         if (blahManager == null) {
