@@ -776,6 +776,36 @@ public class UserManager implements ManagerInterface {
     }
 
     /**
+     * Updates user's mature flag.
+     *
+     * @param localeId
+     * @param request
+     * @param isSpammer
+     * @throws com.eweware.service.base.error.SystemErrorException
+     *
+     * @throws InvalidRequestException
+     */
+    public void updateIsSpammer(LocaleId localeId, HttpServletRequest request, String userId, String spammerId, Boolean isSpammer) throws InvalidRequestException,
+            StateConflictException, SystemErrorException, ResourceNotFoundException {
+        ensureReady();
+        final UserDAO userSearchDAO = getStoreManager().createUser(userId);
+        final UserDAO userDAO = (UserDAO)userSearchDAO._findByPrimaryId();
+
+        if (userDAO == null) {
+            throw new InvalidRequestException("userId=" + userId + " does not exist", ErrorCodes.NOT_FOUND_USER_ID);
+        }
+        if ((userDAO.getIsAdmin() == null) || (userDAO.getIsAdmin() == false)) {
+            throw new InvalidRequestException("userId=" + userId + " is not an admin", ErrorCodes.UNAUTHORIZED_USER);
+        }
+
+
+        final UserDAO spammerDAO = getStoreManager().createUser(spammerId);
+        spammerDAO.setIsSpammer(isSpammer);
+        spammerDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+    }
+
+    /**
      * <p>Updates a user's password. <i>Assumes that the user is authenticated!</i></p>
      *
      * @param en_us
@@ -833,6 +863,7 @@ public class UserManager implements ManagerInterface {
 
         return new UserPayload(userDAO);
     }
+
 
     public WhatsNewPayload getWhatsNewForID(String userId)  throws InvalidRequestException, SystemErrorException, ResourceNotFoundException  {
         ensureReady();

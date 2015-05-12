@@ -62,6 +62,7 @@ public class UsersResource {
     private static final String GET_USER_RANKING_OPERATION = "getUserRanking";
     private static final String GET_WHATS_NEW_OPERATION = "getWhatsNew";
     private static final String UPDATE_WANTS_MATURE_OPERATION = "updateWantsMature";
+    private static final String ADMIN_FLAG_SPAMMER = "adminFlagSpammer";
 
 
     private UserManager userManager;
@@ -903,6 +904,51 @@ public class UsersResource {
             return RestUtilities.make500AndLogSystemErrorResponse(request, e);
         }
     }
+
+    /**
+     * <p>User this method to update a user's spammer flag.</p>
+     * <p><i>User must be an admin to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> PUT</div>
+     * <div><b>URL:</b> users/update/mature/{mature}</div>
+     *
+     * @param entity Expects a JSON entity containing the preference
+     *               in a field named 'XXX'.
+     * @return Returns http status code 204 (NO CONTENT) on success.
+     *         If the user or user account doesn't exist, returns 404 (NOT FOUND).
+     *         If the input is invalid, returns 400 (BAD REQUEST).
+     *         If username is already taken, returns 409 (CONFLICT).
+     *         On error conditions, a JSON object is returned with details.
+     * @see com.eweware.service.user.validation.Login#ensurePasswordString(String)
+     */
+    @POST
+    @Path("/flag/spammer")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response adminFlagSpammer(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final long s = System.currentTimeMillis();
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final Boolean isSpammer = Boolean.valueOf(entity.get("SS"));
+            final String spammerId = String.valueOf(entity.get("userid"));
+            getUserManager().updateIsSpammer(LocaleId.en_us, request, userId, spammerId, isSpammer);
+            final Response response = RestUtilities.make204OKNoContentResponse();
+            getSystemManager().setResponseTime(ADMIN_FLAG_SPAMMER, (System.currentTimeMillis() - s));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+
 
 
     /**

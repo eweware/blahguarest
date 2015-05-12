@@ -32,6 +32,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(BADGE_IDS, MongoFieldTypes.ARRAY);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(IMAGE_IDS, MongoFieldTypes.ARRAY);
         UserDAOImpl.FIELD_TO_TYPE_MAP.put(WANTS_MATURE, MongoFieldTypes.BOOLEAN);
+        UserDAOImpl.FIELD_TO_TYPE_MAP.put(IS_SPAMMER, MongoFieldTypes.BOOLEAN);
         addInheritedFieldToTypeMapItems(FIELD_TO_TYPE_MAP);
     }
 
@@ -160,4 +161,12 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
     @Override
     public void setWantsMature(Boolean wantsMature) { put(WANTS_MATURE, wantsMature);    }
+
+    @Override
+    public Boolean getIsSpammer() {
+        return (Boolean) get(IS_SPAMMER);
+    }
+
+    @Override
+    public void setIsSpammer(Boolean isSpammer) { put(IS_SPAMMER, isSpammer);    }
 }

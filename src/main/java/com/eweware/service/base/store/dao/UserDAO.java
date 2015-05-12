@@ -43,6 +43,10 @@ public interface UserDAO extends BaseDAO, UserDAOConstants {
 
     public void setWantsMature(Boolean bool);
 
+    public Boolean getIsSpammer();
+
+    public void setIsSpammer(Boolean bool);
+
 
     /**
      * <p>Returns the last signin date for the user</p>
