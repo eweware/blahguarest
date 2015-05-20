@@ -38,6 +38,7 @@ public class GroupsResource {
     private static final String ADD_GROUP_IMPORTER = "addGroupImporter";
     private static final String UPDATE_GROUP_IMPORTER = "updateGroupImporter";
     private static final String DELETE_GROUP_IMPORTER = "deleteGroupImporter";
+    private static final String DELETE_GROUP = "deleteGroup";
 
     private static GroupManager groupManager;
     private static SystemManager systemManager;
@@ -393,6 +394,33 @@ public class GroupsResource {
 
             GroupPayload g = getGroupManager().createGroup(LocaleId.en_us, userId, entity);
             return RestUtilities.make201CreatedResourceResponse(g, new URI(uri.getAbsolutePath() + g.getId()));
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+
+    @DELETE
+    @Path("/{groupId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteGroup(@PathParam("groupId") String groupId,
+                                @Context HttpServletRequest request) {
+        try {
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+
+            final long start = System.currentTimeMillis();
+
+            Boolean didIt = getGroupManager().deleteGroup(LocaleId.en_us, groupId, userId);
+            Response response =  RestUtilities.make200OkResponse(didIt);
+            getSystemManager().setResponseTime(DELETE_GROUP, (System.currentTimeMillis() - start));
+            return response;
         } catch (InvalidRequestException e) {
             return RestUtilities.make400InvalidRequestResponse(request, e);
         } catch (InvalidAuthorizedStateException e) {

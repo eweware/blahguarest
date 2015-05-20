@@ -14,6 +14,9 @@ import com.eweware.service.base.store.impl.mongo.dao.MongoStoreManager;
 import com.eweware.service.base.CommonUtilities.*;
 import com.eweware.service.rest.session.BlahguaSession;
 import com.eweware.service.user.validation.DefaultUserValidationMethod;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 import javax.xml.ws.WebServiceException;
 import java.util.*;
@@ -873,41 +876,45 @@ public final class GroupManager implements ManagerInterface {
    *
    * @param localeId
    * @param groupId     The group id
-   * @param displayName The display name
-   * @param description The group description
-   * @param state       The new group state
+   * @param userId The id of the current user
    * @throws InvalidRequestException
-   * @throws main.java.com.eweware.service.base.error.SystemErrorException
    *
    * @throws ResourceNotFoundException
    * @throws StateConflictException
    */
-  /*
-  public void updateGroup(LocaleId localeId, String groupId, String displayName, String description, String state) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+
+  public boolean deleteGroup(LocaleId localeId, String groupId, String userId) throws SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
       if (groupId == null) {
           throw new InvalidRequestException("missing group id", ErrorCodes.MISSING_GROUP_ID);
       }
-      if (state != null && AuthorizedState.find(state) == null) { // TODO should check for valid state transition
-          throw new InvalidRequestException("requested an invalid group state", ErrorCodes.INVALID_STATE_CODE);
+
+      if (userId == null) {
+          throw new InvalidRequestException("missing user id", ErrorCodes.MISSING_USER_ID);
       }
-      final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId);
+
+      final GroupDAO groupDAO = (GroupDAO) getStoreManager().createGroup(groupId)._findByPrimaryId();
+      final UserDAO userDAO = (UserDAO) getStoreManager().createUser(userId)._findByPrimaryId();
       if (!groupDAO._exists()) {
           throw new ResourceNotFoundException("no group exists with requested id", ErrorCodes.NOT_FOUND_GROUP_ID);
       }
-      final GroupDAO updateDAO = getStoreManager().createGroup(groupId);
-      if (displayName != null && displayName.length() != 0) {
-          updateDAO.setDisplayName(CommonUtilities.scrapeMarkup(displayName));
-      }
-      if (description != null && description.length() != 0) {
-          updateDAO.setDescription(CommonUtilities.scrapeMarkup(description));
-      }
-      if (state != null) {
-          updateDAO.setState(state);
-      }
-      updateDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+      List<String> adminList = groupDAO.getAdmin();
+
+      if (!userDAO.getIsAdmin() || (adminList == null) || (adminList.size() == 0) || (!adminList.contains(userId)))
+          return false; // this user cannot delete this group
+
+      // user is either a system admin or a group admin
+      groupDAO.setDescriptor("x");
+      groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+
+      // delete from all user's current lists
+      MongoStoreManager mongo = (MongoStoreManager)getStoreManager();
+      DBCollection userGroupCollection = mongo.getCollection(mongo.getUserGroupCollectionName());
+      DBObject newObj = new BasicDBObject().append("G", groupId);
+      userGroupCollection.remove(newObj);
+      return true;
 
   }
-    */
+
 
 
     private boolean isEmptyString(String string) {

@@ -803,6 +803,18 @@ public class UserManager implements ManagerInterface {
         spammerDAO.setIsSpammer(isSpammer);
         spammerDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
 
+        // now mark all of their deviations as spam
+        final BlahDAO blahDAO = getStoreManager().createBlah();
+         blahDAO.setAuthorId(spammerId);
+
+        List<BlahDAO> blahList = (List<BlahDAO>)blahDAO._findManyByCompositeId(0, null, null, null, BlahDAO.AUTHOR_ID);
+
+        for (BlahDAO curBlah : blahList) {
+            curBlah.setStrength(-2.0);
+
+            curBlah._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+        }
+
     }
 
     /**

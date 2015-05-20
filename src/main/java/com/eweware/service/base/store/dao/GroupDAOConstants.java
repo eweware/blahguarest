@@ -29,9 +29,10 @@ public interface GroupDAOConstants {
      * <div><visibility></div>
      *
      * <div>There's currently only one attribute:</div>
-     * <div><visibility> := {a|o} </div>
+     * <div><visibility> := {a|o|x} </div>
      * <p>where 'a' means that the group is open and
      * can be viewed by anonymous users and 'o' means that it can't.
+     * x means the group has been deleted
      * All possible descriptor values are specified by the code
      * in GroupDescriptor enum</p>
      * @see GroupDescriptor
