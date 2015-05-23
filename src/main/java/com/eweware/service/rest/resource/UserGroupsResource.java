@@ -143,7 +143,7 @@ public class UserGroupsResource {
             final long start = System.currentTimeMillis();
             final String userId = BlahguaSession.ensureAuthenticated(request, true);
             final String groupId = entity.get("G");
-            getUserManager().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.D.toString());
+            getUserManager().updateUserStatus(LocaleId.en_us, userId, groupId, AuthorizedState.X.toString());
             final Response response = RestUtilities.make204OKNoContentResponse();
             getSystemManager().setResponseTime(REMOVE_USER_FROM_GROUP_OPERATION, (System.currentTimeMillis() - start));
             return response;

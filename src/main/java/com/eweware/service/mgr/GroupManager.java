@@ -262,11 +262,12 @@ public final class GroupManager implements ManagerInterface {
             groupDAO.setState(state);
         }
 
-        final List<? extends BaseDAO> results = groupDAO._findMany(start, count, sortFieldName);
+        final List<GroupDAO> results = (List<GroupDAO>)groupDAO._findMany(start, count, sortFieldName);
 
         final List<GroupPayload> groups = new ArrayList<GroupPayload>(results.size());
-        for (BaseDAO dao : results) {
-            groups.add(new GroupPayload(dao));
+        for (GroupDAO dao : results) {
+            if (dao.getDescriptor().compareTo("x") != 0)
+                groups.add(new GroupPayload(dao));
         }
         return groups;
     }
@@ -905,6 +906,7 @@ public final class GroupManager implements ManagerInterface {
       // user is either a system admin or a group admin
       groupDAO.setDescriptor("x");
       groupDAO._updateByPrimaryId(DAOUpdateType.INCREMENTAL_DAO_UPDATE);
+      doRefreshGroupCache();
 
       // delete from all user's current lists
       MongoStoreManager mongo = (MongoStoreManager)getStoreManager();

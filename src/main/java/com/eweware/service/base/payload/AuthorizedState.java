@@ -8,7 +8,7 @@ package com.eweware.service.base.payload;
  */
 public enum AuthorizedState {
 
-    P("pending"), A("activated"), S("suspended"), D("deleted"),;
+    P("pending"), A("activated"), S("suspended"), X("deleted"),;
 
     private String description;
 

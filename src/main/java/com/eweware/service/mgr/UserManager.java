@@ -810,9 +810,10 @@ public class UserManager implements ManagerInterface {
         List<BlahDAO> blahList = (List<BlahDAO>)blahDAO._findManyByCompositeId(0, null, null, null, BlahDAO.AUTHOR_ID);
 
         for (BlahDAO curBlah : blahList) {
-            curBlah.setStrength(-2.0);
+            BlahDAO updateDAO = getStoreManager().createBlah(curBlah.getId());
+            updateDAO.setStrength(-2.0);
 
-            curBlah._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
+            updateDAO._updateByPrimaryId(DAOUpdateType.ABSOLUTE_UPDATE);
         }
 
     }
@@ -1358,7 +1359,7 @@ public class UserManager implements ManagerInterface {
         }
 
         final boolean join = newState.equals(AuthorizedState.A.toString());
-        final boolean delete = newState.equals(AuthorizedState.D.toString());
+        final boolean delete = newState.equals(AuthorizedState.X.toString());
         if (!getStoreManager().createUser(userId)._exists()) {
             throw new ResourceNotFoundException("not found user with userId=" + userId, ErrorCodes.NOT_FOUND_USER_ID);
         }
