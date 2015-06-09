@@ -1589,6 +1589,28 @@ public class UserManager implements ManagerInterface {
         }
     }
 
+    /**
+     * @param localeId
+     * @param start         Optional start count or null if there is no paging
+     * @param count         Optional max number of users to return
+     * @param sortFieldName
+     * @return Object  Returns list of users
+     * @throws com.eweware.service.base.error.SystemErrorException
+     *
+     */
+    public List<UserPayload> getUsers(Integer start, Integer count, String sortFieldName) throws SystemErrorException {
+        count = ensureCount(count);
+        final UserDAO dao = _storeManager.createUser();
+        final List<? extends BaseDAO> userDAOs = dao._findMany(start, count, sortFieldName);
+        final List<UserPayload> users = new ArrayList<UserPayload>(userDAOs.size());
+        for (BaseDAO item : userDAOs) {
+            users.add(new UserPayload(item));
+        }
+        return users;
+    }
+
+
+
     private Query buildQueryForField(String fieldName, String query, Analyzer analyzer)
             throws ParseException {
         return new QueryParser(Version.LUCENE_35, fieldName, analyzer).parse(query);
@@ -1741,25 +1763,6 @@ public class UserManager implements ManagerInterface {
 //    }
 
 
-//    /**
-//     * @param localeId
-//     * @param start         Optional start count or null if there is no paging
-//     * @param count         Optional max number of users to return
-//     * @param sortFieldName
-//     * @return Object  Returns list of users
-//     * @throws com.eweware.service.base.error.SystemErrorException
-//     *
-//     */
-//    public List<UserPayload> getUsers(LocaleId localeId, Integer start, Integer count, String sortFieldName) throws SystemErrorException {
-//        count = ensureCount(count);
-//        final UserDAO dao = _storeManager.createUser();
-//        final List<? extends BaseDAO> userDAOs = dao._findMany(start, count, sortFieldName);
-//        final List<UserPayload> users = new ArrayList<UserPayload>(userDAOs.size());
-//        for (BaseDAO item : userDAOs) {
-//            users.add(new UserPayload(item));
-//        }
-//        return users;
-//    }
 
 
 //    /**

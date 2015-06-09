@@ -307,6 +307,9 @@ public final class GroupManager implements ManagerInterface {
         return new GroupPayload(dao);
     }
 
+
+
+
     /**
      * Updates the viewer count for this group
      *
@@ -900,8 +903,10 @@ public final class GroupManager implements ManagerInterface {
       }
       List<String> adminList = groupDAO.getAdmin();
 
-      if (!userDAO.getIsAdmin() || (adminList == null) || (adminList.size() == 0) || (!adminList.contains(userId)))
-          return false; // this user cannot delete this group
+      if (!userDAO.getIsAdmin()) {
+          if ((adminList == null) || (adminList.size() == 0) || (!adminList.contains(userId)))
+              return false; // this user cannot delete this group
+      }
 
       // user is either a system admin or a group admin
       groupDAO.setDescriptor("x");
