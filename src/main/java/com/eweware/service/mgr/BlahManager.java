@@ -298,6 +298,7 @@ public final class BlahManager implements ManagerInterface {
         BlahDAO blahSearchRecord = getStoreManager().createBlah();
         blahSearchRecord.setGroupId(blahDAO.getGroupId());
         blahSearchRecord.setText(blahDAO.getText());
+        blahSearchRecord.setBody(blahDAO.getBody());
 
         List<BlahDAO> foundBlahs = (List<BlahDAO>)blahSearchRecord._findMany(null, 1, null);
         if ((foundBlahs != null) && (foundBlahs.size()> 0)) {
