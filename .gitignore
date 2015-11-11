@@ -5,3 +5,4 @@ ml
 target/*
 *.iml
 .DS_Store
+src/main/webapp/.DS_Store
