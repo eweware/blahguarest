@@ -135,6 +135,52 @@ public class BlahsResource {
     }
 
     /**
+     * <p>Creates a blah.</p>
+     * <p><i>User must be logged in to use this method.</i></p>
+     * <p/>
+     * <div><b>METHOD:</b> POST</div>
+     * <div><b>URL:</b> blahs</div>
+     *
+     * @param entity The request entity. Requires a JSON entity (a BlahPayload) with an
+     *               author id, a groupId, a blah type id, and the blah's tagline. Body text
+     *               may optionally be supplied.
+     * @return BlahPayload The created request with the new blah id
+     *         If there is an error in the request, returns status 400.
+     *         If the referenced blah or author can't be found, returns status 404.
+     *         If a conflict would arise from satisfying the request, returns status 409.
+     * @see com.eweware.service.base.store.dao.BlahDAOConstants
+     */
+    @POST
+    @Path("/new")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createNewBlah(
+            BlahPayload entity,
+            @Context UriInfo uri,
+            @Context HttpServletRequest request) {
+        try {
+            final long start = System.currentTimeMillis();
+            final String authorId = BlahguaSession.ensureAuthenticated(request, true);
+            entity = getBlahManager().createBlah(LocaleId.en_us, authorId, entity);
+            final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
+            getSystemManager().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
+            return response;
+        } catch (InvalidRequestException e) {
+            return RestUtilities.make400InvalidRequestResponse(request, e);
+        } catch (ResourceNotFoundException e) {
+            return RestUtilities.make404ResourceNotFoundResponse(request, e);
+        } catch (StateConflictException e) {
+            return RestUtilities.make409StateConflictResponse(request, e);
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    /**
      * <p>Use this method to register a vote for one of the poll options or a blah.</p>
      * <p><i>User must be logged in to use this method.</i></p>
      * <p/>
