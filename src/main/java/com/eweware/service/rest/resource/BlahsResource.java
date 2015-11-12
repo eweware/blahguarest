@@ -161,6 +161,8 @@ public class BlahsResource {
         try {
             final long start = System.currentTimeMillis();
             final String authorId = BlahguaSession.ensureAuthenticated(request, true);
+            if (!BlahguaSession.isAuthenticatedClient(request))
+                throw new InvalidAuthorizedStateException();
             entity = getBlahManager().createBlah(LocaleId.en_us, authorId, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             getSystemManager().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));

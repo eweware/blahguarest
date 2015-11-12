@@ -11,12 +11,28 @@ import com.eweware.service.mgr.TrackingManager;
 import com.eweware.service.rest.RestUtilities;
 import com.eweware.service.user.validation.Login;
 
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.spec.KeySpec;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.crypto.provider.AESKeyGenerator;
+import com.sun.crypto.provider.DESKeyFactory;
+import com.sun.crypto.provider.DESKeyGenerator;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * <p>A set of static methods to handle session state.</p>
@@ -26,6 +42,7 @@ import java.util.logging.Logger;
  */
 public final class BlahguaSession {
 
+    private static final String SECRET_CLIENT_KEY = "ImAGZFi9J9NfcKjPNljZfw==";
 
     private static final Logger logger = Logger.getLogger(BlahguaSession.class.getName());
 
@@ -55,6 +72,9 @@ public final class BlahguaSession {
      * If the user wants mature content
      */
     private static final String USER_WANTS_MATURE_CONTENT = "XXX";
+
+    private static final String AUTHENTICATED_CLIENT = "AUTH";
+    private static final String CLIENT_VERIFY_STRING = "CS";
 
     /**
      * An InboxInfo instance.
@@ -134,6 +154,58 @@ public final class BlahguaSession {
             return (session.getAttribute(USER_ID_ATTRIBUTE) != null);
         } catch (IllegalStateException e) {
             throw new SystemErrorException("Attempted to get attributes from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
+    }
+
+    public static boolean isAuthenticatedClient(HttpServletRequest request) throws SystemErrorException {
+        final HttpSession session = request.getSession(); // don't create a session
+        try {
+            return (session.getAttribute(AUTHENTICATED_CLIENT) != null);
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Attempted to get attributes from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
+    }
+
+    public static String getClientAuthString(HttpServletRequest request) throws SystemErrorException {
+        final HttpSession session = request.getSession(); // don't create a session
+        try {
+            String authString = (String)session.getAttribute(CLIENT_VERIFY_STRING);
+            if (authString == null) {
+                authString = UUID.randomUUID().toString();
+                session.setAttribute(CLIENT_VERIFY_STRING, authString);
+            }
+            return authString;
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Attempted to get attributes from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        }
+    }
+
+    public static boolean AuthenticateClient(HttpServletRequest request, String hashString) throws SystemErrorException {
+        final HttpSession session = request.getSession(); // don't create a session
+        try {
+            String storedString =  (String)session.getAttribute(CLIENT_VERIFY_STRING);
+            byte[] encodedKey     = Base64.decodeBase64(SECRET_CLIENT_KEY);
+
+            Cipher encrypter = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+
+            byte[] iv = { 1, 2, 3, 4, 5, 6, 6, 5, 4, 3, 2, 1, 7, 7, 7, 7 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+
+            Key SecretKey = new SecretKeySpec(encodedKey, "AES");
+            encrypter.init(Cipher.ENCRYPT_MODE, SecretKey, ivspec);
+
+            String finalStr = Base64.encodeBase64String(encrypter.doFinal(storedString.getBytes()));
+
+            if (hashString.compareTo(finalStr) == 0) {
+                session.setAttribute(AUTHENTICATED_CLIENT, true);
+                return true;
+            } else
+                return false;
+
+        } catch (IllegalStateException e) {
+            throw new SystemErrorException("Attempted to set attributes from an invalidated session id '" + session.getId() + "'", e, ErrorCodes.INVALID_SESSION_STATE);
+        } catch (Exception exp) {
+            return false;
         }
     }
 

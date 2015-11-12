@@ -948,7 +948,49 @@ public class UsersResource {
         }
     }
 
+    @GET
+    @Path("/client")
+    public Response getVerificationString(
+            @Context HttpServletRequest request) {
+        try {
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            String responseStr = BlahguaSession.getClientAuthString(request);
 
+
+            final Response response = RestUtilities.make200OkResponse(responseStr);
+
+            return response;
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
+
+    @POST
+    @Path("/client")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response verifyClient(
+            Map<String, String> entity,
+            @Context HttpServletRequest request) {
+        try {
+            final String userId = BlahguaSession.ensureAuthenticated(request, true);
+            final String verifiedStr = String.valueOf(entity.get("code"));
+            final boolean didIt = BlahguaSession.AuthenticateClient(request, verifiedStr);
+            final Response response = RestUtilities.make200OkResponse(didIt);
+
+            return response;
+        } catch (InvalidAuthorizedStateException e) {
+            return RestUtilities.make401UnauthorizedRequestResponse(request, e);
+        } catch (SystemErrorException e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        } catch (Exception e) {
+            return RestUtilities.make500AndLogSystemErrorResponse(request, e);
+        }
+    }
 
 
     /**
