@@ -197,17 +197,26 @@ public final class BlahManager implements ManagerInterface {
     }
 
 
-    /**
-     * Creates a new blah authored by user.
-     *
-     * @param localeId
-     * @param authorId
-     * @param entity   The request object  @return BlahPayload A blah payload including the new blah id
-     * @throws com.eweware.service.base.error.SystemErrorException
-     *
-     * @throws InvalidRequestException
-     * @throws ResourceNotFoundException
-     */
+    public BlahPayload createAdminBlah(LocaleId localeId, String authorId, BlahPayload entity) throws InvalidAuthorizedStateException, SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
+        final UserDAO userDAO = (UserDAO) getStoreManager().createUser(authorId)._findByPrimaryId();
+
+        if (userDAO.getIsAdmin())
+            return createBlah(localeId, authorId, entity);
+        else
+            return null;
+    }
+
+        /**
+         * Creates a new blah authored by user.
+         *
+         * @param localeId
+         * @param authorId
+         * @param entity   The request object  @return BlahPayload A blah payload including the new blah id
+         * @throws com.eweware.service.base.error.SystemErrorException
+         *
+         * @throws InvalidRequestException
+         * @throws ResourceNotFoundException
+         */
     public BlahPayload createBlah(LocaleId localeId, String authorId, BlahPayload entity) throws InvalidAuthorizedStateException, SystemErrorException, InvalidRequestException, ResourceNotFoundException, StateConflictException {
         ensureReady();
         // Check required fields

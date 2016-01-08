@@ -5,6 +5,7 @@ import com.eweware.service.base.i18n.LocaleId;
 import com.eweware.service.base.mgr.SystemManager;
 import com.eweware.service.base.payload.BlahPayload;
 import com.eweware.service.base.payload.UserBlahInfoPayload;
+import com.eweware.service.base.store.dao.UserDAO;
 import com.eweware.service.mgr.BlahManager;
 import com.eweware.service.mgr.type.PredictionExpirationType;
 import com.eweware.service.mgr.type.PredictionVote;
@@ -115,7 +116,8 @@ public class BlahsResource {
         try {
             final long start = System.currentTimeMillis();
             final String authorId = BlahguaSession.ensureAuthenticated(request, true);
-            entity = getBlahManager().createBlah(LocaleId.en_us, authorId, entity);
+
+            entity = getBlahManager().createAdminBlah(LocaleId.en_us, authorId, entity);
             final Response response = RestUtilities.make201CreatedResourceResponse(entity, new URI(uri.getAbsolutePath() + entity.getId()));
             getSystemManager().setResponseTime(CREATE_BLAH_OPERATION, (System.currentTimeMillis() - start));
             return response;
